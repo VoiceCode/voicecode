@@ -50,6 +50,7 @@ _.extend Commands.mapping,
   "chaps":
     kind: "text"
     description: "StudCaseText"
+    aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
   "dechups":

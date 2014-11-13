@@ -2,7 +2,7 @@ class Commands.Chain
   constructor: (phrase) ->
     @phrase = @normalizePhrase phrase
   normalizePhrase: (phrase) ->
-    phrase.toLowerCase().replace(/\s\./g, ".")
+    phrase.toLowerCase()#.replace(/\s\./g, ".")
   parse: ->
     Parser.parse @phrase
   execute: (shouldInvoke) ->
