@@ -1,0 +1,16 @@
+template(name="Vocab")
+  .container
+    h1 Vocab Page
+      small make sure Dragon understands each word needed for commands to operate correctly
+    p.lead Open a blank document. For each line below, start with the phrase: "no space new line", and then read the 4 words.
+    p.lead If Dragon does not recognize a word correctly, keep trying.
+    .alert
+      p Some options are:
+      p - try pronouncing the words more clearly
+      p - try "training" the word in Dragon's interface
+      p - try saying "correct ..." and using Dragon's correction interface so that it learns
+    each vocabGroups
+      pre= this
+    h2 Use for vocabulary training
+      small save to a text file, then choose that file for vocab training in Dragon
+    .well #{vocabList}

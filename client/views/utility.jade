@@ -1,0 +1,24 @@
+template(name="Utility")
+  .container
+    h1 Utility Page
+      small stuff you might need for setup and tweaking
+    h2 Command Setup
+    .alert Every base command word needs to be added as a command in Dragon Dictate
+      | so that it knows to pass off the rest of the phrase to VoiceCode.
+      | Set up should only take 30 minutes to an hour to paste all these in.
+    hr
+    h3 Click a command below to get its setup details
+    .well
+      each commandNames
+        +ChooseCommand
+        | &nbsp;
+    if currentCommand
+      h3 Dragon Base Command Name
+        small paste this into the [name] field. (Click in the box to select)
+      pre.selectable #{dragonBaseCommandName}
+      h3 Dragon Base Command
+        small paste this into the AppleScript window. (Click in the box to select)
+      pre.selectable #{dragonBaseCommand}
+
+template(name="ChooseCommand")
+  div(class="clickable-command {{currentClass}}")= this

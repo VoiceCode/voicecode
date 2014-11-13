@@ -1,0 +1,33 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-platform
+autopublish
+insecure
+coffeescript
+mizzao:bootstrap-3
+iron:router
+sacha:spin
+aldeed:collection2
+dburles:collection-helpers
+natestrauser:font-awesome
+percolatestudio:fastclick
+broth:inspector
+mrt:flash-messages
+mrt:moment
+mrt:timestamp
+zimme:iron-router-active
+stylus
+hellogerard:reststop2
+copleykj:jquery-autosize
+waitingkuo:jade
+aldeed:autoform
+mizzao:timesync
+aslagle:reactive-table
+underscore
+wizonesolutions:underscore-string
+meteorhacks:npm
+npm-container
+http

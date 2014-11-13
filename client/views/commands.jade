@@ -1,0 +1,72 @@
+template(name="Commands")
+  .container
+    h1 Commands
+      small [command1], [command2]...
+    h2 Number Capture:
+      small [command] [number]?
+    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
+      thead
+        tr
+          th Name
+          th Kind
+          th Description
+          th Actions
+      tbody
+        each numberCaptureCommands
+          tr
+            +CommandSummaryRow
+    h2 Text Capture Commands
+      small [command] [one or more words]+
+    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
+      thead
+        tr
+          th Name
+          th Kind
+          th Description
+          th Actions
+      tbody
+        each textCaptureCommand
+          tr
+            +CommandSummaryRow
+    h2 Individual Commands
+      small [command]
+    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
+      thead
+        tr
+          th Name
+          th Kind
+          th Description
+          th Actions
+      tbody
+        each individualCommands
+          tr
+            +CommandSummaryRow
+    h2 Single Argument Commands
+      small [command] [argument]
+    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
+      thead
+        th Name
+        th Kind
+        th Description
+        th Actions
+      tbody
+        each oneArgumentCommands
+          tr
+            +CommandSummaryRow
+    
+template(name="CommandSummaryRow")
+  td= this
+  td= kind
+  td= description
+  td
+    if isAction
+      each actions
+        +CommandAction
+        | &nbsp;
+    else if isText
+      code= transform
+    else if isModifier
+      code= modifierText
+
+template(name="CommandAction")
+  code= text
