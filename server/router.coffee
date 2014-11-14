@@ -16,4 +16,12 @@ RESTstop.add ":namespace/:body?", ->
   phrase = "#{@params.namespace} #{@params.body || ""} "
   chain = new Commands.Chain(phrase)
   chain.execute(true)
+
+  if Meteor.settings.showRecognition
+    notice ="""osascript <<EOD
+    display notification "#{phrase}"
+    EOD
+    """
+    Shell.exec notice, async: true
+    
   {}

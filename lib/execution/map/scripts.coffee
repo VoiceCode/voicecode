@@ -42,6 +42,16 @@
     keystroke "t" using {command down}
     end tell
     """
+  insertAbbreviation: (name) ->
+    abbreviation = Scripts.levenshteinMatch CommandoSettings.abbreviations, name
+    keystroke = if name.length and abbreviation?
+      """
+      tell application "System Events"
+      keystroke "#{abbreviation}"
+      end tell
+      """
+    else
+      ""
   levenshteinMatch: (list, term) ->
     if list[term]?
       list[term]

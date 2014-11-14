@@ -3,7 +3,7 @@ Meteor.startup ->
   @ParseGenerator = {}
 
   try
-    parseGenerator = HTTP.post "http://grammar.voicecode.io/grammar/generate",
+    parseGenerator = HTTP.post "https://grammar.voicecode.io/grammar/generate",
       data:
         license: Meteor.settings.license
         email: Meteor.settings.email

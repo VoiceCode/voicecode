@@ -24,7 +24,7 @@ Template.Utility.helpers
         else
         set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
         set space to "#{name}"
-        set toExecute to "curl http://commando:#{Meteor.settings.public.port}/parse/" & space & "/" & encodedText
+        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
         do shell script toExecute
         end if
       end srhandler

@@ -46,7 +46,6 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Z"
       modifiers: ["command", "shift"]
-      modifiers: ["command"]
     ]
   "tarp":
     kind: "action"
