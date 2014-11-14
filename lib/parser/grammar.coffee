@@ -66,8 +66,19 @@ class @Grammar
         skyzoob: "Z",
       }
 
+
       function makeCapitalLetter (letter) {
         return capitalLetters[letter];
+      }
+
+      var grammarTransforms = {
+        shark: function(argument) {
+          return Scripts.levenshteinMatch(CommandoSettings.abbreviations, argument);
+        }
+      }
+
+      function grammarTransform (name, arguments) {
+        return grammarTransforms[name](arguments);
       }
     }
 
@@ -90,7 +101,7 @@ class @Grammar
     #{@aliases()}
 
     textArgument
-      = (capitalLetter / word)+
+      = (nestableTextCommand / capitalLetter / word)+
 
     numberCaptureCommand
       = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
@@ -127,6 +138,12 @@ class @Grammar
         "skyverge" / "skywomp" / "skytrex" / "skyang" / "skyzoob"
       ) ss {return makeCapitalLetter(letter);}
    
+    nestableTextIdentifier
+      = "shark"
+
+    nestableTextCommand
+      = identifier:nestableTextIdentifier ss arguments:(capitalLetter / word)
+      {return grammarTransform(identifier, arguments);}
 
     s = " "*
 
