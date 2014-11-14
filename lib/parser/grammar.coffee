@@ -28,15 +28,6 @@ class @Grammar
     results.join("\n")
   build: -> """
     {
-      function makeInteger(o) {
-        return parseInt(o.join(""), 10);
-      }
-
-      function sumArray (array) {
-        for (var i = 0, sum = 0; i < array.length; sum += array[i++]);
-        return sum;
-      }
-
       var capitalLetters = {
         skyarch: "A",
         skybrov: "B",
@@ -66,20 +57,30 @@ class @Grammar
         skyzoob: "Z",
       }
 
-
-      function makeCapitalLetter (letter) {
-        return capitalLetters[letter];
-      }
-
       var grammarTransforms = {
         shark: function(argument) {
           return Scripts.levenshteinMatch(CommandoSettings.abbreviations, argument);
         }
       }
 
+      function makeCapitalLetter (letter) {
+        return capitalLetters[letter];
+      }
+
+
       function grammarTransform (name, arguments) {
         return grammarTransforms[name](arguments);
       }
+
+      function makeInteger(textArray) {
+        return parseInt(textArray.join(""), 10);
+      }
+
+      function sumArray (array) {
+        for (var i = 0, sum = 0; i < array.length; sum += array[i++]);
+        return sum;
+      }
+
     }
 
     start
