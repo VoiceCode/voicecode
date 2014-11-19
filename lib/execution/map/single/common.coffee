@@ -114,3 +114,13 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Escape"
     ]
+  "chomlug":
+    kind: "action"
+    grammarType: "individual"
+    description: "press escape"
+    actions: [
+      kind: "key"
+      key: "L"
+      modifiers: ["command"]
+    ]
+

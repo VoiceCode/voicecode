@@ -57,6 +57,7 @@
     directory: "dir"
     divider: "div"
     execute: "exec"
+    favorite: "fav"
     function: "func"
     initialize: "init"
     integer: "int"

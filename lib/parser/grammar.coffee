@@ -12,7 +12,10 @@ class @Grammar
     results = []
     _.each keys, (name) ->
       if Commands.mapping[name].aliases?.length
-        results.push name
+        if name is "."
+          results.push "dot"
+        else
+          results.push name
       else
         results.push "\"#{name}\""
     results.join(' / ')
@@ -23,7 +26,11 @@ class @Grammar
         alternates = _.map command.aliases, (alt) ->
           "'#{alt}'"
         alternates.push "'#{name}'"
-        aliasLine = "#{name} = (#{alternates.join(" / ")}) {return '#{name}';}"
+        normalName = if name is "."
+          "dot"
+        else
+          name
+        aliasLine = "#{normalName} = (#{alternates.join(" / ")}) {return '#{name}';}"
         results.push aliasLine
     results.join("\n")
   build: -> """

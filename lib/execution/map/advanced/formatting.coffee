@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
+    aliases: ["sharks"]
     contextSensitive: true
     actions: [
       kind: "script"

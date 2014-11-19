@@ -30,6 +30,7 @@
       ""
     """
     tell application "#{CommandoSettings.defaultBrowser}" to activate
+    delay 0.2
     tell application "System Events"
     keystroke "t" using {command down}
     #{keystroke}

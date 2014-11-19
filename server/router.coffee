@@ -7,7 +7,7 @@ RESTstop.add "miss/:namespace", ->
   # the space at the end is important! (For parsing, makes it simpler)
   phrase = "#{@params.namespace} "
   chain = new Commands.Chain(phrase)
-  chain.execute(false)
+  results = chain.execute(false)
   {}
 
 RESTstop.add ":namespace/:body?", ->
@@ -15,7 +15,7 @@ RESTstop.add ":namespace/:body?", ->
   # the space at the end is important! (For parsing, makes it simpler)
   phrase = "#{@params.namespace} #{@params.body || ""} "
   chain = new Commands.Chain(phrase)
-  chain.execute(true)
+  results = chain.execute(true)
 
   if Meteor.settings.showRecognition
     notice ="""osascript <<EOD
@@ -25,3 +25,5 @@ RESTstop.add ":namespace/:body?", ->
     Shell.exec notice, async: true
     
   {}
+
+

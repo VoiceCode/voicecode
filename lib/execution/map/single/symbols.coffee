@@ -2,6 +2,7 @@ _.extend Commands.mapping,
   ".":
     kind: "action"
     grammarType: "individual"
+    aliases: ["dot"]
     actions: [
       kind: "key"
       key: "Period"
@@ -221,6 +222,7 @@ _.extend Commands.mapping,
   "swipe":
     kind: "action"
     grammarType: "individual"
+    aliases: ["swiped"]
     actions: [
       kind: "keystroke"
       keystroke: ", "

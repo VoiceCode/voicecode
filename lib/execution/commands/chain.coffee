@@ -19,7 +19,7 @@ class Commands.Chain
       else
         console.log "missed: #{@phrase}"
       # returned for inspection
-      {interpretation: results, generated: appleScript}
+      Commands.previous = {interpretation: results, generated: combined}
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD
     #{content}
@@ -31,3 +31,5 @@ class Commands.Chain
       Shell.exec command, async: true
     else
       command
+
+
