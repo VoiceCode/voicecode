@@ -43,12 +43,12 @@
     keystroke "t" using {command down}
     end tell
     """
-  insertAbbreviation: (name) ->
+  insertAbbreviation: (name, prepend="", append="") ->
     abbreviation = Scripts.levenshteinMatch CommandoSettings.abbreviations, name
     keystroke = if name.length and abbreviation?
       """
       tell application "System Events"
-      keystroke "#{abbreviation}"
+      keystroke "#{prepend}#{abbreviation}#{append}"
       end tell
       """
     else
@@ -144,6 +144,14 @@
     repeat (results + #{value} + #{value} - 1) times
     key code "125" using {shift down}
     end repeat
+    end tell
+    """
+  singleLetter: (letter, more) ->
+    extras = more or []
+    letters = "#{letter}#{extras.join('')}"
+    """
+    tell application "System Events"
+    keystroke "#{letters}"
     end tell
     """
     

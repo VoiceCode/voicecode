@@ -40,6 +40,7 @@
     standout: "stdout"
     administrator: "admin"
     administrators: "admins"
+    alternate: "alt"
     application: "app"
     applications: "apps"
     argument: "arg"
@@ -59,6 +60,7 @@
     execute: "exec"
     favorite: "fav"
     function: "func"
+    image: "img"
     initialize: "init"
     integer: "int"
     iterate: "iter"
@@ -88,3 +90,6 @@
     utility: "util"
     value: "val"
     variable: "var"
+    # multi word abbreviations
+    "stripe test card": "4242424242424242"
+    "my phone": "206-747-3612"

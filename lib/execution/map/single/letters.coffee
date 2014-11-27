@@ -224,7 +224,7 @@
   #     key: "Y"
   #     modifiers: ["shift"]
   #   ]
-  # "skyzoob":
+  # "skyzooch":
   #   kind: "action"
   #   grammarType: "individual"
   #   description: "open drop-down menu"

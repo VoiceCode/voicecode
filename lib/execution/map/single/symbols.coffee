@@ -45,6 +45,19 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Left"
     ]
+  "prexcoif":
+    kind: "action"
+    grammarType: "individual"
+    actions: [
+      kind: "keystroke"
+      keystroke: "(\"\")"
+    ,
+      kind: "key"
+      key: "Left"
+    ,
+      kind: "key"
+      key: "Left"
+    ]
   "prex":
     kind: "action"
     grammarType: "individual"
@@ -54,6 +67,13 @@ _.extend Commands.mapping,
     ,
       kind: "key"
       key: "Left"
+    ]
+  "prekris":
+    kind: "action"
+    grammarType: "individual"
+    actions: [
+      kind: "keystroke"
+      keystroke: "()"
     ]
   "brax":
     kind: "action"
@@ -174,6 +194,7 @@ _.extend Commands.mapping,
   "posh":
     kind: "action"
     grammarType: "individual"
+    aliases: ["pash"]
     actions: [
       kind: "keystroke"
       keystroke: "''"
@@ -222,7 +243,7 @@ _.extend Commands.mapping,
   "swipe":
     kind: "action"
     grammarType: "individual"
-    aliases: ["swiped"]
+    aliases: ["swiped", "swipes"]
     actions: [
       kind: "keystroke"
       keystroke: ", "

@@ -61,7 +61,7 @@ class @Grammar
         skywomp: "W",
         skytrex: "X",
         skyang: "Y",
-        skyzoob: "Z",
+        skyzooch: "Z",
       }
 
       var grammarTransforms = {
@@ -143,7 +143,7 @@ class @Grammar
         "skyarch" / "skybrov" / "skychar" / "skydell" / "skyetch" / "skyfomp" / "skygoof" / 
         "skyhark" / "skyice" / "skyjinks" / "skykoop" / "skylug" / "skymowsh" / "skynerb" /
         "skyork" / "skypooch" / "skyquash" / "skyrosh" / "skysouk" / "skyteek" / "skyunks" /
-        "skyverge" / "skywomp" / "skytrex" / "skyang" / "skyzoob"
+        "skyverge" / "skywomp" / "skytrex" / "skyang" / "skyzooch"
       ) ss {return makeCapitalLetter(letter);}
    
     nestableTextIdentifier
@@ -157,7 +157,7 @@ class @Grammar
 
     ss = " "+
 
-    identifier = textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / "one" / "twah"
+    identifier = textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / "one" / "twah" / "quads"
 
     word = !identifier text:([a-z]i / "." / "'" / "-")+ ss {return text.join('')}
 
@@ -168,11 +168,11 @@ class @Grammar
       = digits:[0-9]+ s {return makeInteger(digits);}
 
     spokenInteger
-      = components:(oneThousand / oneHundred / one / two / four / integer)+
+      = components:(oneThousand / oneHundred / one / two / four / quads / integer)+
       {return sumArray(components);}
 
     exactInteger
-      = components:(oneThousand / oneHundred / one / twah / integer)+
+      = components:(oneThousand / oneHundred / one / twah / quads / integer)+
       {return sumArray(components);}
 
     oneThousand
@@ -192,5 +192,8 @@ class @Grammar
 
     four
       = "for" s {return 4;}
+
+    quads
+      = "quads" s {return 4;}
 
     """

@@ -30,6 +30,11 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "@camelCaseWithAtSign"
     transform: "@camelCase"
+  "dockmel":
+    kind: "text"
+    grammarType: "textCapture"
+    description: "@camelCaseWithAtSign"
+    transform: ".camelCase"
   "deznik":
     kind: "text"
     grammarType: "textCapture"

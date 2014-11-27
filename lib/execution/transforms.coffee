@@ -59,6 +59,8 @@
     ).join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".")
   "@camelCase": (textArray) ->
     "@" + Transforms.camel(textArray)
+  ".camelCase": (textArray) ->
+    "." + Transforms.camel(textArray)
   firstLetters: (textArray) ->
     _.map(textArray, (item, index) ->
       item.charAt(0)

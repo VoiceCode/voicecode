@@ -48,6 +48,19 @@ _.extend Commands.mapping,
       key: "S"
       modifiers: ["command"]
     ]
+  "stooshwick":
+    kind: "action"
+    grammarType: "individual"
+    description: "copy whatever is selected then switch applications"
+    actions: [
+      kind: "key"
+      key: "C"
+      modifiers: ["command"]
+    ,
+      kind: "key"
+      key: "Tab"
+      modifiers: ["command"]
+    ]
   "stoosh":
     kind: "action"
     grammarType: "individual"
@@ -81,7 +94,8 @@ _.extend Commands.mapping,
     ]
   "totch":
     kind: "action"
-    grammarType: "individual"
+    grammarType: "numberCapture"
+    repeatable: true
     description: "close a window or tab"
     actions: [
       kind: "key"
