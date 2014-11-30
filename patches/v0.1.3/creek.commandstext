@@ -1,0 +1,83 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
+
+<database>
+    <databaseInfo>
+        <version>134481920</version>
+        <UUID>B71001E2-BB64-4148-848B-BE9CA08A1AD6</UUID>
+        <nextObjectID>104</nextObjectID>
+        <metadata>
+            <plist version="1.0">
+                <dict>
+                    <key>NSPersistenceFrameworkVersion</key>
+                    <integer>526</integer>
+                    <key>NSStoreModelVersionHashes</key>
+                    <dict>
+                        <key>action</key>
+                        <data>
+		Gl79yicU/qMmmjW+02T6r/N/3wY/MXt1/ETG6BgiQvk=
+		</data>
+                        <key>command</key>
+                        <data>
+		LnTEAxQizumf4LEx7vWu/AEuw8pYLvlU+A+QAxxNV1Q=
+		</data>
+                        <key>location</key>
+                        <data>
+		l1GW8zsQs6xToCTE303HdInkm0pvem69Qmej6Ixq3k4=
+		</data>
+                        <key>trigger</key>
+                        <data>
+		kWwewq0GT8KPB4ELML1wT0S2IYIZ5+/6CI0GsK9LDns=
+		</data>
+                    </dict>
+                    <key>NSStoreModelVersionHashesVersion</key>
+                    <integer>3</integer>
+                    <key>NSStoreModelVersionIdentifiers</key>
+                    <array>
+                        <string></string>
+                    </array>
+                </dict>
+            </plist>
+        </metadata>
+    </databaseInfo>
+    <object type="COMMAND" id="z102">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-900438198</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z104"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z103"></relationship>
+    </object>
+    <object type="TRIGGER" id="z103">
+        <attribute name="string" type="string">creek /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z102"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z104">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)	set space to "creek"	set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText	do shell script toExecuteend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z102"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+</database>
