@@ -2,7 +2,7 @@ Template.Commands.helpers
   numberCaptureCommands: ->
     Commands.Utility.numberCaptureCommands()
   textCaptureCommand: ->
-    Commands.Utility.textCaptureCommand()
+    Commands.Utility.textCaptureCommands()
   individualCommands: ->
     Commands.Utility.individualCommands()
   oneArgumentCommands: ->
