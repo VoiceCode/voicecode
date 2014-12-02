@@ -15,3 +15,11 @@ Commands.Utility =
     _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].grammarType is "oneArgument"
     )
+
+  addAliases: (key, aliases) ->
+    Commands.mapping[key].aliases ?= []
+    Commands.mapping[key].aliases.concat aliases
+
+  changeName: (old, newName) ->
+    Commands.mapping[newName] = Commands.mapping[old]
+    delete Commands.mapping[old]

@@ -53,6 +53,18 @@
       """
     else
       ""
+  codeSnippet: (name) ->
+    snippet = Scripts.levenshteinMatch CommandoSettings.codeSnippets, name
+    keystroke = if name.length and snippet?
+      """
+      tell application "System Events"
+      keystroke "#{snippet}"
+      delay 0.15
+      #{CommandoSettings.codeSnippetCompletionKeystroke}
+      end tell
+      """
+    else
+      ""
   levenshteinMatch: (list, term) ->
     if list[term]?
       list[term]

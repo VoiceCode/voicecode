@@ -5,7 +5,6 @@
     "amazon console": "console.aws.amazon.com"
     atmosphere: "atmospherejs.com"
     balsamic: "www.mybalsamiq.com/login"
-    chase: "chase.com"
     cloudflare: "www.cloudflare.com"
     craigslist: "craigslist.com"
     github: "github.com"
@@ -92,4 +91,35 @@
     variable: "var"
     # multi word abbreviations
     "stripe test card": "4242424242424242"
-    "my phone": "206-747-3612"
+  codeSnippets:
+    "if else": "ife"
+    if: "if"
+    switch: "swi"
+    for: "for"
+    log: "log"
+    else: "el"
+    "else if": "elif"
+    require: "req"
+    ternary: "ter"
+    "try catch": "try"
+    unless: "unl"
+    class: "cla"
+    define: "def"
+    "define initializer": "defi"
+    "define self": "defs"
+    "while": "while"
+    "each": "ea"
+    "each pair": "eap"
+    "each with index": "eawi"
+    "find all": "fina"
+  # this can be changed. 48 = TAB, 36 = ENTER, etc
+  codeSnippetCompletionKeystroke: "key code 48"
+
+    
+            
+
+    
+      
+    
+
+
