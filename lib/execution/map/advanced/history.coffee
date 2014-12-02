@@ -7,6 +7,5 @@ _.extend Commands.mapping,
     actions: [
       kind: "script"
       script: (input) ->
-        console.log @PreviousCommand
         Commands.previous.generated
     ]

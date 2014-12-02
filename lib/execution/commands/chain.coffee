@@ -17,7 +17,7 @@ class Commands.Chain
       if shouldInvoke
         @invokeShell appleScript
       else
-        console.log "missed: #{@phrase}"
+        # console.log "missed: #{@phrase}"
       # returned for inspection
       Commands.previous = {interpretation: results, generated: combined}
   makeAppleScriptCommand: (content) ->
