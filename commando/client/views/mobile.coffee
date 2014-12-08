@@ -1,7 +1,7 @@
 Template.Mobile.events
   'click #interpret': (event, template) ->
     phrase = template.find('#phrase').value
-    alert("boom")
+    # alert("boom")
     Meteor.call "execute", "#{phrase} "
   'input #phrase': (event, template) ->
     phrase = event.target.value
