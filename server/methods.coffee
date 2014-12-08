@@ -5,3 +5,7 @@
 Meteor.methods
 	parseGeneratorString: ->
 		ParseGenerator.string
+
+	execute: (phrase) ->
+		chain = new Commands.Chain(phrase)
+		results = chain.execute(true)

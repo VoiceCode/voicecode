@@ -1,0 +1,9 @@
+template(name="Mobile")
+  .container
+    h3 Speak into the textbox to control your computer!
+    .row
+      .col.col-md-6
+        textarea(id="phrase" class="form-control" rows="2")
+        br
+        a(href="#" id="interpret" class="btn btn-success btn-block") Execute
+        span= currentPhrase

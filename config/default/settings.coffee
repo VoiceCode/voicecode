@@ -34,6 +34,8 @@
     tune: "iTunes"
     preview: "Preview"
     sublime: "Sublime Text"
+    activity: "Activity Monitor"
+    safari: "Safari"
   abbreviations:
     standing: "stdin"
     standout: "stdout"
@@ -78,6 +80,7 @@
     reference: "ref"
     references: "refs"
     request: "req"
+    result: "res"
     revision: "rev"
     source: "src"
     standard: "std"
