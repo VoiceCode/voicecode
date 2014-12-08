@@ -1,0 +1,17 @@
+# examples of words you might want to add into dragon's vocabulary apart from voicecode
+
+concat
+params
+param
+params
+github
+
+
+# examples of words that are hard for dragon to distinguish, so we add an alternate pronunciation
+
+length: lanker
+width: wideth
+height: hideth
+null: nully
+nil: nilly
+git: jitter
