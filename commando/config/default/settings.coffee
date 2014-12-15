@@ -58,6 +58,7 @@
     develop: "dev"
     directory: "dir"
     divider: "div"
+    document: "doc"
     execute: "exec"
     favorite: "fav"
     function: "func"

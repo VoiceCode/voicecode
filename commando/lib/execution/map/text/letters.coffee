@@ -30,7 +30,8 @@ _.each letters, (value, key) ->
 	Commands.mapping[value] = 
     kind: "action"
     grammarType: "textCapture"
-    description: "Enters a single letter optionally followed by more"
+    description: "Enters the single letter: #{key}"
+    tags: ["letter"]
     actions: [
       kind: "script"
       script: (input) ->

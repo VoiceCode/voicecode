@@ -1,27 +1,53 @@
 _.extend Commands.mapping,
-  ".":
+  "dot":
     kind: "action"
     grammarType: "individual"
-    aliases: ["dot"]
+    aliases: ["."]
     actions: [
       kind: "key"
       key: "Period"
     ]
-  "/":
+  "star":
     kind: "action"
     grammarType: "individual"
+    aliases: ["*"]
     actions: [
-      kind: "key"
-      key: "Slash"
+      kind: "keystroke"
+      keystroke: "*"
     ]
   "slash":
     kind: "action"
     grammarType: "individual"
+    aliases: ["/"]
     actions: [
       kind: "key"
       key: "Slash"
     ]
-  "quals":
+  "comma":
+    kind: "action"
+    grammarType: "individual"
+    aliases: [","]
+    actions: [
+      kind: "key"
+      key: "Comma"
+    ]
+  "tilde":
+    kind: "action"
+    grammarType: "individual"
+    aliases: ["~"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "~"
+    ]
+  "colon":
+    kind: "action"
+    grammarType: "individual"
+    aliases: [":"]
+    actions: [
+      kind: "keystroke"
+      keystroke: ":"
+    ]
+  "equeft":
     kind: "action"
     grammarType: "individual"
     actions: [
@@ -459,7 +485,7 @@ _.extend Commands.mapping,
       kind: "keystroke"
       keystroke: " % "
     ]
-  "riskoosh":
+  "chriskoosh":
     kind: "action"
     grammarType: "individual"
     actions: [
@@ -483,6 +509,13 @@ _.extend Commands.mapping,
       kind: "keystroke"
       keystroke: "<"
     ]
+  "declangle":
+    kind: "action"
+    grammarType: "individual"
+    actions: [
+      kind: "keystroke"
+      keystroke: " < "
+    ]
   "langlang":
     kind: "action"
     grammarType: "individual"
@@ -498,6 +531,13 @@ _.extend Commands.mapping,
       kind: "keystroke"
       keystroke: ">"
     ]
+  "derangle":
+    kind: "action"
+    grammarType: "individual"
+    actions: [
+      kind: "keystroke"
+      keystroke: " > "
+    ]
   "rangrang":
     kind: "action"
     grammarType: "individual"
@@ -505,6 +545,20 @@ _.extend Commands.mapping,
     actions: [
       kind: "keystroke"
       keystroke: ">>"
+    ]
+  "precorp":
+    kind: "action"
+    grammarType: "individual"
+    actions: [
+      kind: "keystroke"
+      keystroke: "("
+    ]
+  "prekose":
+    kind: "action"
+    grammarType: "individual"
+    actions: [
+      kind: "keystroke"
+      keystroke: ")"
     ]
   "brackorp":
     kind: "action"

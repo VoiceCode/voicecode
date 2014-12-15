@@ -7,6 +7,10 @@ Template.Commands.helpers
     Commands.Utility.individualCommands()
   oneArgumentCommands: ->
     Commands.Utility.oneArgumentCommands()
+  letterCommands: ->
+    Commands.Utility.letterCommands()
+  numberCommands: ->
+    Commands.Utility.numberCommands()
 
 Template.CommandSummaryRow.helpers
   isAction: ->

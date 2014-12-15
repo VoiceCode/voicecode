@@ -1,5 +1,5 @@
 _.extend Commands.mapping,
-  "shark":
+  "frank":
     kind: "action"
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
@@ -10,7 +10,7 @@ _.extend Commands.mapping,
       script: (input) ->
         Scripts.insertAbbreviation((input or []).join(" "))
     ]
-  "skooshark":
+  "skoofrank":
     kind: "action"
     grammarType: "textCapture"
     description: "inserts a common abbreviation preceded by a space"

@@ -3,12 +3,14 @@ Template.Utility.helpers
     name = Session.get("ChooseCommand.current") or "command"
     command = new Commands.Base(name, "")
     commandText = command.generateBaseCommand()
+    space = command.info?.namespace or name
+
     if command.info.contextSensitive
       """
       on srhandler(vars)
         set dictatedText to (varText of vars)
         set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
-        set space to "#{name}"
+        set space to "#{space}"
         set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
         do shell script toExecute
       end srhandler
@@ -19,11 +21,11 @@ Template.Utility.helpers
         set dictatedText to (varText of vars)
         if dictatedText = "" then
         #{commandText}
-        set toExecute to "curl http://commando:5000/parse/miss/#{name}"
+        set toExecute to "curl http://commando:5000/parse/miss/#{space}"
         do shell script toExecute
         else
         set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
-        set space to "#{name}"
+        set space to "#{space}"
         set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
         do shell script toExecute
         end if

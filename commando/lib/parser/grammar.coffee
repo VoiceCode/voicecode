@@ -65,7 +65,7 @@ class @Grammar
       }
 
       var grammarTransforms = {
-        shark: function(argument) {
+        frank: function(argument) {
           return Scripts.levenshteinMatch(CommandoSettings.abbreviations, argument);
         }
       }
@@ -147,7 +147,7 @@ class @Grammar
       ) ss {return makeCapitalLetter(letter);}
    
     nestableTextIdentifier
-      = "shark"
+      = "frank"
 
     nestableTextCommand
       = identifier:nestableTextIdentifier ss arguments:(capitalLetter / word)
@@ -168,12 +168,14 @@ class @Grammar
       = digits:[0-9]+ s {return makeInteger(digits);}
 
     spokenInteger
-      = components:(oneThousand / oneHundred / one / two / four / quads / integer)+
-      {return sumArray(components);}
+      = components:(oneThousand / oneHundred / one / two / four / quads / zero / integer)+
+      // {return sumArray(components);}
+      {return components.join('');}
 
     exactInteger
-      = components:(oneThousand / oneHundred / one / twah / quads / integer)+
-      {return sumArray(components);}
+      = components:(oneThousand / oneHundred / one / twah / quads / zero / integer)+
+      // {return sumArray(components);}
+      {return components.join('');}
 
     oneThousand
       = "one thousand" s {return 1000;}
@@ -195,5 +197,8 @@ class @Grammar
 
     quads
       = "quads" s {return 4;}
+
+    zero
+      = "oh" s {return 0;}
 
     """

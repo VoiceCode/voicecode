@@ -87,6 +87,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "cut whatever is selected"
+    aliases: ["snatched"]
     actions: [
       kind: "key"
       key: "X"
@@ -136,5 +137,24 @@ _.extend Commands.mapping,
       kind: "key"
       key: "L"
       modifiers: ["command"]
+    ]
+  "storky":
+    kind: "action"
+    grammarType: "individual"
+    description: "press the delete key twice (non-repeatable, for when you need to enter a number afterwards)"
+    actions: [
+      kind: "key"
+      key: "Delete"
+    ,
+      kind: "key"
+      key: "Delete"
+    ]
+  "stork":
+    kind: "action"
+    grammarType: "individual"
+    description: "press the delete key (non-repeatable, for when you need to enter a number afterwards)"
+    actions: [
+      kind: "key"
+      key: "Delete"
     ]
 

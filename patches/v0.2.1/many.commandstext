@@ -1,0 +1,763 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
+
+<database>
+    <databaseInfo>
+        <version>134481920</version>
+        <UUID>8107CAC5-6405-4848-AAC1-F8BA05E91D48</UUID>
+        <nextObjectID>155</nextObjectID>
+        <metadata>
+            <plist version="1.0">
+                <dict>
+                    <key>NSPersistenceFrameworkVersion</key>
+                    <integer>526</integer>
+                    <key>NSStoreModelVersionHashes</key>
+                    <dict>
+                        <key>action</key>
+                        <data>
+		Gl79yicU/qMmmjW+02T6r/N/3wY/MXt1/ETG6BgiQvk=
+		</data>
+                        <key>command</key>
+                        <data>
+		LnTEAxQizumf4LEx7vWu/AEuw8pYLvlU+A+QAxxNV1Q=
+		</data>
+                        <key>location</key>
+                        <data>
+		l1GW8zsQs6xToCTE303HdInkm0pvem69Qmej6Ixq3k4=
+		</data>
+                        <key>trigger</key>
+                        <data>
+		kWwewq0GT8KPB4ELML1wT0S2IYIZ5+/6CI0GsK9LDns=
+		</data>
+                    </dict>
+                    <key>NSStoreModelVersionHashesVersion</key>
+                    <integer>3</integer>
+                    <key>NSStoreModelVersionIdentifiers</key>
+                    <array>
+                        <string></string>
+                    </array>
+                </dict>
+            </plist>
+        </metadata>
+    </databaseInfo>
+    <object type="TRIGGER" id="z102">
+        <attribute name="string" type="string">comma /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z121"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z103">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then				tell application "System Events"			keystroke "@"			delay 0.02		end tell		set toExecute to "curl http://commando:5000/parse/miss/lowcram"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "lowcram"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z132"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z104">
+        <attribute name="string" type="string">decram /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z119"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z105">
+        <attribute name="string" type="string">prekose /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z153"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z106">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke "~"			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/tilde"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "tilde"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z146"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z107">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-899555540</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z152"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z128"></relationship>
+    </object>
+    <object type="COMMAND" id="z108">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898518686</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z154"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z129"></relationship>
+    </object>
+    <object type="TRIGGER" id="z109">
+        <attribute name="string" type="string">declangle /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z124"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z110">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898701401</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z112"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z136"></relationship>
+    </object>
+    <object type="ACTION" id="z111">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			key code "124"		end tell		delay 0.01				tell application "System Events"			keystroke " "			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/chriskoosh"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "chriskoosh"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z140"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z112">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke " "			delay 0.01			keystroke "\u3e00"			delay 0.01			keystroke " "			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/derangle"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "derangle"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUA
+Bg0ABQACaQAAAAAAAwAHAAgNAAcAA0kAAAAAAAD//gAJ//0L//4ADTAACXNyaGFuZGxlcgAAAgAJAAIACv/8DQAKAAFvAAAAAAAA//sL//sACDAABHZhcnMAAAL//AAAAv/9AAANAAgAAWsAAAAAAGQACwIACwACAAwADQ0ADAACcgAAAAAABQAOAA8NAA4AA2wABQAAAAMAEP/6//kNABAAAm4AAAAAAAMAEQASDQARAAFvAAAAAQAD//gL//gAEjAAB3ZhcnRleHQAB3ZhclRleHQNABIAAW8AAAAAAAH/9wv/9wAIMAAEdmFycwAAAf/6AAAB//kAAA0ADwABbwAAAAAAAP/2C//2ABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAIADQACABP/9Q0AEwAEWgAAAAYAZAAUABX/9AAWDQAUAAI9AAAABgAJABcAGA0AFwABbwAAAAYAB//zC//zABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dA0AGAABbQAAAAcACAAZDgAZAAGxABoRABoAAA0AFQABawAAAAwAPgAbAgAbAAIAHAAdDQAcAAJPAAAADAA0AB4AHw0AHgABawAAABAAMwAgAgAgAAIAIQAiDQAhAANJAAIAEAAV//IAI//xCv/yABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAjAAFtAAAAEAARACQOACQAAbEAJREAJQACACAC//EAAAIAIgACACYAJw0AJgADSQACABYAG//wACj/7wr/8AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AKAABbQAAABYAFwApCAApAAg/hHrhR64UewL/7wAAAgAnAAIAKgArDQAqAANJAAIAHAAh/+4ALP/tCv/uABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAsAAFtAAAAHAAdAC0OAC0AAbEALhEALgACAD4C/+0AAAIAKwACAC8AMA0ALwADSQACACIAJ//sADH/6wr/7AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AMQABbQAAACIAIwAyCAAyAAg/hHrhR64UewL/6wAAAgAwAAIAMwA0DQAzAANJAAIAKAAt/+oANf/pCv/qABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQA1AAFtAAAAKAA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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z110"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z113">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-900882588</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z123"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z141"></relationship>
+    </object>
+    <object type="COMMAND" id="z114">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-901895558</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z139"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z117"></relationship>
+    </object>
+    <object type="TRIGGER" id="z115">
+        <attribute name="string" type="string">chriskoosh /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z140"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z116">
+        <attribute name="string" type="string">cram /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z126"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z117">
+        <attribute name="string" type="string">equeft /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z114"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z118">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898510753</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z148"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z127"></relationship>
+    </object>
+    <object type="COMMAND" id="z119">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-901813177</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z135"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z104"></relationship>
+    </object>
+    <object type="TRIGGER" id="z120">
+        <attribute name="string" type="string">storky /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z125"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z121">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898519124</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z150"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z102"></relationship>
+    </object>
+    <object type="TRIGGER" id="z122">
+        <attribute name="string" type="string">precorp /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z137"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z123">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)	set space to "frank"	set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText	do shell script toExecuteend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z113"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z124">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898701533</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z134"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z109"></relationship>
+    </object>
+    <object type="COMMAND" id="z125">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898510716</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z155"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z120"></relationship>
+    </object>
+    <object type="COMMAND" id="z126">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-901798707</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z149"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z116"></relationship>
+    </object>
+    <object type="TRIGGER" id="z127">
+        <attribute name="string" type="string">stork /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z118"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z128">
+        <attribute name="string" type="string">skoofrank /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z107"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z129">
+        <attribute name="string" type="string">star /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z108"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z130">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke ":"			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/colon"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "colon"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z147"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z131">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then				tell application "System Events"						delay 0.02		end tell		set toExecute to "curl http://commando:5000/parse/miss/criffed"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "criffed"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z138"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z132">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-901574475</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z103"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z142"></relationship>
+    </object>
+    <object type="TRIGGER" id="z133">
+        <attribute name="string" type="string">tilde /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z146"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z134">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke " "			delay 0.01			keystroke "\u3c00"			delay 0.01			keystroke " "			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/declangle"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "declangle"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUA
+Bg0ABQACaQAAAAAAAwAHAAgNAAcAA0kAAAAAAAD//gAJ//0L//4ADTAACXNyaGFuZGxlcgAAAgAJAAIACv/8DQAKAAFvAAAAAAAA//sL//sACDAABHZhcnMAAAL//AAAAv/9AAANAAgAAWsAAAAAAGQACwIACwACAAwADQ0ADAACcgAAAAAABQAOAA8NAA4AA2wABQAAAAMAEP/6//kNABAAAm4AAAAAAAMAEQASDQARAAFvAAAAAQAD//gL//gAEjAAB3ZhcnRleHQAB3ZhclRleHQNABIAAW8AAAAAAAH/9wv/9wAIMAAEdmFycwAAAf/6AAAB//kAAA0ADwABbwAAAAAAAP/2C//2ABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAIADQACABP/9Q0AEwAEWgAAAAYAZAAUABX/9AAWDQAUAAI9AAAABgAJABcAGA0AFwABbwAAAAYAB//zC//zABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dA0AGAABbQAAAAcACAAZDgAZAAGxABoRABoAAA0AFQABawAAAAwAPgAbAgAbAAIAHAAdDQAcAAJPAAAADAA0AB4AHw0AHgABawAAABAAMwAgAgAgAAIAIQAiDQAhAANJAAIAEAAV//IAI//xCv/yABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAjAAFtAAAAEAARACQOACQAAbEAJREAJQACACAC//EAAAIAIgACACYAJw0AJgADSQACABYAG//wACj/7wr/8AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AKAABbQAAABYAFwApCAApAAg/hHrhR64UewL/7wAAAgAnAAIAKgArDQAqAANJAAIAHAAh/+4ALP/tCv/uABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAsAAFtAAAAHAAdAC0OAC0AAbEALhEALgACADwC/+0AAAIAKwACAC8AMA0ALwADSQACACIAJ//sADH/6wr/7AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AMQABbQAAACIAIwAyCAAyAAg/hHrhR64UewL/6wAAAgAwAAIAMwA0DQAzAANJAAIAKAAt/+oANf/pCv/qABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQA1AAFtAAAAKAA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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z124"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z135">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke " "		end tell		tell application "System Events"						delay 0.02		end tell		set toExecute to "curl http://commando:5000/parse/miss/decram"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "decram"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z119"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z136">
+        <attribute name="string" type="string">derangle /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z110"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z137">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898206716</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z143"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z122"></relationship>
+    </object>
+    <object type="COMMAND" id="z138">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-901744909</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z131"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z145"></relationship>
+    </object>
+    <object type="ACTION" id="z139">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke " "			delay 0.01			keystroke "="			delay 0.01			keystroke " "			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/equeft"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "equeft"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUA
+Bg0ABQACaQAAAAAAAwAHAAgNAAcAA0kAAAAAAAD//gAJ//0L//4ADTAACXNyaGFuZGxlcgAAAgAJAAIACv/8DQAKAAFvAAAAAAAA//sL//sACDAABHZhcnMAAAL//AAAAv/9AAANAAgAAWsAAAAAAGQACwIACwACAAwADQ0ADAACcgAAAAAABQAOAA8NAA4AA2wABQAAAAMAEP/6//kNABAAAm4AAAAAAAMAEQASDQARAAFvAAAAAQAD//gL//gAEjAAB3ZhcnRleHQAB3ZhclRleHQNABIAAW8AAAAAAAH/9wv/9wAIMAAEdmFycwAAAf/6AAAB//kAAA0ADwABbwAAAAAAAP/2C//2ABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAIADQACABP/9Q0AEwAEWgAAAAYAZAAUABX/9AAWDQAUAAI9AAAABgAJABcAGA0AFwABbwAAAAYAB//zC//zABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dA0AGAABbQAAAAcACAAZDgAZAAGxABoRABoAAA0AFQABawAAAAwAPgAbAgAbAAIAHAAdDQAcAAJPAAAADAA0AB4AHw0AHgABawAAABAAMwAgAgAgAAIAIQAiDQAhAANJAAIAEAAV//IAI//xCv/yABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAjAAFtAAAAEAARACQOACQAAbEAJREAJQACACAC//EAAAIAIgACACYAJw0AJgADSQACABYAG//wACj/7wr/8AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AKAABbQAAABYAFwApCAApAAg/hHrhR64UewL/7wAAAgAnAAIAKgArDQAqAANJAAIAHAAh/+4ALP/tCv/uABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAsAAFtAAAAHAAdAC0OAC0AAbEALhEALgACAD0C/+0AAAIAKwACAC8AMA0ALwADSQACACIAJ//sADH/6wr/7AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AMQABbQAAACIAIwAyCAAyAAg/hHrhR64UewL/6wAAAgAwAAIAMwA0DQAzAANJAAIAKAAt/+oANf/pCv/qABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQA1AAFtAAAAKAApADYOADYAAbEANxEANwACACAC/+kAAAIANAACADj/6A0AOAADSQACAC4AM//nADn/5gr/5wAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AOQABbQAAAC4ALwA6CAA6AAg/lHrhR64UewL/5gAAAv/oAAANAB8AAW0AAAAMAA0AOw8AOwHwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABzZXZzAAIBAGFsaXMAAAAAAZIAAgABDE1hY2ludG9zaCBIRAAAAAAAAAAAAAAAAAAAAMzLqBRIKwAAAub17RFTeXN0ZW0gRXZlbnRzLmFwcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6xAF0DTALQAAAAAAAAAA/////wAACSAAAAAAAAAAAAAAAAAAAAAMQ29yZVNlcnZpY2VzABAACAAAzMwYlAAAABEACAAA0DUinQAAAAEADALm9e0C5vXhAub14AACAD1NYWNpbnRvc2ggSEQ6U3lzdGVtOgBMaWJyYXJ5OgBDb3JlU2VydmljZXM6AFN5c3RlbSBFdmVudHMuYXBwAAAOACQAEQBTAHkAcwB0AGUAbQAgAEUAdgBlAG4AdABzAC4AYQBwAHAADwAaAAwATQBhAGMAaQBuAHQAbwBzAGgAIABIAEQAEgAtU3lzdGVtL0xpYnJhcnkvQ29yZVNlcnZpY2VzL1N5c3RlbSBFdmVudHMuYXBwAAATAAEvAP//AAACAB0AAgA8AD0NADwAA2wAAgA1ADX/5f/k/+MB/+UAAAH/5AAAAf/jAAACAD0AAgA+AD8NAD4AAnIAAAA1ADgAQABBDQBAAAFtAAAANQA2AEIOAEIAAbEAQxEAQwBWAGMAdQByAGwAIABoAHQAdABwADoALwAvAGMAbwBtAG0AYQBuAGQAbwA6ADUAMAAwADAALwBwAGEAcgBzAGUALwBtAGkAcwBzAC8AZQBxAHUAZQBmAHQNAEEAAW8AAAAAAAD/4gv/4gAWMAAJdG9leGVjdXRlAAl0b0V4ZWN1dGUCAD8AAgBE/+ENAEQAA0kAAgA5AD7/4ABF/98K/+AAGC5zeXNvZXhlY1RFWFT//4AAAAAAAFRFWFQNAEUAAW8AAAA5ADr/3gv/3gAWMAAJdG9leGVjdXRlAAl0b0V4ZWN1dGUC/98AAAL/4QAAAv/0AAANABYAAWsAAABBAGQARgIARgACAEcASA0ARwACcgAAAEEATABJAEoNAEkAA2wABQBBAEoAS//d/9wNAEsAA0kAAgBBAEr/2wBM/9oK/9sAGC5zeXNvZXhlY1RFWFT//4AAAAAAAFRFWFQNAEwAAmIAAABBAEYATQBODQBNAAFtAAAAQQBCAE8OAE8AAbEAUBEAUACYAC8AdQBzAHIALwBiAGkAbgAvAHAAeQB0AGgAbwBuACAALQBjACAAJwBpAG0AcABvAHIAdAAgAHMAeQBzACwAIAB1AHIAbABsAGkAYgA7ACAAcAByAGkAbgB0ACAAdQByAGwAbABpAGIALgBxAHUAbwB0AGUAKABzAHkAcwAuAGEAcgBnAHYAWwAxAF0ALAAiACIAKQAnACANAE4AAm4AAABCAEUAUQBSDQBRAAExAAAAQwBF/9kK/9kABApzdHJxDQBSAAFvAAAAQgBD/9gL/9gAHDAADGRpY3RhdGVkdGV4dAAMZGljdGF0ZWRUZXh0Av/aAAAB/90AAAH/3AAADQBKAAFvAAAAAAAA/9cL/9cAGjAAC2VuY29kZWR0ZXh0AAtlbmNvZGVkVGV4dAIASAACAFMAVA0AUwACcgAAAE0AUABVAFYNAFUAAW0AAABNAE4AVw4AVwABsQBYEQBYAAwAZQBxAHUAZQBmAHQNAFYAATEAAAAAAAD/1gr/1gAECnNwYWMCAFQAAgBZAFoNAFkAAnIAAABRAF4AWwBcDQBbAAJiAAAAUQBcAF0AXg0AXQACYgAAAFEAWgBfAGANAF8AAmIAAABRAFYAYQBiDQBhAAFtAAAAUQBUAGMOAGMAAbEAZBEAZABAAGMAdQByAGwAIABoAHQAdABwADoALwAvAGMAbwBtAG0AYQBuAGQAbwA6ADUAMAAwADAALwBwAGEAcgBzAGUALw0AYgABMQAAAFQAVf/VCv/VAAQKc3BhYw0AYAABbQAAAFYAWQBlDgBlAAGxAGYRAGYAAgAvDQBeAAFvAAAAWgBb/9QL/9QAGjAAC2VuY29kZWR0ZXh0AAtlbmNvZGVkVGV4dA0AXAABbwAAAAAAAP/TC//TABYwAAl0b2V4ZWN1dGUACXRvRXhlY3V0ZQIAWgACAGf/0g0AZwADSQACAF8AZP/RAGj/0Ar/0QAYLnN5c29leGVjVEVYVP//gAAAAAAAVEVYVA0AaAABbwAAAF8AYP/PC//PABYwAAl0b2V4ZWN1dGUACXRvRXhlY3V0ZQL/0AAAAv/SAAAC//UAAAIABgACAGn/zg0AaQADbAACAAAAAP/N/8z/ywH/zQAAAf/MAAAB/8sAAAL/zgAADgACAAAPEAADAAP/ygBqAGsB/8oAABAAagAB/8kL/8kADTAACXNyaGFuZGxlcgAADgBrAAcQ/8gACP/H/8YAbABt/8UL/8gADTAACXNyaGFuZGxlcgAADv/HAAIE/8QAbgP/xAABDgBuAAEA/8ML/8MACDAABHZhcnMAAAL/xgAAEABsAAT/wv/B/8D/vwv/wgAIMAAEdmFycwAAC//BABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAv/wAAWMAAJdG9leGVjdXRlAAl0b0V4ZWN1dGUL/78AGjAAC2VuY29kZWR0ZXh0AAtlbmNvZGVkVGV4dBAAbQAS/74AGQA7ACT/vQAp/7wALQA2ADoAQv+7AE//ugBX/7kAYwBlC/++ABIwAAd2YXJ0ZXh0AAd2YXJUZXh0Cv+9ABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0Cv+8ABguc3lzb2RlbGFudWxs//+AAP//gABubWJyCv+7ABguc3lzb2V4ZWNURVhU//+AAAAAAABURVhUCv+6AAQKc3RycQr/uQAECnNwYWMR/8UAZaDgLEWxT6HhAB0AN+ISACXjagwABE/lagwABk/nagwABE/lagwABk/oagwABE/pagwABlVP6kWyT6JqDAALWQAl7KHtLCVqDAALRbNP7kXfT2EAEM8lYQARJaMlRbJPomoMAAsPAGFzY3IAAQAN+t7erQ==
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z114"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z140">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-901577288</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z111"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z115"></relationship>
+    </object>
+    <object type="TRIGGER" id="z141">
+        <attribute name="string" type="string">frank /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z113"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z142">
+        <attribute name="string" type="string">lowcram /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z132"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z143">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke "("			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/precorp"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "precorp"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z137"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z144">
+        <attribute name="string" type="string">colon /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z147"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z145">
+        <attribute name="string" type="string">criffed /!Text!/</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z138"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z146">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898518437</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z106"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z133"></relationship>
+    </object>
+    <object type="COMMAND" id="z147">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898492763</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z130"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z144"></relationship>
+    </object>
+    <object type="ACTION" id="z148">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			key code "51"		end tell		delay 0.01				set toExecute to "curl http://commando:5000/parse/miss/stork"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "stork"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z118"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z149">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then				tell application "System Events"						delay 0.02		end tell		set toExecute to "curl http://commando:5000/parse/miss/cram"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "cram"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z126"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z150">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			key code "43"		end tell		delay 0.01				set toExecute to "curl http://commando:5000/parse/miss/comma"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "comma"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z121"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z151">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke ")"			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/prekose"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "prekose"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z153"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z152">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)	set space to "skoofrank"	set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText	do shell script toExecuteend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUA
+Bg0ABQACaQAAAAAAAwAHAAgNAAcAA0kAAAAAAAD//gAJ//0L//4ADTAACXNyaGFuZGxlcgAAAgAJAAIACv/8DQAKAAFvAAAAAAAA//sL//sACDAABHZhcnMAAAL//AAAAv/9AAANAAgAAWsAAAAAACUACwIACwACAAwADQ0ADAACcgAAAAAABQAOAA8NAA4AA2wABQAAAAMAEP/6//kNABAAAm4AAAAAAAMAEQASDQARAAFvAAAAAQAD//gL//gAEjAAB3ZhcnRleHQAB3ZhclRleHQNABIAAW8AAAAAAAH/9wv/9wAIMAAEdmFycwAAAf/6AAAB//kAAA0ADwABbwAAAAAAAP/2C//2ABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAIADQACABMAFA0AEwACcgAAAAYAEQAVABYNABUAA2wABQAGAA8AF//1//QNABcAA0kAAgAGAA//8wAY//IK//MAGC5zeXNvZXhlY1RFWFT//4AAAAAAAFRFWFQNABgAAmIAAAAGAAsAGQAaDQAZAAFtAAAABgAHABsOABsAAbEAHBEAHACYAC8AdQBzAHIALwBiAGkAbgAvAHAAeQB0AGgAbwBuACAALQBjACAAJwBpAG0AcABvAHIAdAAgAHMAeQBzACwAIAB1AHIAbABsAGkAYgA7ACAAcAByAGkAbgB0ACAAdQByAGwAbABpAGIALgBxAHUAbwB0AGUAKABzAHkAcwAuAGEAcgBnAHYAWwAxAF0ALAAiACIAKQAnACANABoAAm4AAAAHAAoAHQAeDQAdAAExAAAACAAK//EK//EABApzdHJxDQAeAAFvAAAABwAI//AL//AAHDAADGRpY3RhdGVkdGV4dAAMZGljdGF0ZWRUZXh0Av/yAAAB//UAAAH/9AAADQAWAAFvAAAAAAAA/+8L/+8AGjAAC2VuY29kZWR0ZXh0AAtlbmNvZGVkVGV4dAIAFAACAB8AIA0AHwACcgAAABIAFQAhACINACEAAW0AAAASABMAIw4AIwABsQAkEQAkABIAcwBrAG8AbwBmAHIAYQBuAGsNACIAATEAAAAAAAD/7gr/7gAECnNwYWMCACAAAgAlACYNACUAAnIAAAAWAB8AJwAoDQAnAAJiAAAAFgAdACkAKg0AKQACYgAAABYAGwArACwNACsAAmIAAAAWABkALQAuDQAtAAFtAAAAFgAXAC8OAC8AAbEAMBEAMABAAGMAdQByAGwAIABoAHQAdABwADoALwAvAGMAbwBtAG0AYQBuAGQAbwA6ADUAMAAwADAALwBwAGEAcgBzAGUALw0ALgABMQAAABcAGP/tCv/tAAQKc3BhYw0ALAABbQAAABkAGgAxDgAxAAGxADIRADIAAgAvDQAqAAFvAAAAGwAc/+wL/+wAGjAAC2VuY29kZWR0ZXh0AAtlbmNvZGVkVGV4dA0AKAABbwAAAAAAAP/rC//rABYwAAl0b2V4ZWN1dGUACXRvRXhlY3V0ZQIAJgACADP/6g0AMwADSQACACAAJf/pADT/6Ar/6QAYLnN5c29leGVjVEVYVP//gAAAAAAAVEVYVA0ANAABbwAAACAAIf/nC//nABYwAAl0b2V4ZWN1dGUACXRvRXhlY3V0ZQL/6AAAAv/qAAACAAYAAgA1/+YNADUAA2wAAgAAAAD/5f/k/+MB/+UAAAH/5AAAAf/jAAAC/+YAAA4AAgAADxAAAwAD/+IANgA3Af/iAAAQADYAAf/hC//hAA0wAAlzcmhhbmRsZXIAAA4ANwAHEP/gAAj/3//eADgAOf/dC//gAA0wAAlzcmhhbmRsZXIAAA7/3wACBP/cADoD/9wAAQ4AOgABAP/bC//bAAgwAAR2YXJzAAAC/94AABAAOAAE/9r/2f/Y/9cL/9oACDAABHZhcnMAAAv/2QAcMAAMZGljdGF0ZWR0ZXh0AAxkaWN0YXRlZFRleHQL/9gAGjAAC2VuY29kZWR0ZXh0AAtlbmNvZGVkVGV4dAv/1wAWMAAJdG9leGVjdXRlAAl0b0V4ZWN1dGUQADkACP/WABv/1f/UACP/0wAvADEL/9YAEjAAB3ZhcnRleHQAB3ZhclRleHQK/9UABApzdHJxCv/UABguc3lzb2V4ZWNURVhU//+AAAAAAABURVhUCv/TAAQKc3BhYxH/3QAmoOAsRbFP4aHiLCVqDAADRbJP5EXVT+bFJecloiVFs0+jagwAAw8AYXNjcgABAA363t6t
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z107"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="COMMAND" id="z153">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-898206684</attribute>
+        <attribute name="appversion" type="int32">0</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z151"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z105"></relationship>
+    </object>
+    <object type="ACTION" id="z154">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke "*"			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/star"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "star"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUA
+Bg0ABQACaQAAAAAAAwAHAAgNAAcAA0kAAAAAAAD//gAJ//0L//4ADTAACXNyaGFuZGxlcgAAAgAJAAIACv/8DQAKAAFvAAAAAAAA//sL//sACDAABHZhcnMAAAL//AAAAv/9AAANAAgAAWsAAAAAAEgACwIACwACAAwADQ0ADAACcgAAAAAABQAOAA8NAA4AA2wABQAAAAMAEP/6//kNABAAAm4AAAAAAAMAEQASDQARAAFvAAAAAQAD//gL//gAEjAAB3ZhcnRleHQAB3ZhclRleHQNABIAAW8AAAAAAAH/9wv/9wAIMAAEdmFycwAAAf/6AAAB//kAAA0ADwABbwAAAAAAAP/2C//2ABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAIADQACABP/9Q0AEwAEWgAAAAYASAAUABX/9AAWDQAUAAI9AAAABgAJABcAGA0AFwABbwAAAAYAB//zC//zABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dA0AGAABbQAAAAcACAAZDgAZAAGxABoRABoAAA0AFQABawAAAAwAJgAbAgAbAAIAHAAdDQAcAAJPAAAADAAcAB4AHw0AHgABawAAABAAGwAgAgAgAAIAIQAiDQAhAANJAAIAEAAV//IAI//xCv/yABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAjAAFtAAAAEAARACQOACQAAbEAJREAJQACACoC//EAAAIAIgACACb/8A0AJgADSQACABYAG//vACf/7gr/7wAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AJwABbQAAABYAFwAoCAAoAAg/lHrhR64UewL/7gAAAv/wAAANAB8AAW0AAAAMAA0AKQ8AKQHwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABzZXZzAAIBAGFsaXMAAAAAAZIAAgABDE1hY2ludG9zaCBIRAAAAAAAAAAAAAAAAAAAAMzLqBRIKwAAAub17RFTeXN0ZW0gRXZlbnRzLmFwcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6xAF0DTALQAAAAAAAAAA/////wAACSAAAAAAAAAAAAAAAAAAAAAMQ29yZVNlcnZpY2VzABAACAAAzMwYlAAAABEACAAA0DUinQAAAAEADALm9e0C5vXhAub14AACAD1NYWNpbnRvc2ggSEQ6U3lzdGVtOgBMaWJyYXJ5OgBDb3JlU2VydmljZXM6AFN5c3RlbSBFdmVudHMuYXBwAAAOACQAEQBTAHkAcwB0AGUAbQAgAEUAdgBlAG4AdABzAC4AYQBwAHAADwAaAAwATQBhAGMAaQBuAHQAbwBzAGgAIABIAEQAEgAtU3lzdGVtL0xpYnJhcnkvQ29yZVNlcnZpY2VzL1N5c3RlbSBFdmVudHMuYXBwAAATAAEvAP//AAACAB0AAgAqACsNACoAA2wAAgAdAB3/7f/s/+sB/+0AAAH/7AAAAf/rAAACACsAAgAsAC0NACwAAnIAAAAdACAALgAvDQAuAAFtAAAAHQAeADAOADAAAbEAMREAMQBSAGMAdQByAGwAIABoAHQAdABwADoALwAvAGMAbwBtAG0AYQBuAGQAbwA6ADUAMAAwADAALwBwAGEAcgBzAGUALwBtAGkAcwBzAC8AcwB0AGEAcg0ALwABbwAAAAAAAP/qC//qABYwAAl0b2V4ZWN1dGUACXRvRXhlY3V0ZQIALQACADL/6Q0AMgADSQACACEAJv/oADP/5wr/6AAYLnN5c29leGVjVEVYVP//gAAAAAAAVEVYVA0AMwABbwAAACEAIv/mC//mABYwAAl0b2V4ZWN1dGUACXRvRXhlY3V0ZQL/5wAAAv/pAAAC//QAAA0AFgABawAAACkASAA0AgA0AAIANQA2DQA1AAJyAAAAKQA0ADcAOA0ANwADbAAFACkAMgA5/+X/5A0AOQADSQACACkAMv/jADr/4gr/4wAYLnN5c29leGVjVEVYVP//gAAAAAAAVEVYVA0AOgACYgAAACkALgA7ADwNADsAAW0AAAApACoAPQ4APQABsQA+EQA+AJgALwB1AHMAcgAvAGIAaQBuAC8AcAB5AHQAaABvAG4AIAAtAGMAIAAnAGkAbQBwAG8AcgB0ACAAcwB5AHMALAAgAHUAcgBsAGwAaQBiADsAIABwAHIAaQBuAHQAIAB1AHIAbABsAGkAYgAuAHEAdQBvAHQAZQAoAHMAeQBzAC4AYQByAGcAdgBbADEAXQAsACIAIgApACcAIA0APAACbgAAACoALQA/AEANAD8AATEAAAArAC3/4Qr/4QAECnN0cnENAEAAAW8AAAAqACv/4Av/4AAcMAAMZGljdGF0ZWR0ZXh0AAxkaWN0YXRlZFRleHQC/+IAAAH/5QAAAf/kAAANADgAAW8AAAAAAAD/3wv/3wAaMAALZW5jb2RlZHRleHQAC2VuY29kZWRUZXh0AgA2AAIAQQBCDQBBAAJyAAAANQA4AEMARA0AQwABbQAAADUANgBFDgBFAAGxAEYRAEYACABzAHQAYQByDQBEAAExAAAAAAAA/94K/94ABApzcGFjAgBCAAIARwBIDQBHAAJyAAAAOQBCAEkASg0ASQACYgAAADkAQABLAEwNAEsAAmIAAAA5AD4ATQBODQBNAAJiAAAAOQA8AE8AUA0ATwABbQAAADkAOgBRDgBRAAGxAFIRAFIAQABjAHUAcgBsACAAaAB0AHQAcAA6AC8ALwBjAG8AbQBtAGEAbgBkAG8AOgA1ADAAMAAwAC8AcABhAHIAcwBlAC8NAFAAATEAAAA6ADv/3Qr/3QAECnNwYWMNAE4AAW0AAAA8AD0AUw4AUwABsQBUEQBUAAIALw0ATAABbwAAAD4AP//cC//cABowAAtlbmNvZGVkdGV4dAALZW5jb2RlZFRleHQNAEoAAW8AAAAAAAD/2wv/2wAWMAAJdG9leGVjdXRlAAl0b0V4ZWN1dGUCAEgAAgBV/9oNAFUAA0kAAgBDAEj/2QBW/9gK/9kAGC5zeXNvZXhlY1RFWFT//4AAAAAAAFRFWFQNAFYAAW8AAABDAET/1wv/1wAWMAAJdG9leGVjdXRlAAl0b0V4ZWN1dGUC/9gAAAL/2gAAAv/1AAACAAYAAgBX/9YNAFcAA2wAAgAAAAD/1f/U/9MB/9UAAAH/1AAAAf/TAAAC/9YAAA4AAgAADxAAAwAD/9IAWABZAf/SAAAQAFgAAf/RC//RAA0wAAlzcmhhbmRsZXIAAA4AWQAHEP/QAAj/z//OAFoAW//NC//QAA0wAAlzcmhhbmRsZXIAAA7/zwACBP/MAFwD/8wAAQ4AXAABAP/LC//LAAgwAAR2YXJzAAAC/84AABAAWgAE/8r/yf/I/8cL/8oACDAABHZhcnMAAAv/yQAcMAAMZGljdGF0ZWR0ZXh0AAxkaWN0YXRlZFRleHQL/8gAFjAACXRvZXhlY3V0ZQAJdG9FeGVjdXRlC//HABowAAtlbmNvZGVkdGV4dAALZW5jb2RlZFRleHQQAFsAD//GABkAKQAk/8UAKP/EADD/wwA9/8IARf/BAFEAUwv/xgASMAAHdmFydGV4dAAHdmFyVGV4dAr/xQAYLnByY3NrcHJzbnVsbP//gAAAAAAAY3R4dAr/xAAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icgr/wwAYLnN5c29leGVjVEVYVP//gAAAAAAAVEVYVAr/wgAECnN0cnEK/8EABApzcGFjEf/NAEmg4CxFsU+h4QAdAB/iEgAN42oMAARP5WoMAAZVT+dFsk+iagwACFkAIemh6iwlagwACEWzT+tF3E/tzCXuJaMlRbJPomoMAAgPAGFzY3IAAQAN+t7erQ==
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z108"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z155">
+        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			key code "51"		end tell		delay 0.01				tell application "System Events"			key code "51"		end tell		delay 0.01				set toExecute to "curl http://commando:5000/parse/miss/storky"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "storky"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">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
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z125"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+</database>

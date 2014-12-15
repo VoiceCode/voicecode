@@ -3,7 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     repeatable: true
     grammarType: "numberCapture"
-    aliases: ["shocked"]
+    aliases: ["shocked", "shox"]
     description: "press the return key"
     actions: [
       kind: "key"

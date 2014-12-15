@@ -15,10 +15,18 @@ Commands.Utility =
     _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].grammarType is "oneArgument"
     )
+  numberCommands: ->
+    _.filter(_.keys(Commands.mapping), (key) ->
+      _.contains (Commands.mapping[key].tags or []), "number"
+    )
+  letterCommands: ->
+    _.filter(_.keys(Commands.mapping), (key) ->
+      _.contains (Commands.mapping[key].tags or []), "letter"
+    )
 
   addAliases: (key, aliases) ->
     Commands.mapping[key].aliases ?= []
-    Commands.mapping[key].aliases.concat aliases
+    Commands.mapping[key].aliases.push.apply(Commands.mapping[key].aliases, aliases)
 
   changeName: (old, newName) ->
     Commands.mapping[newName] = Commands.mapping[old]

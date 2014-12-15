@@ -45,6 +45,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "press the left arrow"
+    aliases: ["crimped"]
     tags: ["movement"]
     actions: [
       kind: "key"

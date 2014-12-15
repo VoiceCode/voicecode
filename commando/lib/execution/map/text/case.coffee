@@ -4,12 +4,13 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "words with spaces between"
     transform: "literal"
-  "camel":
+  "cram":
     kind: "text"
     grammarType: "textCapture"
     description: "camelCaseText"
     transform: "camel"
-  "dekmel":
+    aliases: ["crammed", "crams"]
+  "decram":
     kind: "text"
     grammarType: "textCapture"
     description: "space camelCaseText"
@@ -25,16 +26,11 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: ":snake_case_with_a_colon_at_the_front"
     transform: "rubySymbol"
-  "lowcam":
+  "lowcram":
     kind: "text"
     grammarType: "textCapture"
     description: "@camelCaseWithAtSign"
     transform: "@camelCase"
-  "dockmel":
-    kind: "text"
-    grammarType: "textCapture"
-    description: "@camelCaseWithAtSign"
-    transform: ".camelCase"
   "deznik":
     kind: "text"
     grammarType: "textCapture"
@@ -52,18 +48,12 @@ _.extend Commands.mapping,
     description: "space spinal-case-text"
     transform: "spine"
     padLeft: true
-  "chaps":
+  "criffed":
     kind: "text"
     description: "StudCaseText"
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
-  "dechups":
-    kind: "text"
-    grammarType: "textCapture"
-    description: "space StudCaseText"
-    transform: "stud"
-    padLeft: true
   "smash":
     kind: "text"
     grammarType: "textCapture"

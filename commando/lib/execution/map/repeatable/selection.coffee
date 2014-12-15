@@ -1,4 +1,14 @@
 _.extend Commands.mapping,
+  "shroomway":
+    kind: "action"
+    repeatable: true
+    grammarType: "numberCapture"
+    description: "select all text downward"
+    actions: [
+      kind: "key"
+      key: "Down"
+      modifiers: ['shift', 'command']
+    ]
   "shroom":
     kind: "action"
     repeatable: true
@@ -17,16 +27,6 @@ _.extend Commands.mapping,
     actions: [
       kind: "key"
       key: "Up"
-      modifiers: ['shift', 'command']
-    ]
-  "shroomway":
-    kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
-    description: "select all text downward"
-    actions: [
-      kind: "key"
-      key: "Down"
       modifiers: ['shift', 'command']
     ]
   "shreep":
