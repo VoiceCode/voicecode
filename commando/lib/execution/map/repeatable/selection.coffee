@@ -4,6 +4,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "select all text downward"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Down"
@@ -14,6 +15,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "shift down, select text by line downward"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Down"
@@ -24,6 +26,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "select all text upward"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Up"
@@ -34,6 +37,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "shift up, select text by line upward"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Up"
@@ -44,6 +48,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "extend selection by character to the left"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Left"
@@ -54,6 +59,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "extend selection by character to the right"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Right"
@@ -64,6 +70,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "extend selection by word to the left"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Left"
@@ -74,6 +81,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "extend selection by word to the right"
+    tags: ["selection"]
     actions: [
       kind: "key"
       key: "Right"

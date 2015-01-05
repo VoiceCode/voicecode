@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "oneArgument"
     description: "opens drop-down menu by name"
+    tags: ["application", "system"]
     actions: [
       kind: "script"
       script: (input) ->

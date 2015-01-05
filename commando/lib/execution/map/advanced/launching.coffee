@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "textCapture"
     description: "opens a website by name"
+    tags: ["system", "launching"]
     actions: [
       kind: "script"
       script: (input) ->

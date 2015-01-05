@@ -36,6 +36,8 @@
     sublime: "Sublime Text"
     activity: "Activity Monitor"
     safari: "Safari"
+    xcode: "Xcode"
+    automate: "Automator"
   abbreviations:
     standing: "stdin"
     standout: "stdout"
@@ -93,6 +95,8 @@
     utility: "util"
     value: "val"
     variable: "var"
+    increment: "inc"
+    "inc.": "inc"
     # multi word abbreviations
     "stripe test card": "4242424242424242"
   codeSnippets:

@@ -11,6 +11,11 @@ Template.Commands.helpers
     Commands.Utility.letterCommands()
   numberCommands: ->
     Commands.Utility.numberCommands()
+  tags: ->
+    Commands.Utility.allTags()
+  scopedCommands: ->
+    Session.get("commands.inScope")
+
 
 Template.CommandSummaryRow.helpers
   isAction: ->
@@ -19,6 +24,8 @@ Template.CommandSummaryRow.helpers
     Commands.mapping[@].kind is "text"
   isModifier: ->
     Commands.mapping[@].kind is "modifier"
+  name: ->
+    Commands.mapping[@].triggerPhrase or @.toString()
   kind: ->
     Commands.mapping[@].kind
   actions: ->
@@ -27,6 +34,8 @@ Template.CommandSummaryRow.helpers
     Commands.mapping[@].transform
   description: ->
     Commands.mapping[@].description
+  grammarType: ->
+    Commands.mapping[@].grammarType
   modifierText: ->
     Commands.mapping[@].modifiers.join('+')
 
@@ -43,4 +52,16 @@ Template.CommandAction.helpers
         @transform.toString()
       else
         null
-    
+
+
+Template.commandTag.events
+  "click": (event, template) ->
+    Session.set "commandTag.current", @.toString()
+    Session.set "commands.inScope", Commands.Utility.scopedCommands(Session.get("commandTag.current"))
+
+
+Template.commandTag.helpers
+  currentClass: ->
+    if Session.equals "commandTag.current", @.toString()
+      "current"
+  

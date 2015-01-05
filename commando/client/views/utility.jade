@@ -5,7 +5,7 @@ template(name="Utility")
     h2 Command Setup
     .alert Every base command word needs to be added as a command in Dragon Dictate
       | so that it knows to pass off the rest of the phrase to VoiceCode.
-      | Clicking on a command below shows the code needed to paste into Dragon. When you add a new command, come here to get the details for setting the command up in Dragon.
+      | Clicking on a command below shows the code needed to paste into Dragon. When you add a new command, come here to get the details for setting the command up in Dragon, or click the blue button below to automatically create the command in dragon's command interface
     hr
     h3 Click a command below to get its setup details
     .well
@@ -16,6 +16,8 @@ template(name="Utility")
       h3 Dragon Base Command Name
         small paste this into the [name] field. (Click in the box to select)
       pre.selectable #{dragonBaseCommandName}
+      a.btn.btn-primary.runScript Run dragon command creation script
+      span Make sure the Dragon Dictate commands window is already open before you do this
       h3 Dragon Base Command
         small paste this into the AppleScript window. (Click in the box to select)
       pre.selectable #{dragonBaseCommand}

@@ -4,6 +4,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "repeat last command"
     contextSensitive: true
+    tags: ["system", "voicecode"]
     actions: [
       kind: "script"
       script: (input) ->

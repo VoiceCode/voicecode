@@ -37,3 +37,15 @@ _.each letters, (value, key) ->
       script: (input) ->
         Scripts.singleLetter(key, input)
     ]
+
+# _.each letters, (value, key) ->
+# 	Commands.mapping["sky#{value}"] = 
+#     kind: "action"
+#     grammarType: "textCapture"
+#     description: "Enters capital letter: #{key}"
+#     tags: ["letter"]
+#     actions: [
+#       kind: "script"
+#       script: (input) ->
+#         Scripts.singleLetter(key.toUpperCase(), input)
+#     ]

@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "Switch to most recent application"
     grammarType: "individual"
+    tags: ["application", "Tab"]
     actions: [
       kind: "script"
       script: () ->
@@ -17,6 +18,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open application launcher"
     grammarType: "individual"
+    tags: ["application", "system"]
     actions: [
       kind: "key"
       key: "Space"
@@ -26,6 +28,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open application switcher"
     grammarType: "individual"
+    tags: ["application", "system"]
     actions: [
       kind: "key"
       key: "E"
@@ -35,6 +38,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open a new browser tab (from anywhere)"
     grammarType: "individual"
+    tags: ["system"]
     actions: [
       kind: "script"
       script: () ->
@@ -43,6 +47,7 @@ _.extend Commands.mapping,
   "fox":
     kind: "action"
     description: "open application"
+    tags: ["application", "system"]
     grammarType: "oneArgument"
     actions: [
       kind: "script"

@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "moves the cursor all the way to the right"
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Right"
@@ -12,6 +13,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "moves the cursor on the way to the right than inserts a space"
+    tags: ["cursor", "Space", "Right", "combo"]
     actions: [
       kind: "key"
       key: "Right"
@@ -24,6 +26,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the right"
+    tags: ["selection", "Right"]
     actions: [
       kind: "key"
       key: "Right"
@@ -33,6 +36,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "move the cursor all the way to the left"
+    tags: ["cursor", "Left"]
     actions: [
       kind: "key"
       key: "Left"
@@ -42,6 +46,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the left"
+    tags: ["selection", "Left"]
     actions: [
       kind: "key"
       key: "Left"
@@ -51,6 +56,8 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "selects the entire line"
+    tags: ["selection"]
+    aliases: ["sheqel"]
     actions: [
       kind: "key"
       key: "Left"
@@ -64,6 +71,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "will delete the entire line"
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "Right"
@@ -77,6 +85,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "will delete everything to the right"
+    tags: ["deleting", "Right"]
     actions: [
       kind: "key"
       key: "Right"
@@ -88,6 +97,7 @@ _.extend Commands.mapping,
   "snipple":
     kind: "action"
     grammarType: "individual"
+    tags: ["deleting", "Left"]
     description: "will delete everything to the left"
     actions: [
       kind: "key"
@@ -98,6 +108,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "will duplicate the current line"
+    tags: ["text-manipulation"]
     actions: [
       kind: "key"
       key: "Left"
@@ -126,6 +137,7 @@ _.extend Commands.mapping,
     description: "expand selection to block"
     grammarType: "individual"
     contextSensitive: true
+    tags: ["text-manipulation"]
     actions: [
       kind: "script"
       script: (value) ->
@@ -136,6 +148,7 @@ _.extend Commands.mapping,
     description: "expand selection symmetrically (horizontally)"
     grammarType: "numberCapture"
     contextSensitive: true
+    tags: ["text-manipulation"]
     actions: [
       kind: "script"
       script: (value) ->
@@ -146,6 +159,7 @@ _.extend Commands.mapping,
     description: "expand selection vertically, symmetrically"
     grammarType: "numberCapture"
     contextSensitive: true
+    tags: ["text-manipulation"]
     actions: [
       kind: "script"
       script: (value) ->

@@ -1,88 +1,29 @@
 template(name="Commands")
   .container
     h1 Commands
-      small [command1], [command2]...
-    h2 Number Capture:
-      small [command] [number]?
+      small Click on the tags below to see related commands
+    .well
+      +each tags
+        +commandTag
     table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
       thead
         tr
           th Name
           th Kind
           th Description
+          th Grammar Type
           th Actions
       tbody
-        each numberCaptureCommands
+        each scopedCommands
           tr
             +CommandSummaryRow
-    h2 Text Capture Commands
-      small [command] [one or more words]+
-    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
-      thead
-        tr
-          th Name
-          th Kind
-          th Description
-          th Actions
-      tbody
-        each textCaptureCommand
-          tr
-            +CommandSummaryRow
-    h2 Individual Commands
-      small [command]
-    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
-      thead
-        tr
-          th Name
-          th Kind
-          th Description
-          th Actions
-      tbody
-        each individualCommands
-          tr
-            +CommandSummaryRow
-    h2 Single Argument Commands
-      small [command] [argument]
-    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
-      thead
-        th Name
-        th Kind
-        th Description
-        th Actions
-      tbody
-        each oneArgumentCommands
-          tr
-            +CommandSummaryRow
-    h2 Letter Commands
-      small [command]
-    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
-      thead
-        th Name
-        th Kind
-        th Description
-        th Actions
-      tbody
-        each letterCommands
-          tr
-            +CommandSummaryRow
-    h2 Number Commands
-      small [command]
-    p Numbers are interpreted in a chain. So if you say: "two one", it understands "21", or "three oh two nine" => "3029". This applies for repeatable commands as well. So be careful not to say: "junk three fifty", when you actually want to just delete three characters then insert "50". "junk three fifty" == "DELETE x350"
-    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
-      thead
-        th Name
-        th Kind
-        th Description
-        th Actions
-      tbody
-        each numberCommands
-          tr
-            +CommandSummaryRow
+    //- p Numbers are interpreted in a chain. So if you say: "two one", it understands "21", or "three oh two nine" => "3029". This applies for repeatable commands as well. So be careful not to say: "junk three fifty", when you actually want to just delete three characters then insert "50". "junk three fifty" == "DELETE x350"
     
 template(name="CommandSummaryRow")
-  td= this
+  td= name
   td= kind
   td= description
+  td= grammarType
   td
     if isAction
       each actions
@@ -95,3 +36,6 @@ template(name="CommandSummaryRow")
 
 template(name="CommandAction")
   code= text
+
+template(name="commandTag")
+  .commandTag(class="{{currentClass}}")= this

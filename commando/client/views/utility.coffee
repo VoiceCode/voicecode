@@ -2,38 +2,11 @@ Template.Utility.helpers
   dragonBaseCommand: ->
     name = Session.get("ChooseCommand.current") or "command"
     command = new Commands.Base(name, "")
-    commandText = command.generateBaseCommand()
-    space = command.info?.namespace or name
-
-    if command.info.contextSensitive
-      """
-      on srhandler(vars)
-        set dictatedText to (varText of vars)
-        set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
-        set space to "#{space}"
-        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
-        do shell script toExecute
-      end srhandler
-      """
-    else
-      """
-      on srhandler(vars)
-        set dictatedText to (varText of vars)
-        if dictatedText = "" then
-        #{commandText}
-        set toExecute to "curl http://commando:5000/parse/miss/#{space}"
-        do shell script toExecute
-        else
-        set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
-        set space to "#{space}"
-        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
-        do shell script toExecute
-        end if
-      end srhandler
-      """
+    command.generateFullCommand()
   dragonBaseCommandName: ->
-    command = Session.get("ChooseCommand.current") or "command"
-    "#{command} /!Text!/"
+    name = Session.get("ChooseCommand.current") or "command"
+    command = new Commands.Base(name, "")
+    command.generateDragonCommandName()
   commandNames: ->
     _.sortBy _.keys(Commands.mapping), (item) ->
       item
@@ -53,6 +26,11 @@ Template.Utility.events
       range.selectNodeContents target
       selection.removeAllRanges()
       selection.addRange range
+  "click .runScript": (event, template) ->
+    name = Session.get("ChooseCommand.current")
+    if name?.length
+      Meteor.call("makeDragonCommand", name)
+
 
 Template.ChooseCommand.helpers
   currentClass: ->

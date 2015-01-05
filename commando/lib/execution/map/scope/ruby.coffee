@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "ruby if end block"
+    tags: ["domain-specific", "ruby"]
     actions: [
       kind: "block"
       transform: () ->
@@ -19,6 +20,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "ruby if else block"
+    tags: ["domain-specific", "ruby"]
     actions: [
       kind: "block"
       transform: () ->
@@ -39,6 +41,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "ruby def block"
+    tags: ["domain-specific", "ruby"]
     actions: [
       kind: "block"
       transform: () ->
@@ -58,6 +61,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "ruby elsif"
+    tags: ["domain-specific", "ruby"]
     actions: [
       kind: "keystroke"
       keystroke: "elsif "
@@ -66,6 +70,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "ruby do end block"
+    tags: ["domain-specific", "ruby"]
     actions: [
       kind: "block"
       transform: () ->
@@ -89,6 +94,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "ruby do |var| block"
+    tags: ["domain-specific", "ruby"]
     actions: [
       kind: "block"
       transform: () ->

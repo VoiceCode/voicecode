@@ -34,7 +34,7 @@ _.each numbers, (value, key) ->
   grammarType: "none"
   description: "Enters the number: #{value}"
   namespace: "#{value}"
-  tags: ["number"]
+  tags: ["number", "n#{value}"]
   actions: [
     kind: "script"
     script: (input) ->

@@ -166,5 +166,21 @@
     keystroke "#{letters}"
     end tell
     """
+  singleModifier: (letter, modifiers) ->
+    code = KeyCodes[letter]
+    mods = _.map modifiers, (m) -> "#{m} down"
+    """
+    tell application "System Events"
+    key code "#{code}" using {#{mods.join(', ')}}
+    end tell
+    """
+  runWorkflow: (path) ->
+    """
+    set workflowpath to "#{path}"
+    set qtdworkflowpath to quoted form of (Posix path of workflowpath)
+    set c to "/usr/bin/automator " & qtdworkflowpath
+    set output to do shell script c
+    """
+
     
     

@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "select all"
+    tags: ["selection", "A"]
     actions: [
       kind: "key"
       key: "A"
@@ -12,6 +13,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "paste the alternate clipboard"
+    tags: ["V", "copy-paste"]
     actions: [
       kind: "key"
       key: "V"
@@ -21,6 +23,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "select all then paste the clipboard"
+    tags: ["V", "A", "copy-paste", "selection"]
     actions: [
       kind: "key"
       key: "A"
@@ -34,6 +37,8 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "paste the clipboard"
+    aliases: ["sparked"]
+    tags: ["V", "copy-paste"]
     actions: [
       kind: "key"
       key: "V"
@@ -43,6 +48,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "file > save"
+    tags: ["application", "command", "S"]
     actions: [
       kind: "key"
       key: "S"
@@ -52,6 +58,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "copy whatever is selected then switch applications"
+    tags: ["C", "copy-paste", "application", "system"]
     actions: [
       kind: "key"
       key: "C"
@@ -65,6 +72,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "copy whatever is selected"
+    tags: ["C", "copy-paste"]
     actions: [
       kind: "key"
       key: "C"
@@ -74,6 +82,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "select all then copy whatever is selected"
+    tags: ["A", "C", "copy-paste", "selection"]
     actions: [
       kind: "key"
       key: "A"
@@ -87,6 +96,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "cut whatever is selected"
+    tags: ["X", "copy-paste"]
     aliases: ["snatched"]
     actions: [
       kind: "key"
@@ -98,6 +108,7 @@ _.extend Commands.mapping,
     grammarType: "numberCapture"
     repeatable: true
     description: "close a window or tab"
+    tags: ["application", "command", "W"]
     actions: [
       kind: "key"
       key: "W"
@@ -107,6 +118,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "find"
+    tags: ["application", "command", "F"]
     actions: [
       kind: "key"
       key: "F"
@@ -116,6 +128,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "open a new tab"
+    tags: ["application", "command", "T"]
     actions: [
       kind: "key"
       key: "T"
@@ -125,23 +138,16 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "press escape"
+    tags: ["Escape"]
     actions: [
       kind: "key"
       key: "Escape"
-    ]
-  "chomlug":
-    kind: "action"
-    grammarType: "individual"
-    description: "press escape"
-    actions: [
-      kind: "key"
-      key: "L"
-      modifiers: ["command"]
     ]
   "storky":
     kind: "action"
     grammarType: "individual"
     description: "press the delete key twice (non-repeatable, for when you need to enter a number afterwards)"
+    tags: ["number", "Delete"]
     actions: [
       kind: "key"
       key: "Delete"
@@ -153,6 +159,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "press the delete key (non-repeatable, for when you need to enter a number afterwards)"
+    tags: ["number", "Delete"]
     actions: [
       kind: "key"
       key: "Delete"

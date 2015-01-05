@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "make a directory in the shell"
+    tags: ["domain-specific", "shell"]
     actions: [
       kind: "keystroke"
       keystroke: "mkdir "
@@ -11,6 +12,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "change directory"
+    tags: ["domain-specific", "shell"]
     actions: [
       kind: "keystroke"
       keystroke: "cd "
@@ -19,6 +21,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "textCapture"
     description: "list directory contents (takes dynamic arguments)"
+    tags: ["domain-specific", "shell"]
     actions: [
       kind: "script"
       script: (input) ->

@@ -140,9 +140,9 @@ class Commands.Base
     set the clipboard to theOriginal as record
     """
   escapeString: (text) ->
-    ("" + text).replace /["'\\\n\r]/g, (character) ->
+    ("" + text).replace /["\\\n\r]/g, (character) ->
       switch character
-        when "\"", "'", "\\"
+        when "\"", "\\" #, "'"
           "\\" + character
         when "\n"
           "\\n"
@@ -156,3 +156,36 @@ class Commands.Base
       "using {#{innerString}}"
     else
       ""
+  getTriggerPhrase: () ->
+    @info.triggerPhrase or @namespace
+  generateFullCommand: () ->
+    commandText = @generateBaseCommand()
+    space = @info.namespace or @namespace
+    if @info.contextSensitive
+      """
+      on srhandler(vars)
+        set dictatedText to (varText of vars)
+        set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
+        set space to "#{space}"
+        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
+        do shell script toExecute
+      end srhandler
+      """
+    else
+      """
+      on srhandler(vars)
+        set dictatedText to (varText of vars)
+        if dictatedText = "" then
+        #{commandText}
+        set toExecute to "curl http://commando:5000/parse/miss/#{space}"
+        do shell script toExecute
+        else
+        set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
+        set space to "#{space}"
+        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
+        do shell script toExecute
+        end if
+      end srhandler
+      """
+  generateDragonCommandName: () ->
+    "#{@getTriggerPhrase()} /!Text!/"

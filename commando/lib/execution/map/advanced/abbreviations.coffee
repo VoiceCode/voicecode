@@ -4,6 +4,7 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
     aliases: ["sharks"]
+    tags: ["text"]
     contextSensitive: true
     actions: [
       kind: "script"
@@ -15,6 +16,7 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "inserts a common abbreviation preceded by a space"
     contextSensitive: true
+    tags: ["text"]
     actions: [
       kind: "script"
       script: (input) ->
@@ -25,6 +27,7 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "inserts an IDE code snippet"
     contextSensitive: true
+    tags: ["text"]
     actions: [
       kind: "script"
       script: (input) ->

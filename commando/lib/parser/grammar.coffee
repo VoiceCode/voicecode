@@ -35,34 +35,34 @@ class @Grammar
     results.join("\n")
   build: -> """
     {
-      var capitalLetters = {
-        skyarch: "A",
-        skybrov: "B",
-        skychar: "C",
-        skydell: "D",
-        skyetch: "E",
-        skyfomp: "F",
-        skygoof: "G",
-        skyhark: "H",
-        skyice: "I",
-        skyjinks: "J",
-        skykoop: "K",
-        skylug: "L",
-        skymowsh: "M",
-        skynerb: "N",
-        skyork: "O",
-        skypooch: "P",
-        skyquash: "Q",
-        skyrosh: "R",
-        skysouk: "S",
-        skyteek: "T",
-        skyunks: "U",
-        skyverge: "V",
-        skywomp: "W",
-        skytrex: "X",
-        skyang: "Y",
-        skyzooch: "Z",
-      }
+      // var capitalLetters = {
+      //   skyarch: "A",
+      //   skybrov: "B",
+      //   skychar: "C",
+      //   skydell: "D",
+      //   skyetch: "E",
+      //   skyfomp: "F",
+      //   skygoof: "G",
+      //   skyhark: "H",
+      //   skyice: "I",
+      //   skyjinks: "J",
+      //   skykoop: "K",
+      //   skylug: "L",
+      //   skymowsh: "M",
+      //   skynerb: "N",
+      //   skyork: "O",
+      //   skypooch: "P",
+      //   skyquash: "Q",
+      //   skyrosh: "R",
+      //   skysouk: "S",
+      //   skyteek: "T",
+      //   skyunks: "U",
+      //   skyverge: "V",
+      //   skywomp: "W",
+      //   skytrex: "X",
+      //   skyyang: "Y",
+      //   skyzooch: "Z",
+      // }
 
       var grammarTransforms = {
         frank: function(argument) {
@@ -70,9 +70,9 @@ class @Grammar
         }
       }
 
-      function makeCapitalLetter (letter) {
-        return capitalLetters[letter];
-      }
+      //  function makeCapitalLetter (letter) {
+      //    return capitalLetters[letter];
+      //  }
 
 
       function grammarTransform (name, arguments) {
@@ -109,7 +109,7 @@ class @Grammar
     #{@aliases()}
 
     textArgument
-      = (nestableTextCommand / capitalLetter / word)+
+      = (nestableTextCommand / word)+
 
     numberCaptureCommand
       = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
@@ -133,24 +133,24 @@ class @Grammar
       = identifier:(#{@individualCommands()}) ss {return identifier;}
 
     literalCommand
-      = text:(capitalLetter / word / symbol)+ {return {command: "literal", arguments: text};}
+      = text:(word / symbol)+ {return {command: "literal", arguments: text};}
 
     literalNumber
       = number:exactInteger {return {command: "number", arguments: number};}
 
-    capitalLetter
-      = letter:(
-        "skyarch" / "skybrov" / "skychar" / "skydell" / "skyetch" / "skyfomp" / "skygoof" / 
-        "skyhark" / "skyice" / "skyjinks" / "skykoop" / "skylug" / "skymowsh" / "skynerb" /
-        "skyork" / "skypooch" / "skyquash" / "skyrosh" / "skysouk" / "skyteek" / "skyunks" /
-        "skyverge" / "skywomp" / "skytrex" / "skyang" / "skyzooch"
-      ) ss {return makeCapitalLetter(letter);}
+    //  capitalLetter
+    //    = letter:(
+    //      "skyarch" / "skybrov" / "skychar" / "skydell" / "skyetch" / "skyfomp" / "skygoof" / 
+    //      "skyhark" / "skyice" / "skyjinks" / "skykoop" / "skylug" / "skymowsh" / "skynerb" /
+    //      "skyork" / "skypooch" / "skyquash" / "skyrosh" / "skysouk" / "skyteek" / "skyunks" /
+    //      "skyverge" / "skywomp" / "skytrex" / "skyang" / "skyzooch"
+    //    ) ss {return makeCapitalLetter(letter);}
    
     nestableTextIdentifier
       = "frank"
 
     nestableTextCommand
-      = identifier:nestableTextIdentifier ss arguments:(capitalLetter / word)
+      = identifier:nestableTextIdentifier ss arguments:(word)
       {return grammarTransform(identifier, arguments);}
 
     s = " "*

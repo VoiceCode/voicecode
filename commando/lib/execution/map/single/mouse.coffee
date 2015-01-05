@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "mouse double click"
+    tags: ["mouse"]
     actions: [
       kind: "key"
       key: "P"
@@ -13,6 +14,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "mouse right click"
+    tags: ["mouse"]
     actions: [
       kind: "key"
       key: "O"
@@ -23,6 +25,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "mouse left click"
+    tags: ["mouse"]
     actions: [
       kind: "key"
       key: "I"
@@ -33,6 +36,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "mouse shift click"
+    tags: ["mouse"]
     actions: [
       kind: "key"
       key: "A"
@@ -43,6 +47,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "selects the entire line of text cursor hovers over"
+    tags: ["mouse", "combo"]
     actions: [
       kind: "key"
       key: "I"

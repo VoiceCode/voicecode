@@ -23,6 +23,17 @@ Commands.Utility =
     _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), "letter"
     )
+  allTags: ->
+    result = []
+    _.each(_.keys(Commands.mapping), (key) ->
+      _.each (Commands.mapping[key].tags or []), (tag) ->
+        result.push tag
+    )
+    _.uniq result
+  scopedCommands: (tag) ->
+    _.filter(_.keys(Commands.mapping), (key) ->
+      _.contains (Commands.mapping[key].tags or []), tag
+    )
 
   addAliases: (key, aliases) ->
     Commands.mapping[key].aliases ?= []

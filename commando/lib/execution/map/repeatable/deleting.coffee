@@ -4,6 +4,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "press the delete key"
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "Delete"
@@ -14,6 +15,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "delete a partial word at a time"
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "Delete"
@@ -24,6 +26,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "forward delete a partial word at a time"
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "ForwardDelete"
@@ -34,6 +37,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "forward delete a word at a time"
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "ForwardDelete"

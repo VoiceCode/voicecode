@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "JavaScript if block"
+    tags: ["domain-specific", "javascript"]
     actions: [
       kind: "block"
       transform: () ->

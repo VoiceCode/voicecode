@@ -4,7 +4,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "move the cursor to the bottom of the page"
-    tags: ["movement"]
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Down"
@@ -15,7 +15,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "press the down arrow"
-    tags: ["movement"]
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Down"
@@ -24,7 +24,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "numberCapture"
     description: "move the cursor to the top of the page"
-    tags: ["movement"]
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Up"
@@ -35,7 +35,7 @@ _.extend Commands.mapping,
     repeatable: true
     description: "Press the up arrow"
     grammarType: "numberCapture"
-    tags: ["movement"]
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Up"
@@ -46,7 +46,7 @@ _.extend Commands.mapping,
     grammarType: "numberCapture"
     description: "press the left arrow"
     aliases: ["crimped"]
-    tags: ["movement"]
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Left"
@@ -56,6 +56,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "press the right arrow"
+    tags: ["cursor"]
     aliases: ["krist", "crist"]
     actions: [
       kind: "key"
@@ -66,6 +67,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "move the cursor by word to the left"
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Left"
@@ -76,6 +78,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "move the cursor by partial word to the left"
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Left"
@@ -86,6 +89,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "move the cursor by partial word to the right"
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Right"
@@ -96,6 +100,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "move the cursor by word to the right"
+    tags: ["cursor"]
     actions: [
       kind: "key"
       key: "Right"

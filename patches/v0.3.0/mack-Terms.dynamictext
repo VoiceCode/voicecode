@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
+
+<database>
+    <databaseInfo>
+        <version>134481920</version>
+        <UUID>29CA9A64-D970-449D-9D7E-05F1D87DC388</UUID>
+        <nextObjectID>103</nextObjectID>
+        <metadata>
+            <plist version="1.0">
+                <dict>
+                    <key>NSPersistenceFrameworkVersion</key>
+                    <integer>526</integer>
+                    <key>NSStoreModelVersionHashes</key>
+                    <dict>
+                        <key>GeneralTerm</key>
+                        <data>
+		viq8omf+2O5b0fq11zhAdXE34fIC3k5xmFDwX+vPQ0A=
+		</data>
+                        <key>SpecificTerm</key>
+                        <data>
+		kR9hYZ8J0txqQcn0EJ6+yJsAVfza/wG8AD5YVW/8ULQ=
+		</data>
+                    </dict>
+                    <key>NSStoreModelVersionHashesVersion</key>
+                    <integer>3</integer>
+                    <key>NSStoreModelVersionIdentifiers</key>
+                    <array>
+                        <string></string>
+                    </array>
+                </dict>
+            </plist>
+        </metadata>
+    </databaseInfo>
+    <object type="SPECIFICTERM" id="z102">
+        <attribute name="numericvalue" type="int32">0</attribute>
+        <attribute name="name" type="string">Text</attribute>
+        <relationship name="generalterm" type="1/1" destination="GENERALTERM" idrefs="z103"></relationship>
+    </object>
+    <object type="GENERALTERM" id="z103">
+        <attribute name="termtype" type="string">Syn</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="name" type="string">Text</attribute>
+        <attribute name="bundleidentifier" type="string">#</attribute>
+        <relationship name="specificterms" type="0/0" destination="SPECIFICTERM" idrefs="z102"></relationship>
+    </object>
+</database>

@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "textCapture"
     description: "inserts an html tag with a dynamic name and dynamic attributes"
+    tags: ["domain-specific", "html"]
     actions: [
       kind: "block"
       transform: (textArray) ->

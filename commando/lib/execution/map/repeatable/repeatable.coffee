@@ -5,6 +5,7 @@ _.extend Commands.mapping,
     grammarType: "numberCapture"
     aliases: ["shocked", "shox"]
     description: "press the return key"
+    tags: ["Return"]
     actions: [
       kind: "key"
       key: "Return"
@@ -14,6 +15,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "press the delete key"
+    tags: ["Delete"]
     actions: [
       kind: "key"
       key: "Delete"
@@ -23,6 +25,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "pressed the forward delete key"
+    tags: ["ForwardDelete"]
     actions: [
       kind: "key"
       key: "ForwardDelete"
@@ -32,6 +35,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "undo"
+    tags: ["application", "command", "Z"]
     actions: [
       kind: "key"
       key: "Z"
@@ -42,6 +46,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "redo"
+    tags: ["application", "command+shift", "Z"]
     actions: [
       kind: "key"
       key: "Z"
@@ -52,6 +57,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "inserts a tab"
+    tags: ["Tab"]
     actions: [
       kind: "key"
       key: "Tab"
@@ -61,6 +67,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "inserts a shift + tab"
+    tags: ["Tab", "shift"]
     actions: [
       kind: "key"
       key: "Tab"
@@ -71,6 +78,7 @@ _.extend Commands.mapping,
     description: "Switch to next window in same application"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["application", "command"]
     actions: [
       kind: "keystroke"
       keystroke: "`"
@@ -81,6 +89,7 @@ _.extend Commands.mapping,
     description: "Switch to previous window in same application"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["application", "command"]
     actions: [
       kind: "keystroke"
       keystroke: "`"
@@ -91,6 +100,7 @@ _.extend Commands.mapping,
     description: "zoom in"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["application", "command", "Plus", "Equal"]
     actions: [
       kind: "keystroke"
       keystroke: "+"
@@ -101,6 +111,7 @@ _.extend Commands.mapping,
     description: "zoom out"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["application", "command", "Minus"]
     actions: [
       kind: "keystroke"
       keystroke: "-"
@@ -110,6 +121,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: ""
     grammarType: "numberCapture"
+    tags: ["LeftBracket"]
     repeatable: true
     actions: [
       kind: "keystroke"
@@ -121,6 +133,7 @@ _.extend Commands.mapping,
     description: ""
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["RightBracket"]
     actions: [
       kind: "keystroke"
       keystroke: "]"
@@ -131,6 +144,7 @@ _.extend Commands.mapping,
     description: "find the next occurrence of a search term"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["application", "command", "G"]
     actions: [
       kind: "key"
       key: "G"
@@ -140,6 +154,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "find the previous occurrence of a search term"
     grammarType: "numberCapture"
+    tags: ["application", "command+shift", "G"]
     repeatable: true
     actions: [
       kind: "key"
@@ -151,6 +166,7 @@ _.extend Commands.mapping,
     description: "scroll down"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["scroll"]
     actions: [
       kind: "key"
       key: "PageDown"
@@ -161,6 +177,7 @@ _.extend Commands.mapping,
     description: "scroll up"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["scroll"]
     actions: [
       kind: "key"
       key: "PageUp"
@@ -168,8 +185,9 @@ _.extend Commands.mapping,
     ]
   "scrolltop":
     kind: "action"
-    description: "scroll up"
+    description: "scroll to top"
     grammarType: "numberCapture"
+    tags: ["scroll"]
     repeatable: true
     actions: [
       kind: "key"
@@ -177,9 +195,10 @@ _.extend Commands.mapping,
     ]
   "scrollend":
     kind: "action"
-    description: "scroll up"
+    description: "scroll to bottom"
     grammarType: "numberCapture"
     repeatable: true
+    tags: ["scroll"]
     actions: [
       kind: "key"
       key: "End"

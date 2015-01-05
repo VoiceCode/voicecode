@@ -3,6 +3,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     aliases: ["."]
+    tags: ["symbol"]
     actions: [
       kind: "key"
       key: "Period"
@@ -11,6 +12,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     aliases: ["*"]
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "*"
@@ -19,6 +21,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     aliases: ["/"]
+    tags: ["symbol"]
     actions: [
       kind: "key"
       key: "Slash"
@@ -27,6 +30,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     aliases: [","]
+    tags: ["symbol"]
     actions: [
       kind: "key"
       key: "Comma"
@@ -35,6 +39,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     aliases: ["~"]
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "~"
@@ -43,6 +48,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     aliases: [":"]
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ":"
@@ -50,6 +56,7 @@ _.extend Commands.mapping,
   "equeft":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " = "
@@ -57,6 +64,7 @@ _.extend Commands.mapping,
   "smaqual":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "="
@@ -64,6 +72,7 @@ _.extend Commands.mapping,
   "qualquo":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "=\"\""
@@ -74,6 +83,7 @@ _.extend Commands.mapping,
   "prexcoif":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "(\"\")"
@@ -87,6 +97,7 @@ _.extend Commands.mapping,
   "prex":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "()"
@@ -97,6 +108,7 @@ _.extend Commands.mapping,
   "prekris":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "()"
@@ -104,6 +116,7 @@ _.extend Commands.mapping,
   "brax":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "[]"
@@ -114,6 +127,7 @@ _.extend Commands.mapping,
   "kirk":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "{}"
@@ -124,6 +138,7 @@ _.extend Commands.mapping,
   "dekirk":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " {}"
@@ -134,6 +149,7 @@ _.extend Commands.mapping,
   "kirblock":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "{}"
@@ -147,6 +163,7 @@ _.extend Commands.mapping,
   "prank":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     description: "inserts 2 spaces then left arrow"
     actions: [
       kind: "keystroke"
@@ -158,6 +175,7 @@ _.extend Commands.mapping,
   "deprex":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " ()"
@@ -168,6 +186,7 @@ _.extend Commands.mapping,
   "debrax":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " []"
@@ -178,6 +197,7 @@ _.extend Commands.mapping,
   "tranquil":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " -= "
@@ -185,6 +205,7 @@ _.extend Commands.mapping,
   "pluqual":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " += "
@@ -192,6 +213,7 @@ _.extend Commands.mapping,
   "banquall":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " != "
@@ -199,6 +221,7 @@ _.extend Commands.mapping,
   "longqual":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " == "
@@ -206,6 +229,7 @@ _.extend Commands.mapping,
   "lessqual":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " <= "
@@ -213,6 +237,7 @@ _.extend Commands.mapping,
   "grayqual":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " >= "
@@ -220,6 +245,7 @@ _.extend Commands.mapping,
   "posh":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     aliases: ["pash"]
     actions: [
       kind: "keystroke"
@@ -231,6 +257,7 @@ _.extend Commands.mapping,
   "deeposh":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " ''"
@@ -241,6 +268,7 @@ _.extend Commands.mapping,
   "coif":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     aliases: ["coiffed"]
     actions: [
       kind: "keystroke"
@@ -252,6 +280,7 @@ _.extend Commands.mapping,
   "decoif":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " \"\""
@@ -262,6 +291,7 @@ _.extend Commands.mapping,
   "shrocket":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " => "
@@ -269,6 +299,7 @@ _.extend Commands.mapping,
   "swipe":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     aliases: ["swiped", "swipes"]
     actions: [
       kind: "keystroke"
@@ -277,6 +308,7 @@ _.extend Commands.mapping,
   "swipshock":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ","
@@ -287,6 +319,7 @@ _.extend Commands.mapping,
   "coalgap":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ": "
@@ -294,6 +327,7 @@ _.extend Commands.mapping,
   "coalshock":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ":"
@@ -304,6 +338,7 @@ _.extend Commands.mapping,
   "divy":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " / "
@@ -311,6 +346,7 @@ _.extend Commands.mapping,
   "sinker":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ";"
@@ -318,6 +354,7 @@ _.extend Commands.mapping,
   "sinkshock":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ";"
@@ -328,6 +365,7 @@ _.extend Commands.mapping,
   "clamor":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "!"
@@ -335,6 +373,7 @@ _.extend Commands.mapping,
   "loco":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "@"
@@ -342,6 +381,7 @@ _.extend Commands.mapping,
   "deloco":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " @"
@@ -349,6 +389,7 @@ _.extend Commands.mapping,
   "amper":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "&"
@@ -356,6 +397,7 @@ _.extend Commands.mapping,
   "damper":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " & "
@@ -363,6 +405,7 @@ _.extend Commands.mapping,
   "pounder":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "#"
@@ -370,6 +413,7 @@ _.extend Commands.mapping,
   "questo":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "?"
@@ -377,6 +421,7 @@ _.extend Commands.mapping,
   "bartrap":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "||"
@@ -387,6 +432,7 @@ _.extend Commands.mapping,
   "goalpost":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " || "
@@ -394,6 +440,7 @@ _.extend Commands.mapping,
   "orquals":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " ||= "
@@ -401,6 +448,7 @@ _.extend Commands.mapping,
   "spike":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "|"
@@ -408,6 +456,7 @@ _.extend Commands.mapping,
   "angler":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "<>"
@@ -418,6 +467,7 @@ _.extend Commands.mapping,
   "plus":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "+"
@@ -425,6 +475,7 @@ _.extend Commands.mapping,
   "deplush":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " + "
@@ -432,6 +483,7 @@ _.extend Commands.mapping,
   "minus":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "-"
@@ -439,6 +491,7 @@ _.extend Commands.mapping,
   "deminus":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " - "
@@ -446,6 +499,7 @@ _.extend Commands.mapping,
   "skoofin":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " -"
@@ -453,6 +507,7 @@ _.extend Commands.mapping,
   "lambo":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "->"
@@ -460,6 +515,7 @@ _.extend Commands.mapping,
   "quatches":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "\""
@@ -467,6 +523,7 @@ _.extend Commands.mapping,
   "quatchet":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "'"
@@ -474,6 +531,7 @@ _.extend Commands.mapping,
   "percy":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "%"
@@ -481,6 +539,7 @@ _.extend Commands.mapping,
   "depercy":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " % "
@@ -488,6 +547,7 @@ _.extend Commands.mapping,
   "chriskoosh":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "key"
       key: "Right"
@@ -498,6 +558,7 @@ _.extend Commands.mapping,
   "dolly":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "$"
@@ -505,6 +566,7 @@ _.extend Commands.mapping,
   "clangle":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "<"
@@ -512,6 +574,7 @@ _.extend Commands.mapping,
   "declangle":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " < "
@@ -519,6 +582,7 @@ _.extend Commands.mapping,
   "langlang":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     pronunciation: "lang glang"
     actions: [
       kind: "keystroke"
@@ -527,6 +591,7 @@ _.extend Commands.mapping,
   "wrangle":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ">"
@@ -534,6 +599,7 @@ _.extend Commands.mapping,
   "derangle":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: " > "
@@ -541,6 +607,7 @@ _.extend Commands.mapping,
   "rangrang":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     pronunciation: "rang grang"
     actions: [
       kind: "keystroke"
@@ -549,6 +616,7 @@ _.extend Commands.mapping,
   "precorp":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "("
@@ -556,6 +624,7 @@ _.extend Commands.mapping,
   "prekose":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: ")"
@@ -563,6 +632,7 @@ _.extend Commands.mapping,
   "brackorp":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "["
@@ -570,6 +640,7 @@ _.extend Commands.mapping,
   "brackose":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "]"
@@ -577,6 +648,7 @@ _.extend Commands.mapping,
   "kirksorp":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "{"
@@ -584,6 +656,7 @@ _.extend Commands.mapping,
   "kirkos":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "}"
@@ -591,6 +664,7 @@ _.extend Commands.mapping,
   "crunder":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "_"
@@ -598,6 +672,7 @@ _.extend Commands.mapping,
   "coaltwice":
     kind: "action"
     grammarType: "individual"
+    tags: ["symbol"]
     actions: [
       kind: "keystroke"
       keystroke: "::"
