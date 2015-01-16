@@ -167,10 +167,10 @@ _.extend Commands.mapping,
     ]
   "kerleck":
     kind: "action"
-    description: "select occurrence of spoken text on current line"
+    description: "With argument: [word], Will select the text [word] on the current line. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] on the current line"
     grammarType: "textCapture"
     contextSensitive: true
-    tags: ["text-manipulation", "cursor"]
+    tags: ["text-manipulation", "cursor", "selection"]
     actions: [
       kind: "script"
       script: (value) ->
@@ -178,10 +178,10 @@ _.extend Commands.mapping,
     ]
   "jeepleck":
     kind: "action"
-    description: "select previous occurrence of spoken text"
+    description: "With argument: [word], Will select the text [word] previous to the cursor. With arguments: [word1], [word2], Will select the text starting with the last occurrence of [word1] and ending with the first occurrence of [word2] previous to the cursor"
     grammarType: "textCapture"
     contextSensitive: true
-    tags: ["text-manipulation", "cursor"]
+    tags: ["text-manipulation", "cursor", "selection"]
     actions: [
       kind: "script"
       script: (value) ->
@@ -189,10 +189,10 @@ _.extend Commands.mapping,
     ]
   "doomleck":
     kind: "action"
-    description: "select following occurrence of spoken text"
+    description: "With argument: [word], Will select the text [word] after the cursor. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] after the cursor"
     grammarType: "textCapture"
     contextSensitive: true
-    tags: ["text-manipulation", "cursor"]
+    tags: ["text-manipulation", "cursor", "selection"]
     actions: [
       kind: "script"
       script: (value) ->

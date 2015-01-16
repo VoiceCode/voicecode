@@ -191,9 +191,9 @@
         tell application "System Events"
         key code "123" using {command down}
         key code "124" using {command down, shift down}
-        delay 0.15
+        delay 0.05
         key code "8" using {command down}
-        delay 0.15
+        delay 0.2
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -229,9 +229,9 @@
         tell application "System Events"
         key code "123" using {command down}
         key code "124" using {command down, shift down}
-        delay 0.1
+        delay 0.05
         key code "8" using {command down}
-        delay 0.1
+        delay 0.2
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -254,6 +254,7 @@
         end repeat
         end tell
         set the clipboard to theOriginal as record
+        delay 1
         """
     else
       ""
@@ -270,9 +271,9 @@
         repeat 20 times
         key code "126" using {shift down}
         end repeat
-        delay 0.15
+        delay 0.05
         key code "8" using {command down}
-        delay 0.15
+        delay 0.2
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -293,7 +294,6 @@
         
         tell application "System Events"
         key code "124"
-        delay 0.1
         repeat (distanceRight) times
         key code "123"
         end repeat
@@ -312,9 +312,9 @@
         repeat 20 times
         key code "126" using {shift down}
         end repeat
-        delay 0.15
+        delay 0.05
         key code "8" using {command down}
-        delay 0.15
+        delay 0.2
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -329,7 +329,6 @@
         
         tell application "System Events"
         key code "124"
-        delay 0.1
         repeat distanceLeft times
         key code "123"
         end repeat
@@ -354,9 +353,9 @@
         repeat 20 times
         key code "125" using {shift down}
         end repeat
-        delay 0.15
+        delay 0.05
         key code "8" using {command down}
-        delay 0.15
+        delay 0.2
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -377,7 +376,6 @@
         
         tell application "System Events"
         key code "123"
-        delay 0.1
         repeat (distanceLeft) times
         key code "124"
         end repeat
@@ -396,9 +394,9 @@
         repeat 20 times
         key code "125" using {shift down}
         end repeat
-        delay 0.15
+        delay 0.05
         key code "8" using {command down}
-        delay 0.15
+        delay 0.2
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -413,7 +411,6 @@
         
         tell application "System Events"
         key code "123"
-        delay 0.1
         repeat distanceLeft times
         key code "124"
         end repeat
