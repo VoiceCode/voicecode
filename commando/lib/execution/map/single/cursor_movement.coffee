@@ -165,5 +165,38 @@ _.extend Commands.mapping,
       script: (value) ->
         Scripts.verticalSelectionExpansion(value or 1)
     ]
+  "kerleck":
+    kind: "action"
+    description: "select occurrence of spoken text on current line"
+    grammarType: "textCapture"
+    contextSensitive: true
+    tags: ["text-manipulation", "cursor"]
+    actions: [
+      kind: "script"
+      script: (value) ->
+        Scripts.selectCurrentOccurrence(value)
+    ]
+  "jeepleck":
+    kind: "action"
+    description: "select previous occurrence of spoken text"
+    grammarType: "textCapture"
+    contextSensitive: true
+    tags: ["text-manipulation", "cursor"]
+    actions: [
+      kind: "script"
+      script: (value) ->
+        Scripts.selectPreviousOccurrence(value)
+    ]
+  "doomleck":
+    kind: "action"
+    description: "select following occurrence of spoken text"
+    grammarType: "textCapture"
+    contextSensitive: true
+    tags: ["text-manipulation", "cursor"]
+    actions: [
+      kind: "script"
+      script: (value) ->
+        Scripts.selectFollowingOccurrence(value)
+    ]
 
 

@@ -27,3 +27,14 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Left"
     ]
+  "gitadd":
+    kind: "action"
+    grammarType: "individual"
+    description: "git add"
+    triggerPhrase: "jet add"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git add "
+    ]

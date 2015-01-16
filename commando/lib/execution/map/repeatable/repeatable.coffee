@@ -15,7 +15,7 @@ _.extend Commands.mapping,
     repeatable: true
     grammarType: "numberCapture"
     description: "press the delete key"
-    aliases: ["junks"]
+    aliases: ["junks", "junked"]
     tags: ["Delete"]
     actions: [
       kind: "key"

@@ -181,6 +181,250 @@
     set c to "/usr/bin/automator " & qtdworkflowpath
     set output to do shell script c
     """
+  selectCurrentOccurrence: (textArray) ->
+    if textArray?.length
+      first = textArray[0]
+      last = textArray[1]
+      if last?.length
+        """
+        set theOriginal to the clipboard as record
+        tell application "System Events"
+        key code "123" using {command down}
+        key code "124" using {command down, shift down}
+        delay 0.15
+        key code "8" using {command down}
+        delay 0.15
+        end tell
 
-    
-    
+        set astid to AppleScript's text item delimiters
+
+        set AppleScript's text item delimiters to "#{first}"
+        set selText to (the clipboard as text)
+        set sections1 to every text item of selText
+
+        set AppleScript's text item delimiters to "#{last}"
+        set sections2 to every text item of selText
+
+        set AppleScript's text item delimiters to astid
+
+        set totalLength to length of selText
+
+        set distanceLeft to length of item 1 of sections1
+        set distanceRight to length of item -1 of sections2
+        
+        tell application "System Events"
+        key code "123"
+        repeat distanceLeft times
+        key code "124"
+        end repeat
+        repeat (totalLength - distanceLeft - distanceRight) times
+        key code "124" using {shift down}
+        end repeat
+        end tell
+        set the clipboard to theOriginal as record
+        """
+      else
+        """
+        set theOriginal to the clipboard as record
+        tell application "System Events"
+        key code "123" using {command down}
+        key code "124" using {command down, shift down}
+        delay 0.1
+        key code "8" using {command down}
+        delay 0.1
+        end tell
+
+        set astid to AppleScript's text item delimiters
+
+        set AppleScript's text item delimiters to "#{first}"
+        set selText to (the clipboard as text)
+        set sections1 to every text item of selText
+
+        set AppleScript's text item delimiters to astid
+
+        set distanceLeft to length of item 1 of sections1
+        
+        tell application "System Events"
+        key code "123"
+        repeat distanceLeft times
+        key code "124"
+        end repeat
+        repeat #{first.length} times
+        key code "124" using {shift down}
+        end repeat
+        end tell
+        set the clipboard to theOriginal as record
+        """
+    else
+      ""
+  selectPreviousOccurrence: (textArray) ->
+    if textArray?.length
+      first = textArray[0]
+      last = textArray[1]
+      if last?.length
+        """
+        set theOriginal to the clipboard as record
+        tell application "System Events"
+        key code "123"
+        key code "124"
+        repeat 20 times
+        key code "126" using {shift down}
+        end repeat
+        delay 0.15
+        key code "8" using {command down}
+        delay 0.15
+        end tell
+
+        set astid to AppleScript's text item delimiters
+
+        set AppleScript's text item delimiters to "#{first}"
+        set selText to (the clipboard as text)
+        set sections1 to every text item of selText
+
+        set AppleScript's text item delimiters to "#{last}"
+        set sections2 to every text item of selText
+
+        set AppleScript's text item delimiters to astid
+
+        set totalLength to length of selText
+
+        set distanceLeft to length of item -1 of sections1
+        set distanceRight to length of item -1 of sections2
+        
+        tell application "System Events"
+        key code "124"
+        delay 0.1
+        repeat (distanceRight) times
+        key code "123"
+        end repeat
+        repeat (distanceLeft + #{first.length} - distanceRight) times
+        key code "123" using {shift down}
+        end repeat
+        end tell
+        set the clipboard to theOriginal as record
+        """
+      else
+        """
+        set theOriginal to the clipboard as record
+        tell application "System Events"
+        key code "123"
+        key code "124"
+        repeat 20 times
+        key code "126" using {shift down}
+        end repeat
+        delay 0.15
+        key code "8" using {command down}
+        delay 0.15
+        end tell
+
+        set astid to AppleScript's text item delimiters
+
+        set AppleScript's text item delimiters to "#{first}"
+        set selText to (the clipboard as text)
+        set sections1 to every text item of selText
+
+        set AppleScript's text item delimiters to astid
+
+        set distanceLeft to length of item -1 of sections1
+        
+        tell application "System Events"
+        key code "124"
+        delay 0.1
+        repeat distanceLeft times
+        key code "123"
+        end repeat
+        repeat #{first.length} times
+        key code "123" using {shift down}
+        end repeat
+        end tell
+        set the clipboard to theOriginal as record
+        """
+    else
+      ""
+  selectFollowingOccurrence: (textArray) ->
+    if textArray?.length
+      first = textArray[0]
+      last = textArray[1]
+      if last?.length
+        """
+        set theOriginal to the clipboard as record
+        tell application "System Events"
+        key code "124"
+        key code "123"
+        repeat 20 times
+        key code "125" using {shift down}
+        end repeat
+        delay 0.15
+        key code "8" using {command down}
+        delay 0.15
+        end tell
+
+        set astid to AppleScript's text item delimiters
+
+        set AppleScript's text item delimiters to "#{first}"
+        set selText to (the clipboard as text)
+        set sections1 to every text item of selText
+
+        set AppleScript's text item delimiters to "#{last}"
+        set sections2 to every text item of selText
+
+        set AppleScript's text item delimiters to astid
+
+        set totalLength to length of selText
+
+        set distanceLeft to length of item 1 of sections1
+        set distanceRight to length of item 1 of sections2
+        
+        tell application "System Events"
+        key code "123"
+        delay 0.1
+        repeat (distanceLeft) times
+        key code "124"
+        end repeat
+        repeat (distanceRight + #{last.length} - distanceLeft) times
+        key code "124" using {shift down}
+        end repeat
+        end tell
+        set the clipboard to theOriginal as record
+        """
+      else
+        """
+        set theOriginal to the clipboard as record
+        tell application "System Events"
+        key code "124"
+        key code "123"
+        repeat 20 times
+        key code "125" using {shift down}
+        end repeat
+        delay 0.15
+        key code "8" using {command down}
+        delay 0.15
+        end tell
+
+        set astid to AppleScript's text item delimiters
+
+        set AppleScript's text item delimiters to "#{first}"
+        set selText to (the clipboard as text)
+        set sections1 to every text item of selText
+
+        set AppleScript's text item delimiters to astid
+
+        set distanceLeft to length of item 1 of sections1
+        
+        tell application "System Events"
+        key code "123"
+        delay 0.1
+        repeat distanceLeft times
+        key code "124"
+        end repeat
+        repeat #{first.length} times
+        key code "124" using {shift down}
+        end repeat
+        end tell
+        set the clipboard to theOriginal as record
+        """
+    else
+      ""
+
+      
+      

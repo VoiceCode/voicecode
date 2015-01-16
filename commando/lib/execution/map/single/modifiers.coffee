@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+# _.extend Commands.mapping,
   # "chompshin":
   #   kind: "modifier"
   #   grammarType: "oneArgument"
