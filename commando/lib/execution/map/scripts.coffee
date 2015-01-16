@@ -193,7 +193,7 @@
         key code "124" using {command down, shift down}
         delay 0.05
         key code "8" using {command down}
-        delay 0.2
+        delay 0.3
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -231,7 +231,7 @@
         key code "124" using {command down, shift down}
         delay 0.05
         key code "8" using {command down}
-        delay 0.2
+        delay 0.3
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -273,7 +273,7 @@
         end repeat
         delay 0.05
         key code "8" using {command down}
-        delay 0.2
+        delay 0.3
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -314,7 +314,7 @@
         end repeat
         delay 0.05
         key code "8" using {command down}
-        delay 0.2
+        delay 0.3
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -355,7 +355,7 @@
         end repeat
         delay 0.05
         key code "8" using {command down}
-        delay 0.2
+        delay 0.3
         end tell
 
         set astid to AppleScript's text item delimiters
@@ -396,7 +396,7 @@
         end repeat
         delay 0.05
         key code "8" using {command down}
-        delay 0.2
+        delay 0.3
         end tell
 
         set astid to AppleScript's text item delimiters
