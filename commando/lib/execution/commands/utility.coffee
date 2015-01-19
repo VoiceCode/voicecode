@@ -35,6 +35,20 @@ Commands.Utility =
       _.contains (Commands.mapping[key].tags or []), tag
     )
 
+  documentationReport: ->
+    tags = Commands.Utility.allTags()
+    commands = {}
+    _.each tags, (tag) ->
+      commands[tag] = _.map Commands.Utility.scopedCommands(tag), (key) ->
+        command = Commands.mapping[key]
+        {
+          name: key
+          kind: command.kind
+          description: command.description
+          grammarType: command.grammarType
+          actions: command.actionDescriptionString()
+        }
+
   addAliases: (key, aliases) ->
     Commands.mapping[key].aliases ?= []
     Commands.mapping[key].aliases.push.apply(Commands.mapping[key].aliases, aliases)

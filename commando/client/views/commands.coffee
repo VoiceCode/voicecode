@@ -16,6 +16,11 @@ Template.Commands.helpers
   scopedCommands: ->
     Session.get("commands.inScope")
 
+Template.Commands.created = ->
+  unless Session.get("commandTag.current")?
+    Session.set "commandTag.current", "all"
+    Session.set "commands.inScope", _.keys(Commands.mapping)
+
 
 Template.CommandSummaryRow.helpers
   isAction: ->
@@ -56,8 +61,12 @@ Template.CommandAction.helpers
 
 Template.commandTag.events
   "click": (event, template) ->
-    Session.set "commandTag.current", @.toString()
-    Session.set "commands.inScope", Commands.Utility.scopedCommands(Session.get("commandTag.current"))
+    if Session.get("commandTag.current") is @.toString()
+      Session.set "commandTag.current", "all"
+      Session.set "commands.inScope", _.keys(Commands.mapping)
+    else
+      Session.set "commandTag.current", @.toString()
+      Session.set "commands.inScope", Commands.Utility.scopedCommands(Session.get("commandTag.current"))
 
 
 Template.commandTag.helpers

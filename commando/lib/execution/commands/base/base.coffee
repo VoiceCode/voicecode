@@ -36,6 +36,9 @@ class Commands.Base
         @joinActionCommands()
       when "modifier"
         @makeModifierCommand @input
+      when "word"
+        transformed = Transforms.identity([@info.word].concat(@input or []))
+        @makeTextCommand(transformed)
   joinActionCommands: ->
     me = @
     _.map(@actions, (action) ->
