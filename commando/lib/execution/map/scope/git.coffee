@@ -1,5 +1,5 @@
 _.extend Commands.mapping,
-  "gitstatus":
+  "git-status":
     kind: "action"
     grammarType: "individual"
     description: "git status"
@@ -13,7 +13,7 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Return"
     ]  
-  "gitcommit":
+  "git-commit":
     kind: "action"
     grammarType: "individual"
     description: "git commit -a -m ''"
@@ -27,7 +27,7 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Left"
     ]
-  "gitadd":
+  "git-add":
     kind: "action"
     grammarType: "individual"
     description: "git add"
@@ -37,4 +37,15 @@ _.extend Commands.mapping,
       kind: "block"
       transform: () ->
         "git add "
+    ]
+  "git-diff":
+    kind: "action"
+    grammarType: "individual"
+    description: "git add"
+    triggerPhrase: "jet diff"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git diff "
     ]

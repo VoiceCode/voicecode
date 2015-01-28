@@ -22,23 +22,23 @@ class Commands.Base
       when "text"
         transformed = @applyTransform(@input or [])
         preCommand = if @info.padLeft
-          @spacePad()
+          Scripts.spacePad()
         else
           ""
-        [preCommand, @makeTextCommand(transformed)].join("\n")
+        [preCommand, Scripts.makeTextCommand(transformed)].join("\n")
       when "number"
         preCommand = if @info.padLeft
-          @spacePad()
+          Scripts.spacePad()
         else
           ""
-        [preCommand, @makeTextCommand "#{@input}"].join("\n")
+        [preCommand, Scripts.makeTextCommand "#{@input}"].join("\n")
       when "action"
         @joinActionCommands()
       when "modifier"
         @makeModifierCommand @input
       when "word"
         transformed = Transforms.identity([@info.word].concat(@input or []))
-        @makeTextCommand(transformed)
+        Scripts.makeTextCommand(transformed)
   joinActionCommands: ->
     me = @
     _.map(@actions, (action) ->
@@ -49,11 +49,11 @@ class Commands.Base
       when "key"
         ms = @makeModifierString(action.modifiers)
         code = @code(action.key)
-        kc = @makeKeycode(code, ms)
-        @makeSystemEventsCommand(kc) + "\ndelay 0.01"
+        kc = Scripts.makeKeycode(code, ms)
+        Scripts.makeSystemEventsCommand(kc) + "\ndelay 0.01"
       when "keystroke"
         ms = @makeModifierString(action.modifiers)
-        @makeTextCommand(action.keystroke, ms)
+        Scripts.makeTextCommand(action.keystroke, ms)
       when "script"
         action.script(@input)
       when "block"
@@ -78,8 +78,8 @@ class Commands.Base
       code = ModifierTargets[string] or ModifierTargets[string.charAt(0)]
       if code?
         ms = @makeModifierString(@info.modifiers)
-        kc = @makeKeycode(code, ms)
-        @makeSystemEventsCommand kc
+        kc = Scripts.makeKeycode(code, ms)
+        Scripts.makeSystemEventsCommand kc
       else
         ""
     else
@@ -90,43 +90,6 @@ class Commands.Base
     #{@generateBaseCommand()}
     end repeat
     """
-  spacePad: ->
-    """
-    tell application "System Events"
-    keystroke " "
-    end tell
-    """
-  makeSystemEventsCommand: (lines) ->
-    """
-    tell application "System Events"
-    #{lines}
-    end tell
-    """
-  makeKeystroke: (text, modifierString = "") ->
-    """
-    keystroke "#{text}" #{modifierString}
-    """
-  makeKeycode: (code, modifierString = "") ->
-    """
-    key code "#{code}" #{modifierString}
-    """
-  makeTextCommand: (text, modifierString) ->
-    console.log "make text command: #{text}"
-    me = @
-    strokes = _.map text.split(''), (character) ->
-      result = if character is "."
-        me.makeKeycode 47
-      else if character is "/"
-        me.makeKeycode 44
-      else if character is "-"
-        me.makeKeycode 27
-      else if character is '"'
-        me.makeKeystroke "\\\""
-      else
-        me.makeKeystroke character
-      [result, modifierString].join(" ")
-    joined = strokes.join("\ndelay 0.01\n") + "\ndelay 0.02"
-    @makeSystemEventsCommand joined 
   makeBlockAction: (input, action) ->
     transformed = action.transform(input or [])
     @makeBlockCommand(transformed)

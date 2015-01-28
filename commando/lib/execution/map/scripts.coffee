@@ -43,6 +43,43 @@
     keystroke "t" using {command down}
     end tell
     """
+  spacePad: ->
+    """
+    tell application "System Events"
+    keystroke " "
+    end tell
+    """
+  makeSystemEventsCommand: (lines) ->
+    """
+    tell application "System Events"
+    #{lines}
+    end tell
+    """
+  makeKeystroke: (text, modifierString = "") ->
+    """
+    keystroke "#{text}" #{modifierString}
+    """
+  makeKeycode: (code, modifierString = "") ->
+    """
+    key code "#{code}" #{modifierString}
+    """
+  makeTextCommand: (text, modifierString) ->
+    strokes = _.map text.split(''), (character) ->
+      result = if character is "."
+        Scripts.makeKeycode 47
+      else if character is "/"
+        Scripts.makeKeycode 44
+      else if character is "-"
+        Scripts.makeKeycode 27
+      else if character is '"'
+        Scripts.makeKeystroke "\\\""
+      else if character >= '0' and character <= '9'
+        Scripts.makeKeycode KeyCodes["n#{character}"]
+      else
+        Scripts.makeKeystroke character
+      [result, modifierString].join(" ")
+    joined = strokes.join("\ndelay 0.01\n") + "\ndelay 0.02"
+    Scripts.makeSystemEventsCommand joined 
   insertAbbreviation: (name, prepend="", append="") ->
     abbreviation = Scripts.levenshteinMatch CommandoSettings.abbreviations, name
     keystroke = if name.length and abbreviation?

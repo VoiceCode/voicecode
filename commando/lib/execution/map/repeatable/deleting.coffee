@@ -3,8 +3,8 @@ _.extend Commands.mapping,
     kind: "action"
     repeatable: true
     grammarType: "numberCapture"
-    description: "press the delete key"
-    tags: ["deleting"]
+    description: "press option-delete"
+    tags: ["deleting", "option"]
     actions: [
       kind: "key"
       key: "Delete"

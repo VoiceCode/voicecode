@@ -72,6 +72,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "will delete the entire line"
     tags: ["deleting"]
+    aliases: ["snipeline"]
     actions: [
       kind: "key"
       key: "Right"
@@ -86,6 +87,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "will delete everything to the right"
     tags: ["deleting", "Right"]
+    aliases: ["sniper"]
     actions: [
       kind: "key"
       key: "Right"
