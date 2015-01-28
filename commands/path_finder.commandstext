@@ -1,0 +1,124 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
+
+<database>
+    <databaseInfo>
+        <version>134481920</version>
+        <UUID>4BA12EFA-A249-4CEC-B75D-CE7EBA15BED9</UUID>
+        <nextObjectID>107</nextObjectID>
+        <metadata>
+            <plist version="1.0">
+                <dict>
+                    <key>NSPersistenceFrameworkVersion</key>
+                    <integer>526</integer>
+                    <key>NSStoreModelVersionHashes</key>
+                    <dict>
+                        <key>action</key>
+                        <data>
+		Gl79yicU/qMmmjW+02T6r/N/3wY/MXt1/ETG6BgiQvk=
+		</data>
+                        <key>command</key>
+                        <data>
+		LnTEAxQizumf4LEx7vWu/AEuw8pYLvlU+A+QAxxNV1Q=
+		</data>
+                        <key>location</key>
+                        <data>
+		l1GW8zsQs6xToCTE303HdInkm0pvem69Qmej6Ixq3k4=
+		</data>
+                        <key>trigger</key>
+                        <data>
+		kWwewq0GT8KPB4ELML1wT0S2IYIZ5+/6CI0GsK9LDns=
+		</data>
+                    </dict>
+                    <key>NSStoreModelVersionHashesVersion</key>
+                    <integer>3</integer>
+                    <key>NSStoreModelVersionIdentifiers</key>
+                    <array>
+                        <string></string>
+                    </array>
+                </dict>
+            </plist>
+        </metadata>
+    </databaseInfo>
+    <object type="ACTION" id="z102">
+        <attribute name="text" type="string">tell application "System Events" to tell (process 1 where frontmost is true)
+    click menu item "Open in Terminal" of menu 1 of menu bar item "Commands" of menu bar 1
+end tell</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAA2wAAgAAACcABP/+//0NAAQA
+Ak8AAQAAACcABQAGDQAFAAJPAAAABAAmAAcACA0ABwADSQACABQAJf/8AAn/+wr//AAYLnByY3NjbGljbnVsbP//gAD//4AAdWllbA0ACQACbgAAABQAIQAKAAsNAAoAAjQAAAAeACH/+gAMCv/6AAQKbWVuSQ0ADAABbQAAAB8AIAANDgANAAGxAA4RAA4AIABPAHAAZQBuACAAaQBuACAAVABlAHIAbQBpAG4AYQBsDQALAAJuAAAAFAAeAA8AEA0ADwACNAAAABsAHv/5ABEK//kABAptZW5FDQARAAFtAAAAHAAd//gD//gAAQ0AEAACbgAAABQAGwASABMNABIAAjQAAAAYABv/9wAUCv/3AAQKbWJyaQ0AFAABbQAAABkAGgAVDgAVAAGxABYRABYAEABDAG8AbQBtAGEAbgBkAHMNABMAAjQAAAAUABj/9gAXCv/2AAQKbWJhcg0AFwABbQAAABYAF//1A//1AAEC//sAAA0ACAADbAAFAAQAEQAY//T/8w0AGAACNgEBAAQAEQAZABoNABkAAjQAAAAEAAj/8gAbCv/yAAQKcHJjcw0AGwABbQAAAAYAB//xA//xAAENABoAAj0AAwAJABAAHAAdDQAcAAExAAAACgAM//AK//AABApwaXNmDQAdAAFtAAAADQAP/+8K/+8ACAtib292dHJ1ZQH/9AAAAf/zAAANAAYAAW0AAAAAAAEAHg8AHgHwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABzZXZzAAIBAGFsaXMAAAAAAZIAAgABDE1hY2ludG9zaCBIRAAAAAAAAAAAAAAAAAAAAMzLqBRIKwAAALZ4dxFTeXN0ZW0gRXZlbnRzLmFwcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAukBTzkFgyQAAAAAAAAAA/////wAACSAAAAAAAAAAAAAAAAAAAAAMQ29yZVNlcnZpY2VzABAACAAAzMwYlAAAABEACAAAzkHDOQAAAAEADAC2eHcAtnh0ALZ4cwACAD1NYWNpbnRvc2ggSEQ6U3lzdGVtOgBMaWJyYXJ5OgBDb3JlU2VydmljZXM6AFN5c3RlbSBFdmVudHMuYXBwAAAOACQAEQBTAHkAcwB0AGUAbQAgAEUAdgBlAG4AdABzAC4AYQBwAHAADwAaAAwATQBhAGMAaQBuAHQAbwBzAGgAIABIAEQAEgAtU3lzdGVtL0xpYnJhcnkvQ29yZVNlcnZpY2VzL1N5c3RlbSBFdmVudHMuYXBwAAATAAEvAP//AAAB//4AAAH//QAADgACAAAPEAADAAP/7gAfACAB/+4AABAAHwAB/+0K/+0AGC5hZXZ0b2FwcG51bGwAAIAAAACQACoqKioOACAABxD/7AAh/+v/6gAiACP/6Qr/7AAYLmFldnRvYXBwbnVsbAAAgAAAAJAAKioqKg0AIQABawAAAAAAJwAkAgAkAAIAAf/oAv/oAAAB/+sAAAL/6gAAEAAiAAAQACMACwAe/+cAJf/m/+X/5AAV/+P/4gAN/+EK/+cABApwcmNzDgAlAAATCv/mAAQKcGlzZgr/5QAECm1iYXIK/+QABAptYnJpCv/jAAQKbWVuRQr/4gAECm1lbkkK/+EAGC5wcmNzY2xpY251bGz//4AA//+AAHVpZWwR/+kAKOASACQq4Wsv4lvjLFxaZTgxEgATKuRrL+XmL+drL+jpL2oMAApVVQ8AYXNjcgABAA363t6t
+</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z105"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="TRIGGER" id="z103">
+        <attribute name="string" type="string">terminate</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z105"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
+    </object>
+    <object type="ACTION" id="z104">
+        <attribute name="text" type="string">Hidden Command Text</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z106"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND" idrefs="z106"></relationship>
+    </object>
+    <object type="COMMAND" id="z105">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">AppleScript</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-906194298</attribute>
+        <attribute name="appversion" type="int32">6</attribute>
+        <attribute name="appbundle" type="string">com.cocoatech.PathFinder</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z102"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z103"></relationship>
+    </object>
+    <object type="COMMAND" id="z106">
+        <attribute name="version" type="int32">1</attribute>
+        <attribute name="vendor" type="string">triumph</attribute>
+        <attribute name="type" type="string">*Hidden*</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="oslanguage" type="string">en_GB</attribute>
+        <attribute name="isspelling" type="bool">0</attribute>
+        <attribute name="issleep" type="bool">0</attribute>
+        <attribute name="isdictation" type="bool">0</attribute>
+        <attribute name="iscorrection" type="bool">0</attribute>
+        <attribute name="iscommand" type="bool">1</attribute>
+        <attribute name="engineid" type="int32">-1</attribute>
+        <attribute name="display" type="bool">1</attribute>
+        <attribute name="commandid" type="int32">-302973645</attribute>
+        <attribute name="appversion" type="int32">6</attribute>
+        <attribute name="appbundle" type="string">com.cocoatech.PathFinder</attribute>
+        <attribute name="active" type="bool">1</attribute>
+        <relationship name="currentaction" type="1/1" destination="ACTION" idrefs="z104"></relationship>
+        <relationship name="currenttrigger" type="1/1" destination="TRIGGER" idrefs="z107"></relationship>
+        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
+        <relationship name="action" type="0/0" destination="ACTION" idrefs="z104"></relationship>
+        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z107"></relationship>
+    </object>
+    <object type="TRIGGER" id="z107">
+        <attribute name="string" type="string">Hidden Command Name</attribute>
+        <attribute name="spokenlanguage" type="string">en_US</attribute>
+        <attribute name="isuser" type="bool">1</attribute>
+        <attribute name="desc" type="string">Hidden Command Description</attribute>
+        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z106"></relationship>
+        <relationship name="currentcommand" type="1/1" destination="COMMAND" idrefs="z106"></relationship>
+    </object>
+</database>

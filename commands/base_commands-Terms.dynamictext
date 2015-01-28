@@ -4,7 +4,7 @@
 <database>
     <databaseInfo>
         <version>134481920</version>
-        <UUID>ADF7D90B-CB2D-44C9-A736-4BED9EBF8C5A</UUID>
+        <UUID>4E0BE162-444E-4202-AE2B-82E7478DB590</UUID>
         <nextObjectID>103</nextObjectID>
         <metadata>
             <plist version="1.0">
@@ -32,16 +32,16 @@
             </plist>
         </metadata>
     </databaseInfo>
-    <object type="GENERALTERM" id="z102">
+    <object type="SPECIFICTERM" id="z102">
+        <attribute name="numericvalue" type="int32">0</attribute>
+        <attribute name="name" type="string">Text</attribute>
+        <relationship name="generalterm" type="1/1" destination="GENERALTERM" idrefs="z103"></relationship>
+    </object>
+    <object type="GENERALTERM" id="z103">
         <attribute name="termtype" type="string">Syn</attribute>
         <attribute name="spokenlanguage" type="string">en_US</attribute>
         <attribute name="name" type="string">Text</attribute>
         <attribute name="bundleidentifier" type="string">#</attribute>
-        <relationship name="specificterms" type="0/0" destination="SPECIFICTERM" idrefs="z103"></relationship>
-    </object>
-    <object type="SPECIFICTERM" id="z103">
-        <attribute name="numericvalue" type="int32">0</attribute>
-        <attribute name="name" type="string">Text</attribute>
-        <relationship name="generalterm" type="1/1" destination="GENERALTERM" idrefs="z102"></relationship>
+        <relationship name="specificterms" type="0/0" destination="SPECIFICTERM" idrefs="z102"></relationship>
     </object>
 </database>
