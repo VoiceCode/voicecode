@@ -119,27 +119,3 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Return"
     ]  
-  "shell-grab":
-    kind: "action"
-    description: "open file in editor"
-    grammarType: "individual"
-    tags: ["domain-specific", "terminal"]
-    triggerPhrase: "shell edit"
-    applications: ["iTerm"]
-    actions: [
-      kind: "key"
-      key: "O"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.15
-    ,
-      kind: "block"
-      transform: () ->
-        "$EDITOR "
-    ,
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Return"
-    ]
