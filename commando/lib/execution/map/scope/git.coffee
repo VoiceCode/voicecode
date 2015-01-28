@@ -49,3 +49,47 @@ _.extend Commands.mapping,
       transform: () ->
         "git diff "
     ]
+  "git-init":
+    kind: "action"
+    grammarType: "individual"
+    description: "git init"
+    triggerPhrase: "jet init"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git init "
+    ]
+  "git-push":
+    kind: "action"
+    grammarType: "individual"
+    description: "git push"
+    triggerPhrase: "jet push"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git push "
+    ]
+  "git-rebase":
+    kind: "action"
+    grammarType: "individual"
+    description: "git rebase"
+    triggerPhrase: "jet rebase"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git rebase "
+    ]
+  "git-pull":
+    kind: "action"
+    grammarType: "individual"
+    description: "git pull"
+    triggerPhrase: "jet pull"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git pull "
+    ]
