@@ -12,7 +12,7 @@ Template.Commands.helpers
   numberCommands: ->
     Commands.Utility.numberCommands()
   tags: ->
-    Commands.Utility.allTags()
+    _.sortBy Commands.Utility.allTags(), (i) -> i.toLowerCase()
   scopedCommands: ->
     Session.get("commands.inScope")
 

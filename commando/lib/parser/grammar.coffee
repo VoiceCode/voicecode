@@ -35,45 +35,20 @@ class @Grammar
     results.join("\n")
   build: -> """
     {
-      // var capitalLetters = {
-      //   skyarch: "A",
-      //   skybrov: "B",
-      //   skychar: "C",
-      //   skydell: "D",
-      //   skyetch: "E",
-      //   skyfomp: "F",
-      //   skygoof: "G",
-      //   skyhark: "H",
-      //   skyice: "I",
-      //   skyjinks: "J",
-      //   skykoop: "K",
-      //   skylug: "L",
-      //   skymowsh: "M",
-      //   skynerb: "N",
-      //   skyork: "O",
-      //   skypooch: "P",
-      //   skyquash: "Q",
-      //   skyrosh: "R",
-      //   skysouk: "S",
-      //   skyteek: "T",
-      //   skyunks: "U",
-      //   skyverge: "V",
-      //   skywomp: "W",
-      //   skytrex: "X",
-      //   skyyang: "Y",
-      //   skyzooch: "Z",
-      // }
-
       var grammarTransforms = {
-        frank: function(argument) {
-          return Scripts.levenshteinMatch(CommandoSettings.abbreviations, argument);
+        frank: function(arguments) {
+          return Scripts.levenshteinMatch(CommandoSettings.abbreviations, arguments.join(' '));
+        },
+        treemail: function(arguments) {
+          return Scripts.levenshteinMatch(CommandoSettings.emails, arguments.join(' '));
+        },
+        trusername: function(arguments) {
+          return Scripts.levenshteinMatch(CommandoSettings.usernames, arguments.join(' '));
+        },
+        trassword: function(arguments) {
+          return Scripts.levenshteinMatch(CommandoSettings.passwords, arguments.join(' '));
         }
       }
-
-      //  function makeCapitalLetter (letter) {
-      //    return capitalLetters[letter];
-      //  }
-
 
       function grammarTransform (name, arguments) {
         return grammarTransforms[name](arguments);
@@ -133,24 +108,16 @@ class @Grammar
       = identifier:(#{@individualCommands()}) ss {return identifier;}
 
     literalCommand
-      = text:(word / symbol)+ {return {command: "literal", arguments: text};}
+      = text:(nestableTextCommand / word / symbol)+ {return {command: "literal", arguments: text};}
 
     literalNumber
       = number:exactInteger {return {command: "number", arguments: number};}
-
-    //  capitalLetter
-    //    = letter:(
-    //      "skyarch" / "skybrov" / "skychar" / "skydell" / "skyetch" / "skyfomp" / "skygoof" / 
-    //      "skyhark" / "skyice" / "skyjinks" / "skykoop" / "skylug" / "skymowsh" / "skynerb" /
-    //      "skyork" / "skypooch" / "skyquash" / "skyrosh" / "skysouk" / "skyteek" / "skyunks" /
-    //      "skyverge" / "skywomp" / "skytrex" / "skyang" / "skyzooch"
-    //    ) ss {return makeCapitalLetter(letter);}
    
     nestableTextIdentifier
-      = "frank"
+      = "frank" / "treemail" / "trusername" / "trassword"
 
     nestableTextCommand
-      = identifier:nestableTextIdentifier ss arguments:(word)
+      = identifier:nestableTextIdentifier ss arguments:(word)+
       {return grammarTransform(identifier, arguments);}
 
     s = " "*
@@ -169,12 +136,10 @@ class @Grammar
 
     spokenInteger
       = components:(oneThousand / oneHundred / one / two / four / quads / zero / integer)+
-      // {return sumArray(components);}
       {return components.join('');}
 
     exactInteger
       = components:(oneThousand / oneHundred / one / twah / quads / zero / integer)+
-      // {return sumArray(components);}
       {return components.join('');}
 
     oneThousand

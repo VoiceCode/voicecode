@@ -119,3 +119,23 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Return"
     ]  
+  "shell-direct":
+    kind: "action"
+    grammarType: "textCapture"
+    description: "changes directory to any directory in the predefined list"
+    tags: ["text", "domain-specific", "shell"]
+    applications: ["iTerm"]
+    contextSensitive: true
+    triggerPhrase: "direct"
+    actions: [
+      kind: "block"
+      transform: (input) ->
+        if input?.length
+          directory = Scripts.levenshteinMatch CommandoSettings.directories, input.join(' ')
+          "cd #{directory} ; ls"
+        else
+          ""
+    ,
+      kind: "key"
+      key: "Return"
+    ]

@@ -11,6 +11,7 @@ singleWords = [
   "each"
   "while"
   "length"
+  "undefined"
 ]
 
 _.each singleWords, (word) ->

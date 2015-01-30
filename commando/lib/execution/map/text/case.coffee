@@ -9,10 +9,9 @@ _.extend Commands.mapping,
     kind: "text"
     grammarType: "textCapture"
     description: "camelCaseText"
-    aliases: ["tram"]
     tags: ["text"]
     transform: "camel"
-    aliases: ["crammed", "crams"]
+    aliases: ["crammed", "crams", "tram"]
   "decram":
     kind: "text"
     grammarType: "textCapture"

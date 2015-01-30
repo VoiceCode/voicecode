@@ -1,6 +1,6 @@
 @Transforms =
   identity: (textArray) ->
-    textArray.join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".").replace(/\s\./, ".").replace(/\s:/, ":").replace(/\s'\s/, "'")
+    textArray.join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".").replace(/\s\./, ".").replace(/\s:/, ":").replace(/\s'\s/, "'").replace(/-\s/, "-")
   literal: (textArray) ->
     switch Meteor.settings.defaultLiteralTransform
       when "snake"

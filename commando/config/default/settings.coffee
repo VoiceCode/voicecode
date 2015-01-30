@@ -73,6 +73,7 @@
     length: "len"
     library: "lib"
     medium: "md"
+    minimum: "min"
     number: "num"
     object: "obj"
     parameter: "param"
@@ -122,6 +123,16 @@
     "find all": "fina"
   # this can be changed. 48 = TAB, 36 = ENTER, etc
   codeSnippetCompletionKeystroke: "key code 48"
+  directories:
+    home: "~"
+    applications: "/Applications"
+    users: "/Users"
+  passwords:
+    example: "password"
+  emails:
+    example: "email@example.com"
+  usernames:
+    example: "username1"
 
     
             
