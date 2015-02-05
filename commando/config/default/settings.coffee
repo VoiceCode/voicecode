@@ -46,6 +46,7 @@
     alternate: "alt"
     application: "app"
     applications: "apps"
+    architecture: "arch"
     argument: "arg"
     arguments: "args"
     attribute: "attr"
@@ -133,6 +134,10 @@
     example: "email@example.com"
   usernames:
     example: "username1"
+  translations:
+    "january": "January"
+    "february": "February"
+    "i'm": "I'm"
 
     
             

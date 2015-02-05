@@ -33,6 +33,9 @@ class @Grammar
         aliasLine = "#{normalName} = (#{alternates.join(" / ")}) {return '#{name}';}"
         results.push aliasLine
     results.join("\n")
+  translationIdentifiers: ->
+    # = transBoom / transHello
+    _.map(CommandoSettings.translations, (value, key) -> "\"#{key}\"").join(" / ")
   build: -> """
     {
       var grammarTransforms = {
@@ -108,7 +111,7 @@ class @Grammar
       = identifier:(#{@individualCommands()}) ss {return identifier;}
 
     literalCommand
-      = text:(nestableTextCommand / word / symbol)+ {return {command: "literal", arguments: text};}
+      = text:(nestableTextCommand / translation / word / symbol)+ {return {command: "literal", arguments: text};}
 
     literalNumber
       = number:exactInteger {return {command: "number", arguments: number};}
@@ -119,6 +122,15 @@ class @Grammar
     nestableTextCommand
       = identifier:nestableTextIdentifier ss arguments:(word)+
       {return grammarTransform(identifier, arguments);}
+
+    // translations
+
+    translation
+      = identifier:translationIdentifier {return translationReplacement(identifier);}
+
+    translationIdentifier
+      = identifier:(#{@translationIdentifiers()}) ss {return identifier;}
+
 
     s = " "*
 

@@ -57,7 +57,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "selects the entire line"
     tags: ["selection"]
-    aliases: ["sheqel"]
+    aliases: ["sheqel", "shackle"]
     actions: [
       kind: "key"
       key: "Left"

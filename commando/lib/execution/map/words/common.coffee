@@ -12,7 +12,14 @@ singleWords = [
   "while"
   "length"
   "undefined"
+  "yes"
+  "class"
+  "new"
 ]
+
+wordsWithTriggerPhrase =
+  # "word": "trigger"
+  "id": "ID"
 
 _.each singleWords, (word) ->
   Commands.mapping["word-#{word}"] = 
@@ -21,4 +28,13 @@ _.each singleWords, (word) ->
     description: "insert the word '#{word}'"
     tags: ["user", "word"]
     triggerPhrase: word
+    word: word
+
+_.each wordsWithTriggerPhrase, (trigger, word) ->
+  Commands.mapping["word-#{word}"] = 
+    kind: "word"
+    grammarType: "textCapture"
+    description: "insert the word '#{word}'"
+    tags: ["user", "word"]
+    triggerPhrase: trigger
     word: word

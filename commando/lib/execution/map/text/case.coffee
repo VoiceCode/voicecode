@@ -11,7 +11,7 @@ _.extend Commands.mapping,
     description: "camelCaseText"
     tags: ["text"]
     transform: "camel"
-    aliases: ["crammed", "crams", "tram"]
+    aliases: ["crammed", "crams", "tram", "kram"]
   "decram":
     kind: "text"
     grammarType: "textCapture"

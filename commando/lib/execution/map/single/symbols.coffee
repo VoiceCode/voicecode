@@ -124,6 +124,22 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Left"
     ]
+  "kirksorp":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "{"
+    ]
+  "kirkos":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "}"
+    ]
   "kirk":
     kind: "action"
     grammarType: "individual"
@@ -644,22 +660,6 @@ _.extend Commands.mapping,
     actions: [
       kind: "keystroke"
       keystroke: "]"
-    ]
-  "kirksorp":
-    kind: "action"
-    grammarType: "individual"
-    tags: ["symbol"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "{"
-    ]
-  "kirkos":
-    kind: "action"
-    grammarType: "individual"
-    tags: ["symbol"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "}"
     ]
   "crunder":
     kind: "action"

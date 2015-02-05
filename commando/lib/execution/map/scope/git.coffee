@@ -1,4 +1,15 @@
 _.extend Commands.mapping,
+  "git-base":
+    kind: "action"
+    grammarType: "individual"
+    description: "git"
+    triggerPhrase: "jet"
+    tags: ["domain-specific", "git"]
+    actions: [
+      kind: "block"
+      transform: () ->
+        "git "
+    ]  
   "git-status":
     kind: "action"
     grammarType: "individual"
@@ -53,7 +64,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "git init"
-    triggerPhrase: "jet init"
+    triggerPhrase: "jet in it"
     tags: ["domain-specific", "git"]
     actions: [
       kind: "block"
