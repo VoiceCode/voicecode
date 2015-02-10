@@ -575,6 +575,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     tags: ["symbol"]
+    aliases: ["dalai", "dawley"]
     actions: [
       kind: "keystroke"
       keystroke: "$"
@@ -676,6 +677,23 @@ _.extend Commands.mapping,
     actions: [
       kind: "keystroke"
       keystroke: "::"
+    ]
+  "tinker":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "`"
+    ]
+  "caret":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    # aliases: ["^"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "^"
     ]
 
   

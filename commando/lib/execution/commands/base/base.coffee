@@ -1,6 +1,6 @@
 @Commands ?= {}
 Commands.mapping = {}
-Commands.previous = interpretation: {}, generated: ""
+Commands.history = []
 
 class Commands.Base
   constructor: (@namespace, @input) ->

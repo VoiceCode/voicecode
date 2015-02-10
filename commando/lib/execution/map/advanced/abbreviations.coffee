@@ -8,7 +8,11 @@ _.extend Commands.mapping,
     actions: [
       kind: "script"
       script: (input) ->
-        Scripts.insertAbbreviation((input or []).join(" "))
+        if input?.length
+          result = Scripts.levenshteinMatch CommandoSettings.abbreviations, input.join(' ')
+          Scripts.makeTextCommand result
+        else
+          ""
     ]
   "skoofrank":
     kind: "action"
@@ -19,7 +23,11 @@ _.extend Commands.mapping,
     actions: [
       kind: "script"
       script: (input) ->
-        Scripts.insertAbbreviation((input or []).join(" "), " ")
+        if input?.length
+          result = Scripts.levenshteinMatch CommandoSettings.abbreviations, input.join(' ')
+          Scripts.makeTextCommand " #{result}"
+        else
+          ""
     ]
   "quinn":
     kind: "action"
@@ -39,12 +47,14 @@ _.extend Commands.mapping,
     tags: ["text", "utility"]
     contextSensitive: true
     actions: [
-      kind: "block"
-      transform: (input) ->
+      kind: "script"
+      script: (input) ->
         if input?.length
-          Scripts.levenshteinMatch CommandoSettings.passwords, input.join(' ')
+          result = Scripts.levenshteinMatch CommandoSettings.passwords, input.join(' ')
+          Scripts.makeTextCommand result
         else
           ""
+
     ]
   "treemail":
     kind: "action"
@@ -53,10 +63,11 @@ _.extend Commands.mapping,
     tags: ["text", "utility"]
     contextSensitive: true
     actions: [
-      kind: "block"
-      transform: (input) ->
+      kind: "script"
+      script: (input) ->
         if input?.length
-          Scripts.levenshteinMatch CommandoSettings.emails, input.join(' ')
+          result = Scripts.levenshteinMatch CommandoSettings.emails, input.join(' ')
+          Scripts.makeTextCommand result
         else
           ""
     ]
@@ -67,10 +78,11 @@ _.extend Commands.mapping,
     tags: ["text", "utility"]
     contextSensitive: true
     actions: [
-      kind: "block"
-      transform: (input) ->
+      kind: "script"
+      script: (input) ->
         if input?.length
-          Scripts.levenshteinMatch CommandoSettings.usernames, input.join(' ')
+          result = Scripts.levenshteinMatch CommandoSettings.usernames, input.join(' ')
+          Scripts.makeTextCommand result
         else
           ""
     ]

@@ -8,5 +8,20 @@ _.extend Commands.mapping,
     actions: [
       kind: "script"
       script: (input) ->
-        Commands.previous.generated
+        previous = PreviousCommands.find({}, {sort: {createdAt: -1}, limit: 1}).fetch()[0]
+        previous?.generated
+    ]
+  "recon":
+    kind: "action"
+    grammarType: "individual"
+    description: "repeat last command"
+    tags: ["system", "voicecode"]
+    actions: [
+      kind: "key"
+      key: "Space"
+      modifiers: ["option"]
+    ,
+      kind: "block"
+      transform: () ->
+        "vc  "
     ]

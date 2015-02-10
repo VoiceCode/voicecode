@@ -4,7 +4,6 @@ aldeed:simple-schema@1.1.0
 anti:i18n@0.4.3
 application-configuration@1.0.4
 aslagle:reactive-table@0.5.9
-autopublish@1.0.2
 autoupdate@1.1.4
 base64@1.0.2
 binary-heap@1.0.2
@@ -37,6 +36,8 @@ iron:location@1.0.6
 iron:middleware-stack@1.0.6
 iron:router@1.0.6
 iron:url@1.0.6
+jparker:crypto-core@0.1.0
+jparker:crypto-md5@0.1.1
 jquery@1.0.2
 json@1.0.2
 launch-screen@1.0.1
@@ -73,6 +74,7 @@ sha@1.0.2
 spacebars@1.0.4
 spacebars-compiler@1.0.4
 srp@1.0.2
+stratogee:relative-time@1.0.0
 stylus@1.0.6
 templating@1.0.10
 tracker@1.0.4

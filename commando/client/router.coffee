@@ -14,5 +14,7 @@ Router.route '/utility', ->
   this.render 'Utility'
 Router.route '/vocab', ->
   this.render 'Vocab'
+Router.route '/history', ->
+  this.render 'History'
 Router.route '/mobile', ->
   this.render 'Mobile'

@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 coffeescript
 mizzao:bootstrap-3
@@ -31,3 +30,5 @@ wizonesolutions:underscore-string
 meteorhacks:npm
 npm-container
 http
+jparker:crypto-md5
+stratogee:relative-time

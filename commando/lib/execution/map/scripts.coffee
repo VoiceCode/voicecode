@@ -65,18 +65,34 @@
     """
   makeTextCommand: (text, modifierString) ->
     strokes = _.map text.split(''), (character) ->
-      result = if character is "."
-        Scripts.makeKeycode 47
-      else if character is "/"
-        Scripts.makeKeycode 44
-      else if character is "-"
-        Scripts.makeKeycode 27
-      else if character is '"'
-        Scripts.makeKeystroke "\\\""
-      else if character >= '0' and character <= '9'
-        Scripts.makeKeycode KeyCodes["n#{character}"]
-      else
-        Scripts.makeKeystroke character
+      result = switch character 
+        when "."
+          Scripts.makeKeycode 47
+        when "/"
+          Scripts.makeKeycode 44
+        when "-"
+          Scripts.makeKeycode 27
+        when "+"
+          Scripts.makeKeycode 24, "using {shift down}"
+        when "="
+          Scripts.makeKeycode 24
+        when "`"
+          Scripts.makeKeycode 50
+        when "$"
+          Scripts.makeKeycode 21, "using {shift down}"
+        when "*"
+          Scripts.makeKeycode 28, "using {shift down}"
+        when "'"
+          Scripts.makeKeycode 39
+        when '"'
+          Scripts.makeKeycode 39, "using {shift down}"
+        when '\\'
+          Scripts.makeKeycode 42
+        else
+          if character >= '0' and character <= '9'
+            Scripts.makeKeycode KeyCodes["n#{character}"]
+          else
+            Scripts.makeKeystroke character          
       [result, modifierString].join(" ")
     joined = strokes.join("\ndelay 0.01\n") + "\ndelay 0.02"
     Scripts.makeSystemEventsCommand joined 
@@ -197,12 +213,7 @@
     """
   singleLetter: (letter, more) ->
     extras = more or []
-    letters = "#{letter}#{extras.join('')}"
-    """
-    tell application "System Events"
-    keystroke "#{letters}"
-    end tell
-    """
+    Scripts.makeTextCommand "#{letter}#{extras.join('')}"
   singleModifier: (letter, modifiers) ->
     code = KeyCodes[letter]
     mods = _.map modifiers, (m) -> "#{m} down"

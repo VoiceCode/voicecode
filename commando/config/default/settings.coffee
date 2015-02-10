@@ -44,6 +44,7 @@
     administrator: "admin"
     administrators: "admins"
     alternate: "alt"
+    apartment: "apt"
     application: "app"
     applications: "apps"
     architecture: "arch"

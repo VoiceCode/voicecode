@@ -16,10 +16,17 @@ class Commands.Chain
       appleScript = @makeAppleScriptCommand combined
       if shouldInvoke
         @invokeShell appleScript
-      else
-        # console.log "missed: #{@phrase}"
-      # returned for inspection
-      Commands.previous = {interpretation: results, generated: combined}
+
+      if Meteor.isServer
+        inserted = PreviousCommands.insert
+          createdAt: new Date()
+          interpretation: results
+          spoken: @phrase
+          generated: combined
+        # console.log "result is #{inserted}"
+
+      {interpretation: results, generated: combined}
+
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD
     #{content}
