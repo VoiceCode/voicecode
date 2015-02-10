@@ -7,3 +7,6 @@ To start voicecode:
 
 cd ~/voicecode
 meteor --settings config/settings.json --port 5000
+
+Command Reference (after starting voicecode):
+http://commando:5000/commands
