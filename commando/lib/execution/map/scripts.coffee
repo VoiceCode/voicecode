@@ -39,8 +39,10 @@
   openWebTab: (name) ->
     """
     tell application "#{CommandoSettings.defaultBrowser}" to activate
+    delay 0.1
     tell application "System Events"
     keystroke "t" using {command down}
+    delay 0.1
     end tell
     """
   spacePad: ->
