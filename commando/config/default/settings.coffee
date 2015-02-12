@@ -38,6 +38,7 @@
     safari: "Safari"
     xcode: "Xcode"
     automate: "Automator"
+    store: "App Store"
   abbreviations:
     standing: "stdin"
     standout: "stdout"

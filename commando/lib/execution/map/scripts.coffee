@@ -90,6 +90,8 @@
           Scripts.makeKeycode 39, "using {shift down}"
         when '\\'
           Scripts.makeKeycode 42
+        when '\n'
+          Scripts.makeKeycode 36
         else
           if character >= '0' and character <= '9'
             Scripts.makeKeycode KeyCodes["n#{character}"]
