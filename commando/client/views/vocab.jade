@@ -1,16 +1,5 @@
 template(name="Vocab")
   .container
-    h1 Vocab Page
-      small make sure Dragon understands each word needed for commands to operate correctly
-    p.lead Open a blank document and put dragon in dictation mode. For each line below, start with the phrase: "no space", and then read the 4 words.
-    p.lead If Dragon does not recognize a word correctly, keep trying.
-    .alert
-      p Some options are:
-      p - try pronouncing the words more clearly
-      p - try "training" the word in Dragon's interface
-      p - try refreshing this page and copying all the words from the bottom of this page into a new text file, and importing that text file into dragon's vocabulary training. This will tell dragon to update its algorithms and prioritize these words more highly.
-    each vocabGroups
-      pre= this
-    h2 Use for vocabulary training
-      small save to a text file, then choose that file for vocab training in Dragon
+    h2 Vocab Page
+      small Tip: If you are ever having trouble with dragon not recognizing some of the special command words try refreshing this page and copying all the words into a new text file, and importing that text file into dragon's vocabulary training. This will tell dragon to update its algorithms and prioritize these words more highly.
     .well #{vocabList}

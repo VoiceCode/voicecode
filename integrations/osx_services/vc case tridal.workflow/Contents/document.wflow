@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>409.1</string>
+	<key>AMApplicationVersion</key>
+	<string>2.5</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run JavaScript.action</string>
+				<key>ActionName</key>
+				<string>Run JavaScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>var hasSpace = /\s/;
+var hasSeparator = /[\W_]/;
+var separatorSplitter = /[\W_]+(.|$)/g;
+var camelSplitter = /(.)([A-Z]+)/g;
+
+function unseparate (string) {
+  return string.replace(separatorSplitter, function (m, next) {
+    return next ? ' ' + next : '';
+  });
+}
+
+function uncamelize (string) {
+  return string.replace(camelSplitter, function (m, previous, uppers) {
+    return previous + ' ' + uppers.toLowerCase().split('').join(' ');
+  });
+}
+
+function toNoCase (string) {
+  if (hasSpace.test(string)) return string.toLowerCase();
+  if (hasSeparator.test(string)) return (unseparate(string) || string).toLowerCase();
+  return uncamelize(string).toLowerCase();
+}
+
+function toSpaceCase (string) {
+  return toNoCase(string).replace(/[\W_]+(.|$)/g, function (matches, match) {
+    return match ? ' ' + match : '';
+  });
+}
+
+function toSnakeCase (string) {
+  return toSpaceCase(string).replace(/\s/g, '_');
+}
+
+function toCamelCase (string) {
+  return toSpaceCase(string).replace(/\s(\w)/g, function (matches, letter) {
+    return letter.toUpperCase();
+  });
+}
+
+function toDotCase (string) {
+  return toSpaceCase(string).replace(/\s/g, '.');
+}
+
+function toConstantCase (string) {
+  return toSnakeCase(string).toUpperCase();
+}
+
+function toSentenceCase (string) {
+  return toNoCase(string).replace(/[a-z]/i, function (letter) {
+    return letter.toUpperCase();
+  });
+}
+
+function toSlugCase (string) {
+  return toSpaceCase(string).replace(/\s/g, '-');
+}
+
+function toCapitalCase (string) {
+  return toNoCase(string).replace(/(^|\s)(\w)/g, function (matches, previous, letter) {
+    return previous + letter.toUpperCase();
+  });
+}
+
+function toPascalCase (string) {
+  return toSpaceCase(string).replace(/(?:^|\s)(\w)/g, function (matches, letter) {
+    return letter.toUpperCase();
+  });
+}
+
+function toTitleCase (string) {
+	escape = function(str){
+	  return String(str).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+	};
+	var minors = [
+	  'a',
+	  'an',
+	  'and',
+	  'as',
+	  'at',
+	  'but',
+	  'by',
+	  'en',
+	  'for',
+	  'from',
+	  'how',
+	  'if',
+	  'in',
+	  'neither',
+	  'nor',
+	  'of',
+	  'on',
+	  'only',
+	  'onto',
+	  'out',
+	  'or',
+	  'per',
+	  'so',
+	  'than',
+	  'that',
+	  'the',
+	  'to',
+	  'until',
+	  'up',
+	  'upon',
+	  'v',
+	  'v.',
+	  'versus',
+	  'vs',
+	  'vs.',
+	  'via',
+	  'when',
+	  'with',
+	  'without',
+	  'yet'
+	];
+	var escaped = minors.map(escape);
+	var minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig');
+	var colonMatcher = /:\s*(\w)/g;
+
+  return toCapitalCase(string)
+    .replace(minorMatcher, function (minor) {
+      return minor.toLowerCase();
+    })
+    .replace(colonMatcher, function (letter) {
+      return letter.toUpperCase();
+    });
+}
+
+function run(input, parameters) {
+	return toTitleCase(input[0]);
+}
+</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunJavaScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunJavaScriptAction</string>
+				<key>InputUUID</key>
+				<string>7572DBC4-897D-40B8-98F2-64078ACEBA25</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+					<string>JavaScript</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>E5792025-A7FC-4486-8A8D-8FC72D08F11B</string>
+				<key>UUID</key>
+				<string>684244FF-CF6E-49DD-B754-9D301A391F94</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>function run(input, parameters) {
+	
+	// Your script goes here
+
+	return input;
+}</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>430.500000:316.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run JavaScript.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.text</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.text</string>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>

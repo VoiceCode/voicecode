@@ -474,6 +474,13 @@
         """
     else
       ""
+  clickServiceItem: (item) ->
+    """
+    tell application "System Events" to tell (process 1 where frontmost is true)
+      click menu item "#{item}" of menu "Services" of menu item "Services" of menu 1 of menu bar item 2 of menu bar 1
+    end tell
+    delay 1
+    """
 
       
       

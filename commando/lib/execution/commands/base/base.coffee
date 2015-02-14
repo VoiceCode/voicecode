@@ -20,12 +20,16 @@ class Commands.Base
   generateBaseCommand: ->
     switch @kind
       when "text"
-        transformed = @applyTransform(@input or [])
-        preCommand = if @info.padLeft
-          Scripts.spacePad()
+        if @input?.length
+          transformed = @applyTransform(@input)
+          preCommand = if @info.padLeft
+            Scripts.spacePad()
+          else
+            ""
+          [preCommand, Scripts.makeTextCommand(transformed)].join("\n")
         else
-          ""
-        [preCommand, Scripts.makeTextCommand(transformed)].join("\n")
+          if @info.fallbackService?
+            Scripts.clickServiceItem(@info.fallbackService)
       when "number"
         preCommand = if @info.padLeft
           Scripts.spacePad()

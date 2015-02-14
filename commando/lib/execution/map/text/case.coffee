@@ -12,6 +12,8 @@ _.extend Commands.mapping,
     tags: ["text"]
     transform: "camel"
     aliases: ["crammed", "crams", "tram", "kram"]
+    contextSensitive: true
+    fallbackService: "vc case cram"
   "decram":
     kind: "text"
     grammarType: "textCapture"
@@ -25,6 +27,8 @@ _.extend Commands.mapping,
     description: "snake_case_text"
     tags: ["text"]
     transform: "snake"
+    contextSensitive: true
+    fallbackService: "vc case snake"
   "coalsnik":
     kind: "text"
     grammarType: "textCapture"
@@ -50,6 +54,8 @@ _.extend Commands.mapping,
     description: "spinal-case-text"
     tags: ["text"]
     transform: "spine"
+    contextSensitive: true
+    fallbackService: "vc case spine"
   "despin":
     kind: "text"
     grammarType: "textCapture"
@@ -64,30 +70,40 @@ _.extend Commands.mapping,
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
+    contextSensitive: true
+    fallbackService: "vc case criffed"
   "smash":
     kind: "text"
     grammarType: "textCapture"
     description: "lowercasewithnospaces"
     tags: ["text"]
     transform: "lowerSlam"
+    contextSensitive: true
+    fallbackService: "vc case smash"
   "yellsmash":
     kind: "text"
     grammarType: "textCapture"
     description: "UPPERCASEWITHNOSPACES"
     tags: ["text"]
     transform: "upperSlam"
+    contextSensitive: true
+    fallbackService: "vc case yellsmash"
   "yeller":
     kind: "text"
     grammarType: "textCapture"
     description: "UPPER CASE WITH SPACES"
     tags: ["text"]
     transform: "upperCase"
+    contextSensitive: true
+    fallbackService: "vc case yeller"
   "yellsnik":
     kind: "text"
     grammarType: "textCapture"
     description: "UPPER_CASE_SNAKE"
     tags: ["text"]
     transform: "upperSnake"
+    contextSensitive: true
+    fallbackService: "vc case yellsnik"
   "yellspin":
     kind: "text"
     grammarType: "textCapture"
@@ -112,9 +128,13 @@ _.extend Commands.mapping,
     description: "Title Words With Spaces"
     tags: ["text"]
     transform: "titleSentance"
+    contextSensitive: true
+    fallbackService: "vc case tridal"
   "senchen":
     kind: "text"
     grammarType: "textCapture"
     description: "Sentence case with spaces"
     tags: ["text"]
     transform: "titleFirstSentance"
+    contextSensitive: true
+    fallbackService: "vc case senchen"
