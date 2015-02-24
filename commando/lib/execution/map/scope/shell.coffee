@@ -99,7 +99,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open file in editor"
     grammarType: "individual"
-    tags: ["domain-specific", "terminal"]
+    tags: ["domain-specific", "shell"]
     triggerPhrase: "shell edit"
     applications: ["iTerm"]
     actions: [

@@ -16,10 +16,44 @@ _.extend Commands.mapping,
     grammarType: "numberCapture"
     description: "delete a partial word at a time"
     tags: ["deleting"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "Delete"
+          modifiers: ['control']
+        ]
+      "vim":
+        requirements: [
+          application: "iTerm"
+          context: "vim"
+        ,
+          application: "MacVim"
+        ]
+        actions: [
+          kind: "key"
+          key: "Delete"
+          modifiers: ['option']
+        ]
+      "emacs":
+        requirements: [
+          application: "iTerm"
+          context: "emacs"
+        ,
+          application: "Emacs"
+        ]
+        actions: [
+          kind: "key"
+          key: "Delete"
+          modifiers: ['option']
+        ]
     actions: [
       kind: "key"
       key: "Delete"
-      modifiers: ['control']
+      modifiers: ['option']
     ]
   "stippy":
     kind: "action"
@@ -27,6 +61,12 @@ _.extend Commands.mapping,
     grammarType: "numberCapture"
     description: "forward delete a partial word at a time"
     tags: ["deleting"]
+    applicationActions:
+      "Sublime Text": [
+        kind: "key"
+        key: "ForwardDelete"
+        modifiers: ['control']
+      ]
     actions: [
       kind: "key"
       key: "ForwardDelete"

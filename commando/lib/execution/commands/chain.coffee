@@ -26,12 +26,25 @@ class Commands.Chain
         # console.log "result is #{inserted}"
 
       {interpretation: results, generated: combined}
-
+  generateNestedInterpretation: ->
+    results = @parse()
+    if results?
+      combined = _.map(results, (result) ->
+        command = new Commands.Base(result.command, result.arguments)
+        command.generate()
+      ).join('\n')
+      combined
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD
     #{content}
     EOD
     """
+  makeJavascriptCommand: (content) ->
+    """osascript -l JavaScript <<EOD
+    #{content}
+    EOD
+    """
+
   invokeShell: (command) ->
     console.log command
     if Meteor.isServer

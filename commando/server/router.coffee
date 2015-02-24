@@ -22,6 +22,37 @@ RESTstop.add "recall", ->
       results = chain.execute(true)
   {}
 
+  # RESTstop.add "testing2", ->
+  #   console.log @
+  #   # notice ="""osascript <<EOD
+  #   # tell application "System Events"
+  #   # keystroke "b"
+  #   # end tell
+  #   # EOD
+  #   # """
+  #   notice2 ="osascript ~/projects/voiceCode/utility/applescripts/arch5.scpt"
+
+  #   Shell.exec notice2, async: true
+  #   # Shell.exec notice, async: true
+
+  #   {}
+  #   ""
+
+RESTstop.add "testing", ->
+  console.log @params
+  notice ="osascript /Users/triumph/projects/voiceCode/utility/applescripts/arch5.scpt"
+  # notice ="""osascript <<EOD
+  # tell application "System Events"
+  # keystroke "b"
+  # end tell
+  # EOD
+  # """
+  Shell.exec notice, async: true
+
+
+  {}
+
+
 RESTstop.add "history", ->
   console.log @params
   items = PreviousCommands.find({}, {sort: {createdAt: -1}, limit: 50}).fetch()

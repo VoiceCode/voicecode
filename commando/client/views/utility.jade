@@ -12,12 +12,22 @@ template(name="Utility")
       each commandNames
         +ChooseCommand
         | &nbsp;
+    input.form-control#commandSearch(placeholder="Say: voicecode <command>" style="width:300px;display:inline;")
+    a.btn.btn-primary#find Find
     if currentCommand
       h3 Dragon Base Command Name
         small paste this into the [name] field. (Click in the box to select)
       pre.selectable #{dragonBaseCommandName}
       a.btn.btn-primary.runScript Run dragon command creation script
       span Make sure the Dragon Dictate commands window is already open before you do this
+      br
+      br
+      a.btn.btn-info#findDragonCommand Find in Dragon interface 
+      span Make sure the Dragon Dictate commands window is already open before you do this
+      br
+      br
+      a.btn.btn-warning#updateDragonCommand Update Dragon Command
+      span Make sure the Dragon Dictate commands window is already open AND that the command is ALREADY selection in Dragon's interface!
       h3 Dragon Base Command
         small paste this into the AppleScript window. (Click in the box to select)
       pre.selectable #{dragonBaseCommand}

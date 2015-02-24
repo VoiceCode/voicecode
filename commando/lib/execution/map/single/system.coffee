@@ -9,3 +9,15 @@ _.extend Commands.mapping,
       script: (input) ->
         Scripts.openDropDown(input)
     ]
+  "system-volume":
+    kind: "action"
+    grammarType: "numberCapture"
+    description: "adjust the system volume [0-100]"
+    triggerPhrase: "volume"
+    contextSensitive: true
+    tags: ["system"]
+    actions: [
+      kind: "script"
+      script: (input) ->
+        Scripts.setVolume(input)
+    ]

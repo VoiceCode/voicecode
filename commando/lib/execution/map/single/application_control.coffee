@@ -39,6 +39,7 @@ _.extend Commands.mapping,
     description: "open a new browser tab (from anywhere)"
     grammarType: "individual"
     tags: ["system"]
+    contextSensitive: true
     actions: [
       kind: "script"
       script: () ->

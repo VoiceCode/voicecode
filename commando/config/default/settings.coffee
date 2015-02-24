@@ -53,9 +53,11 @@
     arguments: "args"
     attribute: "attr"
     attributes: "attrs"
+    allocate: "alloc"
     author: "auth"
     binary: "bin"
     button: "btn"
+    call: "col"
     column: "col"
     command: "cmd"
     define: "def"
@@ -140,7 +142,25 @@
     "january": "January"
     "february": "February"
     "i'm": "I'm"
-
+    "isobject": "object"
+    "maine": "main"
+  contexts:
+    global: "global"
+    emacs: "emacs"
+    mate: "textmate"
+  workflows:
+    "workflow test": "yellsnik it worked clamor"
+  shellCommands:
+    permissions: "chmod "
+    access: "chmod "
+    cat: "cat "
+    copy: "cp "
+    move: "mv "
+    remove: "rm "
+    "remove directory": "rmdir "
+    "make directory": "mkdir "
+    link: "ln "
+    man: "man "
     
             
 

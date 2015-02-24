@@ -239,3 +239,62 @@ Meteor.methods
     # console.log f
     Shell.exec f, async: true
     true
+  # compileApplescripts: ->
+  #   _.each _.keys(Commands.mapping)
+  updateDragonCommand: (name) ->
+    command = new Commands.Base(name, null)
+    body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    dragonName = command.generateDragonCommandName()
+    script = """osascript <<EOD
+    tell application "Dragon Dictate" to activate
+    delay 0.1
+
+    tell application "System Events"
+      tell process "Dragon Dictate"
+        set value of text area 1 of scroll area 1 of group 3 of splitter group 1 of window "Commands" to "#{body}"
+      end tell
+    end tell
+
+    delay 0.1
+
+    tell application "System Events"
+      tell process "Dragon Dictate"
+        click button "Compile" of splitter group 1 of window "Commands"
+      end tell
+    end tell
+    
+    delay 0.4
+
+    tell application "System Events"
+      tell process "Dragon Dictate"
+        click button "Save" of splitter group 1 of window "Commands"
+      end tell
+    end tell
+
+    EOD
+    """
+    console.log script
+    Shell.exec script, async: true
+    true
+  findDragonCommand: (name) ->
+    command = new Commands.Base(name, null)
+    body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    dragonName = command.generateDragonCommandName()
+    script = """
+    tell application "Dragon Dictate" to activate
+    delay 0.1
+    tell application "System Events"
+      tell process "Dragon Dictate"
+        set focused of (text field 1 of splitter group 1 of window "Commands") to true
+        delay 0.2
+        set value of text field 1 of splitter group 1 of window "Commands"  to "#{dragonName}"
+      end tell
+    end tell
+    """
+    f = """osascript <<EOD
+    #{script}
+    EOD
+    """
+    # console.log f
+    Shell.exec f, async: true
+    true

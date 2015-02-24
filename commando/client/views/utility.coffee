@@ -30,6 +30,18 @@ Template.Utility.events
     name = Session.get("ChooseCommand.current")
     if name?.length
       Meteor.call("makeDragonCommand", name)
+  "click #updateDragonCommand": (event, template) ->
+    name = Session.get("ChooseCommand.current")
+    if name?.length
+      Meteor.call("updateDragonCommand", name)
+  "click #findDragonCommand": (event, template) ->
+    name = Session.get("ChooseCommand.current")
+    if name?.length
+      Meteor.call("findDragonCommand", name)
+  "click #find": (e, t) ->
+    value = $("#commandSearch").val()?.toLowerCase()
+    console.log value
+    Session.set "ChooseCommand.current", value
 
 
 Template.ChooseCommand.helpers

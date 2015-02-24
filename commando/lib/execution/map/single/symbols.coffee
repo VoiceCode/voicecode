@@ -575,7 +575,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     tags: ["symbol"]
-    aliases: ["dalai", "dawley"]
+    aliases: ["dalai", "dawley", "donnelly"]
     actions: [
       kind: "keystroke"
       keystroke: "$"

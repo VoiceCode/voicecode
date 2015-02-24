@@ -70,10 +70,23 @@ _.extend Commands.mapping,
   "snipline":
     kind: "action"
     grammarType: "individual"
-    description: "will delete the entire line"
+    description: "will delete the entire line(s)"
     tags: ["deleting"]
     aliases: ["snipeline"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "K"
+          modifiers: ['control', 'shift']
+        ]
     actions: [
+      kind: "key"
+      key: "Delete"
+    ,
       kind: "key"
       key: "Right"
       modifiers: ["command"]
@@ -88,6 +101,16 @@ _.extend Commands.mapping,
     description: "will delete everything to the right"
     tags: ["deleting", "Right"]
     aliases: ["sniper"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "K"
+          modifiers: ['control']
+        ]
     actions: [
       kind: "key"
       key: "Right"
@@ -111,6 +134,16 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "will duplicate the current line"
     tags: ["text-manipulation"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "D"
+          modifiers: ['command', 'shift']
+        ]
     actions: [
       kind: "key"
       key: "Left"
@@ -134,15 +167,24 @@ _.extend Commands.mapping,
       key: "V"
       modifiers: ["command"]
     ]
-  "streak":
+  "folly":
     kind: "action"
     description: "expand selection to block"
     grammarType: "individual"
-    contextSensitive: true
     tags: ["text-manipulation"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "L"
+          modifiers: ['command']
+        ]
     actions: [
       kind: "script"
-      script: (value) ->
+      script: ->
         Scripts.selectBlock()
     ]
   "spando":

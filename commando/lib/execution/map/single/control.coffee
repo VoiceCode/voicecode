@@ -19,6 +19,16 @@ _.extend Commands.mapping,
     description: "Inserts a new line below the current line"
     grammarType: "individual"
     tags: ["Return", "combo"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "Return"
+          modifiers: ['command']
+        ]
     actions: [
       kind: "key"
       key: "Right"
@@ -44,14 +54,24 @@ _.extend Commands.mapping,
     description: "Inserts a new line above the current line"
     grammarType: "individual"
     tags: ["Return", "combo"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "Return"
+          modifiers: ['command', 'shift']
+        ]
     actions: [
       kind: "key"
-      key: "Up"
-    ,
-      kind: "key"
-      key: "Right"
+      key: "Left"
       modifiers: ["command"]
     ,
       kind: "key"
       key: "Return"
+    ,
+      kind: "key"
+      key: "Up"
     ]

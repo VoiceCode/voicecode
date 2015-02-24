@@ -52,7 +52,7 @@ _.extend Commands.mapping,
   "git-diff":
     kind: "action"
     grammarType: "individual"
-    description: "git add"
+    description: "git diff"
     triggerPhrase: "jet diff"
     tags: ["domain-specific", "git"]
     actions: [
