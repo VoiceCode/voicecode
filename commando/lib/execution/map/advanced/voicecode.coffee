@@ -44,7 +44,7 @@ _.extend Commands.mapping,
   "voicecode-context":
     kind: "action"
     grammarType: "textCapture"
-    description: "change voicecode execution context"
+    description: "change voicecode command execution context"
     tags: ["system", "voicecode"]
     triggerPhrase: "context"
     contextSensitive: true
