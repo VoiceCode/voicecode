@@ -80,4 +80,3 @@ _.each commandModifiers, (mods, prefix) ->
         script: (input) ->
           Scripts.singleModifier(key, mods)
       ]
-

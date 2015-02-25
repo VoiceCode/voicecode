@@ -242,5 +242,18 @@ _.extend Commands.mapping,
       script: (value) ->
         Scripts.selectFollowingOccurrence(value)
     ]
-
-
+  "swan":
+    kind: "action"
+    grammarType: "individual"
+    description: "Enters 'Ace Jump' / 'Easy Motion' mode"
+    tags: ["cursor"]
+    contextualActions:
+      "sublime": 
+        requirements: [
+          application: "Sublime Text"
+        ]
+        actions: [
+          kind: "key"
+          key: "Semicolon"
+          modifiers: ["command"]
+        ]

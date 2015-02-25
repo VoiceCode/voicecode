@@ -43,9 +43,15 @@ class Commands.Base
               requirements: scenarioInfo.requirements
               generated: Scripts.joinActionCommands(scenarioInfo.actions, @input)
             )
-          Scripts.applicationScope scopeCases, Scripts.joinActionCommands(@actions, @input)
+          fallback = if @actions
+            Scripts.joinActionCommands(@actions, @input)
+          else
+            Scripts.outOfContext(@namespace)
+            
+          Scripts.applicationScope scopeCases, fallback
         else
-          Scripts.joinActionCommands(@actions, @input)
+          if @actions?.length
+            Scripts.joinActionCommands(@actions, @input)
       when "word"
         transformed = Transforms.identity([@info.word].concat(@input or []))
         Scripts.makeTextCommand(transformed)

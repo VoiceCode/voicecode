@@ -38,14 +38,14 @@ Meteor.startup ->
       throw "invalid license key"
 
     notice ="""osascript <<EOD
-    display notification "voicecode is running!"
+    display notification "voicecode is running!" with title "VoiceCode"
     EOD
     """
     Shell.exec notice, async: true
   catch e
     console.log e
     notice ="""osascript <<EOD
-    display notification "please check your VoiceCode license key, and make sure you are online"
+    display notification "please check your license key, and make sure you are online" with title "VoiceCode"
     EOD
     """
     Shell.exec notice, async: true

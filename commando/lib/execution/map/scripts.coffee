@@ -574,6 +574,9 @@
       """
       set volume output volume #{volume}
       """
-
+  outOfContext: (name) ->
+    """
+    display notification "wrong context for command" with title "VoiceCode" subtitle "#{name}" sound name "Sosumi"
+    """
       
       

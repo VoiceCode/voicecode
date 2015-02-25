@@ -24,6 +24,8 @@
     _.map(textArray, (item, index) ->
       item.charAt(0).toUpperCase() + item.slice(1)
     ).join('')
+  nsObjectiveC: (textArray) ->
+    "NS" + Transforms.stud(textArray)
   spine: (textArray) ->
     _.slugify textArray.join(' ')
   lowerSlam: (textArray) ->

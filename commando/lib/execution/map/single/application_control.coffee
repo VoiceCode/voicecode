@@ -18,7 +18,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open application launcher"
     grammarType: "individual"
-    tags: ["application", "system"]
+    tags: ["application", "system", "launching"]
     actions: [
       kind: "key"
       key: "Space"
@@ -28,7 +28,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open application switcher"
     grammarType: "individual"
-    tags: ["application", "system"]
+    tags: ["application", "system", "launching"]
     actions: [
       kind: "key"
       key: "E"
@@ -38,7 +38,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "open a new browser tab (from anywhere)"
     grammarType: "individual"
-    tags: ["system"]
+    tags: ["system", "launching"]
     contextSensitive: true
     actions: [
       kind: "script"
@@ -48,7 +48,7 @@ _.extend Commands.mapping,
   "fox":
     kind: "action"
     description: "open application"
-    tags: ["application", "system"]
+    tags: ["application", "system", "launching"]
     grammarType: "oneArgument"
     actions: [
       kind: "script"
