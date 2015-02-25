@@ -39,6 +39,7 @@
     xcode: "Xcode"
     automate: "Automator"
     store: "App Store"
+    quicktime: "QuickTime Player"
   abbreviations:
     standing: "stdin"
     standout: "stdout"

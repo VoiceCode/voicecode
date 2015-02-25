@@ -4,5 +4,5 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     contextSensitive: true
     description: "formats spoke in arguments in NSUpperCamelCase (automatically inserts the 'NS' part)"
-    tags: ["text"]
+    tags: ["text", "objective-c", "domain-specific"]
     transform: "nsObjectiveC"
