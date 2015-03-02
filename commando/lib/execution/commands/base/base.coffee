@@ -2,6 +2,16 @@
 Commands.mapping = {}
 Commands.history = []
 Commands.context = "global"
+Commands.conditionalModules = {}
+
+Commands.registerConditionalModuleCommands = (moduleName, commands) ->
+  Commands.conditionalModules[moduleName] ?= {}
+  _.extend Commands.conditionalModules[moduleName], commands
+
+Commands.loadConditionalModules = ->
+  _.each Commands.conditionalModules, (value, key) ->
+    if CommandoSettings.modules[key] is true
+      _.extend Commands.mapping, value
 
 class Commands.Base
   constructor: (@namespace, @input) ->
@@ -19,13 +29,11 @@ class Commands.Base
   generateBaseCommand: ->
     switch @kind
       when "text"
-        if @input?.length
+        if @input?.length or @info.transformWhenBlank
           transformed = @applyTransform(@input)
-          preCommand = if @info.padLeft
-            Scripts.spacePad()
-          else
-            ""
-          [preCommand, Scripts.makeTextCommand(transformed)].join("\n")
+          prefix = @info.prefix or ""
+          suffix = @info.suffix or ""
+          Scripts.makeTextCommand([prefix, transformed, suffix].join(''))
         else
           if @info.fallbackService?
             Scripts.clickServiceItem(@info.fallbackService)
@@ -38,10 +46,11 @@ class Commands.Base
       when "action"
         if @info.contextualActions?
           scopeCases = []
+          me = @
           _.each @info.contextualActions, (scenarioInfo, scenarioName) ->
             scopeCases.push(
               requirements: scenarioInfo.requirements
-              generated: Scripts.joinActionCommands(scenarioInfo.actions, @input)
+              generated: Scripts.joinActionCommands(scenarioInfo.actions, me.input)
             )
           fallback = if @actions
             Scripts.joinActionCommands(@actions, @input)

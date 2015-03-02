@@ -75,7 +75,8 @@ class @Grammar
       = command+
 
     command
-      = textCaptureCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalNumber / literalCommand
+      = textCaptureCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalCommand
+      // = textCaptureCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalNumber / literalCommand
 
     textCaptureCommand
       = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}
@@ -87,7 +88,7 @@ class @Grammar
     #{@aliases()}
 
     textArgument
-      = (nestableTextCommand / word)+
+      = (nestableTextCommand / exactInteger / word)+
 
     numberCaptureCommand
       = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
@@ -102,7 +103,7 @@ class @Grammar
       = identifier:(#{@oneArgumentCommands()}) ss {return identifier;}
 
     singleTextArgument
-      = (word / symbol)
+      = (word / exactInteger / symbol)
 
     individualCommand
       = identifier:individualIdentifier {return {command: identifier};}
@@ -111,10 +112,10 @@ class @Grammar
       = identifier:(#{@individualCommands()}) ss {return identifier;}
 
     literalCommand
-      = text:(nestableTextCommand / translation / word / symbol)+ {return {command: "literal", arguments: text};}
+      = text:(nestableTextCommand / translation / word / exactInteger / symbol)+ {return {command: "vc-literal", arguments: text};}
 
-    literalNumber
-      = number:exactInteger {return {command: "number", arguments: number};}
+    // literalNumber
+    //   = number:exactInteger {return {command: "number", arguments: number};}
    
     nestableTextIdentifier
       = "frank" / "treemail" / "trusername" / "trassword"

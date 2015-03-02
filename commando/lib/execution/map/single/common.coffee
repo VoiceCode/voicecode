@@ -44,6 +44,19 @@ _.extend Commands.mapping,
       key: "V"
       modifiers: ["command"]
     ]
+  "sparshock":
+    kind: "action"
+    grammarType: "individual"
+    description: "paste the clipboard then press enter"
+    tags: ["V", "copy-paste", "combo", "Return"]
+    actions: [
+      kind: "key"
+      key: "V"
+      modifiers: ["command"]
+    ,
+      kind: "key"
+      key: "Return"
+    ]
   "sage":
     kind: "action"
     grammarType: "individual"
@@ -52,6 +65,20 @@ _.extend Commands.mapping,
     actions: [
       kind: "key"
       key: "S"
+      modifiers: ["command"]
+    ]
+  "sagewick":
+    kind: "action"
+    grammarType: "individual"
+    description: "file > save"
+    tags: ["application", "command", "S", "combo"]
+    actions: [
+      kind: "key"
+      key: "S"
+      modifiers: ["command"]
+    ,
+      kind: "key"
+      key: "Tab"
       modifiers: ["command"]
     ]
   "stooshwick":

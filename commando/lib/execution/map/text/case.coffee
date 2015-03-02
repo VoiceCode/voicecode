@@ -1,8 +1,8 @@
 _.extend Commands.mapping,
-  "literal":
+  "vc-literal":
     kind: "text"
     grammarType: "textCapture"
-    description: "words with spaces between"
+    description: "words with spaces between. This command is for internal grammar use (not spoken)"
     tags: ["text"]
     transform: "literal"
   "cram":
@@ -18,9 +18,16 @@ _.extend Commands.mapping,
     kind: "text"
     grammarType: "textCapture"
     description: "space camelCaseText"
-    tags: ["text"]
+    tags: ["text", "combo"]
     transform: "camel"
-    padLeft: true
+    prefix: " "
+  "dockram":
+    kind: "text"
+    grammarType: "textCapture"
+    description: "space camelCaseText"
+    tags: ["text", "combo"]
+    transform: "camel"
+    prefix: "."
   "snake":
     kind: "text"
     grammarType: "textCapture"
@@ -33,21 +40,30 @@ _.extend Commands.mapping,
     kind: "text"
     grammarType: "textCapture"
     description: ":snake_case_with_a_colon_at_the_front"
-    tags: ["text"]
-    transform: "rubySymbol"
+    tags: ["text", "combo"]
+    transform: "snake"
+    prefix: ":"
   "lowcram":
     kind: "text"
     grammarType: "textCapture"
     description: "@camelCaseWithAtSign"
+    tags: ["text", "combo"]
+    transform: "camel"
+    prefix: "@"
+  "dollcram":
+    kind: "text"
+    grammarType: "textCapture"
+    description: "$camelCaseWithDollarSign"
     tags: ["text"]
-    transform: "@camelCase"
+    transform: "camel"
+    prefix: "$"
   "deznik":
     kind: "text"
     grammarType: "textCapture"
     description: "space snake_case_text"
-    tags: ["text"]
+    tags: ["text", "combo"]
     transform: "snake"
-    padLeft: true
+    prefix: " "
   "spine":
     kind: "text"
     grammarType: "textCapture"
@@ -62,7 +78,7 @@ _.extend Commands.mapping,
     description: "space spinal-case-text"
     tags: ["text"]
     transform: "spine"
-    padLeft: true
+    prefix: " "
   "criffed":
     kind: "text"
     description: "StudCaseText"
@@ -72,6 +88,33 @@ _.extend Commands.mapping,
     transform: "stud"
     contextSensitive: true
     fallbackService: "vc case criffed"
+  "decriffed":
+    kind: "text"
+    description: "space StudCaseText"
+    tags: ["text", "combo"]
+    aliases: ["chaffed"]
+    grammarType: "textCapture"
+    transform: "stud"
+    contextSensitive: true
+    prefix: " "
+  "dockriffed":
+    kind: "text"
+    description: "space StudCaseText"
+    tags: ["text", "combo"]
+    aliases: ["chaffed"]
+    grammarType: "textCapture"
+    transform: "stud"
+    contextSensitive: true
+    prefix: "."
+  "dollkriffed":
+    kind: "text"
+    description: "space StudCaseText"
+    tags: ["text", "combo"]
+    aliases: ["chaffed"]
+    grammarType: "textCapture"
+    transform: "stud"
+    contextSensitive: true
+    prefix: "$"
   "smash":
     kind: "text"
     grammarType: "textCapture"
@@ -138,3 +181,11 @@ _.extend Commands.mapping,
     transform: "titleFirstSentance"
     contextSensitive: true
     fallbackService: "vc case senchen"
+  "datsun":
+    kind: "text"
+    grammarType: "textCapture"
+    description: "Sentence case with spaces"
+    tags: ["text"]
+    transform: "titleFirstSentance"
+    contextSensitive: true
+    prefix: ". "

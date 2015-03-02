@@ -11,8 +11,6 @@
         Transforms.identity(textArray)
   snake: (textArray) ->
     textArray.join('_').replace(/_\._/g, ".").replace(/\._/, ".")
-  rubySymbol: (textArray) ->
-    ":" + Transforms.snake(textArray)
   camel: (textArray) ->
     _.map(textArray, (item, index) ->
       if index is 0
@@ -24,8 +22,6 @@
     _.map(textArray, (item, index) ->
       item.charAt(0).toUpperCase() + item.slice(1)
     ).join('')
-  nsObjectiveC: (textArray) ->
-    "NS" + Transforms.stud(textArray)
   spine: (textArray) ->
     _.slugify textArray.join(' ')
   lowerSlam: (textArray) ->
@@ -59,10 +55,6 @@
       else
         item
     ).join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".")
-  "@camelCase": (textArray) ->
-    "@" + Transforms.camel(textArray)
-  ".camelCase": (textArray) ->
-    "." + Transforms.camel(textArray)
   firstLetters: (textArray) ->
     _.map(textArray, (item, index) ->
       item.charAt(0)

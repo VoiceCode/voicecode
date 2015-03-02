@@ -1,5 +1,6 @@
 Meteor.startup ->
   @Grammar = new Grammar()
+  Commands.loadConditionalModules()
   @ParseGenerator = {}
 
   try

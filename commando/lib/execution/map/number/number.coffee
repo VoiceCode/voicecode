@@ -1,8 +1,8 @@
-_.extend Commands.mapping,
-  "number":
-    kind: "number"
-    grammarType: "none"
-    description: "not spoken. used indirectly by other commands"
+# _.extend Commands.mapping,
+#   "number":
+#     kind: "number"
+#     grammarType: "none"
+#     description: "not spoken. used indirectly by other commands"
 
 numbers = 
   one: 1

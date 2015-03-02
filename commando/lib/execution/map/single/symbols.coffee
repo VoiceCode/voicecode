@@ -80,6 +80,17 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Left"
     ]
+  "qualposh":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "=''"
+    ,
+      kind: "key"
+      key: "Left"
+    ]
   "prexcoif":
     kind: "action"
     grammarType: "individual"
@@ -364,13 +375,27 @@ _.extend Commands.mapping,
     grammarType: "individual"
     tags: ["symbol"]
     actions: [
+      kind: "key"
+      key: "Right"
+      modifiers: ["command"]
+    ,
       kind: "keystroke"
       keystroke: ";"
     ]
-  "sinkshock":
+  "sunk":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol"]
+    aliases: ["stunk"]
+    actions: [
+      kind: "keystroke"
+      keystroke: ";"
+    ]
+  "sunkshock":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    aliases: ["sinkshock"] #TODO remove later
     actions: [
       kind: "keystroke"
       keystroke: ";"
@@ -523,6 +548,7 @@ _.extend Commands.mapping,
   "lambo":
     kind: "action"
     grammarType: "individual"
+    aliases: ["limbo"]
     tags: ["symbol"]
     actions: [
       kind: "keystroke"
@@ -575,7 +601,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     tags: ["symbol"]
-    aliases: ["dalai", "dawley", "donnelly"]
+    aliases: ["dalai", "dawley", "donnelly", "donley"]
     actions: [
       kind: "keystroke"
       keystroke: "$"
@@ -677,6 +703,14 @@ _.extend Commands.mapping,
     actions: [
       kind: "keystroke"
       keystroke: "::"
+    ]
+  "mintwice":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    actions: [
+      kind: "keystroke"
+      keystroke: "--"
     ]
   "tinker":
     kind: "action"

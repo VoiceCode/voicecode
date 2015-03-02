@@ -1,14 +1,4 @@
 _.extend Commands.mapping,
-  "shellmakedir":
-    kind: "action"
-    grammarType: "individual"
-    description: "make a directory in the shell"
-    tags: ["domain-specific", "shell"]
-    applications: ["iTerm"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "mkdir "
-    ]
   "shell-cd":
     kind: "action"
     grammarType: "individual"
@@ -127,7 +117,36 @@ _.extend Commands.mapping,
     applications: ["iTerm"]
     contextSensitive: true
     triggerPhrase: "direct"
+    contextualActions:
+      "terminal": 
+        requirements: [
+          application: "iTerm"
+        ,
+          application: "Terminal"
+        ]
+        actions: [
+          kind: "block"
+          transform: (input) ->
+            if input?.length
+              directory = Scripts.levenshteinMatch CommandoSettings.directories, input.join(' ')
+              "cd #{directory} ; ls"
+            else
+              ""
+        ,
+          kind: "key"
+          key: "Return"
+        ]
     actions: [
+      kind: "script"
+      script: (input) ->
+        Scripts.openApplication("iTerm")
+      delay: 0.5
+    ,
+      kind: "key"
+      key: "T"
+      modifiers: ["command"]
+      delay: 0.5
+    ,
       kind: "block"
       transform: (input) ->
         if input?.length

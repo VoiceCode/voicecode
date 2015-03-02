@@ -14,6 +14,19 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Space"
     ]
+  "skoopark":
+    kind: "action"
+    grammarType: "individual"
+    description: "insert a space then paste the clipboard"
+    tags: ["Space", "combo", "copy-paste",  "V"]
+    actions: [
+      kind: "key"
+      key: "Space"
+    ,
+      kind: "key"
+      key: "V"
+      modifiers: ["command"]
+    ]
   "shockoon":
     kind: "action"
     description: "Inserts a new line below the current line"

@@ -1,83 +1,0 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
-
-<database>
-    <databaseInfo>
-        <version>134481920</version>
-        <UUID>7CA86F13-7D73-46A2-A86F-3B14BC1F1EA3</UUID>
-        <nextObjectID>104</nextObjectID>
-        <metadata>
-            <plist version="1.0">
-                <dict>
-                    <key>NSPersistenceFrameworkVersion</key>
-                    <integer>526</integer>
-                    <key>NSStoreModelVersionHashes</key>
-                    <dict>
-                        <key>action</key>
-                        <data>
-		Gl79yicU/qMmmjW+02T6r/N/3wY/MXt1/ETG6BgiQvk=
-		</data>
-                        <key>command</key>
-                        <data>
-		LnTEAxQizumf4LEx7vWu/AEuw8pYLvlU+A+QAxxNV1Q=
-		</data>
-                        <key>location</key>
-                        <data>
-		l1GW8zsQs6xToCTE303HdInkm0pvem69Qmej6Ixq3k4=
-		</data>
-                        <key>trigger</key>
-                        <data>
-		kWwewq0GT8KPB4ELML1wT0S2IYIZ5+/6CI0GsK9LDns=
-		</data>
-                    </dict>
-                    <key>NSStoreModelVersionHashesVersion</key>
-                    <integer>3</integer>
-                    <key>NSStoreModelVersionIdentifiers</key>
-                    <array>
-                        <string></string>
-                    </array>
-                </dict>
-            </plist>
-        </metadata>
-    </databaseInfo>
-    <object type="COMMAND" id="z102">
-        <attribute name="version" type="int32">1</attribute>
-        <attribute name="vendor" type="string">triumph</attribute>
-        <attribute name="type" type="string">AppleScript</attribute>
-        <attribute name="spokenlanguage" type="string">en_US</attribute>
-        <attribute name="oslanguage" type="string">en_GB</attribute>
-        <attribute name="isspelling" type="bool">0</attribute>
-        <attribute name="issleep" type="bool">0</attribute>
-        <attribute name="isdictation" type="bool">0</attribute>
-        <attribute name="iscorrection" type="bool">0</attribute>
-        <attribute name="iscommand" type="bool">1</attribute>
-        <attribute name="engineid" type="int32">-1</attribute>
-        <attribute name="display" type="bool">1</attribute>
-        <attribute name="commandid" type="int32">-902855706</attribute>
-        <attribute name="appversion" type="int32">0</attribute>
-        <attribute name="active" type="bool">1</attribute>
-        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
-        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
-        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
-        <relationship name="action" type="0/0" destination="ACTION" idrefs="z104"></relationship>
-        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z103"></relationship>
-    </object>
-    <object type="TRIGGER" id="z103">
-        <attribute name="string" type="string">\u7f00\u7f00voice code /!Text!/</attribute>
-        <attribute name="spokenlanguage" type="string">en_US</attribute>
-        <attribute name="isuser" type="bool">1</attribute>
-        <attribute name="desc" type="string">Testing something</attribute>
-        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z102"></relationship>
-        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
-    </object>
-    <object type="ACTION" id="z104">
-        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	set theOriginal to the clipboard as record	set the clipboard to dictatedText as text	delay 0.05	tell application "System Events"		keystroke "v" using {command down}	end tell	delay 0.05	set the clipboard to theOriginal as recordend srhandler</attribute>
-        <attribute name="oslanguage" type="string">en_GB</attribute>
-        <attribute name="isuser" type="bool">1</attribute>
-        <attribute name="data" type="binary">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
-</attribute>
-        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z102"></relationship>
-        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
-    </object>
-</database>

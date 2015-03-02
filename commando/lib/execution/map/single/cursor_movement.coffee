@@ -22,6 +22,19 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Space"
     ]
+  "nudgle":
+    kind: "action"
+    grammarType: "individual"
+    description: "remove a space before the adjacent word on the left"
+    tags: ["cursor", "Space", "deleting", "Left", "combo"]
+    actions: [
+      kind: "key"
+      key: "Left"
+      modifiers: ["option"]
+    ,
+      kind: "key"
+      key: "Delete"
+    ]
   "ricksy":
     kind: "action"
     grammarType: "individual"
@@ -57,7 +70,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "selects the entire line"
     tags: ["selection"]
-    aliases: ["sheqel", "shackle"]
+    aliases: ["sheqel", "shikel"]
     actions: [
       kind: "key"
       key: "Left"
@@ -134,6 +147,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "will duplicate the current line"
     tags: ["text-manipulation"]
+    aliases: ["joel"]
     contextualActions:
       "sublime": 
         requirements: [

@@ -5,4 +5,6 @@ _.extend Commands.mapping,
     contextSensitive: true
     description: "formats spoke in arguments in NSUpperCamelCase (automatically inserts the 'NS' part)"
     tags: ["text", "objective-c", "domain-specific"]
-    transform: "nsObjectiveC"
+    transform: "stud"
+    prefix: "NS"
+    transformWhenBlank: true

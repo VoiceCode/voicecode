@@ -194,8 +194,6 @@
         results[key] = totalDistance
       best = _.min _.keys(results), (k) ->
         results[k]
-      # console.log results
-      # console.log best
       list[best]
   openApplication: (name) ->
     application = Scripts.levenshteinMatch CommandoSettings.applications, name

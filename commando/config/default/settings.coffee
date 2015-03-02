@@ -1,5 +1,12 @@
 @CommandoSettings = 
   defaultBrowser: "Chrome"
+  modules:
+    global: true
+    smartnav: false
+    css: false
+    javascript: false
+    ruby: false
+    shell: false
   websites:
     amazon: "amazon.com"
     "amazon console": "console.aws.amazon.com"
@@ -81,6 +88,8 @@
     medium: "md"
     minimum: "min"
     number: "num"
+    navigate: "nav"
+    navigation: "nav"
     object: "obj"
     parameter: "param"
     parameters: "params"
