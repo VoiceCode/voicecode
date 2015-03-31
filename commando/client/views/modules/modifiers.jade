@@ -1,0 +1,15 @@
+template(name="moduleModifiers")
+  h3 Modifier Combos
+  table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
+    thead
+      tr
+        th Keys / Modifiers
+        each prefixes
+          th= this
+    tbody
+      each letters
+        tr
+          td= this
+          each prefixes
+            td= this
+

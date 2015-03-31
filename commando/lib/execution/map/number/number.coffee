@@ -18,6 +18,15 @@ numbers =
   nine: 9
   zero: 0
   oh: 0
+  eleven: 11
+  twelve: 12
+  thirteen: 13
+  fourteen: 14
+  fifteen: 15
+  sixteen: 16
+  seventeen: 17
+  eighteen: 18
+  nineteen: 19
   ten: 10
   twenty: 20
   thirty: 30
@@ -34,7 +43,8 @@ _.each numbers, (value, key) ->
   grammarType: "none"
   description: "Enters the number: #{value}"
   namespace: "#{value}"
-  tags: ["number", "n#{value}"]
+  tags: ["number"]
+  module: "number"
   actions: [
     kind: "script"
     script: (input) ->

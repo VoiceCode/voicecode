@@ -23,6 +23,7 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Space"
       modifiers: ["option"]
+      delay: 0.1
     ]
   "foxwitch":
     kind: "action"
@@ -44,12 +45,14 @@ _.extend Commands.mapping,
       kind: "script"
       script: () ->
         Scripts.openWebTab()
+      delay: 0.3
     ]
   "fox":
     kind: "action"
     description: "open application"
     tags: ["application", "system", "launching"]
     grammarType: "oneArgument"
+    contextSensitive: true
     actions: [
       kind: "script"
       script: (value) ->

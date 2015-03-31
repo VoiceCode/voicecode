@@ -87,8 +87,22 @@ class @Grammar
 
     #{@aliases()}
 
+    overrideCommand
+     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger)
+     {
+      if (isNaN(keeperRight)) {
+        return keeperRight;
+      }
+      else {
+        return numberToWords(keeperRight);
+      }
+     }
+
+    overrideIdentifier
+     = identifier:("keeper") ss {return identifier;}
+
     textArgument
-      = (nestableTextCommand / exactInteger / word)+
+      = (overrideCommand / nestableTextCommand / translation / exactInteger / word)+
 
     numberCaptureCommand
       = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
@@ -112,7 +126,7 @@ class @Grammar
       = identifier:(#{@individualCommands()}) ss {return identifier;}
 
     literalCommand
-      = text:(nestableTextCommand / translation / word / exactInteger / symbol)+ {return {command: "vc-literal", arguments: text};}
+      = text:(overrideCommand / nestableTextCommand / translation / word / exactInteger / symbol)+ {return {command: "vc-literal", arguments: text};}
 
     // literalNumber
     //   = number:exactInteger {return {command: "number", arguments: number};}
@@ -137,7 +151,7 @@ class @Grammar
 
     ss = " "+
 
-    identifier = textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / "one" / "twah" / "quads"
+    identifier = id:(textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / "one" / "twah" / "quads" / "keeper") s {return id;}
 
     word = !identifier text:([a-z]i / "." / "'" / "-")+ ss {return text.join('')}
 

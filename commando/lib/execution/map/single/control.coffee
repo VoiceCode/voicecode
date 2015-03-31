@@ -3,13 +3,14 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "does nothing, but enters into voice code"
+    aliases: ["chin"]
     actions: []
     tags: ["text"]
   "skoosh":
     kind: "action"
     grammarType: "individual"
     description: "insert a space"
-    tags: ["Space"]
+    tags: ["space"]
     actions: [
       kind: "key"
       key: "Space"
@@ -18,7 +19,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "insert a space then paste the clipboard"
-    tags: ["Space", "combo", "copy-paste",  "V"]
+    tags: ["space", "combo", "copy-paste",  "V"]
     actions: [
       kind: "key"
       key: "Space"
@@ -66,6 +67,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "Inserts a new line above the current line"
     grammarType: "individual"
+    aliases: ["chalky"]
     tags: ["Return", "combo"]
     contextualActions:
       "sublime": 

@@ -7,7 +7,8 @@ _.extend Commands.mapping,
     actions: [
       kind: "script"
       script: (input) ->
-        Scripts.openDropDown(input)
+        menuItem = CommandoSettings.menuItemAliases[input] or input
+        Scripts.openDropDown(menuItem)
     ]
   "system-volume":
     kind: "action"

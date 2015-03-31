@@ -68,15 +68,34 @@
   prick: ["command", "control", "shift"]
   sky: ["shift"]
 
+allowed =
+  chomm: [
+    "won"
+    "too"
+    "three"
+    "four"
+    "five"
+    "six"
+    "seven"
+    "arch"
+  ]
+  shay: [
+    "souk"
+  ]
+
 _.each commandModifiers, (mods, prefix) ->
   _.each commandLetters, (value, key) ->
-    Commands.mapping["#{prefix}#{value}"] = 
-      kind: "action"
-      grammarType: "individual"
-      description: "#{mods.join(' + ')} + #{key}"
-      tags: ["modifier", key, mods.join("+")]
-      actions: [
-        kind: "script"
-        script: (input) ->
-          Scripts.singleModifier(key, mods)
-      ]
+    if allowed[prefix]? and _.contains allowed[prefix], value
+      Commands.mapping["#{prefix}#{value}"] = 
+        kind: "action"
+        grammarType: "individual"
+        description: "#{mods.join(' + ')} + #{key}"
+        tags: ["modifiers"]
+        module: "modifiers"
+        actions: [
+          kind: "script"
+          modifiers: mods
+          key: key
+          script: (input) ->
+            Scripts.singleModifier(key, mods)
+        ]

@@ -1,0 +1,15 @@
+template(name="Modules")
+  .container
+    h1 Command Modules
+      small Enable / disable optional commands
+    .well
+      +each modules
+        +commandModule
+    //- +Template.dynamic(template=getModuleTemplate)
+    if showModifiers
+      +moduleModifiers
+    else
+      +moduleGeneric
+
+template(name="commandModule")
+  .commandTag(class="{{currentClass}}")= this

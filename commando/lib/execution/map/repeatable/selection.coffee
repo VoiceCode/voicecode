@@ -1,8 +1,7 @@
 _.extend Commands.mapping,
   "shroomway":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "select all text downward"
     tags: ["selection"]
     actions: [
@@ -12,8 +11,7 @@ _.extend Commands.mapping,
     ]
   "shroom":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "shift down, select text by line downward"
     tags: ["selection"]
     actions: [
@@ -23,8 +21,7 @@ _.extend Commands.mapping,
     ]
   "shreepway":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "select all text upward"
     tags: ["selection"]
     actions: [
@@ -34,8 +31,7 @@ _.extend Commands.mapping,
     ]
   "shreep":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "shift up, select text by line upward"
     tags: ["selection"]
     actions: [
@@ -45,8 +41,7 @@ _.extend Commands.mapping,
     ]
   "shrim":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "extend selection by character to the left"
     tags: ["selection"]
     actions: [
@@ -56,8 +51,7 @@ _.extend Commands.mapping,
     ]
   "shrish":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "extend selection by character to the right"
     tags: ["selection"]
     actions: [
@@ -67,8 +61,7 @@ _.extend Commands.mapping,
     ]
   "scram":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "extend selection by word to the left"
     tags: ["selection"]
     actions: [
@@ -78,8 +71,7 @@ _.extend Commands.mapping,
     ]
   "scrish":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "extend selection by word to the right"
     tags: ["selection"]
     actions: [

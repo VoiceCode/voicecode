@@ -1,8 +1,7 @@
 _.extend Commands.mapping,
   "doomway":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "move the cursor to the bottom of the page"
     tags: ["cursor"]
     actions: [
@@ -12,8 +11,7 @@ _.extend Commands.mapping,
     ]
   "doom":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "press the down arrow"
     tags: ["cursor"]
     actions: [
@@ -22,7 +20,7 @@ _.extend Commands.mapping,
     ]
   "jeepway":
     kind: "action"
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "move the cursor to the top of the page"
     tags: ["cursor"]
     actions: [
@@ -32,9 +30,8 @@ _.extend Commands.mapping,
     ]
   "jeep":
     kind: "action"
-    repeatable: true
     description: "Press the up arrow"
-    grammarType: "numberCapture"
+    grammarType: "individual"
     tags: ["cursor"]
     actions: [
       kind: "key"
@@ -42,8 +39,7 @@ _.extend Commands.mapping,
     ]
   "crimp":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "press the left arrow"
     aliases: ["crimped"]
     tags: ["cursor"]
@@ -53,8 +49,7 @@ _.extend Commands.mapping,
     ]
   "chris":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "press the right arrow"
     tags: ["cursor"]
     aliases: ["krist", "crist"]
@@ -64,8 +59,7 @@ _.extend Commands.mapping,
     ]
   "shunkrim":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "move the cursor by word to the left"
     tags: ["cursor"]
     actions: [
@@ -75,8 +69,7 @@ _.extend Commands.mapping,
     ]
   "wonkrim":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "move the cursor by partial word to the left"
     tags: ["cursor"]
     actions: [
@@ -86,8 +79,7 @@ _.extend Commands.mapping,
     ]
   "wonkrish":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "move the cursor by partial word to the right"
     tags: ["cursor"]
     actions: [
@@ -97,8 +89,7 @@ _.extend Commands.mapping,
     ]
   "shunkrish":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "move the cursor by word to the right"
     tags: ["cursor"]
     actions: [

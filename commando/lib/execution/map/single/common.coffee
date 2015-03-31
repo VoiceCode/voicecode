@@ -132,8 +132,7 @@ _.extend Commands.mapping,
     ]
   "totch":
     kind: "action"
-    grammarType: "numberCapture"
-    repeatable: true
+    grammarType: "individual"
     description: "close a window or tab"
     tags: ["application", "command", "W"]
     actions: [
@@ -170,25 +169,3 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Escape"
     ]
-  "storky":
-    kind: "action"
-    grammarType: "individual"
-    description: "press the delete key twice (non-repeatable, for when you need to enter a number afterwards)"
-    tags: ["number", "Delete"]
-    actions: [
-      kind: "key"
-      key: "Delete"
-    ,
-      kind: "key"
-      key: "Delete"
-    ]
-  "stork":
-    kind: "action"
-    grammarType: "individual"
-    description: "press the delete key (non-repeatable, for when you need to enter a number afterwards)"
-    tags: ["number", "Delete"]
-    actions: [
-      kind: "key"
-      key: "Delete"
-    ]
-

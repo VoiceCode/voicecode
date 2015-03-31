@@ -1,20 +1,21 @@
 singleWords = [
-  "null"
-  "true"
+  "and"
+  "class"
+  "each"
+  "else"
+  "end"
+  "error"
   "false"
   "if"
-  "else"
-  "and"
-  "or"
-  "not"
-  "end"
-  "each"
-  "while"
   "length"
-  "undefined"
-  "yes"
-  "class"
   "new"
+  "not"
+  "null"
+  "or"
+  "true"
+  "undefined"
+  "while"
+  "yes"
 ]
 
 wordsWithTriggerPhrase =
@@ -26,7 +27,8 @@ _.each singleWords, (word) ->
     kind: "word"
     grammarType: "textCapture"
     description: "insert the word '#{word}'"
-    tags: ["word"]
+    tags: ["words"]
+    module: "words"
     triggerPhrase: word
     word: word
 
@@ -36,5 +38,6 @@ _.each wordsWithTriggerPhrase, (trigger, word) ->
     grammarType: "textCapture"
     description: "insert the word '#{word}'"
     tags: ["word"]
+    module: "words"
     triggerPhrase: trigger
     word: word

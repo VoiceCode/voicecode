@@ -6,7 +6,11 @@ template(name="Mobile")
     p Once you've spoken something, just click execute, then you should see the action happen on your computer immediately. (be careful not to do anything bad!)
     .row
       .col.col-md-6
-        textarea(id="phrase" class="form-control" rows="2")
+        textarea(id="phrase" class="form-control" rows="2")= currentPhrase
+        br
+        div
+          input(type="checkbox" id="immediate" checked=immediateExecution)
+          | Execute immediately?
         br
         a(href="#" id="interpret" class="btn btn-success btn-block") Execute
         span= currentPhrase

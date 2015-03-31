@@ -13,7 +13,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "moves the cursor on the way to the right than inserts a space"
-    tags: ["cursor", "Space", "Right", "combo"]
+    tags: ["cursor", "space", "right", "combo"]
     actions: [
       kind: "key"
       key: "Right"
@@ -26,7 +26,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "remove a space before the adjacent word on the left"
-    tags: ["cursor", "Space", "deleting", "Left", "combo"]
+    tags: ["cursor", "space", "deleting", "left", "combo"]
     actions: [
       kind: "key"
       key: "Left"
@@ -49,7 +49,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "move the cursor all the way to the left"
-    tags: ["cursor", "Left"]
+    tags: ["cursor", "left"]
     actions: [
       kind: "key"
       key: "Left"
@@ -59,7 +59,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the left"
-    tags: ["selection", "Left"]
+    tags: ["selection", "left"]
     actions: [
       kind: "key"
       key: "Left"
@@ -112,7 +112,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "will delete everything to the right"
-    tags: ["deleting", "Right"]
+    tags: ["deleting", "right"]
     aliases: ["sniper"]
     contextualActions:
       "sublime": 
@@ -135,7 +135,7 @@ _.extend Commands.mapping,
   "snipple":
     kind: "action"
     grammarType: "individual"
-    tags: ["deleting", "Left"]
+    tags: ["deleting", "left"]
     description: "will delete everything to the left"
     actions: [
       kind: "key"

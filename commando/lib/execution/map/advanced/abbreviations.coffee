@@ -4,6 +4,7 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
     tags: ["text"]
+    aliases: ["franca"]
     contextSensitive: true
     actions: [
       kind: "script"
@@ -39,21 +40,6 @@ _.extend Commands.mapping,
       kind: "script"
       script: (input) ->
         Scripts.codeSnippet((input or []).join(" "))
-    ]
-  "repple":
-    kind: "action"
-    grammarType: "textCapture"
-    description: "insert a shell command from the predefined shell commands list"
-    tags: ["text", "shell"]
-    contextSensitive: true
-    actions: [
-      kind: "script"
-      script: (input) ->
-        if input?.length
-          result = Scripts.levenshteinMatch CommandoSettings.shellCommands, input.join(' ')
-          Scripts.makeTextCommand result
-        else
-          ""
     ]
   "trassword":
     kind: "action"

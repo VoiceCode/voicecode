@@ -12,13 +12,28 @@ Meteor.methods
 
   makeDragonCommand: (name) ->
     command = new Commands.Base(name, null)
-    body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
     dragonName = command.generateDragonCommandName()
+    scope = command.getTriggerScope()
 
     script = 
       """osascript <<EOD
       tell application "Dragon Dictate" to activate
       delay 0.1
+
+      tell application "System Events"
+        keystroke "k" using {command down}
+      end tell
+
+      delay 0.2
+
+      tell application "System Events"
+        tell process "Dragon Dictate"
+          tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
+            select (row 1 where value of text field 1 is "#{scope}")
+          end tell
+        end tell
+      end tell
 
       tell application "System Events"
         tell process "Dragon Dictate"
@@ -83,7 +98,7 @@ Meteor.methods
     final = []
     _.each commandLetters, (value, key) ->
       command = new Commands.Base("#{modifier}#{value}", null)
-      body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+      body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
       dragonName = command.generateDragonCommandName()
       script = 
         """
@@ -164,7 +179,7 @@ Meteor.methods
     final = []
     _.each keys, (key) ->
       command = new Commands.Base(key, null)
-      body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+      body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
       dragonName = command.generateDragonCommandName()
       script = 
         """
@@ -243,11 +258,16 @@ Meteor.methods
   #   _.each _.keys(Commands.mapping)
   updateDragonCommand: (name) ->
     command = new Commands.Base(name, null)
-    body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
     dragonName = command.generateDragonCommandName()
     script = """osascript <<EOD
     tell application "Dragon Dictate" to activate
-    delay 0.1
+    delay 0.3
+
+    tell application "Dragon Dictate"
+      reveal command "#{dragonName}" of group "Global"
+    end tell
+
 
     tell application "System Events"
       tell process "Dragon Dictate"
@@ -278,17 +298,22 @@ Meteor.methods
     true
   findDragonCommand: (name) ->
     command = new Commands.Base(name, null)
-    body = command.generateFullCommand().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
     dragonName = command.generateDragonCommandName()
+    # script = """
+    # tell application "Dragon Dictate" to activate
+    # delay 0.1
+    # tell application "System Events"
+    #   tell process "Dragon Dictate"
+    #     set focused of (text field 1 of splitter group 1 of window "Commands") to true
+    #     delay 0.2
+    #     set value of text field 1 of splitter group 1 of window "Commands"  to "#{dragonName}"
+    #   end tell
+    # end tell
+    # """
     script = """
-    tell application "Dragon Dictate" to activate
-    delay 0.1
-    tell application "System Events"
-      tell process "Dragon Dictate"
-        set focused of (text field 1 of splitter group 1 of window "Commands") to true
-        delay 0.2
-        set value of text field 1 of splitter group 1 of window "Commands"  to "#{dragonName}"
-      end tell
+    tell application "Dragon Dictate"
+      reveal command "#{dragonName}" of group "Global"
     end tell
     """
     f = """osascript <<EOD
@@ -298,3 +323,24 @@ Meteor.methods
     # console.log f
     Shell.exec f, async: true
     true
+  getAllCommandStatuses: ->
+    try
+      CommandStatuses.remove({})
+      CommandUpdater.getAllStatuses("Global")
+      CommandUpdater.getAllStatuses("iTerm")
+    catch e
+      console.log e
+  updateAllCommandStatuses: (scope) ->
+    try
+      CommandUpdater.updateAll(scope)
+    catch e
+      console.log e
+  createAllCommandStatuses: (scope) ->
+    try
+      CommandUpdater.createAll(scope)
+    catch e
+      console.log e
+  currentCommandStatus: (name, scope) ->
+    CommandUpdater.getCommandStatus(name, scope)
+
+

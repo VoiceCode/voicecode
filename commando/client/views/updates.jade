@@ -1,0 +1,54 @@
+template(name="Updates")
+  .container.updatesPage
+    h1 Command Updates
+      small Come here to make sure commands are up-to-date after each release
+    a.btn.btn-primary#run Run Command Check
+    h3 Needs Creating
+    .well
+      h4
+        | Global 
+        a.smallButton#createAllGlobal Create All These
+      ul
+        each addedGlobal
+          +commandNeedsUpdate
+      h4 
+        | iTerm
+        a.smallButton#createAllTerm Create All These
+      ul
+        each addedTerm
+          +commandNeedsUpdate
+    h3 Needs Deleting
+    .well
+      h4
+        | Global
+        a.smallButton#deleteAllGlobal Delete All These
+      ul
+        each removedGlobal
+          +commandNeedsUpdate
+      h4
+        | iTerm
+        a.smallButton#deleteAllTerm Delete All These
+      ul
+        each removedTerm
+          +commandNeedsUpdate
+    h3 Needs Updating
+    .well
+      h4
+        | Global
+        a.smallButton#updateAllGlobal Update All These
+      ul
+        each dirtyGlobal
+          +commandNeedsUpdate
+      h4
+        | iTerm
+        a.smallButton#updateAllTerm Update All These
+      ul
+        each dirtyTerm
+          +commandNeedsUpdate
+
+          
+template(name="commandNeedsUpdate")
+  li
+    = name
+    .status(class=status)= status
+    a.smallButton#performAction= actionText

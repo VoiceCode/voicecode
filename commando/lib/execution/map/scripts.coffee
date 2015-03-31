@@ -73,6 +73,17 @@
       "using {#{innerString}}"
     else
       ""
+  generateRepeating: (content, times, delay) ->
+    delayString = if delay?
+      "delay #{delay}"
+    else
+      ""
+    """
+    repeat #{times} times
+    #{content}
+    #{delayString}
+    end repeat
+    """
   makeTextCommand: (text, modifiers) ->
     strokes = _.map text.split(''), (character) ->
       result = switch character 
@@ -122,8 +133,13 @@
         Scripts.makeTextCommand(action.keystroke, action.modifiers)
       when "script"
         action.script(input)
+      when "text"
+        Scripts.makeTextCommand(action.text(input))
       when "block"
         Scripts.makeBlockAction input, action
+      when "mimic"
+        command = new Commands.Base(action.command, action.parameters)
+        command.generate()
     delay = if action.delay?
       "delay #{action.delay}"
     else

@@ -72,7 +72,7 @@ _.extend Commands.mapping,
   "qualquo":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: "=\"\""
@@ -83,7 +83,7 @@ _.extend Commands.mapping,
   "qualposh":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: "=''"
@@ -94,7 +94,7 @@ _.extend Commands.mapping,
   "prexcoif":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: "(\"\")"
@@ -272,7 +272,7 @@ _.extend Commands.mapping,
   "posh":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     aliases: ["pash"]
     actions: [
       kind: "keystroke"
@@ -284,7 +284,7 @@ _.extend Commands.mapping,
   "deeposh":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: " ''"
@@ -295,7 +295,7 @@ _.extend Commands.mapping,
   "coif":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     aliases: ["coiffed"]
     actions: [
       kind: "keystroke"
@@ -307,7 +307,7 @@ _.extend Commands.mapping,
   "decoif":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: " \"\""
@@ -557,7 +557,7 @@ _.extend Commands.mapping,
   "quatches":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: "\""
@@ -565,7 +565,7 @@ _.extend Commands.mapping,
   "quatchet":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol"]
+    tags: ["symbol", "quotes"]
     actions: [
       kind: "keystroke"
       keystroke: "'"
@@ -601,7 +601,7 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     tags: ["symbol"]
-    aliases: ["dalai", "dawley", "donnelly", "donley"]
+    aliases: ["dalai", "dawley", "donnelly", "donley", "dali"]
     actions: [
       kind: "keystroke"
       keystroke: "$"

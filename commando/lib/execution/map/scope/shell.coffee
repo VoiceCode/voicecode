@@ -4,7 +4,7 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "change directory"
     tags: ["domain-specific", "shell"]
-    applications: ["iTerm"]
+    triggerScope: "iTerm"
     triggerPhrase: "cd"
     actions: [
       kind: "keystroke"
@@ -27,7 +27,7 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "list directory contents (takes dynamic arguments)"
     tags: ["domain-specific", "shell"]
-    applications: ["iTerm"]
+    triggerScope: "iTerm"
     triggerPhrase: "shell list"
     actions: [
       kind: "script"
@@ -53,11 +53,10 @@ _.extend Commands.mapping,
     description: "display the last [n](default all) shell commands executed"
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell history"
-    applications: ["iTerm"]
+    triggerScope: "iTerm"
     actions: [
-      kind: "script"
-      script: (input) ->
-        Scripts.makeTextCommand "history #{input}"
+      kind: "text"
+      text: (input) -> "history #{input}"
     ,
       kind: "key"
       key: "Return"
@@ -68,7 +67,7 @@ _.extend Commands.mapping,
     description: "hovering the mouse over the left-hand number of a result from the history output, this will re-execute the command"
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell recall"
-    applications: ["iTerm"]
+    triggerScope: "iTerm"
     actions: [
       kind: "key"
       key: "P"
@@ -91,16 +90,15 @@ _.extend Commands.mapping,
     grammarType: "individual"
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell edit"
-    applications: ["iTerm"]
+    triggerScope: "iTerm"
     actions: [
       kind: "key"
       key: "O"
       modifiers: ["command", "option", "control", "shift"]
       delay: 0.15
     ,
-      kind: "block"
-      transform: () ->
-        "$EDITOR "
+      kind: "keystroke"
+      keystroke: "$EDITOR "
     ,
       kind: "key"
       key: "V"
@@ -109,12 +107,21 @@ _.extend Commands.mapping,
       kind: "key"
       key: "Return"
     ]  
+  "durrup":
+    kind: "action"
+    description: "navigate to the parent directory"
+    grammarType: "individual"
+    tags: ["domain-specific", "shell"]
+    triggerScope: "iTerm"
+    actions: [
+      kind: "keystroke"
+      keystroke: "cd ..; ls \n"
+    ]  
   "shell-direct":
     kind: "action"
     grammarType: "textCapture"
     description: "changes directory to any directory in the predefined list"
     tags: ["text", "domain-specific", "shell"]
-    applications: ["iTerm"]
     contextSensitive: true
     triggerPhrase: "direct"
     contextualActions:
@@ -157,4 +164,19 @@ _.extend Commands.mapping,
     ,
       kind: "key"
       key: "Return"
+    ]
+  "shell":
+    kind: "action"
+    grammarType: "textCapture"
+    description: "insert a shell command from the predefined shell commands list"
+    tags: ["text", "shell"]
+    contextSensitive: true
+    aliases: ["shall"]
+    actions: [
+      kind: "text"
+      text: (input) ->
+        if input?.length
+          Scripts.levenshteinMatch CommandoSettings.shellCommands, input.join(' ')
+        else
+          ""
     ]

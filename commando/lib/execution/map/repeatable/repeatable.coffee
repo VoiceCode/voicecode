@@ -1,9 +1,8 @@
 _.extend Commands.mapping,
   "shock":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
-    aliases: ["shocked", "shox"]
+    grammarType: "individual"
+    aliases: ["shocked", "shox", "chalk"]
     description: "press the return key"
     tags: ["Return"]
     actions: [
@@ -12,29 +11,26 @@ _.extend Commands.mapping,
     ]
   "junk":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "press the delete key"
     aliases: ["junks", "junked"]
-    tags: ["Delete"]
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "Delete"
     ]
   "spunk":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "pressed the forward delete key"
-    tags: ["ForwardDelete"]
+    tags: ["deleting"]
     actions: [
       kind: "key"
       key: "ForwardDelete"
     ]
   "dizzle":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "undo"
     tags: ["application", "command", "Z"]
     actions: [
@@ -44,8 +40,7 @@ _.extend Commands.mapping,
     ]
   "rizzle":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "redo"
     tags: ["application", "command+shift", "Z"]
     actions: [
@@ -55,8 +50,7 @@ _.extend Commands.mapping,
     ]
   "tarp":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "inserts a tab"
     tags: ["Tab"]
     actions: [
@@ -65,10 +59,9 @@ _.extend Commands.mapping,
     ]
   "tarsh":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "inserts a shift + tab"
-    tags: ["Tab", "shift"]
+    tags: ["tab", "shift"]
     actions: [
       kind: "key"
       key: "Tab"
@@ -77,8 +70,7 @@ _.extend Commands.mapping,
   "gibby":
     kind: "action"
     description: "Switch to next window in same application"
-    grammarType: "numberCapture"
-    repeatable: true
+    grammarType: "individual"
     tags: ["application", "command"]
     actions: [
       kind: "keystroke"
@@ -88,8 +80,7 @@ _.extend Commands.mapping,
   "shibby":
     kind: "action"
     description: "Switch to previous window in same application"
-    grammarType: "numberCapture"
-    repeatable: true
+    grammarType: "individual"
     tags: ["application", "command"]
     actions: [
       kind: "keystroke"
@@ -99,20 +90,18 @@ _.extend Commands.mapping,
   "shompla":
     kind: "action"
     description: "zoom in"
-    grammarType: "numberCapture"
-    repeatable: true
-    tags: ["application", "command", "Plus", "Equal"]
+    grammarType: "individual"
+    tags: ["application", "command", "plus"]
     actions: [
       kind: "keystroke"
-      keystroke: "+"
+      keystroke: "="
       modifiers: ["command"]
     ]
   "shaman":
     kind: "action"
     description: "zoom out"
-    grammarType: "numberCapture"
-    repeatable: true
-    tags: ["application", "command", "Minus"]
+    grammarType: "individual"
+    tags: ["application", "command", "minus"]
     actions: [
       kind: "keystroke"
       keystroke: "-"
@@ -121,9 +110,8 @@ _.extend Commands.mapping,
   "shabble":
     kind: "action"
     description: ""
-    grammarType: "numberCapture"
-    tags: ["LeftBracket"]
-    repeatable: true
+    grammarType: "individual"
+    tags: ["["]
     actions: [
       kind: "keystroke"
       keystroke: "["
@@ -132,9 +120,9 @@ _.extend Commands.mapping,
   "shabber":
     kind: "action"
     description: ""
-    grammarType: "numberCapture"
-    repeatable: true
-    tags: ["RightBracket"]
+    grammarType: "individual"
+    aliases: ["shammar"]
+    tags: ["]"]
     actions: [
       kind: "keystroke"
       keystroke: "]"
@@ -143,8 +131,7 @@ _.extend Commands.mapping,
   "marneck":
     kind: "action"
     description: "find the next occurrence of a search term"
-    grammarType: "numberCapture"
-    repeatable: true
+    grammarType: "individual"
     tags: ["application", "command", "G"]
     actions: [
       kind: "key"
@@ -154,9 +141,8 @@ _.extend Commands.mapping,
   "marpreev":
     kind: "action"
     description: "find the previous occurrence of a search term"
-    grammarType: "numberCapture"
+    grammarType: "individual"
     tags: ["application", "command+shift", "G"]
-    repeatable: true
     actions: [
       kind: "key"
       key: "G"
@@ -165,9 +151,8 @@ _.extend Commands.mapping,
   "scrodge":
     kind: "action"
     description: "scroll down"
-    grammarType: "numberCapture"
-    repeatable: true
-    tags: ["scroll"]
+    grammarType: "individual"
+    tags: ["scroll", "down"]
     actions: [
       kind: "key"
       key: "PageDown"
@@ -176,9 +161,8 @@ _.extend Commands.mapping,
   "scroop":
     kind: "action"
     description: "scroll up"
-    grammarType: "numberCapture"
-    repeatable: true
-    tags: ["scroll"]
+    grammarType: "individual"
+    tags: ["scroll", "up"]
     actions: [
       kind: "key"
       key: "PageUp"
@@ -187,9 +171,8 @@ _.extend Commands.mapping,
   "scrolltop":
     kind: "action"
     description: "scroll to top"
-    grammarType: "numberCapture"
-    tags: ["scroll"]
-    repeatable: true
+    grammarType: "individual"
+    tags: ["scroll", "up"]
     actions: [
       kind: "key"
       key: "Home"
@@ -197,9 +180,8 @@ _.extend Commands.mapping,
   "scrollend":
     kind: "action"
     description: "scroll to bottom"
-    grammarType: "numberCapture"
-    repeatable: true
-    tags: ["scroll"]
+    grammarType: "individual"
+    tags: ["scroll", "down"]
     actions: [
       kind: "key"
       key: "End"

@@ -3,6 +3,9 @@ Commands.mapping = {}
 Commands.history = []
 Commands.context = "global"
 Commands.conditionalModules = {}
+Commands.lastIndividualCommand = null
+Commands.lastFullCommand = null
+Commands.isBeginningOfCommand = null
 
 Commands.registerConditionalModuleCommands = (moduleName, commands) ->
   Commands.conditionalModules[moduleName] ?= {}
@@ -23,7 +26,7 @@ class Commands.Base
     Transforms[@info.transform]
   generate: ->
     if @repeatable
-      @generateRepeating(@repeatCount())
+      Scripts.generateRepeating(@generateBaseCommand(), @repeatCount())
     else
       @generateBaseCommand()
   generateBaseCommand: ->
@@ -64,6 +67,11 @@ class Commands.Base
       when "word"
         transformed = Transforms.identity([@info.word].concat(@input or []))
         Scripts.makeTextCommand(transformed)
+      when "combo"
+        combined = _.map(@info.combo, (subCommand) ->
+          command = new Commands.Base(subCommand)
+          command.generate()
+        ).join('\n')
       # when "modifier"
       #   @makeModifierCommand @input
   applyTransform: (textArray) ->
@@ -75,26 +83,12 @@ class Commands.Base
       n
     else
       1
-  # makeModifierCommand: (input) ->
-  #   string = input.toString()
-  #   if string.length
-  #     code = ModifierTargets[string] or ModifierTargets[string.charAt(0)]
-  #     if code?
-  #       ms = Scripts.makeModifierString(@info.modifiers)
-  #       kc = Scripts.makeKeycode(code, ms)
-  #       Scripts.makeSystemEventsCommand kc
-  #     else
-  #       ""
-  #   else
-  #     ""
-  generateRepeating: (number) ->
-    """
-    repeat #{number} times
-    #{@generateBaseCommand()}
-    end repeat
-    """
   getTriggerPhrase: () ->
     @info.triggerPhrase or @namespace
+  getTriggerScope: ->
+    @info.triggerScope or "Global"
+  isSpoken: ->
+    @info.isSpoken != false
   generateFullCommand: () ->
     commandText = @generateBaseCommand()
     space = @info.namespace or @namespace
@@ -102,9 +96,7 @@ class Commands.Base
       """
       on srhandler(vars)
         set dictatedText to (varText of vars)
-        set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
-        set space to "#{space}"
-        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
+        set toExecute to "curl http://commando:5000/parse --data-urlencode space=\\\"#{space}\\\"" & " --data-urlencode phrase=\\\"" & dictatedText & "\\\""
         do shell script toExecute
       end srhandler
       """
@@ -114,16 +106,21 @@ class Commands.Base
         set dictatedText to (varText of vars)
         if dictatedText = "" then
         #{commandText}
-        set toExecute to "curl http://commando:5000/parse/miss/#{space}"
+        set toExecute to "curl http://commando:5000/miss --data-urlencode space=\\\"#{space}\\\""
         do shell script toExecute
         else
-        set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " & quoted form of dictatedText)
-        set space to "#{space}"
-        set toExecute to "curl http://commando:5000/parse/" & space & "/" & encodedText
+        set toExecute to "curl http://commando:5000/parse --data-urlencode space=\\\"#{space}\\\"" & " --data-urlencode phrase=\\\"" & dictatedText & "\\\""
         do shell script toExecute
         end if
       end srhandler
       """
+  generateFullCommandWithDigest: ->
+    script = @generateFullCommand()
+    digest = @digest()
+    """
+    -- #{digest}
+    #{script}
+    """
   generateFullShellCommand: () ->
     space = @info.namespace or @namespace
     if @info.contextSensitive
@@ -142,3 +139,5 @@ class Commands.Base
       """
   generateDragonCommandName: () ->
     "#{@getTriggerPhrase()} /!Text!/"
+  digest: ->
+    CryptoJS.MD5(@generateFullCommand()).toString()

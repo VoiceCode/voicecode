@@ -1,8 +1,7 @@
 _.extend Commands.mapping,
   "kef":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "press option-delete"
     tags: ["deleting", "option"]
     actions: [
@@ -12,8 +11,7 @@ _.extend Commands.mapping,
     ]
   "steffi":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "delete a partial word at a time"
     tags: ["deleting"]
     contextualActions:
@@ -57,8 +55,7 @@ _.extend Commands.mapping,
     ]
   "stippy":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "forward delete a partial word at a time"
     tags: ["deleting"]
     applicationActions:
@@ -74,8 +71,7 @@ _.extend Commands.mapping,
     ]
   "kite":
     kind: "action"
-    repeatable: true
-    grammarType: "numberCapture"
+    grammarType: "individual"
     description: "forward delete a word at a time"
     tags: ["deleting"]
     actions: [

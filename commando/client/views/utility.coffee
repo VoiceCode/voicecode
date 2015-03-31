@@ -2,7 +2,7 @@ Template.Utility.helpers
   dragonBaseCommand: ->
     name = Session.get("ChooseCommand.current") or "command"
     command = new Commands.Base(name, "")
-    command.generateFullCommand()
+    command.generateFullCommandWithDigest()
   dragonBaseCommandName: ->
     name = Session.get("ChooseCommand.current") or "command"
     command = new Commands.Base(name, "")

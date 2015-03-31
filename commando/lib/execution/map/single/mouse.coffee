@@ -32,6 +32,12 @@ _.extend Commands.mapping,
       modifiers: ["command", "option", "control", "shift"]
       delay: 0.1
     ]
+  "triplick":
+    kind: "combo"
+    grammarType: "individual"
+    description: "mouse left click"
+    tags: ["mouse"]
+    combo: ["chiff", "chiff", "chiff"]
   "shicks":
     kind: "action"
     grammarType: "individual"
@@ -43,22 +49,25 @@ _.extend Commands.mapping,
       modifiers: ["command", "option", "control", "shift"]
       delay: 0.1
     ]
-  "chibble":
+  "comlick":
     kind: "action"
     grammarType: "individual"
-    description: "selects the entire line of text cursor hovers over"
-    tags: ["mouse", "combo"]
+    description: "mouse command+click"
+    tags: ["mouse"]
     actions: [
       kind: "key"
-      key: "I"
+      key: "X"
       modifiers: ["command", "option", "control", "shift"]
       delay: 0.1
-    ,
+    ]
+  "croplick":
+    kind: "action"
+    grammarType: "individual"
+    description: "mouse option+click"
+    tags: ["mouse"]
+    actions: [
       kind: "key"
-      key: "Left"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Right"
-      modifiers: ["command", "shift"]
+      key: "X"
+      modifiers: ["command", "option", "control", "shift"]
+      delay: 0.1
     ]

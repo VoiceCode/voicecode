@@ -6,18 +6,30 @@ class Commands.Chain
   parse: ->
     Parser.parse @phrase
   execute: (shouldInvoke) ->
+    Commands.isBeginningOfCommand = true
+    Commands.subcommandIndex = 0
+    Commands.repetitionIndex = 0
     results = @parse()
     console.log "parsed: #{JSON.stringify results}"
     if results?
       combined = _.map(results, (result) ->
         command = new Commands.Base(result.command, result.arguments)
-        command.generate()
+        individual = command.generate()
+        if command.info.ignoreHistory
+          Commands.repetitionIndex = 0
+        else
+          Commands.lastIndividualCommand = individual
+          Commands.repetitionIndex += 1
+
+        Commands.subcommandIndex += 1
+        individual
       ).join('\n')
       appleScript = @makeAppleScriptCommand combined
       if shouldInvoke
         @invokeShell appleScript
 
       if Meteor.isServer
+        Commands.lastFullCommand = combined
         inserted = PreviousCommands.insert
           createdAt: new Date()
           interpretation: results

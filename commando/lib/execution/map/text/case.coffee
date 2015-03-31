@@ -4,6 +4,7 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "words with spaces between. This command is for internal grammar use (not spoken)"
     tags: ["text"]
+    isSpoken: false
     transform: "literal"
   "cram":
     kind: "text"

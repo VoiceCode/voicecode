@@ -43,16 +43,36 @@ Template.CommandSummaryRow.helpers
     Commands.mapping[@].grammarType
   modifierText: ->
     Commands.mapping[@].modifiers.join('+')
+  tags: ->
+    Commands.mapping[@].tags or []
+
+makeKeyText = (string) ->
+  string.
+    replace(/\s/g, "<span class='symbol'>&#9251;</span>").replace(/command/g, "<span class='symbol'>&#8984;</span>")
+
+modifierCodes =
+  command: "&#8984;"
+  option: "&#8997;"
+  control: "&#8963;"
+  shift: "&#8679;"
+
+makeModifierText = (modifiers) ->
+  result = _.map modifiers, (m) ->
+    "<span class='symbol'>#{modifierCodes[m]}</span>"
+  result.join ""
 
 Template.CommandAction.helpers
   text: ->
     switch @kind
       when "key"
-        [@modifiers?.join('+'), @key].join(' ')
+        [makeModifierText(@modifiers), @key].join(' ')
       when "keystroke"
-        [@modifiers?.join('+'), @keystroke.replace(/\s/g, "space")].join(' ')
+        [makeModifierText(@modifiers), @keystroke].join(' ')
       when "script"
-        @script.toString()
+        if @modifiers
+          [makeModifierText(@modifiers), @key].join(' ')
+        else
+          @script.toString()
       when "block"
         @transform.toString()
       else

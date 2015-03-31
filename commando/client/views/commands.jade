@@ -12,6 +12,7 @@ template(name="Commands")
           th Kind
           th Description
           th Grammar Type
+          th Tags
           th Actions
       tbody
         each scopedCommands
@@ -25,6 +26,9 @@ template(name="CommandSummaryRow")
   td= description
   td= grammarType
   td
+    +each tags
+      +commandTag
+  td
     if isAction
       each actions
         +CommandAction
@@ -35,7 +39,7 @@ template(name="CommandSummaryRow")
       code= modifierText
 
 template(name="CommandAction")
-  code= text
+  code {{{text}}}
 
 template(name="commandTag")
   .commandTag(class="{{currentClass}}")= this

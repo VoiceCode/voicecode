@@ -1,28 +1,39 @@
 Commands.Utility =
   numberCaptureCommands: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].grammarType is "numberCapture"
     )
+    _.sortBy(r, (e) -> e).reverse()
+  repeatableCommands: ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
+      Commands.mapping[key].grammarType is "repeatable"
+    )
+    _.sortBy(r, (e) -> e).reverse()
   textCaptureCommands: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].grammarType is "textCapture"
     )
+    _.sortBy(r, (e) -> e).reverse()
   individualCommands: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].grammarType is "individual"
     )
+    _.sortBy(r, (e) -> e).reverse()
   oneArgumentCommands: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].grammarType is "oneArgument"
     )
+    _.sortBy(r, (e) -> e).reverse()
   numberCommands: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), "number"
     )
+    _.sortBy(r, (e) -> e).reverse()
   letterCommands: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), "letter"
     )
+    _.sortBy(r, (e) -> e).reverse()
   allTags: ->
     result = []
     _.each(_.keys(Commands.mapping), (key) ->
@@ -30,9 +41,19 @@ Commands.Utility =
         result.push tag
     )
     _.uniq result
+  allModules: ->
+    result = []
+    _.each(_.keys(Commands.mapping), (key) ->
+      result.push Commands.mapping[key].module
+    )
+    _.uniq result
   scopedCommands: (tag) ->
     _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), tag
+    )
+  scopedModules: (module) ->
+    _.filter(_.keys(Commands.mapping), (key) ->
+      Commands.mapping[key].module is module
     )
 
   documentationReport: ->
