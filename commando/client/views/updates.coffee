@@ -34,28 +34,30 @@ Template.Updates.events
     Meteor.call "getAllCommandStatuses", (error, result) ->
       if error
         alert(error.message)
-  "click #updateAllGlobal": ->
-    Meteor.call "updateAllCommandStatuses", "Global", (error, result) ->
+  "click #updateAll": ->
+    Meteor.call "updateAllCommandStatuses", @context, (error, result) ->
       if error
         alert(error.message)
-  "click #createAllGlobal": ->
-    Meteor.call "createAllCommandStatuses", "Global", (error, result) ->
+  "click #createAll": ->
+    Meteor.call "createAllCommandStatuses", @context, (error, result) ->
+      if error
+        alert(error.message)
+  "click #deleteAll": ->
+    Meteor.call "deleteAllCommandStatuses", @context, (error, result) ->
       if error
         alert(error.message)
       
 Template.Updates.helpers
-  addedGlobal: ->
-    CommandStatuses.find({status: "missing", scope: "Global"})
-  addedTerm: ->
-    CommandStatuses.find({status: "missing", scope: "iTerm"})
-  removedGlobal: ->
-    CommandStatuses.find({status: "removed", scope: "Global"})
-  removedTerm: ->
-    CommandStatuses.find({status: "removed", scope: "iTerm"})
+  dragonContexts: ->
+    _.map CommandoSettings.dragonContexts, (item) ->
+      context: item
+      _id: item
+  added: ->
+    CommandStatuses.find({status: "missing", scope: @context})
+  removed: ->
+    CommandStatuses.find({status: "removed", scope: @context})
   dirtyGlobal: ->
-    CommandStatuses.find({status: "dirty", scope: "Global"})
-  dirtyTerm: ->
-    CommandStatuses.find({status: "dirty", scope: "iTerm"})
+    CommandStatuses.find({status: "dirty", scope: @context})
 
 # Template.commandUpdateAdded.created = ->
 #   Meteor.call "currentCommandStatus", @data.name, @data.scope

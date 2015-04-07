@@ -1,18 +1,4 @@
 @Scripts =
-  dubCap: ->
-    """
-    do shell script "/usr/local/bin/cliclick dc:+0,+0"
-    delay 0.1
-    tell application "System Events"
-      keystroke "c" using {command down}
-    end tell
-    set theData to (the clipboard as text)
-    set result to do shell script "ruby ~/Code/dragon/snake.rb liz '" & theData & "'"
-    set the clipboard to result as text
-    tell application "System Events"
-      keystroke "v" using {command down}
-    end tell
-    """
   openDropDown: (name) ->
     """
     tell application "System Events" to tell (process 1 where frontmost is true)
@@ -20,7 +6,7 @@
     end tell
     """
   openWebsite: (name) ->
-    address = Scripts.levenshteinMatch CommandoSettings.websites, name
+    address = Scripts.fuzzyMatch CommandoSettings.websites, name
     keystroke = if name.length and address?
       """
       keystroke "#{address}"
@@ -43,12 +29,6 @@
     tell application "System Events"
     keystroke "t" using {command down}
     delay 0.1
-    end tell
-    """
-  spacePad: ->
-    """
-    tell application "System Events"
-    keystroke " "
     end tell
     """
   makeSystemEventsCommand: (lines) ->
@@ -169,35 +149,13 @@
           "\\n"
         when "\r"
           "\\r"
-  insertAbbreviation: (name, prepend="", append="") ->
-    abbreviation = Scripts.levenshteinMatch CommandoSettings.abbreviations, name
-    keystroke = if name.length and abbreviation?
-      """
-      tell application "System Events"
-      keystroke "#{prepend}#{abbreviation}#{append}"
-      end tell
-      """
-    else
-      ""
-  codeSnippet: (name) ->
-    snippet = Scripts.levenshteinMatch CommandoSettings.codeSnippets, name
-    keystroke = if name.length and snippet?
-      """
-      tell application "System Events"
-      keystroke "#{snippet}"
-      delay 0.15
-      #{CommandoSettings.codeSnippetCompletionKeystroke}
-      end tell
-      """
-    else
-      ""
-  levenshteinMatch: (list, term) ->
+  fuzzyMatch: (list, term) ->
     if list[term]?
       list[term]
     else
       results = {}
       _.each list, (item, key) ->
-        totalDistance = _.levenshtein(key, term)
+        totalDistance = _s.levenshtein(key, term)
         # tokens = key.split(" ")
         # cumulativeDistance = 0
         # matchCount = 0
@@ -212,7 +170,7 @@
         results[k]
       list[best]
   openApplication: (name) ->
-    application = Scripts.levenshteinMatch CommandoSettings.applications, name
+    application = Scripts.fuzzyMatch CommandoSettings.applications, name
     """
     tell application "#{application}" to activate
     """
@@ -250,29 +208,6 @@
     end repeat
     repeat (results + #{value} + #{value}) times
     key code 124 using {shift down}
-    end repeat
-    end tell
-    """
-  verticalSelectionExpansion: (value) ->
-    """
-    set theOriginal to the clipboard as record
-    tell application "System Events"
-    key code 8 using {command down}
-    end tell
-    delay 0.03
-    set astid to AppleScript's text item delimiters
-    set AppleScript's text item delimiters to "\\r"
-    set selText to (the clipboard as text)
-    set results to (count selText's text items)
-    set the clipboard to theOriginal as record
-    set AppleScript's text item delimiters to astid
-    tell application "System Events"
-    key code 123
-    repeat (#{value}) times
-    key code 126
-    end repeat
-    repeat (results + #{value} + #{value} - 1) times
-    key code 125 using {shift down}
     end repeat
     end tell
     """
@@ -534,13 +469,6 @@
         """
     else
       ""
-  clickServiceItem: (item) ->
-    """
-    tell application "System Events" to tell (process 1 where frontmost is true)
-      click menu item "#{item}" of menu "Services" of menu item "Services" of menu 1 of menu bar item 2 of menu bar 1
-    end tell
-    delay 1
-    """
   applicationScope: (scopeCases, fallback) ->
     scopeMapGenerated = _.map scopeCases, (scenario) ->
       conditionArray = _.map scenario.requirements, (requirement) ->
@@ -583,11 +511,6 @@
       #{fallback}
     end if
     """
-  setVolume: (volume) ->
-    if volume >= 0 and volume <= 100
-      """
-      set volume output volume #{volume}
-      """
   outOfContext: (name) ->
     """
     display notification "wrong context for command" with title "VoiceCode" subtitle "#{name}" sound name "Sosumi"

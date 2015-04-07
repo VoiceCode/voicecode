@@ -36,21 +36,52 @@ Commands.Utility =
     _.sortBy(r, (e) -> e).reverse()
   allTags: ->
     result = []
-    _.each(_.keys(Commands.mapping), (key) ->
-      _.each (Commands.mapping[key].tags or []), (tag) ->
+    _.each(Commands.mapping, (command, key) ->
+      _.each (command.tags or []), (tag) ->
         result.push tag
     )
     _.uniq result
+  allEnabledTags: (enabled) ->
+    enabled = switch enabled
+      when "enabled"
+        true
+      when "disabled"
+        false
+      else
+        "all"
+    result = []
+    _.each Commands.mapping, (command, key) ->
+      if (enabled is "all") or (command.enabled is enabled)
+        _.each (command.tags or []), (tag) ->
+          result.push tag
+    _.uniq result
   allModules: ->
     result = []
-    _.each(_.keys(Commands.mapping), (key) ->
-      result.push Commands.mapping[key].module
+    _.each(Commands.mapping, (command, key) ->
+      result.push command.module
     )
     _.uniq result
   scopedCommands: (tag) ->
     _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), tag
     )
+  enabledCommandNames:  ->
+    _.filter(_.keys(Commands.mapping), (key) ->
+      Commands.mapping[key].enabled is true
+    )
+  scopedCommandsWithToggle: (tag, toggle) ->
+    enabled = switch toggle
+      when "enabled"
+        true
+      when "disabled"
+        false
+      else
+        "all"
+    _.filter _.keys(Commands.mapping), (key) ->
+      command = Commands.mapping[key]
+      (enabled is "all" or (command.enabled is enabled)) and _.contains((command.tags or []), tag)
+
+
   scopedModules: (module) ->
     _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].module is module

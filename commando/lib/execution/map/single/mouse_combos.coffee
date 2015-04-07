@@ -4,20 +4,10 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "selects the entire line of text cursor hovers over"
     tags: ["mouse", "combo"]
-    actions: [
-      kind: "key"
-      key: "I"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ,
-      kind: "key"
-      key: "Left"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Right"
-      modifiers: ["command", "shift"]
-    ]
+    action: ->
+      @click()
+      @key "Left", ['command']
+      @key "Right", ['command', 'shift']
   "dookoosh":
     kind: "combo"
     grammarType: "individual"

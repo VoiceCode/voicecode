@@ -3,26 +3,40 @@ template(name="Commands")
     h1 Commands
       small Click on the tags below to see related commands
     .well
+      each enabledDisabledAll
+        +enabledDisabledToggle
+    .well
       +each tags
         +commandTag
-    table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
-      thead
+
+    if showModifiers
+      +moduleModifiers
+    else
+      +commandsGeneric
+
+template(name="commandsGeneric")
+  table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
+    thead
+      tr
+        th Name
+        th#toggleAll
+          | Enabled
+          small toggle all
+        th Description
+        th Grammar Type
+        th Tags
+        th Actions
+    tbody
+      each scopedCommands
         tr
-          th Name
-          th Kind
-          th Description
-          th Grammar Type
-          th Tags
-          th Actions
-      tbody
-        each scopedCommands
-          tr
-            +CommandSummaryRow
-    //- p Numbers are interpreted in a chain. So if you say: "two one", it understands "21", or "three oh two nine" => "3029". This applies for repeatable commands as well. So be careful not to say: "junk three fifty", when you actually want to just delete three characters then insert "50". "junk three fifty" == "DELETE x350"
-    
+          +CommandSummaryRow
+
+
 template(name="CommandSummaryRow")
   td= name
-  td= kind
+  td.modifierCell
+    label.modifierLabel
+      input(type="checkbox" class="modifierCheckbox" checked=enabled)
   td= description
   td= grammarType
   td
@@ -30,16 +44,15 @@ template(name="CommandSummaryRow")
       +commandTag
   td
     if isAction
-      each actions
-        +CommandAction
-        | &nbsp;
+      | {{{actionDescriptor}}}
     else if isText
       code= transform
-    else if isModifier
-      code= modifierText
 
 template(name="CommandAction")
   code {{{text}}}
 
 template(name="commandTag")
+  .commandTag(class="{{currentClass}}")= this
+
+template(name="enabledDisabledToggle")
   .commandTag(class="{{currentClass}}")= this

@@ -4,89 +4,53 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "does nothing, but enters into voice code"
     aliases: ["chin"]
-    actions: []
     tags: ["text"]
+    action: -> 
+      null
   "skoosh":
     kind: "action"
     grammarType: "individual"
     description: "insert a space"
     tags: ["space"]
-    actions: [
-      kind: "key"
-      key: "Space"
-    ]
+    action: ->
+      @key " "
   "skoopark":
     kind: "action"
     grammarType: "individual"
     description: "insert a space then paste the clipboard"
-    tags: ["space", "combo", "copy-paste",  "V"]
-    actions: [
-      kind: "key"
-      key: "Space"
-    ,
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ]
+    tags: ["space", "combo", "copy-paste"]
+    action: ->
+      @key " "
+      @key "V", ["command"]
   "shockoon":
     kind: "action"
     description: "Inserts a new line below the current line"
     grammarType: "individual"
-    tags: ["Return", "combo"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "Return"
-          modifiers: ['command']
-        ]
-    actions: [
-      kind: "key"
-      key: "Right"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Return"
-    ]
+    tags: ["return", "combo"]
+    action: ->
+      if @currentApplication() is "sublime"
+        @key "Return", ["command"]
+      else
+        @key "Right", ["command"]
+        @key "Return"
   "shocktar":
     kind: "action"
     description: "Inserts a new line then a tab"
     grammarType: "individual"
-    tags: ["Return", "Tab", "combo"]
-    actions: [
-      kind: "key"
-      key: "Return"
-    ,
-      kind: "key"
-      key: "Tab"
-    ]
+    tags: ["return", "tab", "combo"]
+    action: ->
+      @key "Return"
+      @key "Tab"
   "shockey":
     kind: "action"
     description: "Inserts a new line above the current line"
     grammarType: "individual"
     aliases: ["chalky"]
-    tags: ["Return", "combo"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "Return"
-          modifiers: ['command', 'shift']
-        ]
-    actions: [
-      kind: "key"
-      key: "Left"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Return"
-    ,
-      kind: "key"
-      key: "Up"
-    ]
+    tags: ["return", "combo"]
+    action: ->
+      if @currentApplication() is "sublime"
+        @key "Return", ["command", "shift"]
+      else
+        @key "Left", ["command"]
+        @key "Return"
+        @key "Up"

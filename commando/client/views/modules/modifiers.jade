@@ -5,11 +5,23 @@ template(name="moduleModifiers")
       tr
         th Keys / Modifiers
         each prefixes
-          th= this
+          th
+            code
+              each modifiers
+                | {{{this}}}
+            = name
     tbody
       each letters
         tr
-          td= this
-          each prefixes
-            td= this
+          td 
+            code {{{name}}}
+            = spoken
+          each prefixCombos
+            +enabledModifier
+
+template(name="enabledModifier")
+  td.modifierCell
+    label.modifierLabel
+      input(type="checkbox" class="modifierCheckbox" checked=enabled)
+      small= name
 

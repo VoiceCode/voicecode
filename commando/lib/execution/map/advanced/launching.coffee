@@ -4,44 +4,36 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "opens a website by name"
     tags: ["system", "launching"]
-    actions: [
-      kind: "script"
-      script: (input) ->
-        Scripts.openWebsite((input or []).join(" "))
-    ]
+    action: (input) ->
+      if input?.length
+        address = Scripts.fuzzyMatch CommandoSettings.websites, (input or []).join(" ")
+        @openURL address
+      else
+        @openBrowser()
+        @delay(50)
+        @key "T", ['command']
   "dears":
     kind: "action"
     grammarType: "textCapture"
     description: "opens a directory in the finder"
     tags: ["system", "launching"]
-    contextSensitive: true
-    actions: [
-      kind: "script"
-      script: (input) ->
-        if input?.length
-          directory = Scripts.levenshteinMatch CommandoSettings.directories, input.join(' ')
-          """
-          do shell script "open #{directory}"
-          """
-    ]
+    action: (input) ->
+      if input?.length
+        directory = Scripts.fuzzyMatch CommandoSettings.directories, input.join(' ')
+        @revealFinderDirectory directory
   "sispref":
     kind: "action"
     grammarType: "textCapture"
     description: "opens a specific system preference items (or none if no input)"
     tags: ["system", "launching"]
-    actions: [
-      kind: "script"
-      script: (input) ->
-        if input?.length
-          preference = Scripts.levenshteinMatch CommandoSettings.systemPreferences, input.join(' ')
-          """
-          tell application "System Preferences"
-            activate
-            reveal pane "#{preference}"
-          end tell
-          """
-        else
-          """
-          tell application "System Preferences" to activate
-          """
-    ]
+    action: (input) ->
+      if input?.length
+        preference = Scripts.fuzzyMatch CommandoSettings.systemPreferences, input.join(' ')
+        @applescript """
+        tell application "System Preferences"
+          activate
+          reveal pane "#{preference}"
+        end tell
+        """
+      else
+        @openApplication "System Preferences"

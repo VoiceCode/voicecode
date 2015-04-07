@@ -3,79 +3,38 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "press option-delete"
-    tags: ["deleting", "option"]
-    actions: [
-      kind: "key"
-      key: "Delete"
-      modifiers: ['option']
-    ]
+    tags: ["deleting"]
+    action: ->
+      @key "Delete", ["option"]
   "steffi":
     kind: "action"
     grammarType: "individual"
     description: "delete a partial word at a time"
     tags: ["deleting"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "Delete"
-          modifiers: ['control']
-        ]
-      "vim":
-        requirements: [
-          application: "iTerm"
-          context: "vim"
-        ,
-          application: "MacVim"
-        ]
-        actions: [
-          kind: "key"
-          key: "Delete"
-          modifiers: ['option']
-        ]
-      "emacs":
-        requirements: [
-          application: "iTerm"
-          context: "emacs"
-        ,
-          application: "Emacs"
-        ]
-        actions: [
-          kind: "key"
-          key: "Delete"
-          modifiers: ['option']
-        ]
-    actions: [
-      kind: "key"
-      key: "Delete"
-      modifiers: ['option']
-    ]
+    action: ->
+      current = @currentApplication()
+      if current is "Sublime Text"
+        @key "Delete", ["control"]
+      else if current is "iTerm" and @context is "vim"
+        @key "Delete", ["option"]
+      else if current is "Emacs" or (current is "iTerm" and @context is "emacs")
+        @key "Delete", ["option"]
+      else
+        @key "Delete", ["option"]
   "stippy":
     kind: "action"
     grammarType: "individual"
     description: "forward delete a partial word at a time"
     tags: ["deleting"]
-    applicationActions:
-      "Sublime Text": [
-        kind: "key"
-        key: "ForwardDelete"
-        modifiers: ['control']
-      ]
-    actions: [
-      kind: "key"
-      key: "ForwardDelete"
-      modifiers: ['control']
-    ]
+    action: ->
+      if @currentApplication() is "Sublime Text"
+        @key "ForwardDelete", ["control"]
+      else
+        @key "ForwardDelete", ["option"]
   "kite":
     kind: "action"
     grammarType: "individual"
     description: "forward delete a word at a time"
     tags: ["deleting"]
-    actions: [
-      kind: "key"
-      key: "ForwardDelete"
-      modifiers: ['option']
-    ]
+    action: ->
+      @key "ForwardDelete", ['option']

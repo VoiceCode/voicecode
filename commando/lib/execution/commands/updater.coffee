@@ -36,6 +36,7 @@
     """
   getAllStatuses: (scope) ->
     # digests = []
+    Commands.loadConditionalModules()
     scope = scope or "Global"
     script = ""
     script += CommandUpdater.activateScope(scope) unless scope is "Global"
@@ -71,7 +72,7 @@
 
     # console.log resultMap
 
-    _.each _.keys(Commands.mapping), (name) ->
+    _.each Commands.Utility.enabledCommandNames(), (name) ->
       command = new Commands.Base(name, null)
       digest = command.digest()
       dragonName = command.generateDragonCommandName()
@@ -174,5 +175,8 @@
     _.each CommandStatuses.find({scope: scope, status: "dirty"}, {limit: 90}).fetch(), (item) ->
       item.performReconciliation()
   createAll: (scope) ->
-    _.each CommandStatuses.find({scope: scope, status: "missing"}, {limit: 10}).fetch(), (item) ->
+    _.each CommandStatuses.find({scope: scope, status: "missing"}, {limit: 90}).fetch(), (item) ->
+      item.performReconciliation()
+  deleteAll: (scope) ->
+    _.each CommandStatuses.find({scope: scope, status: "removed"}, {limit: 90}).fetch(), (item) ->
       item.performReconciliation()

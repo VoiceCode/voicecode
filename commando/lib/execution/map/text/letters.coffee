@@ -32,11 +32,8 @@ _.each letters, (value, key) ->
     grammarType: "textCapture"
     description: "Enters the single letter: #{key}"
     tags: ["letter"]
-    actions: [
-      kind: "script"
-      script: (input) ->
-        Scripts.singleLetter(key, input)
-    ]
+    action: (input) ->
+      @string "#{key}#{(input or []).join('')}"
 
 # _.each letters, (value, key) ->
 # 	Commands.mapping["sky#{value}"] = 

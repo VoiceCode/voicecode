@@ -4,21 +4,23 @@ _.extend Commands.mapping,
     grammarType: "oneArgument"
     description: "opens drop-down menu by name"
     tags: ["application", "system"]
-    actions: [
-      kind: "script"
-      script: (input) ->
-        menuItem = CommandoSettings.menuItemAliases[input] or input
-        Scripts.openDropDown(menuItem)
-    ]
+    action: (input) ->
+      menuItem = CommandoSettings.menuItemAliases[input] or input
+      @openMenuBarItem menuItem
+      
+  "blerch":
+    kind: "action"
+    grammarType: "individual"
+    description: "search the menubar items (opens help menu)"
+    tags: ["application", "system"]
+    action: ->
+      @openMenuBarItem "help"
+
   "system-volume":
     kind: "action"
     grammarType: "numberCapture"
     description: "adjust the system volume [0-100]"
     triggerPhrase: "volume"
-    contextSensitive: true
     tags: ["system"]
-    actions: [
-      kind: "script"
-      script: (input) ->
-        Scripts.setVolume(input)
-    ]
+    action: (input) ->
+      @setVolume(input)

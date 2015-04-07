@@ -37,7 +37,7 @@ _.each wordsWithTriggerPhrase, (trigger, word) ->
     kind: "word"
     grammarType: "textCapture"
     description: "insert the word '#{word}'"
-    tags: ["word"]
+    tags: ["words"]
     module: "words"
     triggerPhrase: trigger
     word: word

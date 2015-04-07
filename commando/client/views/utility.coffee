@@ -2,13 +2,14 @@ Template.Utility.helpers
   dragonBaseCommand: ->
     name = Session.get("ChooseCommand.current") or "command"
     command = new Commands.Base(name, "")
-    command.generateFullCommandWithDigest()
+    command.generateDragonBody()
   dragonBaseCommandName: ->
     name = Session.get("ChooseCommand.current") or "command"
     command = new Commands.Base(name, "")
     command.generateDragonCommandName()
   commandNames: ->
-    _.sortBy _.keys(Commands.mapping), (item) ->
+    names = Commands.Utility.enabledCommandNames()
+    _.sortBy names, (item) ->
       item
   currentCommand: ->
     Session.get("ChooseCommand.current")

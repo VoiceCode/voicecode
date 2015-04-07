@@ -4,208 +4,117 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "moves the cursor all the way to the right"
     tags: ["cursor"]
-    actions: [
-      kind: "key"
-      key: "Right"
-      modifiers: ["command"]
-    ]
+    action: ->
+      @key "Right", ['command']
   "derek":
     kind: "action"
     grammarType: "individual"
     description: "moves the cursor on the way to the right than inserts a space"
     tags: ["cursor", "space", "right", "combo"]
-    actions: [
-      kind: "key"
-      key: "Right"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Space"
-    ]
+    action: ->
+      @key "Right", ['command']
+      @key " "
   "nudgle":
     kind: "action"
     grammarType: "individual"
     description: "remove a space before the adjacent word on the left"
     tags: ["cursor", "space", "deleting", "left", "combo"]
-    actions: [
-      kind: "key"
-      key: "Left"
-      modifiers: ["option"]
-    ,
-      kind: "key"
-      key: "Delete"
-    ]
+    action: ->
+      @key "Left", ['option']
+      @key "Delete"
   "ricksy":
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the right"
-    tags: ["selection", "Right"]
-    actions: [
-      kind: "key"
-      key: "Right"
-      modifiers: ["command", "shift"]
-    ]
+    tags: ["selection", "right"]
+    action: ->
+      @key "Right", ['command', 'shift']
   "lefty":
     kind: "action"
     grammarType: "individual"
     description: "move the cursor all the way to the left"
     tags: ["cursor", "left"]
-    actions: [
-      kind: "key"
-      key: "Left"
-      modifiers: ["command"]
-    ]  
+    action: ->
+      @key "Left", ['command']
   "lecksy":
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the left"
     tags: ["selection", "left"]
-    actions: [
-      kind: "key"
-      key: "Left"
-      modifiers: ["command", "shift"]
-    ]  
+    action: ->
+      @key "Left", ['command', 'shift']
   "shackle":
     kind: "action"
     grammarType: "individual"
     description: "selects the entire line"
     tags: ["selection"]
     aliases: ["sheqel", "shikel"]
-    actions: [
-      kind: "key"
-      key: "Left"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Right"
-      modifiers: ["command", "shift"]
-    ]  
+    action: ->
+      @key "Left", ['command']
+      @key "Right", ['command', 'shift']
   "snipline":
     kind: "action"
     grammarType: "individual"
     description: "will delete the entire line(s)"
     tags: ["deleting"]
     aliases: ["snipeline"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "K"
-          modifiers: ['control', 'shift']
-        ]
-    actions: [
-      kind: "key"
-      key: "Delete"
-    ,
-      kind: "key"
-      key: "Right"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Delete"
-      modifiers: ["command"]
-    ]  
+    action: ->
+      if @currentApplication() is "Sublime Text"
+        @key "K", ['control', 'shift']
+      else
+        @key "Delete"
+        @key "Right", ['command']
+        @key "Delete", ['command']
   "snipper":
     kind: "action"
     grammarType: "individual"
     description: "will delete everything to the right"
     tags: ["deleting", "right"]
     aliases: ["sniper"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "K"
-          modifiers: ['control']
-        ]
-    actions: [
-      kind: "key"
-      key: "Right"
-      modifiers: ["command", "shift"]
-    ,
-      kind: "key"
-      key: "Delete"
-    ]
+    action: ->
+      if @currentApplication is "Sublime Text"
+        @key "K", ['control']
+      else
+        @key "Right", ['command', 'shift']
+        @key "Delete"
   "snipple":
     kind: "action"
     grammarType: "individual"
     tags: ["deleting", "left"]
     description: "will delete everything to the left"
-    actions: [
-      kind: "key"
-      key: "Delete"
-      modifiers: ["command"]
-    ]
+    action: ->
+      @key "Delete", ['command']
   "jolt":
     kind: "action"
     grammarType: "individual"
     description: "will duplicate the current line"
     tags: ["text-manipulation"]
     aliases: ["joel"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "D"
-          modifiers: ['command', 'shift']
-        ]
-    actions: [
-      kind: "key"
-      key: "Left"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Right"
-      modifiers: ["command", "shift"]
-    ,
-      kind: "key"
-      key: "C"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Right"
-    ,
-      kind: "key"
-      key: "Return"
-    ,
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ]
+    action: ->
+      if @currentApplication() is "Sublime Text"
+        @key "D", ['command', 'shift']
+      else
+        @key "Left", ['command']
+        @key "Right", ['command', 'shift']
+        @key "C", ['command']
+        @key "Right"
+        @key "Return"
+        @key "V", ['command']
   "folly":
     kind: "action"
     description: "expand selection to block"
     grammarType: "individual"
     tags: ["text-manipulation"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "L"
-          modifiers: ['command']
-        ]
-    actions: [
-      kind: "script"
-      script: ->
+    aliases: ["foley"]
+    action: ->
+      if @currentApplication() is "Sublime Text"
+        @key "L", ['command']
+      else
         Scripts.selectBlock()
-    ]
   "spando":
     kind: "action"
     description: "expand selection symmetrically (horizontally)"
     grammarType: "numberCapture"
-    contextSensitive: true
     tags: ["text-manipulation"]
     actions: [
       kind: "script"
@@ -216,18 +125,14 @@ _.extend Commands.mapping,
     kind: "action"
     description: "expand selection vertically, symmetrically"
     grammarType: "numberCapture"
-    contextSensitive: true
     tags: ["text-manipulation"]
-    actions: [
-      kind: "script"
-      script: (value) ->
-        Scripts.verticalSelectionExpansion(value or 1)
-    ]
+    action: (input) ->
+      @verticalSelectionExpansion(input or 1)
+
   "kerleck":
     kind: "action"
     description: "With argument: [word], Will select the text [word] on the current line. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] on the current line"
     grammarType: "textCapture"
-    contextSensitive: true
     tags: ["text-manipulation", "cursor", "selection"]
     actions: [
       kind: "script"
@@ -238,7 +143,6 @@ _.extend Commands.mapping,
     kind: "action"
     description: "With argument: [word], Will select the text [word] previous to the cursor. With arguments: [word1], [word2], Will select the text starting with the last occurrence of [word1] and ending with the last occurrence of [word2] previous to the cursor"
     grammarType: "textCapture"
-    contextSensitive: true
     tags: ["text-manipulation", "cursor", "selection"]
     actions: [
       kind: "script"
@@ -249,7 +153,6 @@ _.extend Commands.mapping,
     kind: "action"
     description: "With argument: [word], Will select the text [word] after the cursor. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the first occurrence of [word2] after the cursor"
     grammarType: "textCapture"
-    contextSensitive: true
     tags: ["text-manipulation", "cursor", "selection"]
     actions: [
       kind: "script"
@@ -261,13 +164,6 @@ _.extend Commands.mapping,
     grammarType: "individual"
     description: "Enters 'Ace Jump' / 'Easy Motion' mode"
     tags: ["cursor"]
-    contextualActions:
-      "sublime": 
-        requirements: [
-          application: "Sublime Text"
-        ]
-        actions: [
-          kind: "key"
-          key: "Semicolon"
-          modifiers: ["command"]
-        ]
+    action: ->
+      if @currentApplication is "Sublime Text"
+        @key ";", ['command']

@@ -25,16 +25,16 @@
   X: "trex"
   Y: "yang"
   Z: "zooch"
-  n1: "won"
-  n2: "too"
-  n3: "three"
-  n4: "four"
-  n5: "five"
-  n6: "six"
-  n7: "seven"
-  n8: "ate"
-  n9: "nine"
-  n0: "zer"
+  "1": "won"
+  "2": "too"
+  "3": "three"
+  "4": "four"
+  "5": "five"
+  "6": "six"
+  "7": "seven"
+  "8": "ate"
+  "9": "nine"
+  "0": "zer"
   Return: "turn"
   Slash: "slush"
   Period: "peer"
@@ -85,17 +85,11 @@ allowed =
 
 _.each commandModifiers, (mods, prefix) ->
   _.each commandLetters, (value, key) ->
-    if allowed[prefix]? and _.contains allowed[prefix], value
-      Commands.mapping["#{prefix}#{value}"] = 
-        kind: "action"
-        grammarType: "individual"
-        description: "#{mods.join(' + ')} + #{key}"
-        tags: ["modifiers"]
-        module: "modifiers"
-        actions: [
-          kind: "script"
-          modifiers: mods
-          key: key
-          script: (input) ->
-            Scripts.singleModifier(key, mods)
-        ]
+    Commands.mapping["#{prefix}#{value}"] = 
+      kind: "action"
+      grammarType: "individual"
+      description: "#{mods.join(' + ')} + #{key}"
+      tags: ["modifiers"]
+      module: "modifiers"
+      action: ->
+        @key key, mods

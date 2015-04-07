@@ -1,51 +1,46 @@
 template(name="Updates")
   .container.updatesPage
-    h1 Command Updates
-      small Come here to make sure commands are up-to-date after each release
+    h1 Dragon Sync
+    p.lead After each VoiceCode update, and whenever you add your own commands or enable/disable built-in commands, come here and run these synchronization scripts.
+    .well
+      p This feature depends on fairly intricate applescript communication with Dragon Dictate. Sometimes things don't work for no apparent reason, however it is always simply a matter of trying it a few times.
+      p 
+        | Usually the issue is with the commands in other scopes besides "Global", because Dragon's applescript API only recognizes those scopes when the actual application corresponding to the scope is activated
+        |  - that is the reason for all the application switching going on when it is checking for the command statuses.
+      p Things to do if the buttons below are not working:
+      ul
+        li Make sure dragon is in "command mode" rather than "dictation mode"
+        li For each of the contexts besides "Global" make sure the corresponding application is already running
+        li Open Dragon's "Show Available Commands" window
+        li Restart Dragon Dictate
     a.btn.btn-primary#run Run Command Check
     h3 Needs Creating
     .well
-      h4
-        | Global 
-        a.smallButton#createAllGlobal Create All These
-      ul
-        each addedGlobal
-          +commandNeedsUpdate
-      h4 
-        | iTerm
-        a.smallButton#createAllTerm Create All These
-      ul
-        each addedTerm
-          +commandNeedsUpdate
+      each dragonContexts
+        h4
+          =context 
+          a.smallButton#createAll Create All These
+        ul
+          each added
+            +commandNeedsUpdate
     h3 Needs Deleting
     .well
-      h4
-        | Global
-        a.smallButton#deleteAllGlobal Delete All These
-      ul
-        each removedGlobal
-          +commandNeedsUpdate
-      h4
-        | iTerm
-        a.smallButton#deleteAllTerm Delete All These
-      ul
-        each removedTerm
-          +commandNeedsUpdate
+      each dragonContexts
+        h4
+          =context 
+          a.smallButton#deleteAll Delete All These
+        ul
+          each removed
+            +commandNeedsUpdate
     h3 Needs Updating
     .well
-      h4
-        | Global
-        a.smallButton#updateAllGlobal Update All These
-      ul
-        each dirtyGlobal
-          +commandNeedsUpdate
-      h4
-        | iTerm
-        a.smallButton#updateAllTerm Update All These
-      ul
-        each dirtyTerm
-          +commandNeedsUpdate
-
+      each dragonContexts
+        h4
+          =context 
+          a.smallButton#updateAll Update All These
+        ul
+          each dirty
+            +commandNeedsUpdate
           
 template(name="commandNeedsUpdate")
   li

@@ -11,13 +11,15 @@ class @Grammar
   buildCommandList: (keys) ->
     results = []
     _.each keys, (name) ->
-      if Commands.mapping[name].aliases?.length
-        if name is "."
-          results.push "dot"
+      command = Commands.mapping[name]
+      if command.enabled
+        if command.aliases?.length
+          if name is "."
+            results.push "dot"
+          else
+            results.push name
         else
-          results.push name
-      else
-        results.push "\"#{name}\""
+          results.push "\"#{name}\""
     results.join(' / ')
   aliases: ->
     results = []
@@ -40,16 +42,16 @@ class @Grammar
     {
       var grammarTransforms = {
         frank: function(arguments) {
-          return Scripts.levenshteinMatch(CommandoSettings.abbreviations, arguments.join(' '));
+          return Scripts.fuzzyMatch(CommandoSettings.abbreviations, arguments.join(' '));
         },
         treemail: function(arguments) {
-          return Scripts.levenshteinMatch(CommandoSettings.emails, arguments.join(' '));
+          return Scripts.fuzzyMatch(CommandoSettings.emails, arguments.join(' '));
         },
         trusername: function(arguments) {
-          return Scripts.levenshteinMatch(CommandoSettings.usernames, arguments.join(' '));
+          return Scripts.fuzzyMatch(CommandoSettings.usernames, arguments.join(' '));
         },
         trassword: function(arguments) {
-          return Scripts.levenshteinMatch(CommandoSettings.passwords, arguments.join(' '));
+          return Scripts.fuzzyMatch(CommandoSettings.passwords, arguments.join(' '));
         }
       }
 

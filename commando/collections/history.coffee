@@ -8,6 +8,7 @@ Schemas.PreviousCommand = new SimpleSchema
     blackbox: true
   generated:
     type: String
+    optional: true
   createdAt:
     type: Date
     index: 1

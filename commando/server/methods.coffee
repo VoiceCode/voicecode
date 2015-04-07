@@ -12,7 +12,7 @@ Meteor.methods
 
   makeDragonCommand: (name) ->
     command = new Commands.Base(name, null)
-    body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
     dragonName = command.generateDragonCommandName()
     scope = command.getTriggerScope()
 
@@ -56,7 +56,7 @@ Meteor.methods
       end tell
 
       tell application "System Events"
-      key code "0" 
+      keystroke "s" 
       end tell
 
       tell application "System Events"
@@ -67,19 +67,9 @@ Meteor.methods
 
       tell application "System Events"
         tell process "Dragon Dictate"
-          set value of text area 1 of scroll area 1 of group 3 of splitter group 1 of window "Commands" to "#{body}"
+          set value of text area 1 of scroll area 3 of splitter group 1 of window "Commands"  to "#{body}"
         end tell
       end tell
-
-      delay 0.1
-
-      tell application "System Events"
-        tell process "Dragon Dictate"
-          click button "Compile" of splitter group 1 of window "Commands"
-        end tell
-      end tell
-      
-      delay 0.4
 
       tell application "System Events"
         tell process "Dragon Dictate"
@@ -98,7 +88,7 @@ Meteor.methods
     final = []
     _.each commandLetters, (value, key) ->
       command = new Commands.Base("#{modifier}#{value}", null)
-      body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+      body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
       dragonName = command.generateDragonCommandName()
       script = 
         """
@@ -179,7 +169,7 @@ Meteor.methods
     final = []
     _.each keys, (key) ->
       command = new Commands.Base(key, null)
-      body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+      body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
       dragonName = command.generateDragonCommandName()
       script = 
         """
@@ -258,7 +248,7 @@ Meteor.methods
   #   _.each _.keys(Commands.mapping)
   updateDragonCommand: (name) ->
     command = new Commands.Base(name, null)
-    body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
+    body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
     dragonName = command.generateDragonCommandName()
     script = """osascript <<EOD
     tell application "Dragon Dictate" to activate
@@ -298,7 +288,6 @@ Meteor.methods
     true
   findDragonCommand: (name) ->
     command = new Commands.Base(name, null)
-    body = command.generateFullCommandWithDigest().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\")
     dragonName = command.generateDragonCommandName()
     # script = """
     # tell application "Dragon Dictate" to activate
@@ -326,8 +315,8 @@ Meteor.methods
   getAllCommandStatuses: ->
     try
       CommandStatuses.remove({})
-      CommandUpdater.getAllStatuses("Global")
-      CommandUpdater.getAllStatuses("iTerm")
+      _.each CommandoSettings.dragonContexts, (context) ->
+        CommandUpdater.getAllStatuses(context)
     catch e
       console.log e
   updateAllCommandStatuses: (scope) ->
@@ -338,6 +327,11 @@ Meteor.methods
   createAllCommandStatuses: (scope) ->
     try
       CommandUpdater.createAll(scope)
+    catch e
+      console.log e
+  deleteAllCommandStatuses: (scope) ->
+    try
+      CommandUpdater.deleteAll(scope)
     catch e
       console.log e
   currentCommandStatus: (name, scope) ->

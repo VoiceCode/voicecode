@@ -6,7 +6,6 @@ class Commands.Chain
   parse: ->
     Parser.parse @phrase
   execute: (shouldInvoke) ->
-    Commands.isBeginningOfCommand = true
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
     results = @parse()
@@ -23,10 +22,17 @@ class Commands.Chain
 
         Commands.subcommandIndex += 1
         individual
-      ).join('\n')
-      appleScript = @makeAppleScriptCommand combined
+      )
+
+      # appleScript = @makeAppleScriptCommand combined
       if shouldInvoke
-        @invokeShell appleScript
+        pool = $.NSAutoreleasePool('alloc')('init')
+        _.each combined, (callback) ->
+          if callback?
+            callback.call(Actions)
+        pool('release')
+
+        # @invokeShell appleScript
 
       if Meteor.isServer
         Commands.lastFullCommand = combined
@@ -34,17 +40,19 @@ class Commands.Chain
           createdAt: new Date()
           interpretation: results
           spoken: @phrase
-          generated: combined
+          # generated: combined
         # console.log "result is #{inserted}"
 
-      {interpretation: results, generated: combined}
+      # {interpretation: results, generated: combined}
+    null
+
   generateNestedInterpretation: ->
     results = @parse()
     if results?
       combined = _.map(results, (result) ->
         command = new Commands.Base(result.command, result.arguments)
         command.generate()
-      ).join('\n')
+      )
       combined
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD
@@ -63,5 +71,3 @@ class Commands.Chain
       Shell.exec command, async: true
     else
       command
-
-

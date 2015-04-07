@@ -3,169 +3,111 @@ _.extend Commands.mapping,
     kind: "action"
     grammarType: "individual"
     description: "select all"
-    tags: ["selection", "A"]
-    actions: [
-      kind: "key"
-      key: "A"
-      modifiers: ["command"]
-    ]
+    tags: ["selection"]
+    action: ->
+      @key "A", ["command"]
   "sparky":
     kind: "action"
     grammarType: "individual"
     description: "paste the alternate clipboard"
-    tags: ["V", "copy-paste"]
-    actions: [
-      kind: "key"
-      key: "V"
-      modifiers: ["command", "shift"]
-    ]
+    tags: ["copy-paste"]
+    action: ->
+      @key "V", ["command", "shift"]
   "allspark":
     kind: "action"
     grammarType: "individual"
     description: "select all then paste the clipboard"
-    tags: ["V", "A", "copy-paste", "selection"]
-    actions: [
-      kind: "key"
-      key: "A"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ]
+    tags: ["copy-paste", "selection"]
+    action: ->
+      @key "A", ["command"]
+      @key "V", ["command"]
   "spark":
     kind: "action"
     grammarType: "individual"
     description: "paste the clipboard"
     aliases: ["sparked"]
-    tags: ["V", "copy-paste"]
-    actions: [
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ]
+    tags: ["copy-paste"]
+    action: ->
+      @key "V", ["command"]
   "sparshock":
     kind: "action"
     grammarType: "individual"
     description: "paste the clipboard then press enter"
-    tags: ["V", "copy-paste", "combo", "Return"]
-    actions: [
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Return"
-    ]
+    tags: ["copy-paste", "combo", "return"]
+    action: ->
+      @key "V", ["command"]
+      @key "Return"
   "sage":
     kind: "action"
     grammarType: "individual"
     description: "file > save"
-    tags: ["application", "command", "S"]
-    actions: [
-      kind: "key"
-      key: "S"
-      modifiers: ["command"]
-    ]
+    tags: ["application"]
+    action: ->
+      @key "S", ["command"]
   "sagewick":
     kind: "action"
     grammarType: "individual"
     description: "file > save"
-    tags: ["application", "command", "S", "combo"]
-    actions: [
-      kind: "key"
-      key: "S"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Tab"
-      modifiers: ["command"]
-    ]
+    tags: ["application", "combo"]
+    action: ->
+      @key "S", ["command"]
+      @key "Tab", ["command"]
   "stooshwick":
     kind: "action"
     grammarType: "individual"
     description: "copy whatever is selected then switch applications"
-    tags: ["C", "copy-paste", "application", "system"]
-    actions: [
-      kind: "key"
-      key: "C"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Tab"
-      modifiers: ["command"]
-    ]
+    tags: ["copy-paste", "application", "system", "combo"]
+    action: ->
+      @key "C", ["command"]
+      @key "Tab", ["command"]
   "stoosh":
     kind: "action"
     grammarType: "individual"
     description: "copy whatever is selected"
-    tags: ["C", "copy-paste"]
-    actions: [
-      kind: "key"
-      key: "C"
-      modifiers: ["command"]
-    ]
+    tags: ["copy-paste"]
+    action: ->
+      @key "C", ["command"]
   "allstoosh":
     kind: "action"
     grammarType: "individual"
     description: "select all then copy whatever is selected"
-    tags: ["A", "C", "copy-paste", "selection"]
-    actions: [
-      kind: "key"
-      key: "A"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "C"
-      modifiers: ["command"]
-    ]
+    tags: ["copy-paste", "selection"]
+    action: ->
+      @key "A", ["command"]
+      @key "C", ["command"]
   "snatch":
     kind: "action"
     grammarType: "individual"
     description: "cut whatever is selected"
-    tags: ["X", "copy-paste"]
+    tags: ["copy-paste"]
     aliases: ["snatched"]
-    actions: [
-      kind: "key"
-      key: "X"
-      modifiers: ["command"]
-    ]
+    action: ->
+      @key "X", ["command"]
   "totch":
     kind: "action"
     grammarType: "individual"
     description: "close a window or tab"
-    tags: ["application", "command", "W"]
-    actions: [
-      kind: "key"
-      key: "W"
-      modifiers: ["command"]
-    ]
+    tags: ["application", "window"]
+    action: ->
+      @key "W", ["command"]
   "marco":
     kind: "action"
     grammarType: "individual"
     description: "find"
-    tags: ["application", "command", "F"]
-    actions: [
-      kind: "key"
-      key: "F"
-      modifiers: ["command"]
-    ]
+    tags: ["application"]
+    action: ->
+      @key "F", ["command"]
   "talky":
     kind: "action"
     grammarType: "individual"
     description: "open a new tab"
-    tags: ["application", "command", "T"]
-    actions: [
-      kind: "key"
-      key: "T"
-      modifiers: ["command"]
-    ]
+    tags: ["application", "window"]
+    action: ->
+      @key "T", ["command"]
   "randall":
     kind: "action"
     grammarType: "individual"
     description: "press escape"
-    tags: ["Escape"]
-    actions: [
-      kind: "key"
-      key: "Escape"
-    ]
+    tags: ["escape"]
+    action: ->
+      @key "Escape"

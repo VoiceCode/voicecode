@@ -16,6 +16,6 @@ _.each singleWords, (word) ->
     kind: "word"
     grammarType: "textCapture"
     description: "insert the word '#{word}'"
-    tags: ["word"]
+    tags: ["words"]
     triggerPhrase: word
     word: word

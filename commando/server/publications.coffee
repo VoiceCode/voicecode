@@ -3,3 +3,6 @@ Meteor.publish "history", (limit) ->
 
 Meteor.publish "commandStatuses", (limit) ->
   CommandStatuses.find()
+
+Meteor.publish "enables", (limit) ->
+  Enables.find()

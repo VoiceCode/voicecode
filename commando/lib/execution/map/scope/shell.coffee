@@ -6,22 +6,24 @@ _.extend Commands.mapping,
     tags: ["domain-specific", "shell"]
     triggerScope: "iTerm"
     triggerPhrase: "cd"
-    actions: [
-      kind: "keystroke"
-      keystroke: "cd ; ls"
-    ,
-      kind: "key"
-      key: "Left"
-    ,
-      kind: "key"
-      key: "Left"
-    ,
-      kind: "key"
-      key: "Left"
-    ,
-      kind: "key"
-      key: "Left"
-    ]
+    action: ->
+      @string "cd ; ls"
+      _(4).times =>
+        @key "Left"
+  "shell-engage":
+    kind: "action"
+    grammarType: "individual"
+    description: "hover your mouse over a directory name output from a 'ls' command in the terminal, and this command will 'cd' to that directory"
+    tags: ["domain-specific", "shell"]
+    triggerScope: "iTerm"
+    triggerPhrase: "engage"
+    action: ->
+      @rightClick()
+      @delay 50
+      @string "cd "
+      @key "V", ['command']
+      @string "; ls"
+      @key "Return"
   "shell-list":
     kind: "action"
     grammarType: "textCapture"
@@ -29,24 +31,13 @@ _.extend Commands.mapping,
     tags: ["domain-specific", "shell"]
     triggerScope: "iTerm"
     triggerPhrase: "shell list"
-    actions: [
-      kind: "script"
-      script: (input) ->
-        options = _.map((input or []), (item) ->
-          """
-          keystroke " "
-          key code "27"
-          keystroke "#{item}"
-          """
-        ).join("\n")
-        """
-        tell application "System Events"
-        keystroke "ls "
-        #{options}
-        keystroke return
-        end tell
-        """
-    ]
+    action: (input) ->
+      options = _.map((input or []), (item) ->
+        " -#{item}"
+      ).join(" ")
+      @string "ls #{options}"
+      @key "Return"
+      
   "shell-history":
     kind: "action"
     grammarType: "numberCapture"
@@ -54,13 +45,9 @@ _.extend Commands.mapping,
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell history"
     triggerScope: "iTerm"
-    actions: [
-      kind: "text"
-      text: (input) -> "history #{input}"
-    ,
-      kind: "key"
-      key: "Return"
-    ]
+    action: (input) ->
+      @string "history #{input or ""}"
+      @key "Return"
   "shell-recall":
     kind: "action"
     grammarType: "individual"
@@ -68,22 +55,12 @@ _.extend Commands.mapping,
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell recall"
     triggerScope: "iTerm"
-    actions: [
-      kind: "key"
-      key: "P"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ,
-      kind: "keystroke"
-      keystroke: "!"
-    ,
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Return"
-    ]
+    action: ->
+      @rightClick()
+      @delay 50
+      @key "!"
+      @key "V", ["command"]
+      @key "Return"
   "shell-edit":
     kind: "action"
     description: "open file in editor"
@@ -91,92 +68,46 @@ _.extend Commands.mapping,
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell edit"
     triggerScope: "iTerm"
-    actions: [
-      kind: "key"
-      key: "O"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.15
-    ,
-      kind: "keystroke"
-      keystroke: "$EDITOR "
-    ,
-      kind: "key"
-      key: "V"
-      modifiers: ["command"]
-    ,
-      kind: "key"
-      key: "Return"
-    ]  
+    action: ->
+      @rightClick()
+      @delay 50
+      @key "$EDITOR "
+      @key "V", ["command"]
+      @key "Return"
   "durrup":
     kind: "action"
     description: "navigate to the parent directory"
     grammarType: "individual"
     tags: ["domain-specific", "shell"]
     triggerScope: "iTerm"
-    actions: [
-      kind: "keystroke"
-      keystroke: "cd ..; ls \n"
-    ]  
+    action: ->
+      @string "cd ..; ls"
+      @key "Return"
   "shell-direct":
     kind: "action"
     grammarType: "textCapture"
     description: "changes directory to any directory in the predefined list"
     tags: ["text", "domain-specific", "shell"]
-    contextSensitive: true
     triggerPhrase: "direct"
-    contextualActions:
-      "terminal": 
-        requirements: [
-          application: "iTerm"
-        ,
-          application: "Terminal"
-        ]
-        actions: [
-          kind: "block"
-          transform: (input) ->
-            if input?.length
-              directory = Scripts.levenshteinMatch CommandoSettings.directories, input.join(' ')
-              "cd #{directory} ; ls"
-            else
-              ""
-        ,
-          kind: "key"
-          key: "Return"
-        ]
-    actions: [
-      kind: "script"
-      script: (input) ->
-        Scripts.openApplication("iTerm")
-      delay: 0.5
-    ,
-      kind: "key"
-      key: "T"
-      modifiers: ["command"]
-      delay: 0.5
-    ,
-      kind: "block"
-      transform: (input) ->
-        if input?.length
-          directory = Scripts.levenshteinMatch CommandoSettings.directories, input.join(' ')
-          "cd #{directory} ; ls"
+    action: (input) ->
+      if input?.length
+        current = @currentApplication()
+        directory = Scripts.fuzzyMatch CommandoSettings.directories, input.join(' ')
+        if current is "iTerm" or current is "Terminal"
+          @string "cd #{directory} ; ls \n"
         else
-          ""
-    ,
-      kind: "key"
-      key: "Return"
-    ]
+          @openApplication("iTerm")
+          @key "T", ["command"]
+          @delay 200
+          @string "cd #{directory} ; ls"
+          @key "Return"
   "shell":
     kind: "action"
     grammarType: "textCapture"
     description: "insert a shell command from the predefined shell commands list"
     tags: ["text", "shell"]
-    contextSensitive: true
     aliases: ["shall"]
-    actions: [
-      kind: "text"
-      text: (input) ->
-        if input?.length
-          Scripts.levenshteinMatch CommandoSettings.shellCommands, input.join(' ')
-        else
-          ""
-    ]
+    action: (input) ->
+      if input?.length
+        text = Scripts.fuzzyMatch CommandoSettings.shellCommands, input.join(' ')
+        @string text

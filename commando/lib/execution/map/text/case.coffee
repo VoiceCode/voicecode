@@ -13,7 +13,6 @@ _.extend Commands.mapping,
     tags: ["text"]
     transform: "camel"
     aliases: ["crammed", "crams", "tram", "kram"]
-    contextSensitive: true
     fallbackService: "vc case cram"
   "decram":
     kind: "text"
@@ -35,7 +34,6 @@ _.extend Commands.mapping,
     description: "snake_case_text"
     tags: ["text"]
     transform: "snake"
-    contextSensitive: true
     fallbackService: "vc case snake"
   "coalsnik":
     kind: "text"
@@ -71,7 +69,6 @@ _.extend Commands.mapping,
     description: "spinal-case-text"
     tags: ["text"]
     transform: "spine"
-    contextSensitive: true
     fallbackService: "vc case spine"
   "despin":
     kind: "text"
@@ -87,7 +84,6 @@ _.extend Commands.mapping,
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
-    contextSensitive: true
     fallbackService: "vc case criffed"
   "decriffed":
     kind: "text"
@@ -96,7 +92,6 @@ _.extend Commands.mapping,
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
-    contextSensitive: true
     prefix: " "
   "dockriffed":
     kind: "text"
@@ -105,7 +100,6 @@ _.extend Commands.mapping,
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
-    contextSensitive: true
     prefix: "."
   "dollkriffed":
     kind: "text"
@@ -114,7 +108,6 @@ _.extend Commands.mapping,
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
-    contextSensitive: true
     prefix: "$"
   "smash":
     kind: "text"
@@ -122,7 +115,6 @@ _.extend Commands.mapping,
     description: "lowercasewithnospaces"
     tags: ["text"]
     transform: "lowerSlam"
-    contextSensitive: true
     fallbackService: "vc case smash"
   "yellsmash":
     kind: "text"
@@ -130,7 +122,6 @@ _.extend Commands.mapping,
     description: "UPPERCASEWITHNOSPACES"
     tags: ["text"]
     transform: "upperSlam"
-    contextSensitive: true
     fallbackService: "vc case yellsmash"
   "yeller":
     kind: "text"
@@ -138,7 +129,6 @@ _.extend Commands.mapping,
     description: "UPPER CASE WITH SPACES"
     tags: ["text"]
     transform: "upperCase"
-    contextSensitive: true
     fallbackService: "vc case yeller"
   "yellsnik":
     kind: "text"
@@ -146,7 +136,6 @@ _.extend Commands.mapping,
     description: "UPPER_CASE_SNAKE"
     tags: ["text"]
     transform: "upperSnake"
-    contextSensitive: true
     fallbackService: "vc case yellsnik"
   "yellspin":
     kind: "text"
@@ -172,7 +161,6 @@ _.extend Commands.mapping,
     description: "Title Words With Spaces"
     tags: ["text"]
     transform: "titleSentance"
-    contextSensitive: true
     fallbackService: "vc case tridal"
   "senchen":
     kind: "text"
@@ -180,7 +168,6 @@ _.extend Commands.mapping,
     description: "Sentence case with spaces"
     tags: ["text"]
     transform: "titleFirstSentance"
-    contextSensitive: true
     fallbackService: "vc case senchen"
   "datsun":
     kind: "text"
@@ -188,5 +175,4 @@ _.extend Commands.mapping,
     description: "Sentence case with spaces"
     tags: ["text"]
     transform: "titleFirstSentance"
-    contextSensitive: true
     prefix: ". "

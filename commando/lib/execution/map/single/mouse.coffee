@@ -2,72 +2,49 @@ _.extend Commands.mapping,
   "duke":
     kind: "action"
     grammarType: "individual"
-    description: "mouse double click"
+    description: "double click"
     tags: ["mouse"]
-    actions: [
-      kind: "key"
-      key: "P"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ]
+    action: ->
+      @doubleClick()
   "chipper":
     kind: "action"
     grammarType: "individual"
-    description: "mouse right click"
+    description: "right click"
     tags: ["mouse"]
-    actions: [
-      kind: "key"
-      key: "O"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ]
+    action: ->
+      @rightClick()
   "chiff":
     kind: "action"
     grammarType: "individual"
-    description: "mouse left click"
+    description: "left click"
     tags: ["mouse"]
-    actions: [
-      kind: "key"
-      key: "I"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ]
+    action: ->
+      @click()
   "triplick":
-    kind: "combo"
+    kind: "action"
     grammarType: "individual"
-    description: "mouse left click"
+    description: "left click"
     tags: ["mouse"]
-    combo: ["chiff", "chiff", "chiff"]
+    action: ->
+      @tripleClick()
   "shicks":
     kind: "action"
     grammarType: "individual"
-    description: "mouse shift click"
+    description: "shift+click"
     tags: ["mouse"]
-    actions: [
-      kind: "key"
-      key: "A"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ]
+    action: ->
+      @shiftClick()
   "comlick":
     kind: "action"
     grammarType: "individual"
-    description: "mouse command+click"
+    description: "command+click"
     tags: ["mouse"]
-    actions: [
-      kind: "key"
-      key: "X"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ]
+    action: ->
+      @commandClick()
   "croplick":
     kind: "action"
     grammarType: "individual"
-    description: "mouse option+click"
+    description: "option+click"
     tags: ["mouse"]
-    actions: [
-      kind: "key"
-      key: "X"
-      modifiers: ["command", "option", "control", "shift"]
-      delay: 0.1
-    ]
+    action: ->
+      @optionClick()

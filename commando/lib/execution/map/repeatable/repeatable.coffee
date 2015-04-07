@@ -4,188 +4,137 @@ _.extend Commands.mapping,
     grammarType: "individual"
     aliases: ["shocked", "shox", "chalk"]
     description: "press the return key"
-    tags: ["Return"]
-    actions: [
-      kind: "key"
-      key: "Return"
-    ]
+    tags: ["return"]
+    action: (input) ->
+      @key "Return"
   "junk":
     kind: "action"
     grammarType: "individual"
     description: "press the delete key"
     aliases: ["junks", "junked"]
     tags: ["deleting"]
-    actions: [
-      kind: "key"
-      key: "Delete"
-    ]
+    action: (input) ->
+      @key "Delete"
   "spunk":
     kind: "action"
     grammarType: "individual"
     description: "pressed the forward delete key"
     tags: ["deleting"]
-    actions: [
-      kind: "key"
-      key: "ForwardDelete"
-    ]
+    action: (input) ->
+      @key "ForwardDelete"
   "dizzle":
     kind: "action"
     grammarType: "individual"
     description: "undo"
-    tags: ["application", "command", "Z"]
-    actions: [
-      kind: "key"
-      key: "Z"
-      modifiers: ["command"]
-    ]
+    tags: ["application"]
+    action: (input) ->
+      @key "Z", ["command"]
   "rizzle":
     kind: "action"
     grammarType: "individual"
     description: "redo"
-    tags: ["application", "command+shift", "Z"]
-    actions: [
-      kind: "key"
-      key: "Z"
-      modifiers: ["command", "shift"]
-    ]
+    tags: ["application"]
+    action: (input) ->
+      @key "Z", ["command", "shift"]
   "tarp":
     kind: "action"
     grammarType: "individual"
     description: "inserts a tab"
-    tags: ["Tab"]
-    actions: [
-      kind: "key"
-      key: "Tab"
-    ]
+    tags: ["tab"]
+    action: (input) ->
+      @key "Tab"
   "tarsh":
     kind: "action"
     grammarType: "individual"
     description: "inserts a shift + tab"
-    tags: ["tab", "shift"]
-    actions: [
-      kind: "key"
-      key: "Tab"
-      modifiers: ["shift"]
-    ]
+    tags: ["tab"]
+    action: (input) ->
+      @key "Tab", ["shift"]
   "gibby":
     kind: "action"
     description: "Switch to next window in same application"
     grammarType: "individual"
-    tags: ["application", "command"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "`"
-      modifiers: ["command"]
-    ]
+    tags: ["application", "window"]
+    action: (input) ->
+      @key "`", ["command"]
   "shibby":
     kind: "action"
     description: "Switch to previous window in same application"
     grammarType: "individual"
-    tags: ["application", "command"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "`"
-      modifiers: ["command", "shift"]
-    ]
+    tags: ["application", "window"]
+    action: (input) ->
+      @key "`", ["command", "shift"]
   "shompla":
     kind: "action"
     description: "zoom in"
     grammarType: "individual"
-    tags: ["application", "command", "plus"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "="
-      modifiers: ["command"]
-    ]
+    tags: ["application", "plus"]
+    action: (input) ->
+      @key "=", ["command"]
   "shaman":
     kind: "action"
     description: "zoom out"
     grammarType: "individual"
-    tags: ["application", "command", "minus"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "-"
-      modifiers: ["command"]
-    ]
+    tags: ["application", "minus"]
+    action: (input) ->
+      @key "-", ["command"]
   "shabble":
     kind: "action"
     description: ""
     grammarType: "individual"
     tags: ["["]
-    actions: [
-      kind: "keystroke"
-      keystroke: "["
-      modifiers: ["command"]
-    ]
+    action: (input) ->
+      @key "[", ["command"]
   "shabber":
     kind: "action"
     description: ""
     grammarType: "individual"
     aliases: ["shammar"]
     tags: ["]"]
-    actions: [
-      kind: "keystroke"
-      keystroke: "]"
-      modifiers: ["command"]
-    ]
+    action: (input) ->
+      @key "]", ["command"]
   "marneck":
     kind: "action"
     description: "find the next occurrence of a search term"
     grammarType: "individual"
-    tags: ["application", "command", "G"]
-    actions: [
-      kind: "key"
-      key: "G"
-      modifiers: ["command"]
-    ]
+    tags: ["application"]
+    action: (input) ->
+      @key "G", ["command"]
   "marpreev":
     kind: "action"
     description: "find the previous occurrence of a search term"
     grammarType: "individual"
-    tags: ["application", "command+shift", "G"]
-    actions: [
-      kind: "key"
-      key: "G"
-      modifiers: ["command", "shift"]
-    ]
+    tags: ["application"]
+    action: (input) ->
+      @key "G", ["command", "shift"]
   "scrodge":
     kind: "action"
     description: "scroll down"
     grammarType: "individual"
     tags: ["scroll", "down"]
-    actions: [
-      kind: "key"
-      key: "PageDown"
-      delay: 0.2
-    ]
+    action: (input) ->
+      @key "PageDown"
   "scroop":
     kind: "action"
     description: "scroll up"
     grammarType: "individual"
     tags: ["scroll", "up"]
-    actions: [
-      kind: "key"
-      key: "PageUp"
-      delay: 0.2
-    ]
+    action: (input) ->
+      @key "PageUp"
   "scrolltop":
     kind: "action"
     description: "scroll to top"
     grammarType: "individual"
     tags: ["scroll", "up"]
-    actions: [
-      kind: "key"
-      key: "Home"
-    ]
+    action: (input) ->
+      @key "Home"
   "scrollend":
     kind: "action"
     description: "scroll to bottom"
     grammarType: "individual"
     tags: ["scroll", "down"]
-    actions: [
-      kind: "key"
-      key: "End"
-    ]
+    action: (input) ->
+      @key "End"
 
 
 

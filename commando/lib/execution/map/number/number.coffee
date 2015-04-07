@@ -45,8 +45,4 @@ _.each numbers, (value, key) ->
   namespace: "#{value}"
   tags: ["number"]
   module: "number"
-  actions: [
-    kind: "script"
-    script: (input) ->
-      Scripts.singleLetter(value)
-  ]
+

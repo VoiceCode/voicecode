@@ -2,7 +2,10 @@ template(name="moduleGeneric")
   h3= title
   ul
     each items
-      li
-        label
-          input(type="checkbox")
-          = this
+      +moduleItem
+
+template(name="moduleItem")
+  li
+    label
+      input(type="checkbox" checked=enabled)
+      = name

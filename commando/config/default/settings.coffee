@@ -8,18 +8,12 @@
     ruby: false
     shell: false
   websites:
-    amazon: "amazon.com"
-    "amazon console": "console.aws.amazon.com"
-    atmosphere: "atmospherejs.com"
-    balsamic: "www.mybalsamiq.com/login"
-    cloudflare: "www.cloudflare.com"
+    amazon: "http://www.amazon.com"
+    "amazon console": "https://console.aws.amazon.com"
     craigslist: "craigslist.com"
     github: "github.com"
     gmail: "mail.google.com"
     "google docs": "docs.google.com"
-    heroku: "heroku.com"
-    modulus: "modulus.io/user/dashboard"
-    "mongo hq": "app.mongohq.com/databases"
   applications:
     term: "iTerm"
     web: "Chrome"
@@ -140,8 +134,8 @@
     "each pair": "eap"
     "each with index": "eawi"
     "find all": "fina"
-  # this can be changed. 48 = TAB, 36 = ENTER, etc
-  codeSnippetCompletionKeystroke: "key code 48"
+  # this can be changed. Tab, Return, Escape, etc
+  codeSnippetCompletionKey: "Tab"
   directories:
     home: "~"
     applications: "/Applications"
@@ -167,6 +161,10 @@
     global: "global"
     emacs: "emacs"
     mate: "textmate"
+  dragonContexts: [
+    "Global"
+    "iTerm"
+  ]
   workflows:
     "workflow test": "yellsnik it worked clamor"
   shellCommands:

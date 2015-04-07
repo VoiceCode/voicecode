@@ -3,59 +3,45 @@ _.extend Commands.mapping,
     kind: "action"
     description: "Switch to most recent application"
     grammarType: "individual"
-    tags: ["application", "Tab"]
-    actions: [
-      kind: "script"
-      script: () ->
-        """
-        tell application "System Events"
-          key code "48" using {command down}
-        end tell
-        delay 0.15
-        """
-    ]
+    tags: ["application", "tab"]
+    action: ->
+      @key "Tab", ['command']
+      @delay(150)
   "launcher":
     kind: "action"
     description: "open application launcher"
     grammarType: "individual"
-    tags: ["application", "system", "launching"]
-    actions: [
-      kind: "key"
-      key: "Space"
-      modifiers: ["option"]
-      delay: 0.1
-    ]
+    tags: ["application", "system", "launching", "alfred"]
+    action: ->
+      @key " ", ['option']
+      @delay 100
   "foxwitch":
     kind: "action"
     description: "open application switcher"
     grammarType: "individual"
-    tags: ["application", "system", "launching"]
-    actions: [
-      kind: "key"
-      key: "E"
-      modifiers: ["option", "control", "shift", "command"]
-    ]
+    tags: ["application", "system", "launching", "tab"]
+    action: ->
+      @keyDown "Command"
+      @keyDown "Tab", ["command"]
+      @keyUp "Tab"
+      @delay 10000
+      @keyUp "Tab", ["command"]
+      @keyUp "Command"
   "webseek":
     kind: "action"
     description: "open a new browser tab (from anywhere)"
     grammarType: "individual"
     tags: ["system", "launching"]
-    contextSensitive: true
-    actions: [
-      kind: "script"
-      script: () ->
-        Scripts.openWebTab()
-      delay: 0.3
-    ]
+    action: ->
+      @openBrowser()
+      @key "T", ['command']
   "fox":
     kind: "action"
     description: "open application"
     tags: ["application", "system", "launching"]
     grammarType: "oneArgument"
-    contextSensitive: true
-    actions: [
-      kind: "script"
-      script: (value) ->
-        Scripts.openApplication(value)
-    ]
+    action: (name) ->
+      if name?.length
+        application = Scripts.fuzzyMatch CommandoSettings.applications, name
+        @openApplication application
 
