@@ -1,83 +1,0 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
-
-<database>
-    <databaseInfo>
-        <version>134481920</version>
-        <UUID>E2B0598A-0983-42EC-B5C2-45214DB06BDC</UUID>
-        <nextObjectID>104</nextObjectID>
-        <metadata>
-            <plist version="1.0">
-                <dict>
-                    <key>NSPersistenceFrameworkVersion</key>
-                    <integer>526</integer>
-                    <key>NSStoreModelVersionHashes</key>
-                    <dict>
-                        <key>action</key>
-                        <data>
-		Gl79yicU/qMmmjW+02T6r/N/3wY/MXt1/ETG6BgiQvk=
-		</data>
-                        <key>command</key>
-                        <data>
-		LnTEAxQizumf4LEx7vWu/AEuw8pYLvlU+A+QAxxNV1Q=
-		</data>
-                        <key>location</key>
-                        <data>
-		l1GW8zsQs6xToCTE303HdInkm0pvem69Qmej6Ixq3k4=
-		</data>
-                        <key>trigger</key>
-                        <data>
-		kWwewq0GT8KPB4ELML1wT0S2IYIZ5+/6CI0GsK9LDns=
-		</data>
-                    </dict>
-                    <key>NSStoreModelVersionHashesVersion</key>
-                    <integer>3</integer>
-                    <key>NSStoreModelVersionIdentifiers</key>
-                    <array>
-                        <string></string>
-                    </array>
-                </dict>
-            </plist>
-        </metadata>
-    </databaseInfo>
-    <object type="ACTION" id="z102">
-        <attribute name="text" type="string">on srhandler(vars)	set dictatedText to (varText of vars)	if dictatedText = "" then		tell application "System Events"			keystroke "("			delay 0.01			keystroke ")"			delay 0.02		end tell				set toExecute to "curl http://commando:5000/parse/miss/prekris"		do shell script toExecute	else		set encodedText to (do shell script "/usr/bin/python -c 'import sys, urllib; print urllib.quote(sys.argv[1],\\"\\")' " \u2600 quoted form of dictatedText)		set space to "prekris"		set toExecute to "curl http://commando:5000/parse/" \u2600 space \u2600 "/" \u2600 encodedText		do shell script toExecute	end ifend srhandler</attribute>
-        <attribute name="oslanguage" type="string">en_GB</attribute>
-        <attribute name="isuser" type="bool">1</attribute>
-        <attribute name="data" type="binary">RmFzZFVBUyAxLjEwMS4xMA4AAAAED///AAEAAgADAf//AAANAAEAAWsAAAAAAAAABAIABAACAAUA
-Bg0ABQACaQAAAAAAAwAHAAgNAAcAA0kAAAAAAAD//gAJ//0L//4ADTAACXNyaGFuZGxlcgAAAgAJAAIACv/8DQAKAAFvAAAAAAAA//sL//sACDAABHZhcnMAAAL//AAAAv/9AAANAAgAAWsAAAAAAFYACwIACwACAAwADQ0ADAACcgAAAAAABQAOAA8NAA4AA2wABQAAAAMAEP/6//kNABAAAm4AAAAAAAMAEQASDQARAAFvAAAAAQAD//gL//gAEjAAB3ZhcnRleHQAB3ZhclRleHQNABIAAW8AAAAAAAH/9wv/9wAIMAAEdmFycwAAAf/6AAAB//kAAA0ADwABbwAAAAAAAP/2C//2ABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dAIADQACABP/9Q0AEwAEWgAAAAYAVgAUABX/9AAWDQAUAAI9AAAABgAJABcAGA0AFwABbwAAAAYAB//zC//zABwwAAxkaWN0YXRlZHRleHQADGRpY3RhdGVkVGV4dA0AGAABbQAAAAcACAAZDgAZAAGxABoRABoAAA0AFQABawAAAAwAMgAbAgAbAAIAHAAdDQAcAAJPAAAADAAoAB4AHw0AHgABawAAABAAJwAgAgAgAAIAIQAiDQAhAANJAAIAEAAV//IAI//xCv/yABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAjAAFtAAAAEAARACQOACQAAbEAJREAJQACACgC//EAAAIAIgACACYAJw0AJgADSQACABYAG//wACj/7wr/8AAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AKAABbQAAABYAFwApCAApAAg/hHrhR64UewL/7wAAAgAnAAIAKgArDQAqAANJAAIAHAAh/+4ALP/tCv/uABgucHJjc2twcnNudWxs//+AAAAAAABjdHh0DQAsAAFtAAAAHAAdAC0OAC0AAbEALhEALgACACkC/+0AAAIAKwACAC//7A0ALwADSQACACIAJ//rADD/6gr/6wAYLnN5c29kZWxhbnVsbP//gAD//4AAbm1icg0AMAABbQAAACIAIwAxCAAxAAg/lHrhR64UewL/6gAAAv/sAAANAB8AAW0AAAAMAA0AMg8AMgHwCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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
-</attribute>
-        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z103"></relationship>
-        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
-    </object>
-    <object type="COMMAND" id="z103">
-        <attribute name="version" type="int32">1</attribute>
-        <attribute name="vendor" type="string">triumph</attribute>
-        <attribute name="type" type="string">AppleScript</attribute>
-        <attribute name="spokenlanguage" type="string">en_US</attribute>
-        <attribute name="oslanguage" type="string">en_GB</attribute>
-        <attribute name="isspelling" type="bool">0</attribute>
-        <attribute name="issleep" type="bool">0</attribute>
-        <attribute name="isdictation" type="bool">0</attribute>
-        <attribute name="iscorrection" type="bool">0</attribute>
-        <attribute name="iscommand" type="bool">1</attribute>
-        <attribute name="engineid" type="int32">-1</attribute>
-        <attribute name="display" type="bool">1</attribute>
-        <attribute name="commandid" type="int32">-900018944</attribute>
-        <attribute name="appversion" type="int32">0</attribute>
-        <attribute name="active" type="bool">1</attribute>
-        <relationship name="currentaction" type="1/1" destination="ACTION"></relationship>
-        <relationship name="currenttrigger" type="1/1" destination="TRIGGER"></relationship>
-        <relationship name="location" type="1/1" destination="LOCATION"></relationship>
-        <relationship name="action" type="0/0" destination="ACTION" idrefs="z102"></relationship>
-        <relationship name="trigger" type="1/0" destination="TRIGGER" idrefs="z104"></relationship>
-    </object>
-    <object type="TRIGGER" id="z104">
-        <attribute name="string" type="string">prekris /!Text!/</attribute>
-        <attribute name="spokenlanguage" type="string">en_US</attribute>
-        <attribute name="isuser" type="bool">1</attribute>
-        <attribute name="desc" type="string">Command Description</attribute>
-        <relationship name="command" type="1/1" destination="COMMAND" idrefs="z103"></relationship>
-        <relationship name="currentcommand" type="1/1" destination="COMMAND"></relationship>
-    </object>
-</database>
