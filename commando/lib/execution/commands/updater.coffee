@@ -7,6 +7,7 @@
         set g to group "#{scope}"
       on error errMsg number errNum
         tell application "Dragon Dictate"
+          set show Available Commands to true
           set wasListening to listening
           set listening to true
         end tell
@@ -70,7 +71,7 @@
       if item.indexOf("/!Text!/") >= 0
         resultMap[item.trim()] = results[index]
 
-    # console.log resultMap
+    console.log resultMap
 
     _.each Commands.Utility.enabledCommandNames(), (name) ->
       command = new Commands.Base(name, null)
@@ -83,6 +84,7 @@
           if value.indexOf(digest) >= 0
             "current"
           else
+            console.log name
             "dirty"
         else if command.isSpoken()
           "missing"

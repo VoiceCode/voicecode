@@ -76,7 +76,7 @@
 
 # RESTstop.add "websites", ->
 #   formatted = []
-#   _.each CommandoSettings.websites, (value, key) ->
+#   _.each Settings.websites, (value, key) ->
 #     formatted.push
 #       value: value
 #       trigger: key
@@ -107,7 +107,7 @@
 
 # RESTstop.add "abbreviations", ->
 #   formatted = []
-#   _.each CommandoSettings.abbreviations, (value, key) ->
+#   _.each Settings.abbreviations, (value, key) ->
 #     formatted.push
 #       value: value
 #       trigger: key
@@ -138,7 +138,7 @@
 
 # RESTstop.add "directories", ->
 #   formatted = []
-#   _.each CommandoSettings.directories, (value, key) ->
+#   _.each Settings.directories, (value, key) ->
 #     formatted.push
 #       value: value
 #       trigger: key
@@ -169,7 +169,7 @@
 
 # RESTstop.add "emails", ->
 #   formatted = []
-#   _.each CommandoSettings.emails, (value, key) ->
+#   _.each Settings.emails, (value, key) ->
 #     formatted.push
 #       value: value
 #       trigger: key
@@ -200,7 +200,7 @@
 
 # RESTstop.add "usernames", ->
 #   formatted = []
-#   _.each CommandoSettings.usernames, (value, key) ->
+#   _.each Settings.usernames, (value, key) ->
 #     formatted.push
 #       value: value
 #       trigger: key

@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "swick":
     kind: "action"
     description: "Switch to most recent application"
@@ -42,6 +42,6 @@ _.extend Commands.mapping,
     grammarType: "oneArgument"
     action: (name) ->
       if name?.length
-        application = Scripts.fuzzyMatch CommandoSettings.applications, name
+        application = Scripts.fuzzyMatch Settings.applications, name
         @openApplication application
 

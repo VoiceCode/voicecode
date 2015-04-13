@@ -92,15 +92,15 @@ Router.route 'api/history', ->
 
 Router.route 'api/websites', ->
   formatted = []
-  _.each CommandoSettings.websites, (value, key) ->
+  _.each Settings.websites, (value, key) ->
     formatted.push
       value: value
       trigger: key
 
-  results = if @params.query?.length
+  results = if @request.body.query?.length
     f = new Fuse formatted,
       keys: ['value', 'trigger']
-    f.search(@params.query)
+    f.search(@request.body.query)
   else
     formatted
 
@@ -125,15 +125,15 @@ Router.route 'api/websites', ->
 
 Router.route 'api/abbreviations', ->
   formatted = []
-  _.each CommandoSettings.abbreviations, (value, key) ->
+  _.each Settings.abbreviations, (value, key) ->
     formatted.push
       value: value
       trigger: key
 
-  results = if @params.query?.length
+  results = if @request.body.query?.length
     f = new Fuse formatted,
       keys: ['value', 'trigger']
-    f.search(@params.query)
+    f.search(@request.body.query)
   else
     formatted
 
@@ -158,15 +158,15 @@ Router.route 'api/abbreviations', ->
 
 Router.route 'api/directories', ->
   formatted = []
-  _.each CommandoSettings.directories, (value, key) ->
+  _.each Settings.directories, (value, key) ->
     formatted.push
       value: value
       trigger: key
 
-  results = if @params.query?.length
+  results = if @request.body.query?.length
     f = new Fuse formatted,
       keys: ['value', 'trigger']
-    f.search(@params.query)
+    f.search(@request.body.query)
   else
     formatted
 
@@ -191,15 +191,15 @@ Router.route 'api/directories', ->
 
 Router.route 'api/emails', ->
   formatted = []
-  _.each CommandoSettings.emails, (value, key) ->
+  _.each Settings.emails, (value, key) ->
     formatted.push
       value: value
       trigger: key
 
-  results = if @params.query?.length
+  results = if @request.body.query?.length
     f = new Fuse formatted,
       keys: ['value', 'trigger']
-    f.search(@params.query)
+    f.search(@request.body.query)
   else
     formatted
 
@@ -225,15 +225,15 @@ Router.route 'api/emails', ->
 
 Router.route 'api/usernames', ->
   formatted = []
-  _.each CommandoSettings.usernames, (value, key) ->
+  _.each Settings.usernames, (value, key) ->
     formatted.push
       value: value
       trigger: key
 
-  results = if @params.query?.length
+  results = if @request.body.query?.length
     f = new Fuse formatted,
       keys: ['value', 'trigger']
-    f.search(@params.query)
+    f.search(@request.body.query)
   else
     formatted
 

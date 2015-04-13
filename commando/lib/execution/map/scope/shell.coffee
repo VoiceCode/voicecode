@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "shell-cd":
     kind: "action"
     grammarType: "individual"
@@ -92,7 +92,7 @@ _.extend Commands.mapping,
     action: (input) ->
       if input?.length
         current = @currentApplication()
-        directory = Scripts.fuzzyMatch CommandoSettings.directories, input.join(' ')
+        directory = Scripts.fuzzyMatch Settings.directories, input.join(' ')
         if current is "iTerm" or current is "Terminal"
           @string "cd #{directory} ; ls \n"
         else
@@ -106,8 +106,8 @@ _.extend Commands.mapping,
     grammarType: "textCapture"
     description: "insert a shell command from the predefined shell commands list"
     tags: ["text", "shell"]
-    aliases: ["shall"]
+    aliases: ["shall", "chell"]
     action: (input) ->
       if input?.length
-        text = Scripts.fuzzyMatch CommandoSettings.shellCommands, input.join(' ')
+        text = Scripts.fuzzyMatch Settings.shellCommands, input.join(' ')
         @string text

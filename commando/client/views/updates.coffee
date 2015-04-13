@@ -49,14 +49,14 @@ Template.Updates.events
       
 Template.Updates.helpers
   dragonContexts: ->
-    _.map CommandoSettings.dragonContexts, (item) ->
+    _.map Settings.dragonContexts, (item) ->
       context: item
       _id: item
   added: ->
     CommandStatuses.find({status: "missing", scope: @context})
   removed: ->
     CommandStatuses.find({status: "removed", scope: @context})
-  dirtyGlobal: ->
+  dirty: ->
     CommandStatuses.find({status: "dirty", scope: @context})
 
 # Template.commandUpdateAdded.created = ->

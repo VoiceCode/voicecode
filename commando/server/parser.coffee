@@ -1,8 +1,6 @@
-Meteor.startup ->
-  @Grammar = new Grammar()
+loadGrammar = ->
+  console.log "reloading grammar"
   Commands.loadConditionalModules()
-  @ParseGenerator = {}
-
   try
     fingerprint =
       data:
@@ -50,3 +48,25 @@ Meteor.startup ->
     EOD
     """
     Shell.exec notice, async: true
+
+isReloading = false
+needsReloading = false
+Commands.reloadGrammar = ->
+  console.log "reload request:"
+  console.log isReloading
+  console.log needsReloading
+
+  if isReloading
+    needsReloading = true
+  else
+    isReloading = true
+    loadGrammar()
+    isReloading = false
+    if needsReloading
+      needsReloading = false
+      Commands.reloadGrammar()
+
+Meteor.startup ->
+  @Grammar = new Grammar()
+  @ParseGenerator = {}
+  Commands.reloadGrammar()

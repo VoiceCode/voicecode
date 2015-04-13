@@ -8,29 +8,36 @@ Commands.lastFullCommand = null
 Commands.subcommandIndex = 0
 Commands.repetitionIndex = 0
 
-Commands.registerConditionalModuleCommands = (moduleName, commands) ->
-  Commands.conditionalModules[moduleName] ?= {}
-  _.extend Commands.conditionalModules[moduleName], commands
+Commands.create = (name, options) ->
+  if typeof name is "string"
+    Commands.mapping[name] = options
+  else if typeof name is "object"
+    _.extend Commands.mapping, name
+
+Commands.override = (name, callback) ->
+  Commands.mapping[name].override = callback
+
+Commands.addAliases = (key, aliases) ->
+  Commands.mapping[key].aliases ?= []
+  Commands.mapping[key].aliases = Commands.mapping[key].aliases.concat aliases
+
+Commands.changeName = (old, newName) ->
+  Commands.mapping[newName] = Commands.mapping[old]
+  delete Commands.mapping[old]
 
 Commands.loadConditionalModules = ->
-  # _.each Commands.conditionalModules, (value, key) ->
-  #   if CommandoSettings.modules[key] is true
-  #     _.extend Commands.mapping, value
   _.each Commands.mapping, (value, key) ->
     enabled = !!Enables.findOne(name: key)?.enabled
-    # enabled = true
     Commands.mapping[key].enabled = enabled
 
 class Commands.Base
   constructor: (@namespace, @input) ->
     @info = Commands.mapping[@namespace] 
     @kind = @info.kind
-    @repeatable = @info.repeatable
-    @actions = @info.actions
   transform: ->
     Transforms[@info.transform]
   generate: ->
-    switch @kind
+    funk = switch @kind
       when "action"
         action = @info.action
         input = @input
@@ -48,7 +55,7 @@ class Commands.Base
           transformed = @applyTransform(@input)
           prefix = @info.prefix or ""
           suffix = @info.suffix or ""
-          -> @string(transformed)
+          -> @string([prefix, transformed, suffix].join(''))
           # Scripts.makeTextCommand([prefix, transformed, suffix].join(''))
         else
           fallback = @info.fallbackService
@@ -75,6 +82,13 @@ class Commands.Base
           _.each combined, (callback) ->
            if callback?
              callback.call(Actions)
+
+    if @info.override?
+      override = @info.override
+      input = @input
+      -> override.call(@, input, funk)
+    else        
+      funk
       # when "number"
       #   preCommand = if @info.padLeft
       #     Scripts.spacePad()

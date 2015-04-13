@@ -100,11 +100,3 @@ Commands.Utility =
           grammarType: command.grammarType
           actions: command.actionDescriptionString()
         }
-
-  addAliases: (key, aliases) ->
-    Commands.mapping[key].aliases ?= []
-    Commands.mapping[key].aliases.push.apply(Commands.mapping[key].aliases, aliases)
-
-  changeName: (old, newName) ->
-    Commands.mapping[newName] = Commands.mapping[old]
-    delete Commands.mapping[old]

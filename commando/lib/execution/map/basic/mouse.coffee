@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "duke":
     kind: "action"
     grammarType: "individual"
@@ -48,3 +48,17 @@ _.extend Commands.mapping,
     tags: ["mouse"]
     action: ->
       @optionClick()
+  "pretzel":
+    kind: "action"
+    grammarType: "individual"
+    description: "press down mouse and hold"
+    tags: ["mouse"]
+    action: ->
+      @mouseDown()
+  "relish":
+    kind: "action"
+    grammarType: "individual"
+    description: "release the mouse after press and hold"
+    tags: ["mouse"]
+    action: ->
+      @mouseUp()

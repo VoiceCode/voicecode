@@ -38,11 +38,11 @@ numbers =
   ninety: 90
 
 _.each numbers, (value, key) ->
-  Commands.mapping[key] = 
-  kind: "action"
-  grammarType: "none"
-  description: "Enters the number: #{value}"
-  namespace: "#{value}"
-  tags: ["number"]
-  module: "number"
+  Commands.create key,
+    kind: "action"
+    grammarType: "none"
+    description: "Enters the number: #{value}"
+    namespace: "#{value}"
+    tags: ["number"]
+    module: "number"
 

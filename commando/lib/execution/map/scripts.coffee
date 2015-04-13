@@ -6,7 +6,7 @@
     end tell
     """
   openWebsite: (name) ->
-    address = Scripts.fuzzyMatch CommandoSettings.websites, name
+    address = Scripts.fuzzyMatch Settings.websites, name
     keystroke = if name.length and address?
       """
       keystroke "#{address}"
@@ -15,7 +15,7 @@
     else
       ""
     """
-    tell application "#{CommandoSettings.defaultBrowser}" to activate
+    tell application "#{Settings.defaultBrowser}" to activate
     delay 0.2
     tell application "System Events"
     keystroke "t" using {command down}
@@ -24,7 +24,7 @@
     """
   openWebTab: (name) ->
     """
-    tell application "#{CommandoSettings.defaultBrowser}" to activate
+    tell application "#{Settings.defaultBrowser}" to activate
     delay 0.1
     tell application "System Events"
     keystroke "t" using {command down}
@@ -170,7 +170,7 @@
         results[k]
       list[best]
   openApplication: (name) ->
-    application = Scripts.fuzzyMatch CommandoSettings.applications, name
+    application = Scripts.fuzzyMatch Settings.applications, name
     """
     tell application "#{application}" to activate
     """

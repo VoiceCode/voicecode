@@ -27,7 +27,7 @@ letters =
 	z: "zooch"
 
 _.each letters, (value, key) ->
-	Commands.mapping[value] = 
+	Commands.create value,
     kind: "action"
     grammarType: "textCapture"
     description: "Enters the single letter: #{key}"

@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "dot":
     kind: "action"
     grammarType: "individual"
@@ -263,13 +263,6 @@ _.extend Commands.mapping,
     action: ->
       @key "Right", ['command']
       @key ';'
-  "sunk":
-    kind: "action"
-    grammarType: "individual"
-    tags: ["symbol"]
-    aliases: ["stunk"]
-    action: ->
-      @key ";"
   "sunkshock":
     kind: "action"
     grammarType: "individual"
@@ -278,6 +271,13 @@ _.extend Commands.mapping,
     action: ->
       @key ";"
       @key 'Return'
+  "sunk":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    aliases: ["stunk"]
+    action: ->
+      @key ";"
   "clamor":
     kind: "action"
     grammarType: "individual"
@@ -520,3 +520,10 @@ _.extend Commands.mapping,
     # aliases: ["^"]
     action: ->
       @key "^"
+  "pox":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    # aliases: ["^"]
+    action: ->
+      @string "px"

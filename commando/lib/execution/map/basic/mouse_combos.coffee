@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "chibble":
     kind: "action"
     grammarType: "individual"

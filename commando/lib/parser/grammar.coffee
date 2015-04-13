@@ -37,21 +37,21 @@ class @Grammar
     results.join("\n")
   translationIdentifiers: ->
     # = transBoom / transHello
-    _.map(CommandoSettings.translations, (value, key) -> "\"#{key}\"").join(" / ")
+    _.map(Settings.translations, (value, key) -> "\"#{key}\"").join(" / ")
   build: -> """
     {
       var grammarTransforms = {
         frank: function(arguments) {
-          return Scripts.fuzzyMatch(CommandoSettings.abbreviations, arguments.join(' '));
+          return Scripts.fuzzyMatch(Settings.abbreviations, arguments.join(' '));
         },
         treemail: function(arguments) {
-          return Scripts.fuzzyMatch(CommandoSettings.emails, arguments.join(' '));
+          return Scripts.fuzzyMatch(Settings.emails, arguments.join(' '));
         },
         trusername: function(arguments) {
-          return Scripts.fuzzyMatch(CommandoSettings.usernames, arguments.join(' '));
+          return Scripts.fuzzyMatch(Settings.usernames, arguments.join(' '));
         },
         trassword: function(arguments) {
-          return Scripts.fuzzyMatch(CommandoSettings.passwords, arguments.join(' '));
+          return Scripts.fuzzyMatch(Settings.passwords, arguments.join(' '));
         }
       }
 

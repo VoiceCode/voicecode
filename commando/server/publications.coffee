@@ -6,3 +6,8 @@ Meteor.publish "commandStatuses", (limit) ->
 
 Meteor.publish "enables", (limit) ->
   Enables.find()
+
+Meteor.publish "parserCash", (limit) ->
+  Cashes.find(key: "parseGenerator")
+
+

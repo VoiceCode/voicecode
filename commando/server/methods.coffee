@@ -315,7 +315,7 @@ Meteor.methods
   getAllCommandStatuses: ->
     try
       CommandStatuses.remove({})
-      _.each CommandoSettings.dragonContexts, (context) ->
+      _.each Settings.dragonContexts, (context) ->
         CommandUpdater.getAllStatuses(context)
     catch e
       console.log e

@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "creek":
     kind: "historic"
     grammarType: "numberCapture"
@@ -19,11 +19,10 @@ _.extend Commands.mapping,
     tags: ["repetition", "voicecode"]
     action: (context, input) ->
       context.lastIndividualCommand.call(@)
-  "twain":
+  "chew":
     kind: "historic"
     grammarType: "individual"
     description: "repeat last individual command twice"
-    aliases: ["wayne"]
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
     action: (context, input) ->
@@ -85,7 +84,7 @@ _.extend Commands.mapping,
           times or 1
         else
           (times or 1) - 1
-        if times > 0
+        if times > 0 and times < (Settings.maximumRepetitionCount or 100)
           for i in [1..times]
             context.lastIndividualCommand.call(@)
   "recon":
@@ -103,7 +102,7 @@ _.extend Commands.mapping,
     tags: ["voicecode"]
     action: (input) ->
       if input?.length
-        workflow = Scripts.fuzzyMatch CommandoSettings.workflows, input.join(' ')
+        workflow = Scripts.fuzzyMatch Settings.workflows, input.join(' ')
         chain = new Commands.Chain(workflow + " ")
         results = chain.generateNestedInterpretation()
         _.each results, (command) =>
@@ -116,13 +115,13 @@ _.extend Commands.mapping,
     action: (input) ->
       if input?.length
         @string input.join(" ")
-  "voicecode-context":
+  "voicecode-mode":
     kind: "action"
     grammarType: "textCapture"
-    description: "change voicecode command execution context"
+    description: "change voicecode command execution mode"
     tags: ["system", "voicecode"]
-    triggerPhrase: "context"
+    triggerPhrase: "set mode"
     action: (input) ->
       if input?.length
-        context = Scripts.fuzzyMatch CommandoSettings.contexts, input.join(' ')
-        @setGlobalContext(context)
+        mode = Scripts.fuzzyMatch Settings.modes, input.join(' ')
+        @setGlobalMode(mode)

@@ -1,2 +1,2 @@
 @translationReplacement = (key) ->
-	CommandoSettings.translations[key]
+	Settings.translations[key]

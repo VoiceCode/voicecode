@@ -36,24 +36,24 @@
   "9": "nine"
   "0": "zer"
   Return: "turn"
-  Slash: "slush"
-  Period: "peer"
-  Comma: "com"
-  Semicolon: "sink"
+  "/": "slush"
+  ".": "peer"
+  ",": "com"
+  ";": "sink"
   Delete: "leet"
   ForwardDelete: "kit"
-  Space: "oosh"
+  " ": "oosh"
   Escape: "cape"
   Tab: "raff"
-  Equal: "queff"
-  Minus: "min"
+  "=": "queff"
+  "-": "min"
   Up: "up"
   Down: "own"
   Left: "left"
   Right: "right"
-  RightBracket: "race"
-  LeftBracket: "lets"
-  Backslash: "pike"
+  "]": "race"
+  "[": "lets"
+  "\\": "pike"
 
 @commandModifiers =
   chomm: ["command"]
@@ -85,7 +85,7 @@ allowed =
 
 _.each commandModifiers, (mods, prefix) ->
   _.each commandLetters, (value, key) ->
-    Commands.mapping["#{prefix}#{value}"] = 
+    Commands.create "#{prefix}#{value}",
       kind: "action"
       grammarType: "individual"
       description: "#{mods.join(' + ')} + #{key}"

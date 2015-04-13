@@ -23,7 +23,7 @@
       item.charAt(0).toUpperCase() + item.slice(1)
     ).join('')
   spine: (textArray) ->
-    _.slugify textArray.join(' ')
+    _s.slugify textArray.join(' ')
   lowerSlam: (textArray) ->
     textArray.join('')
   upperSlam: (textArray) ->
@@ -39,7 +39,7 @@
       item.toUpperCase()
     ).join('_').replace(/_\._/g, ".").replace(/\._/, ".")
   upperSpine: (textArray) ->
-    _.slugify(textArray.join(' ')).toUpperCase()
+    _s.slugify(textArray.join(' ')).toUpperCase()
   dotsWay: (textArray) ->
     textArray.join('.').replace(/\.\.\./g, ".").replace(/\.\./, ".")
   pathway: (textArray) ->

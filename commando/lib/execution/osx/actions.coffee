@@ -37,7 +37,7 @@ class OSX.Actions
       @_keyUp code, @_normalizeModifiers(modifiers)
 
   _keyDown: (key, modifiers) ->
-    console.log "keydown: #{key}"
+    # console.log "keydown: #{key}"
     e = $.CGEventCreateKeyboardEvent(null, key, true)
     if modifiers
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
@@ -88,15 +88,22 @@ class OSX.Actions
       _.map modifiers, (m) ->
         m.charAt(0).toUpperCase() + m.slice(1)
 
+  mouseDown: (position) ->    
+    position ?= $.CGEventGetLocation($.CGEventCreate(null))
+    down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
+    $.CGEventPost($.kCGSessionEventTap, down)
+
+  mouseUp: (position) ->    
+    position ?= $.CGEventGetLocation($.CGEventCreate(null))
+    up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
+    $.CGEventPost($.kCGSessionEventTap, up)
+
   click: ->    
     # position = $.NSEvent('mouseLocation')
     position = $.CGEventGetLocation($.CGEventCreate(null))
     # console.log position
-    down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
-    up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
-    $.CGEventPost($.kCGSessionEventTap, down)
-    # Meteor.sleep(30)
-    $.CGEventPost($.kCGSessionEventTap, up)
+    @mouseDown(position)
+    @mouseUp(position)
 
   doubleClick: ->
     position = $.CGEventGetLocation($.CGEventCreate(null))
@@ -181,10 +188,33 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, up)
     @keyUp "Option"
 
-  applescript: (content) ->
+  positionMouse: (x, y) ->
+    screen = @getScreenInfo()
+    # console.log screen
+    offsetX = if x <= 1
+      screen.size.width * x
+    else
+      x
+
+    offsetY = if y <= 1
+      screen.size.height * y
+    else
+      y
+    
+    newOriginX = screen.origin.x + offsetX
+    newOriginY = screen.origin.y + offsetY
+
+    event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, $.CGPointMake(newOriginX, newOriginY), 0
+    $.CGEventPost($.kCGSessionEventTap, event)
+
+
+  applescript: (content, shouldReturn=true) ->
     script = $.NSAppleScript('alloc')('initWithSource', $(content))
     results = script('executeAndReturnError', null)
-    results
+    if shouldReturn
+      results('stringValue')?.toString()
+    else
+      null
 
   openMenuBarItem: (item) ->
     @applescript """
@@ -193,8 +223,20 @@ class OSX.Actions
     end tell
     """
 
+  scrollDown: (amount) ->
+    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, -1 * (amount or 1))
+    $.CGEventPost($.kCGHIDEventTap, event)
+
   scrollUp: (amount) ->
-    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, -1)
+    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, (amount or 1))
+    $.CGEventPost($.kCGHIDEventTap, event)
+
+  scrollLeft: (amount) ->
+    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, (amount or 1))
+    $.CGEventPost($.kCGHIDEventTap, event)
+
+  scrollRight: (amount) ->
+    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, -1 * (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   openApplication: (name) ->
@@ -203,7 +245,7 @@ class OSX.Actions
     w('launchApplication', string)
 
   openBrowser: ->
-    defaultBrowser = CommandoSettings.defaultBrowser or "Safari"    
+    defaultBrowser = Settings.defaultBrowser or "Safari"    
     @openApplication(defaultBrowser)
 
   openURL: (url) ->
@@ -216,15 +258,29 @@ class OSX.Actions
     Meteor.sleep(ms)
 
   currentApplication: ->
-    w = $.NSWorkspace('sharedWorkspace')
-    # app = w('frontmostApplication')
-    app = w('menuBarOwningApplication')
-    result = app('localizedName').toString()
-    console.log result
-    result
+    if @_currentApplication
+      @_currentApplication
+    else    
+      w = $.NSWorkspace('sharedWorkspace')
+      app = w('frontmostApplication')
+      # app = w('menuBarOwningApplication')
+      result = app('localizedName').toString()
+      @_currentApplication = result
+      console.log result
+      result
 
-  setGlobalContext: (context) ->
-    Commands.context = context
+    # result = @applescript """
+    # tell application "System Events"
+    #   set currentApplication to name of first application process whose frontmost is true
+    # end tell
+    # return currentApplication
+    # """
+    # console.log result
+    # result
+  setCurrentApplication: (application) ->
+    @_currentApplication = application
+  setGlobalMode: (context) ->
+    Commands.mode = mode
 
   revealFinderDirectory: (directory) ->
     w = $.NSWorkspace('sharedWorkspace')
@@ -277,7 +333,17 @@ class OSX.Actions
   #   if (focussedElement != NULL) CFRelease(focussedElement);
   #   CFRelease(systemWideElement);
   getClipboard: ->
-    @applescript("return the clipboard as text")('stringValue').toString()
+    @applescript("return the clipboard as text")
+
+  getScreenInfo: ->
+    frame = $.NSScreen('mainScreen')('visibleFrame')
+    result =
+      origin: 
+        x: frame.origin.x
+        y: frame.origin.y
+      size: 
+        width: frame.size.width
+        height: frame.size.height
 
   verticalSelectionExpansion: (number) ->
     @key "C", ["command"]
@@ -288,3 +354,122 @@ class OSX.Actions
     console.log numberOfLines
     _(number).times => @key "Up"
     _(numberOfLines + (number * 2) - 1).times => @key "Down", ['shift']
+  
+  symmetricSelectionExpansion: (number) ->
+    @key "C", ["command"]
+    @delay 100
+    clipboard = @getClipboard()
+    length = clipboard?.length or 0
+    @key "Left"
+    _(number).times =>
+      @key "Left"
+    _(number * 2 + length).times =>
+      @key "Right", ["shift"]
+
+  selectCurrentOccurrence: (input) ->
+    if input?.length
+      first = input[0]
+      last = input[1]
+      if last?.length
+        @key "Left", ['command']
+        @key "Right", ['command', 'shift']
+        @key "C", ['command']
+        @delay 100
+        clipboard = @getClipboard().toLowerCase()
+        totalLength = clipboard?.length
+        firstResults = clipboard.split(first)
+        distanceLeft = firstResults[0]?.length or 0
+        lastResults = clipboard.split(last)
+        distanceRight = lastResults[lastResults.length - 1]?.length or 0
+        @key "Left"
+        _(distanceLeft).times => 
+          @key "Right"
+
+        width = totalLength - distanceLeft - distanceRight
+        _(width).times => 
+          @key "Right", ['shift']
+      else
+        @key "Left", ['command']
+        @key "Right", ['command', 'shift']
+        @key "C", ['command']
+        @delay 100
+        clipboard = @getClipboard().toLowerCase()
+        totalLength = clipboard?.length
+        firstResults = clipboard.split(first)
+        distanceLeft = firstResults[0]?.length or 0
+        @key "Left"
+        _(distanceLeft).times => 
+          @key "Right"
+
+        width = first.length
+        _(width).times => 
+          @key "Right", ['shift']
+  selectPreviousOccurrence: (input) ->
+    if input?.length
+      first = input[0]
+      last = input[1]
+      @key "Left"
+      @key "Right"
+      _(20).times => @key "Up", ['shift']
+      @key "C", ['command']
+      @delay 100
+      clipboard = @getClipboard().toLowerCase()
+      if last?.length
+        totalLength = clipboard?.length
+        firstResults = clipboard.split(first)
+        distanceLeft = firstResults[0]?.length or 0
+        lastResults = clipboard.split(last)
+        distanceRight = lastResults[lastResults.length - 1]?.length or 0
+        @key "Right"
+        _(distanceRight).times => 
+          @key "Left"
+
+        width = distanceLeft - first.length - distanceRight
+        _(width).times => 
+          @key "Left", ['shift']
+      else
+        clipboard = @getClipboard().toLowerCase()
+        totalLength = clipboard?.length
+        firstResults = clipboard.split(first)
+        distanceRight = firstResults[firstResults.length - 1]?.length or 0
+        @key "Right"
+        _(distanceRight).times => 
+          @key "Left"
+
+        width = first.length
+        _(width).times => 
+          @key "Left", ['shift']
+  selectFollowingOccurrence: (input) ->
+    if input?.length
+      first = input[0]
+      last = input[1]
+      @key "Right"
+      @key "Left"
+      _(20).times => @key "Down", ['shift']
+      @key "C", ['command']
+      @delay 100
+      clipboard = @getClipboard().toLowerCase()
+      if last?.length
+        totalLength = clipboard?.length
+        firstResults = clipboard.split(first)
+        distanceLeft = firstResults[0]?.length or 0
+        lastResults = clipboard.split(last)
+        distanceRight = lastResults[lastResults.length - 1]?.length or 0
+        @key "Left"
+        _(distanceLeft).times => 
+          @key "Right"
+
+        width = totalLength - distanceLeft - distanceRight
+        _(width).times => 
+          @key "Right", ['shift']
+      else
+        clipboard = @getClipboard().toLowerCase()
+        firstResults = clipboard.split(first)
+        distanceLeft = firstResults[0]?.length or 0
+        @key "Left"
+        _(distanceLeft).times => 
+          @key "Right"
+
+        width = first.length
+        _(width).times => 
+          @key "Right", ['shift']

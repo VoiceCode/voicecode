@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "frank":
     kind: "action"
     grammarType: "textCapture"
@@ -7,7 +7,7 @@ _.extend Commands.mapping,
     aliases: ["franca"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch CommandoSettings.abbreviations, input.join(' ')
+        result = Scripts.fuzzyMatch Settings.abbreviations, input.join(' ')
         @string result
   "skoofrank":
     kind: "action"
@@ -16,7 +16,7 @@ _.extend Commands.mapping,
     tags: ["text"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch CommandoSettings.abbreviations, input.join(' ')
+        result = Scripts.fuzzyMatch Settings.abbreviations, input.join(' ')
         @string(" " + result)
   "quinn":
     kind: "action"
@@ -25,10 +25,11 @@ _.extend Commands.mapping,
     tags: ["text"]
     action: (input) ->
       if input?.length
-        snippet = Scripts.fuzzyMatch CommandoSettings.codeSnippets, input.join(" ")
+        snippet = Scripts.fuzzyMatch Settings.codeSnippets, input.join(" ")
         @string snippet
         @delay 100
-        @key CommandoSettings.codeSnippetCompletionKey
+        completion = Settings.codeSnippetCompletions[@currentApplication()] or "Tab"
+        @key completion
   "trassword":
     kind: "action"
     grammarType: "textCapture"
@@ -36,7 +37,7 @@ _.extend Commands.mapping,
     tags: ["text", "utility"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch CommandoSettings.passwords, input.join(' ')
+        result = Scripts.fuzzyMatch Settings.passwords, input.join(' ')
         @string result
   "treemail":
     kind: "action"
@@ -45,7 +46,7 @@ _.extend Commands.mapping,
     tags: ["text", "utility"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch CommandoSettings.emails, input.join(' ')
+        result = Scripts.fuzzyMatch Settings.emails, input.join(' ')
         @string result
   "trusername":
     kind: "action"
@@ -54,5 +55,5 @@ _.extend Commands.mapping,
     tags: ["text", "utility"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch CommandoSettings.usernames, input.join(' ')
+        result = Scripts.fuzzyMatch Settings.usernames, input.join(' ')
         @string result

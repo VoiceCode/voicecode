@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "webs":
     kind: "action"
     grammarType: "textCapture"
@@ -6,7 +6,7 @@ _.extend Commands.mapping,
     tags: ["system", "launching"]
     action: (input) ->
       if input?.length
-        address = Scripts.fuzzyMatch CommandoSettings.websites, (input or []).join(" ")
+        address = Scripts.fuzzyMatch Settings.websites, (input or []).join(" ")
         @openURL address
       else
         @openBrowser()
@@ -19,16 +19,16 @@ _.extend Commands.mapping,
     tags: ["system", "launching"]
     action: (input) ->
       if input?.length
-        directory = Scripts.fuzzyMatch CommandoSettings.directories, input.join(' ')
+        directory = Scripts.fuzzyMatch Settings.directories, input.join(' ')
         @revealFinderDirectory directory
   "sispref":
     kind: "action"
     grammarType: "textCapture"
-    description: "opens a specific system preference items (or none if no input)"
+    description: "opens a specific system preference item (if no argument given, just opens System Preferences)"
     tags: ["system", "launching"]
     action: (input) ->
       if input?.length
-        preference = Scripts.fuzzyMatch CommandoSettings.systemPreferences, input.join(' ')
+        preference = Scripts.fuzzyMatch Settings.systemPreferences, input.join(' ')
         @applescript """
         tell application "System Preferences"
           activate

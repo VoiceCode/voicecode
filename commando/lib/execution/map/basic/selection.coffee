@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "shroomway":
     kind: "action"
     grammarType: "individual"

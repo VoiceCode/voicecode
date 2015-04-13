@@ -43,8 +43,8 @@ class Commands.Chain
           # generated: combined
         # console.log "result is #{inserted}"
 
-      # {interpretation: results, generated: combined}
-    null
+      {interpretation: results, generated: combined}
+    
 
   generateNestedInterpretation: ->
     results = @parse()

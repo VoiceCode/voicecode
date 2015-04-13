@@ -8,8 +8,6 @@ Meteor.methods
         s.performReconciliation()
       
   enableCommand: (name) ->
-    if @isSimulation
-      Session.set "commandsAreDirty", true
     Commands.mapping[name].enabled = true
     Enables.update
       name: name,
@@ -19,9 +17,17 @@ Meteor.methods
         name: name
     ,
       upsert: true
-  disableCommand: (name) ->
     if @isSimulation
       Session.set "commandsAreDirty", true
+    else
+      @unblock()
+      Commands.reloadGrammar()
+  disableCommand: (name) ->
     Commands.mapping[name].enabled = false
     Enables.remove
       name: name
+    if @isSimulation
+      Session.set "commandsAreDirty", true
+    else
+      @unblock()
+      Commands.reloadGrammar()

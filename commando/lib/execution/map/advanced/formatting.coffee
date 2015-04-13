@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "hytag":
     kind: "action"
     grammarType: "textCapture"

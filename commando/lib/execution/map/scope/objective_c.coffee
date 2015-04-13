@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "tennis":
     kind: "text"
     grammarType: "textCapture"

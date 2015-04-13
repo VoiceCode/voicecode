@@ -54,7 +54,8 @@ git =
       @string "git pull "
 
 _.each git, (value, key) ->
-  Commands.mapping[key] = _.extend value,
+  options = _.extend value,
     kind: "action"
     grammarType: "individual"
     tags: ["domain-specific", "git"]
+  Commands.create key, options

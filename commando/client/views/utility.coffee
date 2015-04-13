@@ -8,9 +8,12 @@ Template.Utility.helpers
     command = new Commands.Base(name, "")
     command.generateDragonCommandName()
   commandNames: ->
-    names = Commands.Utility.enabledCommandNames()
-    _.sortBy names, (item) ->
-      item
+    if enablesSubscription.ready()
+      names = Commands.Utility.enabledCommandNames()
+      _.sortBy names, (item) ->
+        item
+    else
+      []
   currentCommand: ->
     Session.get("ChooseCommand.current")
 

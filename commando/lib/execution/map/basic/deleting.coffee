@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "kef":
     kind: "action"
     grammarType: "individual"
@@ -15,9 +15,9 @@ _.extend Commands.mapping,
       current = @currentApplication()
       if current is "Sublime Text"
         @key "Delete", ["control"]
-      else if current is "iTerm" and @context is "vim"
+      else if current is "iTerm" and @mode is "vim"
         @key "Delete", ["option"]
-      else if current is "Emacs" or (current is "iTerm" and @context is "emacs")
+      else if current is "Emacs" or (current is "iTerm" and @mode is "emacs")
         @key "Delete", ["option"]
       else
         @key "Delete", ["option"]

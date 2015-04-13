@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "snitch":
     kind: "text"
     grammarType: "textCapture"

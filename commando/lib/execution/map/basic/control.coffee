@@ -1,4 +1,4 @@
-_.extend Commands.mapping,
+Commands.create
   "shin":
     kind: "action"
     grammarType: "individual"
@@ -45,7 +45,7 @@ _.extend Commands.mapping,
     kind: "action"
     description: "Inserts a new line above the current line"
     grammarType: "individual"
-    aliases: ["chalky"]
+    aliases: ["chalky", "shocking"]
     tags: ["return", "combo"]
     action: ->
       if @currentApplication() is "sublime"

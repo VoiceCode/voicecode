@@ -34,31 +34,33 @@ class OSX.displayActions
   applescript: (content) ->
     @result += "applescript: #{content}"
   openMenuBarItem: (item) ->
-    @result += "openMenuBarItem(#{item})"
+    @result += "openMenuBarItem(#{item or ''})"
   scrollUp: (amount) ->
     @result += "scrollUp"
   openApplication: (name) ->
-    @result += "openApplication(#{name})"
+    @result += "openApplication(#{name or ''})"
   openBrowser: ->
     @result += "openBrowser"
   openURL: (url) ->
-    @result += "openURL"
+    @result += "openURL(#{url or ''})"
   delay: (ms) ->
     ""
   currentApplication: ->
     ""
   setGlobalContext: (context) ->
-    @result += "setGlobalContext"
+    @result += "setGlobalContext(#{context or ''})"
   revealFinderDirectory: (directory) ->
-    @result += "revealFinderDirectory"
+    @result += "revealFinderDirectory(#{directory or ''})"
   setVolume: (volume) ->
-    @result += "setVolume(volume)"
+    @result += "setVolume(#{volume or ''})"
   clickServiceItem: (item) ->
-    @result += "clickServiceItem(item)"
+    @result += "clickServiceItem(#{item or ''})"
   getClipboard: ->
     ""
   verticalSelectionExpansion: (number) ->
     ""
+  positionMouse: (x, y) ->
+    "positionMouse(#{x or ''}, #{y or ''})"
   makeModifierText: (modifiers) ->
     r = _.map modifiers, (m) ->
       modifierCodes[m]

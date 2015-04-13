@@ -1,5 +1,19 @@
 template(name="Vocab")
   .container
     h2 Vocab Page
-      small Tip: If you are ever having trouble with dragon not recognizing some of the special command words try refreshing this page and copying all the words into a new text file, and importing that text file into dragon's vocabulary training. This will tell dragon to update its algorithms and prioritize these words more highly.
-    .well #{vocabList}
+    p.lead
+      | Tip: Periodically return here to tune Dragon's algorithm.
+    ul
+      li click in the gray area
+      li copy all the text (stoosh)
+      li switch to Dragon Dictate (fox dragon)
+      li open a new "notepad", and paste the text (chommnerb...spark)
+      li select all (olly)
+      li 
+        | open 
+        code Tools &gt; Train Vocabulary From Selection
+    br
+    .well.selectable
+      = vocabList
+      = repeatableList
+      = keeperList

@@ -1,4 +1,76 @@
-_.extend Commands.mapping,
+Commands.create
+  "doomway":
+    kind: "action"
+    grammarType: "individual"
+    description: "move the cursor to the bottom of the page"
+    tags: ["cursor"]
+    action: ->
+      @key "Down", ["command"]
+  "doom":
+    kind: "action"
+    grammarType: "individual"
+    description: "press the down arrow"
+    tags: ["cursor"]
+    action: ->
+      @key "Down"
+  "jeepway":
+    kind: "action"
+    grammarType: "individual"
+    description: "move the cursor to the top of the page"
+    tags: ["cursor"]
+    action: ->
+      @key "Up", ["command"]
+  "jeep":
+    kind: "action"
+    description: "Press the up arrow"
+    grammarType: "individual"
+    tags: ["cursor"]
+    action: ->
+      @key "Up"
+  "crimp":
+    kind: "action"
+    grammarType: "individual"
+    description: "press the left arrow"
+    aliases: ["crimped"]
+    tags: ["cursor"]
+    action: ->
+      @key "Left"
+  "chris":
+    kind: "action"
+    grammarType: "individual"
+    description: "press the right arrow"
+    tags: ["cursor"]
+    aliases: ["krist", "crist"]
+    action: ->
+      @key "Right"
+  "shunkrim":
+    kind: "action"
+    grammarType: "individual"
+    description: "move the cursor by word to the left"
+    tags: ["cursor"]
+    action: ->
+      @key "Left", ["option"]
+  "wonkrim":
+    kind: "action"
+    grammarType: "individual"
+    description: "move the cursor by partial word to the left"
+    tags: ["cursor"]
+    action: ->
+      @key "Left", ["control"]
+  "wonkrish":
+    kind: "action"
+    grammarType: "individual"
+    description: "move the cursor by partial word to the right"
+    tags: ["cursor"]
+    action: ->
+      @key "Right", ["control"]
+  "shunkrish":
+    kind: "action"
+    grammarType: "individual"
+    description: "move the cursor by word to the right"
+    tags: ["cursor"]
+    action: ->
+      @key "Right", ["option"]
   "ricky":
     kind: "action"
     grammarType: "individual"
@@ -116,11 +188,9 @@ _.extend Commands.mapping,
     description: "expand selection symmetrically (horizontally)"
     grammarType: "numberCapture"
     tags: ["text-manipulation"]
-    actions: [
-      kind: "script"
-      script: (value) ->
-        Scripts.symmetricSelectionExpansion(value or 1)
-    ]
+    action: (input) ->
+      @symmetricSelectionExpansion(input or 1)
+
   "bloxy":
     kind: "action"
     description: "expand selection vertically, symmetrically"
@@ -134,31 +204,25 @@ _.extend Commands.mapping,
     description: "With argument: [word], Will select the text [word] on the current line. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] on the current line"
     grammarType: "textCapture"
     tags: ["text-manipulation", "cursor", "selection"]
-    actions: [
-      kind: "script"
-      script: (value) ->
-        Scripts.selectCurrentOccurrence(value)
-    ]
+    action: (input) ->
+      @selectCurrentOccurrence(input)
+
   "jeepleck":
     kind: "action"
     description: "With argument: [word], Will select the text [word] previous to the cursor. With arguments: [word1], [word2], Will select the text starting with the last occurrence of [word1] and ending with the last occurrence of [word2] previous to the cursor"
     grammarType: "textCapture"
     tags: ["text-manipulation", "cursor", "selection"]
-    actions: [
-      kind: "script"
-      script: (value) ->
-        Scripts.selectPreviousOccurrence(value)
-    ]
+    action: (input) ->
+      @selectPreviousOccurrence(input)
+
   "doomleck":
     kind: "action"
     description: "With argument: [word], Will select the text [word] after the cursor. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the first occurrence of [word2] after the cursor"
     grammarType: "textCapture"
     tags: ["text-manipulation", "cursor", "selection"]
-    actions: [
-      kind: "script"
-      script: (value) ->
-        Scripts.selectFollowingOccurrence(value)
-    ]
+    action: (input) ->
+      @selectFollowingOccurrence(input)
+
   "swan":
     kind: "action"
     grammarType: "individual"

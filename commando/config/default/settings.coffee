@@ -1,22 +1,25 @@
-@CommandoSettings = 
-  defaultBrowser: "Chrome"
-  modules:
-    global: true
-    smartnav: false
-    css: false
-    javascript: false
-    ruby: false
-    shell: false
+@Settings = {}
+
+Settings.extend = (key, map) ->
+  if Object.prototype.toString.call(map) is '[object Array]'
+    Settings[key] ?= []
+    Settings[key] = Settings[key].concat map
+  else if typeof map is "object"
+    Settings[key] ?= {}
+    _.extend Settings[key], map
+
+_.extend Settings,
+  maximumRepetitionCount: 100
   websites:
     amazon: "http://www.amazon.com"
     "amazon console": "https://console.aws.amazon.com"
-    craigslist: "craigslist.com"
-    github: "github.com"
-    gmail: "mail.google.com"
-    "google docs": "docs.google.com"
+    craigslist: "http://craigslist.com"
+    github: "https://github.com"
+    gmail: "http://mail.google.com"
+    "google docs": "http://docs.google.com"
   applications:
     term: "iTerm"
-    web: "Chrome"
+    web: "Google Chrome"
     chrome: "Chrome"
     sky: "Skype"
     billy: "Adobe Illustrator"
@@ -64,8 +67,13 @@
     button: "btn"
     calculate: "calc"
     call: "col"
+    character: "char"
+    c: "char"
+    car: "char"
+    care: "char"
     column: "col"
     command: "cmd"
+    constant: "const"
     define: "def"
     descending: "desc"
     develop: "dev"
@@ -135,7 +143,8 @@
     "each with index": "eawi"
     "find all": "fina"
   # this can be changed. Tab, Return, Escape, etc
-  codeSnippetCompletionKey: "Tab"
+  codeSnippetCompletions: 
+    "Sublime Text": "Tab"
   directories:
     home: "~"
     applications: "/Applications"
@@ -157,7 +166,7 @@
     "isobject": "object"
     "maine": "main"
     "o'clock": ":00"
-  contexts:
+  modes:
     global: "global"
     emacs: "emacs"
     mate: "textmate"
@@ -210,11 +219,56 @@
     backup: "com.apple.prefs.backup"
     trackpad: "com.apple.preference.trackpad"
     users: "com.apple.preferences.users"
-    
-            
-
-    
-      
-    
-
-
+  windowPositions:
+    # units <= 1 are proportions
+    # units > 1 are absolute
+    max: 
+      x: 0
+      y: 0
+      width: 1
+      height: 1
+    left: 
+      x: 0
+      y: 0
+      width: 0.5
+      height: 1
+    right: 
+      x: 0.5
+      y: 0
+      width: 0.5
+      height: 1
+    top:
+      x: 0
+      y: 0
+      width: 1
+      height: 0.5
+    bottom:
+      x: 0
+      y: 0.5
+      width: 1
+      height: 0.5
+    "top left":
+      x: 0
+      y: 0
+      width: 0.5
+      height: 0.5
+    "top right":
+      x: 0.5
+      y: 0
+      width: 0.5
+      height: 0.5
+    "bottom left":
+      x: 0
+      y: 0.5
+      width: 0.5
+      height: 0.5
+    "bottom right":
+      x: 0.5
+      y: 0.5
+      width: 0.5
+      height: 0.5
+    ipad:
+      x: "auto" # center
+      y: "auto" # center
+      width: 1024
+      height: 768

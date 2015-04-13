@@ -10,8 +10,20 @@ Template.Interpreter.events
     chain = new Commands.Chain("#{phrase} ")
     try
       result = chain.execute()
-      Session.set "interpretation", JSON.stringify(result.interpretation)
-      Session.set "generated", result.generated
+      interpretation = _.map result.interpretation, (item) ->
+        "#{item.command}(#{item.arguments?.join(', ') or ''})"
+      Session.set "interpretation", interpretation.join("\n")
+
+
+      actions = new OSX.displayActions()
+      display = _.map result.interpretation, (e) -> 
+        actions.reset()
+        command = new Commands.Base(e.command, e.arguments)
+        individual = command.generate()
+        individual.call(actions)
+        actions.result
+
+      Session.set "generated", display.join("<br/>")
     catch e
       console.log e
       Session.set "generated", null

@@ -1,11 +1,8 @@
-Commands.registerConditionalModuleCommands "smartnav",
+Commands.create
   "mousy":
     kind: "action"
     grammarType: "individual"
     description: "center the mouse in the middle of the screen (requires smartnav)"
     tags: ["smartnav", "mouse"]
-    actions: [
-      kind: "key"
-      key: "S"
-      modifiers: ["command", "option", "control", "shift"]
-    ]
+    action: (input) ->
+      @positionMouse(0.5, 0.5)
