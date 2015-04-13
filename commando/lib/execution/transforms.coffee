@@ -188,7 +188,7 @@ toTitleCase = (string) ->
   spine: toSlugCase
   lowerSlam: toSmashCase
   upperSlam: toYellsmashCase
-  upperCase: toCapitalCase
+  upperCase: toYellerCase
   titleSentance: toTitleCase
   titleFirstSentance: toSentenceCase
   

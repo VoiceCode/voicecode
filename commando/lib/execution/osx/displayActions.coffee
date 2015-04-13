@@ -61,8 +61,27 @@ class OSX.displayActions
     ""
   positionMouse: (x, y) ->
     "positionMouse(#{x or ''}, #{y or ''})"
+  mouseUp: ->
+    "mouseUp"
+  mouseDown: ->
+    "mouseDown"
+  symmetricSelectionExpansion: ->
+    "symmetricSelectionExpansion()"
+  selectCurrentOccurrence: ->
+    "selectCurrentOccurrence()"
+  selectPreviousOccurrence: ->
+    "selectPreviousOccurrence()"
+  selectFollowingOccurrence: ->
+    "selectFollowingOccurrence()"
   makeModifierText: (modifiers) ->
     r = _.map modifiers, (m) ->
       modifierCodes[m]
     r.join('')
-
+  scrollRight: ->
+    "scrollRight"
+  scrollLeft: ->
+    "scrollLeft"
+  scrollUp: ->
+    "scrollUp"
+  scrollDown: ->
+    "scrollDown"
