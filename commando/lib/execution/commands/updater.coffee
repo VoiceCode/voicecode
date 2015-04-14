@@ -44,7 +44,7 @@
     script += """
 
     set prevDelimiter to AppleScript's text item delimiters
-    set AppleScript's text item delimiters to ", "
+    set AppleScript's text item delimiters to "||"
     tell application "Dragon Dictate"
       set show Available Commands to true
       delay 0.5
@@ -52,7 +52,7 @@
       
       set names to (name of commands of (group "#{scope}")) as string
       set descriptions to (description of commands of (group "#{scope}")) as string
-      set results to names & ", " & descriptions
+      set results to names & "||" & descriptions
     end tell
     set AppleScript's text item delimiters to prevDelimiter
     return results
@@ -64,7 +64,7 @@
     """
     # Shell.exec script, async: true
     r = Execute script
-    results = r.split(", ")
+    results = r.split("||")
     resultMap = {}
     names = results.splice(0, results.length / 2)
     _.each names, (item, index) ->
