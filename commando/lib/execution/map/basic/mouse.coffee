@@ -3,35 +3,35 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "double click"
-    tags: ["mouse"]
+    tags: ["mouse", "recommended"]
     action: ->
       @doubleClick()
   "chipper":
     kind: "action"
     grammarType: "individual"
     description: "right click"
-    tags: ["mouse"]
+    tags: ["mouse", "recommended"]
     action: ->
       @rightClick()
   "chiff":
     kind: "action"
     grammarType: "individual"
     description: "left click"
-    tags: ["mouse"]
+    tags: ["mouse", "recommended"]
     action: ->
       @click()
   "triplick":
     kind: "action"
     grammarType: "individual"
     description: "left click"
-    tags: ["mouse"]
+    tags: ["mouse", "recommended"]
     action: ->
       @tripleClick()
   "shicks":
     kind: "action"
     grammarType: "individual"
     description: "shift+click"
-    tags: ["mouse"]
+    tags: ["mouse", "recommended"]
     action: ->
       @shiftClick()
   "comlick":

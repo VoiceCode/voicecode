@@ -3,28 +3,28 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "move the cursor to the bottom of the page"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Down", ["command"]
   "doom":
     kind: "action"
     grammarType: "individual"
     description: "press the down arrow"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Down"
   "jeepway":
     kind: "action"
     grammarType: "individual"
     description: "move the cursor to the top of the page"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Up", ["command"]
   "jeep":
     kind: "action"
     description: "Press the up arrow"
     grammarType: "individual"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Up"
   "crimp":
@@ -32,14 +32,14 @@ Commands.create
     grammarType: "individual"
     description: "press the left arrow"
     aliases: ["crimped"]
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Left"
   "chris":
     kind: "action"
     grammarType: "individual"
     description: "press the right arrow"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     aliases: ["krist", "crist"]
     action: ->
       @key "Right"
@@ -47,7 +47,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "move the cursor by word to the left"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Left", ["option"]
   "wonkrim":
@@ -68,21 +68,21 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "move the cursor by word to the right"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Right", ["option"]
   "ricky":
     kind: "action"
     grammarType: "individual"
     description: "moves the cursor all the way to the right"
-    tags: ["cursor"]
+    tags: ["cursor", "recommended"]
     action: ->
       @key "Right", ['command']
   "derek":
     kind: "action"
     grammarType: "individual"
     description: "moves the cursor on the way to the right than inserts a space"
-    tags: ["cursor", "space", "right", "combo"]
+    tags: ["cursor", "space", "right", "combo", "recommended"]
     action: ->
       @key "Right", ['command']
       @key " "
@@ -90,7 +90,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "remove a space before the adjacent word on the left"
-    tags: ["cursor", "space", "deleting", "left", "combo"]
+    tags: ["cursor", "space", "deleting", "left", "combo", "recommended"]
     action: ->
       @key "Left", ['option']
       @key "Delete"
@@ -98,28 +98,28 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the right"
-    tags: ["selection", "right"]
+    tags: ["selection", "right", "recommended"]
     action: ->
       @key "Right", ['command', 'shift']
   "lefty":
     kind: "action"
     grammarType: "individual"
     description: "move the cursor all the way to the left"
-    tags: ["cursor", "left"]
+    tags: ["cursor", "left", "recommended"]
     action: ->
       @key "Left", ['command']
   "lecksy":
     kind: "action"
     grammarType: "individual"
     description: "selects all text to the left"
-    tags: ["selection", "left"]
+    tags: ["selection", "left", "recommended"]
     action: ->
       @key "Left", ['command', 'shift']
   "shackle":
     kind: "action"
     grammarType: "individual"
     description: "selects the entire line"
-    tags: ["selection"]
+    tags: ["selection", "recommended"]
     aliases: ["sheqel", "shikel"]
     action: ->
       @key "Left", ['command']
@@ -128,7 +128,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "will delete the entire line(s)"
-    tags: ["deleting"]
+    tags: ["deleting", "recommended"]
     aliases: ["snipeline"]
     action: ->
       if @currentApplication() is "Sublime Text"
@@ -141,7 +141,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "will delete everything to the right"
-    tags: ["deleting", "right"]
+    tags: ["deleting", "right", "recommended"]
     aliases: ["sniper"]
     action: ->
       if @currentApplication is "Sublime Text"
@@ -152,7 +152,7 @@ Commands.create
   "snipple":
     kind: "action"
     grammarType: "individual"
-    tags: ["deleting", "left"]
+    tags: ["deleting", "left", "recommended"]
     description: "will delete everything to the left"
     action: ->
       @key "Delete", ['command']
@@ -160,7 +160,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "will duplicate the current line"
-    tags: ["text-manipulation"]
+    tags: ["text-manipulation", "recommended"]
     aliases: ["joel"]
     action: ->
       if @currentApplication() is "Sublime Text"

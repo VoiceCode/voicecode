@@ -3,7 +3,7 @@ Commands.create
     kind: "action"
     grammarType: "oneArgument"
     description: "opens drop-down menu by name"
-    tags: ["application", "system"]
+    tags: ["application", "system", "recommended"]
     action: (input) ->
       menuItem = Settings.menuItemAliases[input] or input
       @openMenuBarItem menuItem
@@ -12,7 +12,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "search the menubar items (opens help menu)"
-    tags: ["application", "system"]
+    tags: ["application", "system", "recommended"]
     action: ->
       @openMenuBarItem "help"
 
@@ -21,7 +21,7 @@ Commands.create
     grammarType: "numberCapture"
     description: "adjust the system volume [0-100]"
     triggerPhrase: "volume"
-    tags: ["system"]
+    tags: ["system", "recommended"]
     action: (input) ->
       @setVolume(input)
 
@@ -29,7 +29,7 @@ Commands.create
     kind: "action"
     grammarType: "textCapture"
     description: "set the size of the current active window to one of the preset sizes"
-    tags: ["system", "window"]
+    tags: ["system", "window", "recommended"]
     action: (input) ->
       if input?.length      
         preset = Scripts.fuzzyMatch Settings.windowPositions, input.join(' ')

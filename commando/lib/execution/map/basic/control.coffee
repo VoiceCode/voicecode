@@ -4,14 +4,14 @@ Commands.create
     grammarType: "individual"
     description: "does nothing, but enters into voice code"
     aliases: ["chin"]
-    tags: ["text"]
+    tags: ["text", "recommended"]
     action: -> 
       null
   "skoosh":
     kind: "action"
     grammarType: "individual"
     description: "insert a space"
-    tags: ["space"]
+    tags: ["space", "recommended"]
     action: ->
       @key " "
   "skoopark":
@@ -26,7 +26,7 @@ Commands.create
     kind: "action"
     description: "Inserts a new line below the current line"
     grammarType: "individual"
-    tags: ["return", "combo"]
+    tags: ["return", "combo", "recommended"]
     action: ->
       if @currentApplication() is "sublime"
         @key "Return", ["command"]
@@ -46,7 +46,7 @@ Commands.create
     description: "Inserts a new line above the current line"
     grammarType: "individual"
     aliases: ["chalky", "shocking"]
-    tags: ["return", "combo"]
+    tags: ["return", "combo", "recommended"]
     action: ->
       if @currentApplication() is "sublime"
         @key "Return", ["command", "shift"]

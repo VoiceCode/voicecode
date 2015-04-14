@@ -3,7 +3,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "selects the entire line of text cursor hovers over"
-    tags: ["mouse", "combo"]
+    tags: ["mouse", "combo", "recommended"]
     action: ->
       @click()
       @key "Left", ['command']
@@ -12,7 +12,7 @@ Commands.create
     kind: "combo"
     grammarType: "individual"
     description: "mouse double click, then copy"
-    tags: ["mouse", "combo"]
+    tags: ["mouse", "combo", "recommended"]
     combo: ["duke", "stoosh"]
   "doopark":
     kind: "combo"
@@ -24,7 +24,7 @@ Commands.create
     kind: "combo"
     grammarType: "individual"
     description: "mouse single click, then paste"
-    tags: ["mouse", "combo"]
+    tags: ["mouse", "combo", "recommended"]
     combo: ["chiff", "spark"]
   "shackloosh":
     kind: "combo"

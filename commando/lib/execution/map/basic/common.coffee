@@ -4,7 +4,7 @@ Commands.create
     grammarType: "individual"
     aliases: ["shocked", "shox", "chalk"]
     description: "press the return key"
-    tags: ["return"]
+    tags: ["return", "recommended"]
     action: (input) ->
       @key "Return"
   "junk":
@@ -12,77 +12,77 @@ Commands.create
     grammarType: "individual"
     description: "press the delete key"
     aliases: ["junks", "junked"]
-    tags: ["deleting"]
+    tags: ["deleting", "recommended"]
     action: (input) ->
       @key "Delete"
   "spunk":
     kind: "action"
     grammarType: "individual"
     description: "pressed the forward delete key"
-    tags: ["deleting"]
+    tags: ["deleting", "recommended"]
     action: (input) ->
       @key "ForwardDelete"
   "dizzle":
     kind: "action"
     grammarType: "individual"
     description: "undo"
-    tags: ["application"]
+    tags: ["application", "recommended"]
     action: (input) ->
       @key "Z", ["command"]
   "rizzle":
     kind: "action"
     grammarType: "individual"
     description: "redo"
-    tags: ["application"]
+    tags: ["application", "recommended"]
     action: (input) ->
       @key "Z", ["command", "shift"]
   "tarp":
     kind: "action"
     grammarType: "individual"
     description: "inserts a tab"
-    tags: ["tab"]
+    tags: ["tab", "recommended"]
     action: (input) ->
       @key "Tab"
   "tarsh":
     kind: "action"
     grammarType: "individual"
     description: "inserts a shift + tab"
-    tags: ["tab"]
+    tags: ["tab", "recommended"]
     action: (input) ->
       @key "Tab", ["shift"]
   "gibby":
     kind: "action"
     description: "Switch to next window in same application"
     grammarType: "individual"
-    tags: ["application", "window"]
+    tags: ["application", "window", "recommended"]
     action: (input) ->
       @key "`", ["command"]
   "shibby":
     kind: "action"
     description: "Switch to previous window in same application"
     grammarType: "individual"
-    tags: ["application", "window"]
+    tags: ["application", "window", "recommended"]
     action: (input) ->
       @key "`", ["command", "shift"]
   "shompla":
     kind: "action"
     description: "zoom in"
     grammarType: "individual"
-    tags: ["application", "plus"]
+    tags: ["application", "plus", "recommended"]
     action: (input) ->
       @key "=", ["command"]
   "shaman":
     kind: "action"
     description: "zoom out"
     grammarType: "individual"
-    tags: ["application", "minus"]
+    tags: ["application", "minus", "recommended"]
     action: (input) ->
       @key "-", ["command"]
   "shabble":
     kind: "action"
     description: ""
     grammarType: "individual"
-    tags: ["["]
+    tags: ["[", "recommended"]
     action: (input) ->
       @key "[", ["command"]
   "shabber":
@@ -90,28 +90,28 @@ Commands.create
     description: ""
     grammarType: "individual"
     aliases: ["shammar"]
-    tags: ["]"]
+    tags: ["]", "recommended"]
     action: (input) ->
       @key "]", ["command"]
   "marneck":
     kind: "action"
     description: "find the next occurrence of a search term"
     grammarType: "individual"
-    tags: ["application"]
+    tags: ["application", "recommended"]
     action: (input) ->
       @key "G", ["command"]
   "marpreev":
     kind: "action"
     description: "find the previous occurrence of a search term"
     grammarType: "individual"
-    tags: ["application"]
+    tags: ["application", "recommended"]
     action: (input) ->
       @key "G", ["command", "shift"]
   "olly":
     kind: "action"
     grammarType: "individual"
     description: "select all"
-    tags: ["selection"]
+    tags: ["selection", "recommended"]
     action: ->
       @key "A", ["command"]
   "sparky":
@@ -125,7 +125,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "select all then paste the clipboard"
-    tags: ["copy-paste", "selection"]
+    tags: ["copy-paste", "selection", "recommended"]
     action: ->
       @key "A", ["command"]
       @key "V", ["command"]
@@ -134,7 +134,7 @@ Commands.create
     grammarType: "individual"
     description: "paste the clipboard"
     aliases: ["sparked"]
-    tags: ["copy-paste"]
+    tags: ["copy-paste", "recommended"]
     action: ->
       @key "V", ["command"]
   "sparshock":
@@ -149,7 +149,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "file > save"
-    tags: ["application"]
+    tags: ["application", "recommended"]
     action: ->
       @key "S", ["command"]
   "sagewick":
@@ -164,7 +164,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "copy whatever is selected then switch applications"
-    tags: ["copy-paste", "application", "system", "combo"]
+    tags: ["copy-paste", "application", "system", "combo", "recommended"]
     action: ->
       @key "C", ["command"]
       @key "Tab", ["command"]
@@ -172,14 +172,14 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "copy whatever is selected"
-    tags: ["copy-paste"]
+    tags: ["copy-paste", "recommended"]
     action: ->
       @key "C", ["command"]
   "allstoosh":
     kind: "action"
     grammarType: "individual"
     description: "select all then copy whatever is selected"
-    tags: ["copy-paste", "selection"]
+    tags: ["copy-paste", "selection", "recommended"]
     action: ->
       @key "A", ["command"]
       @key "C", ["command"]
@@ -187,7 +187,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "cut whatever is selected"
-    tags: ["copy-paste"]
+    tags: ["copy-paste", "recommended"]
     aliases: ["snatched"]
     action: ->
       @key "X", ["command"]
@@ -195,27 +195,27 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "close a window or tab"
-    tags: ["application", "window"]
+    tags: ["application", "window", "recommended"]
     action: ->
       @key "W", ["command"]
   "marco":
     kind: "action"
     grammarType: "individual"
     description: "find"
-    tags: ["application"]
+    tags: ["application", "recommended"]
     action: ->
       @key "F", ["command"]
   "talky":
     kind: "action"
     grammarType: "individual"
     description: "open a new tab"
-    tags: ["application", "window"]
+    tags: ["application", "window", "recommended"]
     action: ->
       @key "T", ["command"]
   "randall":
     kind: "action"
     grammarType: "individual"
     description: "press escape"
-    tags: ["escape"]
+    tags: ["escape", "recommended"]
     action: ->
       @key "Escape"

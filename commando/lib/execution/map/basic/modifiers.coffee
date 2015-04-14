@@ -68,7 +68,7 @@
   prick: ["command", "control", "shift"]
   sky: ["shift"]
 
-allowed =
+recommended =
   chomm: [
     "won"
     "too"
@@ -77,19 +77,71 @@ allowed =
     "five"
     "six"
     "seven"
+    "ate"
+    "nine"
+    "zer"
     "arch"
+    "brov"
+    "dell"
+    "etch"
+    "ice"
+    "lug"
+    "mowsh"
+    "nerb"
+    "pooch"
+    "quash"
+    "rosh"
+    "slush"
+    "turn"
+    "leet"
   ]
-  shay: [
+  shoff: [
+    "dell"
     "souk"
+  ]
+  troll: [
+    "char"
+    "zooch"
+  ]
+  sky: [
+    "arch"
+    "brov"
+    "char"
+    "dell"
+    "etch"
+    "fomp"
+    "goof"
+    "hark"
+    "ice"
+    "jinks"
+    "koop"
+    "lug"
+    "mowsh"
+    "nerb"
+    "ork"
+    "pooch"
+    "quash"
+    "rosh"
+    "souk"
+    "teek"
+    "unks"
+    "verge"
+    "womp"
+    "trex"
+    "yang"
+    "zooch"
   ]
 
 _.each commandModifiers, (mods, prefix) ->
   _.each commandLetters, (value, key) ->
+    tags = ["modifiers"]
+    if recommended[prefix]?[value]?
+      tags = ["modifiers", "recommended"]
     Commands.create "#{prefix}#{value}",
       kind: "action"
       grammarType: "individual"
       description: "#{mods.join(' + ')} + #{key}"
-      tags: ["modifiers"]
+      tags: tags
       module: "modifiers"
       action: ->
         @key key, mods

@@ -31,7 +31,7 @@ _.each letters, (value, key) ->
     kind: "action"
     grammarType: "textCapture"
     description: "Enters the single letter: #{key}"
-    tags: ["letter"]
+    tags: ["letter", "recommended"]
     action: (input) ->
       @string "#{key}#{(input or []).join('')}"
 

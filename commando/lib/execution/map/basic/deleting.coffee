@@ -3,7 +3,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "press option-delete"
-    tags: ["deleting"]
+    tags: ["deleting", "recommended"]
     action: ->
       @key "Delete", ["option"]
   "steffi":
@@ -35,6 +35,6 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     description: "forward delete a word at a time"
-    tags: ["deleting"]
+    tags: ["deleting", "recommended"]
     action: ->
       @key "ForwardDelete", ['option']

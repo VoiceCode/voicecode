@@ -3,14 +3,14 @@ Commands.create
     kind: "text"
     grammarType: "textCapture"
     description: "words with spaces between. This command is for internal grammar use (not spoken)"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     isSpoken: false
     transform: "literal"
   "cram":
     kind: "text"
     grammarType: "textCapture"
     description: "camelCaseText"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "camel"
     aliases: ["crammed", "crams", "tram", "kram"]
     fallbackService: "vc case cram"
@@ -32,7 +32,7 @@ Commands.create
     kind: "text"
     grammarType: "textCapture"
     description: "snake_case_text"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "snake"
     fallbackService: "vc case snake"
   "coalsnik":
@@ -67,7 +67,7 @@ Commands.create
     kind: "text"
     grammarType: "textCapture"
     description: "spinal-case-text"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "spine"
     fallbackService: "vc case spine"
   "despin":
@@ -80,7 +80,7 @@ Commands.create
   "criffed":
     kind: "text"
     description: "StudCaseText"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     aliases: ["chaffed"]
     grammarType: "textCapture"
     transform: "stud"
@@ -113,7 +113,7 @@ Commands.create
     kind: "text"
     grammarType: "textCapture"
     description: "lowercasewithnospaces"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "lowerSlam"
     fallbackService: "vc case smash"
   "yellsmash":
@@ -127,7 +127,7 @@ Commands.create
     kind: "text"
     grammarType: "textCapture"
     description: "UPPER CASE WITH SPACES"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "upperCase"
     fallbackService: "vc case yeller"
   "yellsnik":
@@ -159,20 +159,20 @@ Commands.create
     kind: "text"
     grammarType: "textCapture"
     description: "Title Words With Spaces"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "titleSentance"
     fallbackService: "vc case tridal"
   "senchen":
     kind: "text"
     grammarType: "textCapture"
     description: "Sentence case with spaces"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "titleFirstSentance"
     fallbackService: "vc case senchen"
   "datsun":
     kind: "text"
     grammarType: "textCapture"
     description: "Sentence case with spaces"
-    tags: ["text"]
+    tags: ["text", "recommended"]
     transform: "titleFirstSentance"
     prefix: ". "
