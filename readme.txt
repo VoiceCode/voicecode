@@ -1,11 +1,17 @@
 
 SETUP GUIDE
 ===========
-https://docs.google.com/document/d/1OQvOWDY4vlYKSxcGxirEt8p5MPEYqatvJa0IEdaRh68/edit?usp=sharing
+https://github.com/VoiceCode/docs/wiki
 
 
 TO START VOICECODE
 ==================
+
+FIRST make sure you are on the most up to date version:
+
+cd ~/voicecode ; git pull
+
+THEN
 
 - Option 1
 –––––––––––––––––––––––––––––––––––––––––
