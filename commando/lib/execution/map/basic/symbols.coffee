@@ -70,6 +70,7 @@ Commands.create
   "prexcoif":
     kind: "action"
     grammarType: "individual"
+    description: "inserts parentheses then double quotes leaving cursor inside them. If text is selected, will wrap the selected text"
     tags: ["symbol", "quotes", "recommended"]
     action: ->
       if @canDetermineSelections() and @isTextSelected()
@@ -82,6 +83,7 @@ Commands.create
   "prex":
     kind: "action"
     grammarType: "individual"
+    description: "inserts parentheses leaving cursor inside them. If text is selected, will wrap the selected text"
     tags: ["symbol", "recommended"]
     action: ->
       if @canDetermineSelections() and @isTextSelected()
@@ -99,6 +101,7 @@ Commands.create
   "brax":
     kind: "action"
     grammarType: "individual"
+    description: "inserts brackets leaving cursor inside them. If text is selected, will wrap the selected text"
     tags: ["symbol", "recommended"]
     action: ->
       if @canDetermineSelections() and @isTextSelected()
@@ -145,7 +148,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
-    description: "inserts 2 spaces then left arrow"
+    description: "inserts 2 spaces leaving cursor in the middle. If text is selected, will wrap the selected text in spaces"
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
@@ -223,6 +226,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["coiffed"]
+    description: "inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text"
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
@@ -368,6 +372,7 @@ Commands.create
   "angler":
     kind: "action"
     grammarType: "individual"
+    description: "inserts angle brackets leaving cursor inside them. If text is selected, will wrap the selected text"
     tags: ["symbol", "recommended"]
     action: ->
       if @canDetermineSelections() and @isTextSelected()

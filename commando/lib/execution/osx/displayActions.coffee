@@ -78,10 +78,16 @@ class OSX.displayActions
       modifierCodes[m]
     r.join('')
   scrollRight: ->
-    "scrollRight"
+    "scrollRight()"
   scrollLeft: ->
-    "scrollLeft"
+    "scrollLeft()"
   scrollUp: ->
-    "scrollUp"
+    "scrollUp()"
   scrollDown: ->
-    "scrollDown"
+    "scrollDown()"
+  getSelectedText: ->
+    "getSelectedText()"
+  canDetermineSelections: ->
+    false
+  isTextSelected: ->
+    false
