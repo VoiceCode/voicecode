@@ -62,12 +62,8 @@ class Commands.Base
           transform = @info.transform
           -> 
             if fallback?
-              selection = @isTextSelected()
-              console.log selection
-              if selection
-                @key "C", ['command']
-                @delay 100
-                contents = @getClipboard()
+              if @isTextSelected()
+                contents = @getSelectedText()
                 transformed = SelectionTransforms[transform](contents)
                 @string transformed
             # Commands.incomingSelectionHandler = SelectionTransforms[transform]

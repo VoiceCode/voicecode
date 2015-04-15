@@ -346,6 +346,14 @@ class OSX.Actions
   getClipboard: ->
     @applescript("return the clipboard as text")
 
+  getSelectedText: ->
+    @key "C", ['command']
+    @delay 100
+    @getClipboard()
+
+  canDetermineSelections: ->
+    not _.contains(Settings.appsThatCanNotHandleBlankSelections, @currentApplication())
+
   getScreenInfo: ->
     frame = $.NSScreen('mainScreen')('visibleFrame')
     result =

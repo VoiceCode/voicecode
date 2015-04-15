@@ -72,16 +72,24 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "quotes", "recommended"]
     action: ->
-      @string '("")'
-      @key "Left"
-      @key "Left"
+      if @canDetermineSelections() and @isTextSelected()
+        t = @getSelectedText()
+        @string('("' + t + '")')
+      else
+        @string '("")'
+        @key "Left"
+        @key "Left"
   "prex":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @string "()"
-      @key "Left"
+      if @canDetermineSelections() and @isTextSelected()
+        t = @getSelectedText()
+        @string("(#{t})")
+      else
+        @string "()"
+        @key "Left"
   "prekris":
     kind: "action"
     grammarType: "individual"
@@ -93,8 +101,12 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @string "[]"
-      @key "Left"
+      if @canDetermineSelections() and @isTextSelected()
+        t = @getSelectedText()
+        @string("[#{t}]")
+      else
+        @string "[]"
+        @key "Left"
   "kirksorp":
     kind: "action"
     grammarType: "individual"
@@ -135,8 +147,12 @@ Commands.create
     tags: ["symbol", "recommended"]
     description: "inserts 2 spaces then left arrow"
     action: ->
-      @string "  "
-      @key "Left"
+      if @canDetermineSelections() and @isTextSelected()
+        t = @getSelectedText()
+        @string(" #{t} ")
+      else
+        @string "  "
+        @key "Left"
   "deprex":
     kind: "action"
     grammarType: "individual"
@@ -208,8 +224,12 @@ Commands.create
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["coiffed"]
     action: ->
-      @string '""'
-      @key "Left"
+      if @canDetermineSelections() and @isTextSelected()
+        t = @getSelectedText()
+        @string("\"#{t}\"")
+      else
+        @string '""'
+        @key "Left"
   "decoif":
     kind: "action"
     grammarType: "individual"
@@ -350,8 +370,12 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @string "<>"
-      @key "Left"
+      if @canDetermineSelections() and @isTextSelected()
+        t = @getSelectedText()
+        @string("<#{t}>")
+      else
+        @string "<>"
+        @key "Left"
   "plus":
     kind: "action"
     grammarType: "individual"

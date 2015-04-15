@@ -278,3 +278,6 @@ _.extend Settings,
       y: "auto" # center
       width: 1024
       height: 768
+  appsThatCanNotHandleBlankSelections: [
+    "Sublime Text"
+  ]
