@@ -303,6 +303,17 @@ class OSX.Actions
     delay 1
     """
 
+  isTextSelected: ->
+    result = @applescript """
+    tell application "System Events" to tell (process 1 where frontmost is true)
+      set frontmost to true
+      set selectionExists to (enabled of first menu item of (menu 1 of menu bar item 4 of menu bar 1) ¬
+          where (value of attribute "AXMenuItemCmdChar" is "C") ¬
+          and (value of attribute "AXMenuItemCmdModifiers" is 0))
+    end tell
+    return selectionExists
+    """
+    (result is "true")
   # something:
   #   AXUIElementRef systemWideElement = AXUIElementCreateSystemWide();
   #   AXUIElementRef focussedElement = NULL;

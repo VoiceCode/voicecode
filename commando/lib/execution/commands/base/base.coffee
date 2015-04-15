@@ -62,11 +62,14 @@ class Commands.Base
           transform = @info.transform
           -> 
             if fallback?
-              @key "C", ['command']
-              @delay 200
-              contents = @getClipboard()
-              transformed = SelectionTransforms[transform](contents)
-              @string transformed
+              selection = @isTextSelected()
+              console.log selection
+              if selection
+                @key "C", ['command']
+                @delay 100
+                contents = @getClipboard()
+                transformed = SelectionTransforms[transform](contents)
+                @string transformed
             # Commands.incomingSelectionHandler = SelectionTransforms[transform]
             # @clickServiceItem("send-selection-to-voicecode")
               # @clickServiceItem(fallback)
