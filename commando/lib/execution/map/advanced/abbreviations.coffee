@@ -27,7 +27,7 @@ Commands.create
       if input?.length
         snippet = Scripts.fuzzyMatch Settings.codeSnippets, input.join(" ")
         @string snippet
-        @delay 100
+        @delay 200
         completion = Settings.codeSnippetCompletions[@currentApplication()] or "Tab"
         @key completion
   "trassword":

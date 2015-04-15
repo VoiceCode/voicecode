@@ -181,13 +181,18 @@ _.extend Settings,
     permissions: "chmod "
     access: "chmod "
     cat: "cat "
+    chat: "cat " # dragon doesn't like the word 'cat'
     copy: "cp "
     move: "mv "
     remove: "rm "
+    "remove recursive": "rm -rf "
     "remove directory": "rmdir "
     "make directory": "mkdir "
     link: "ln "
     man: "man "
+    list: "ls "
+    "list all": "ls -al"
+    ls: "ls "
   menuItemAliases:
     review: "view"
   systemPreferences:
