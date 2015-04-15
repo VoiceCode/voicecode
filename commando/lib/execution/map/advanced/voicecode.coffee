@@ -15,7 +15,6 @@ Commands.create
     grammarType: "individual"
     description: "repeat last individual command once"
     ignoreHistory: true
-    aliases: ["sun"]
     tags: ["repetition", "voicecode"]
     action: (context, input) ->
       context.lastIndividualCommand.call(@)
