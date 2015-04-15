@@ -20,7 +20,7 @@ _.extend Settings,
   applications:
     term: "iTerm"
     web: "Google Chrome"
-    chrome: "Chrome"
+    chrome: "Google Chrome"
     sky: "Skype"
     billy: "Adobe Illustrator"
     shop: "Adobe Photoshop CC 2014"
@@ -86,6 +86,7 @@ _.extend Settings,
     image: "img"
     initialize: "init"
     integer: "int"
+    imager: "int"
     iterate: "iter"
     jason: "json"
     large: "lg"

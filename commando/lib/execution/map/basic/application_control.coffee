@@ -35,6 +35,7 @@ Commands.create
     action: ->
       @openBrowser()
       @key "T", ['command']
+      @delay 200
   "fox":
     kind: "action"
     description: "open application"
