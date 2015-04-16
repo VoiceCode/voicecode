@@ -79,7 +79,8 @@ Commands.Utility =
         "all"
     _.filter _.keys(Commands.mapping), (key) ->
       command = Commands.mapping[key]
-      (enabled is "all" or (command.enabled is enabled)) and _.contains((command.tags or []), tag)
+      console.log tag
+      (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
 
 
   scopedModules: (module) ->

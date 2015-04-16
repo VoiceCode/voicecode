@@ -21,7 +21,7 @@ Template.Commands.helpers
 
 Template.commandsGeneric.helpers
   scopedCommands: ->
-    tag = Session.get("commandTag.current")
+    tag = Session.get("commandTag.current") or "all"
     toggle = Session.get("enabledDisabledToggle")
     Commands.Utility.scopedCommandsWithToggle(tag, toggle)
     

@@ -30,9 +30,9 @@ AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notif) ->
   Actions.setCurrentApplication current
 
 
-AppDelegate.addMethod 'applicationDidFinishLaunching:', 'v@:@', (self, _cmd, notif) ->
-  console.log('got applicationDidFinishLauching')
-  console.log(notif)
+# AppDelegate.addMethod 'applicationDidFinishLaunching:', 'v@:@', (self, _cmd, notif) ->
+#   console.log('got applicationDidFinishLauching')
+#   console.log(notif)
 
 AppDelegate.addMethod 'applicationWillTerminate:', 'v@:@', (self, _cmd, notif) ->
   console.log('got applicationWillTerminate')
@@ -47,7 +47,7 @@ delegate = AppDelegate('alloc')('init')
 app('setDelegate', delegate)
 
 n('addObserver', delegate, 'selector', 'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-app('activateIgnoringOtherApps', true)
+# app('activateIgnoringOtherApps', true)
 # shared('run')
 # $.NSRunLoop('mainRunLoop')('run')
 

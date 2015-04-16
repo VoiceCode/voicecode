@@ -91,3 +91,7 @@ class OSX.displayActions
     false
   isTextSelected: ->
     false
+  selectPreviousWord: ->
+    "selectPreviousWord()"
+  selectFollowingWord: ->
+    "selectFollowingWord()"

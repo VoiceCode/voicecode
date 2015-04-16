@@ -65,22 +65,22 @@ class OSX.Actions
       mask = mask | bits
     mask
 
+  needsExplicitModifierPresses: ->
+    _.contains Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication()
 
   _pressKey: (key, modifiers) ->
-    if modifiers?
+    if modifiers? and @needsExplicitModifierPresses()
       _.each modifiers, (m) =>
-        Meteor.sleep(4)
         @keyDown m
-        Meteor.sleep(4)
+      @delay(10)
 
     @_keyDown(key, modifiers)
     @_keyUp(key, modifiers)
 
     if modifiers?
       _.each modifiers, (m) =>
-        Meteor.sleep(4)
         @keyUp m
-        Meteor.sleep(8)
+      @delay(10)
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
@@ -259,6 +259,7 @@ class OSX.Actions
 
   currentApplication: ->
     if @_currentApplication
+      console.log @_currentApplication
       @_currentApplication
     else    
       w = $.NSWorkspace('sharedWorkspace')
@@ -306,7 +307,6 @@ class OSX.Actions
   isTextSelected: ->
     result = @applescript """
     tell application "System Events" to tell (process 1 where frontmost is true)
-      set frontmost to true
       set selectionExists to (enabled of first menu item of (menu 1 of menu bar item 4 of menu bar 1) ¬
           where (value of attribute "AXMenuItemCmdChar" is "C") ¬
           and (value of attribute "AXMenuItemCmdModifiers" is 0))
@@ -352,7 +352,7 @@ class OSX.Actions
     @getClipboard()
 
   canDetermineSelections: ->
-    not _.contains(Settings.appsThatCanNotHandleBlankSelections, @currentApplication())
+    not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication())
 
   getScreenInfo: ->
     frame = $.NSScreen('mainScreen')('visibleFrame')
@@ -492,3 +492,42 @@ class OSX.Actions
         width = first.length
         _(width).times => 
           @key "Right", ['shift']
+
+  selectPreviousWord: (input) ->
+    distance = parseInt(input) or 1
+    @key "Right"
+    @key "Right"
+    @key "Up", ["shift"]
+    @key "Up", ["shift"]
+    @key "Left", ['shift', 'command']
+    t = _s.reverse @getSelectedText()
+    expression = /\w+/g
+    match = t.match(expression)
+    item = match[distance] or match[distance - 1]
+    @key "Right"
+    if item?
+      index = t.indexOf(item)
+      _(index).times =>
+        @key "Left"
+      _(item.length).times =>
+        @key "Left", ['shift']
+
+  selectFollowingWord: (input) ->
+    distance = parseInt(input) or 1
+    @key "Left"
+    @key "Left"
+    @key "Down", ['shift']
+    @key "Down", ['shift']
+    @key "Right", ['shift', 'command']
+    t = @getSelectedText()
+    expression = /\w+/g
+    match = t.match(expression)
+    item = match[distance] or match[distance - 1]
+    @key "Left"
+    if item?
+      index = t.indexOf(item)
+      _(index).times =>
+        @key "Right"
+      _(item.length).times =>
+        @key "Right", ['shift']
+

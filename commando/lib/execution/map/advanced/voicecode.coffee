@@ -18,12 +18,13 @@ Commands.create
     tags: ["repetition", "voicecode"]
     action: (context, input) ->
       context.lastIndividualCommand.call(@)
-  "chew":
+  "soup":
     kind: "historic"
     grammarType: "individual"
     description: "repeat last individual command twice"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
+    aliases: ["chew"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         2

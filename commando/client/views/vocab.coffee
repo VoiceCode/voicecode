@@ -22,7 +22,7 @@ Template.Vocab.helpers
         if value.enabled and value.grammarType is "individual" and (value.isSpoken isnt false)
           spoken = value.triggerPhrase or key
           commands.push spoken
-      _.map(['chew', 'trace', 'quarr', 'fypes'], (item) ->
+      _.map(['soup', 'trace', 'quarr', 'fypes'], (item) ->
         _.sample(commands, commands.length).join(" #{item} ")
       ).join(" ")
 

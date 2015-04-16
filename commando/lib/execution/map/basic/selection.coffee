@@ -55,3 +55,71 @@ Commands.create
     tags: ["selection", "recommended"]
     action: ->
       @key 'Right', ['option', 'shift']
+  "folly":
+    kind: "action"
+    description: "expand selection to block"
+    grammarType: "individual"
+    tags: ["text-manipulation"]
+    aliases: ["foley"]
+    action: ->
+      if @currentApplication() is "Sublime Text"
+        @key "L", ['command']
+      else
+        Scripts.selectBlock()
+  "spando":
+    kind: "action"
+    description: "expand selection symmetrically (horizontally)"
+    grammarType: "numberCapture"
+    tags: ["text-manipulation"]
+    action: (input) ->
+      @symmetricSelectionExpansion(input or 1)
+
+  "bloxy":
+    kind: "action"
+    description: "expand selection vertically, symmetrically"
+    grammarType: "numberCapture"
+    tags: ["text-manipulation"]
+    action: (input) ->
+      @verticalSelectionExpansion(input or 1)
+
+  "kerleck":
+    kind: "action"
+    description: "With argument: [word], Will select the text [word] on the current line. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] on the current line"
+    grammarType: "textCapture"
+    tags: ["text-manipulation", "cursor", "selection"]
+    action: (input) ->
+      @selectCurrentOccurrence(input)
+
+  "jeepleck":
+    kind: "action"
+    description: "With argument: [word], Will select the text [word] previous to the cursor. With arguments: [word1], [word2], Will select the text starting with the last occurrence of [word1] and ending with the last occurrence of [word2] previous to the cursor"
+    grammarType: "textCapture"
+    tags: ["text-manipulation", "cursor", "selection"]
+    action: (input) ->
+      @selectPreviousOccurrence(input)
+
+  "doomleck":
+    kind: "action"
+    description: "With argument: [word], Will select the text [word] after the cursor. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the first occurrence of [word2] after the cursor"
+    grammarType: "textCapture"
+    tags: ["text-manipulation", "cursor", "selection"]
+    action: (input) ->
+      @selectFollowingOccurrence(input)
+
+  "selneck":
+    kind: "action"
+    description: "select the following whole word"
+    grammarType: "numberCapture"
+    tags: ["text-manipulation", "cursor", "selection"]
+    action: (input) ->
+      @selectFollowingWord(input)
+
+  "selpreev":
+    kind: "action"
+    description: "select the previous whole word"
+    grammarType: "numberCapture"
+    tags: ["text-manipulation", "cursor", "selection"]
+    action: (input) ->
+      @selectPreviousWord(input)
+
+
