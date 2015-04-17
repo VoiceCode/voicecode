@@ -164,7 +164,7 @@ _.extend Settings,
     "january": "January"
     "february": "February"
     "i'm": "I'm"
-    "isobject": "object"
+    "i'll": "I'll"
     "maine": "main"
     "o'clock": ":00"
   modes:

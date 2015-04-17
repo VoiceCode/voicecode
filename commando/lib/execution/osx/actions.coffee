@@ -19,7 +19,7 @@ class OSX.Actions
   string: (string) ->
     if string?.length
       _.each string.split(''), (item) =>
-        Meteor.sleep(6)
+        Meteor.sleep(4)
         code = OSX.keyCodesRegular[item]
         if code?
           @_pressKey code
@@ -72,7 +72,7 @@ class OSX.Actions
     if modifiers? and @needsExplicitModifierPresses()
       _.each modifiers, (m) =>
         @keyDown m
-      @delay(10)
+      # @delay(10)
 
     @_keyDown(key, modifiers)
     @_keyUp(key, modifiers)
@@ -80,7 +80,7 @@ class OSX.Actions
     if modifiers?
       _.each modifiers, (m) =>
         @keyUp m
-      @delay(10)
+      # @delay(10)
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
@@ -348,7 +348,7 @@ class OSX.Actions
 
   getSelectedText: ->
     @key "C", ['command']
-    @delay 100
+    @delay 150
     @getClipboard()
 
   canDetermineSelections: ->

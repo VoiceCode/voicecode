@@ -3,6 +3,9 @@ class Commands.Chain
     @phrase = @normalizePhrase phrase
   normalizePhrase: (phrase) ->
     phrase.toLowerCase()#.replace(/\s\./g, ".")
+    _.map phrase.split("I "), (segment) ->
+      segment.toLowerCase()
+    .join("I ")
   parse: ->
     Parser.parse @phrase
   execute: (shouldInvoke) ->
