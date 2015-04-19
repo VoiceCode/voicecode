@@ -541,8 +541,8 @@ class OSX.Actions
   selectPreviousWord: (input) ->
     @notUndoable()
     distance = (parseInt(input) or 1) - 1
-    # @key "Right"
-    # @key "Right"
+    if @canDetermineSelections() and @isTextSelected()
+      @key "Left"
     @key "Up", ["shift"]
     @key "Up", ["shift"]
     @key "Left", ['shift', 'command']
@@ -572,8 +572,8 @@ class OSX.Actions
   selectFollowingWord: (input) ->
     @notUndoable()
     distance = (parseInt(input) or 1) - 1
-    # @key "Left"
-    # @key "Left"
+    if @canDetermineSelections() and @isTextSelected()
+      @key "Right"
     @key "Down", ['shift']
     @key "Down", ['shift']
     @key "Right", ['shift', 'command']
