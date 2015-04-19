@@ -38,6 +38,8 @@ CommandStatuses.helpers
       when "dirty"
         @performUpdate()
     CommandStatuses.remove @_id
+  dictateName: ->
+    Settings.dragonApplicationName or "Dragon Dictate"
   performCreate: ->
     command = @getCommand()
     body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
@@ -47,7 +49,7 @@ CommandStatuses.helpers
     script = ""
     script += CommandUpdater.activateScope(scope) unless scope is "Global"
     script += """
-      tell application "Dragon Dictate" to activate
+      tell application "#{@dictateName()}" to activate
       delay 0.1
 
       tell application "System Events"
@@ -57,14 +59,14 @@ CommandStatuses.helpers
       delay 0.2
 
       tell application "System Events"
-        tell process "Dragon Dictate"
+        tell process "#{@dictateName()}"
           tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
             select (row 1 where value of text field 1 is "#{scope}")
           end tell
         end tell
       end tell
 
-      tell application "Dragon Dictate"
+      tell application "#{@dictateName()}"
         set g to group "#{scope}"
         set myProperties to {name:"#{dragonName}", description:"#{digest}", content:"#{body}", active:true, command type:shell script, command mode:true, dictation mode:true, recognition training mode:true, sleep mode:false, user created:true, spelling mode:false, application name:"#{scope}"}
         set c to make new command at g with properties myProperties
@@ -74,7 +76,7 @@ CommandStatuses.helpers
       delay 0.4
 
       tell application "System Events"
-        tell process "Dragon Dictate"
+        tell process "#{@dictateName()}"
           click button "Save" of splitter group 1 of window "Commands"
         end tell
       end tell
@@ -92,32 +94,32 @@ CommandStatuses.helpers
     script = ""
     script += CommandUpdater.activateScope(@scope) unless @scope is "Global"
     script += """
-      tell application "Dragon Dictate" to activate
+      tell application "#{@dictateName()}" to activate
 
       delay 0.2
 
-      tell application "Dragon Dictate"
+      tell application "#{@dictateName()}"
         reveal command "#{@name}" of group "#{@scope}"
       end tell
 
       delay 0.3
 
       tell application "System Events"
-        tell process "Dragon Dictate"
+        tell process "#{@dictateName()}"
           tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
             select (row 1 where value of text field 1 is "#{@scope}")
           end tell
         end tell
       end tell
         
-      tell application "Dragon Dictate"
+      tell application "#{@dictateName()}"
         reveal command "#{@name}" of group "#{@scope}"
       end tell
 
       delay 2
 
       tell application "System Events"
-        tell process "Dragon Dictate"
+        tell process "#{@dictateName()}"
           set value of attribute "AXFocused" of button 2 of group 2 of splitter group 1 of window "Commands" to true
         end tell
       end tell
@@ -151,11 +153,11 @@ CommandStatuses.helpers
     script = ""
     script += CommandUpdater.activateScope(scope) unless scope is "Global"
     script += """
-    tell application "Dragon Dictate" to activate
+    tell application "#{@dictateName()}" to activate
 
     delay 0.2
 
-    tell application "Dragon Dictate"
+    tell application "#{@dictateName()}"
       set c to command "#{dragonName}" of group "#{scope}"
       tell c to reveal 
     end tell
@@ -163,19 +165,19 @@ CommandStatuses.helpers
     delay 0.3
 
     tell application "System Events"
-      tell process "Dragon Dictate"
+      tell process "#{@dictateName()}"
         tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
           select (row 1 where value of text field 1 is "#{scope}")
         end tell
       end tell
     end tell
       
-    tell application "Dragon Dictate"
+    tell application "#{@dictateName()}"
       reveal command "#{dragonName}" of group "#{scope}"
     end tell
 
     tell application "System Events"
-      tell process "Dragon Dictate"
+      tell process "#{@dictateName()}"
         click pop up button 1 of splitter group 1 of window "Commands"
       end tell
     end tell
@@ -191,7 +193,7 @@ CommandStatuses.helpers
     delay 0.1
 
     tell application "System Events"
-      tell process "Dragon Dictate"
+      tell process "#{@dictateName()}"
         set value of attribute "AXFocused" of (text field 2 of splitter group 1 of window "Commands") to true
         delay 0.2
         keystroke "#{digest}"
@@ -202,7 +204,7 @@ CommandStatuses.helpers
     delay 0.4
 
     tell application "System Events"
-      tell process "Dragon Dictate"
+      tell process "#{@dictateName()}"
         click button "Save" of splitter group 1 of window "Commands"
       end tell
     end tell

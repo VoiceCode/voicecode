@@ -285,3 +285,4 @@ _.extend Settings,
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
   ]
+  dragonApplicationName: "Dragon Dictate"

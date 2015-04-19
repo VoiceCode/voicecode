@@ -1,12 +1,14 @@
 @CommandUpdater = 
+  dictateName: ->
+    Settings.dragonApplicationName or "Dragon Dictate"
   activateScope: (scope) ->
     """
 
-    tell application "Dragon Dictate"
+    tell application "#{@dictateName()}"
       try
         set g to group "#{scope}"
       on error errMsg number errNum
-        tell application "Dragon Dictate"
+        tell application "#{@dictateName()}"
           set show Available Commands to true
           set wasListening to listening
           set listening to true
@@ -22,7 +24,7 @@
 
         delay 0.5
 
-        tell application "Dragon Dictate"
+        tell application "#{@dictateName()}"
           set listening to false
         end tell
 
@@ -45,7 +47,7 @@
 
     set prevDelimiter to AppleScript's text item delimiters
     set AppleScript's text item delimiters to "||"
-    tell application "Dragon Dictate"
+    tell application "#{@dictateName()}"
       set show Available Commands to true
       delay 0.5
       set show Available Commands to false
@@ -138,7 +140,7 @@
         """
       script += """
 
-      tell application "Dragon Dictate"
+      tell application "#{@dictateName()}"
         set doesExist to ((name of command "#{dragonName}" of group "#{scope}") is "#{dragonName}")
         if doesExist
           set c to content of command "#{dragonName}" of group "#{scope}"

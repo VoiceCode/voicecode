@@ -125,3 +125,14 @@ Commands.create
       if input?.length
         mode = Scripts.fuzzyMatch Settings.modes, input.join(' ')
         @setGlobalMode(mode)
+  "scratchy":
+    kind: "action"
+    grammarType: "individual"
+    description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"
+    tags: ["system", "voicecode"]
+    action: () ->
+      count = Commands.previousUndoByDeletingCount
+      if count? and count > 0
+        _.times count, =>
+          @key "Delete"
+          

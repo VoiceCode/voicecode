@@ -7,6 +7,9 @@ Commands.lastIndividualCommand = null
 Commands.lastFullCommand = null
 Commands.subcommandIndex = 0
 Commands.repetitionIndex = 0
+Commands.currentUndoByDeletingCount = 0
+Commands.aggregateUndoByDeletingCount = 0
+Commands.previousUndoByDeletingCount = 0
 
 Commands.create = (name, options) ->
   if typeof name is "string"

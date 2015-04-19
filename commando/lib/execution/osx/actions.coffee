@@ -5,7 +5,17 @@ class OSX.Actions
     # @command = $.kCGEventFlagMaskCommand
     # @option = $.kCGEventFlagMaskOption
     # @control = $.kCGEventFlagMaskControl
+  setUndoByDeleting: (amount) ->
+    Commands.currentUndoByDeletingCount = amount
+  notUndoable: ->
+    Commands.currentUndoByDeletingCount = 0
+  undoByDeleting: ->
+    amount = Commands.previousUndoByDeletingCount or 0
+    _.times(amount) =>
+      @key "Delete"
+
   key: (key, modifiers) ->
+    @notUndoable()
     code = OSX.keyCodes[key]
     if code?
       @_pressKey(code, @_normalizeModifiers(modifiers))
@@ -18,6 +28,7 @@ class OSX.Actions
 
   string: (string) ->
     if string?.length
+      @setUndoByDeleting string.length
       _.each string.split(''), (item) =>
         Meteor.sleep(4)
         code = OSX.keyCodesRegular[item]
@@ -37,17 +48,25 @@ class OSX.Actions
       @_keyUp code, @_normalizeModifiers(modifiers)
 
   _keyDown: (key, modifiers) ->
-    # console.log "keydown: #{key}"
+    console.log
+      keydown: key
+      modifiers: modifiers
     e = $.CGEventCreateKeyboardEvent(null, key, true)
-    if modifiers
+    if modifiers?.length
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
+    else
+      $.CGEventSetFlags(e, 0)
     $.CGEventPost($.kCGSessionEventTap, e)
 
   _keyUp: (key, modifiers) ->
-    # console.log "keyup: #{key}, #{modifier}"
+    console.log
+      keyup: key
+      modifiers: modifiers
     e = $.CGEventCreateKeyboardEvent(null, key, false)
     if modifiers
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
+    else
+      $.CGEventSetFlags(e, 0)
     $.CGEventPost($.kCGSessionEventTap, e)
 
   _modifierMask: (modifiers) ->
@@ -71,16 +90,16 @@ class OSX.Actions
   _pressKey: (key, modifiers) ->
     if modifiers? and @needsExplicitModifierPresses()
       _.each modifiers, (m) =>
-        @keyDown m
-      # @delay(10)
+        @_keyDown OSX.keyCodes[m], [m]
+        # @delay(10)
 
-    @_keyDown(key, modifiers)
-    @_keyUp(key, modifiers)
+    @_keyDown key, modifiers
+    @_keyUp key #, modifiers
 
-    if modifiers?
+    if modifiers? and @needsExplicitModifierPresses()
       _.each modifiers, (m) =>
-        @keyUp m
-      # @delay(10)
+        # @delay(10)
+        @_keyUp OSX.keyCodes[m] #, [m]
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
@@ -89,16 +108,19 @@ class OSX.Actions
         m.charAt(0).toUpperCase() + m.slice(1)
 
   mouseDown: (position) ->    
+    @notUndoable()
     position ?= $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
 
   mouseUp: (position) ->    
+    @notUndoable()
     position ?= $.CGEventGetLocation($.CGEventCreate(null))
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, up)
 
   click: ->    
+    @notUndoable()
     # position = $.NSEvent('mouseLocation')
     position = $.CGEventGetLocation($.CGEventCreate(null))
     # console.log position
@@ -106,6 +128,7 @@ class OSX.Actions
     @mouseUp(position)
 
   doubleClick: ->
+    @notUndoable()
     position = $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -120,6 +143,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, up)
 
   tripleClick: ->
+    @notUndoable()
     position = $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -140,6 +164,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, up)
   
   rightClick: ->    
+    @notUndoable()
     position = $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseDown, position, $.kCGMouseButtonRight)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseUp, position, $.kCGMouseButtonRight)
@@ -147,6 +172,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, up)
 
   shiftClick: ->    
+    @notUndoable()
     position = $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -161,6 +187,7 @@ class OSX.Actions
     @keyUp "Shift"
 
   commandClick: ->    
+    @notUndoable()
     position = $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -175,6 +202,7 @@ class OSX.Actions
     @keyUp "Command"
 
   optionClick: ->    
+    @notUndoable()
     position = $.CGEventGetLocation($.CGEventCreate(null))
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -189,6 +217,7 @@ class OSX.Actions
     @keyUp "Option"
 
   positionMouse: (x, y) ->
+    @notUndoable()
     screen = @getScreenInfo()
     # console.log screen
     offsetX = if x <= 1
@@ -209,6 +238,7 @@ class OSX.Actions
 
 
   applescript: (content, shouldReturn=true) ->
+    @notUndoable()
     script = $.NSAppleScript('alloc')('initWithSource', $(content))
     results = script('executeAndReturnError', null)
     if shouldReturn
@@ -217,6 +247,7 @@ class OSX.Actions
       null
 
   openMenuBarItem: (item) ->
+    @notUndoable()
     @applescript """
     tell application "System Events" to tell (process 1 where frontmost is true)
       click menu bar item "#{item}" of menu bar 1
@@ -224,31 +255,38 @@ class OSX.Actions
     """
 
   scrollDown: (amount) ->
+    @notUndoable()
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, -1 * (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   scrollUp: (amount) ->
+    @notUndoable()
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   scrollLeft: (amount) ->
+    @notUndoable()
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   scrollRight: (amount) ->
+    @notUndoable()
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, -1 * (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   openApplication: (name) ->
+    @notUndoable()
     string = $.NSString('stringWithUTF8String', name)
     w = $.NSWorkspace('sharedWorkspace')
     w('launchApplication', string)
 
   openBrowser: ->
+    @notUndoable()
     defaultBrowser = Settings.defaultBrowser or "Safari"    
     @openApplication(defaultBrowser)
 
   openURL: (url) ->
+    @notUndoable()
     string = $.NSString('stringWithUTF8String', url)
     u = $.NSURL('URLWithString', string)
     w = $.NSWorkspace('sharedWorkspace')
@@ -284,6 +322,7 @@ class OSX.Actions
     Commands.mode = mode
 
   revealFinderDirectory: (directory) ->
+    @notUndoable()
     w = $.NSWorkspace('sharedWorkspace')
     d = $.NSString('stringWithUTF8String', directory)
     # finder = $.NSString('stringWithUTF8String', "Finder")
@@ -297,6 +336,7 @@ class OSX.Actions
       """
 
   clickServiceItem: (item) ->
+    @notUndoable()
     @applescript """
     tell application "System Events" to tell (process 1 where frontmost is true)
       click menu item "#{item}" of menu "Services" of menu item "Services" of menu 1 of menu bar item 2 of menu bar 1
@@ -365,6 +405,7 @@ class OSX.Actions
         height: frame.size.height
 
   verticalSelectionExpansion: (number) ->
+    @notUndoable()
     @key "C", ["command"]
     @delay 100
     clipboard = @getClipboard()
@@ -375,6 +416,7 @@ class OSX.Actions
     _(numberOfLines + (number * 2) - 1).times => @key "Down", ['shift']
   
   symmetricSelectionExpansion: (number) ->
+    @notUndoable()
     @key "C", ["command"]
     @delay 100
     clipboard = @getClipboard()
@@ -386,6 +428,7 @@ class OSX.Actions
       @key "Right", ["shift"]
 
   selectCurrentOccurrence: (input) ->
+    @notUndoable()
     if input?.length
       first = input[0]
       last = input[1]
@@ -424,6 +467,7 @@ class OSX.Actions
         _(width).times => 
           @key "Right", ['shift']
   selectPreviousOccurrence: (input) ->
+    @notUndoable()
     if input?.length
       first = input[0]
       last = input[1]
@@ -459,6 +503,7 @@ class OSX.Actions
         _(width).times => 
           @key "Left", ['shift']
   selectFollowingOccurrence: (input) ->
+    @notUndoable()
     if input?.length
       first = input[0]
       last = input[1]
@@ -494,40 +539,69 @@ class OSX.Actions
           @key "Right", ['shift']
 
   selectPreviousWord: (input) ->
-    distance = parseInt(input) or 1
-    @key "Right"
-    @key "Right"
+    @notUndoable()
+    distance = (parseInt(input) or 1) - 1
+    # @key "Right"
+    # @key "Right"
     @key "Up", ["shift"]
     @key "Up", ["shift"]
     @key "Left", ['shift', 'command']
     t = _s.reverse @getSelectedText()
-    expression = /\w+/g
-    match = t.match(expression)
-    item = match[distance] or match[distance - 1]
+    results = []
+    start = undefined
+    selecting = false
+    expression = /\w/
+    _.each t.split(''), (item, index) =>
+      if item.match(expression)
+        selecting = true
+        start ?= index
+      else
+        if selecting
+          results.push [start, index]
+          selecting = false
+          start = undefined
+          
     @key "Right"
-    if item?
-      index = t.indexOf(item)
-      _(index).times =>
+    if results[distance]?
+      span = results[distance][1] - results[distance][0]
+      _(results[distance][0]).times =>
         @key "Left"
-      _(item.length).times =>
+      _(span).times =>
         @key "Left", ['shift']
 
   selectFollowingWord: (input) ->
-    distance = parseInt(input) or 1
-    @key "Left"
-    @key "Left"
+    @notUndoable()
+    distance = (parseInt(input) or 1) - 1
+    # @key "Left"
+    # @key "Left"
     @key "Down", ['shift']
     @key "Down", ['shift']
     @key "Right", ['shift', 'command']
     t = @getSelectedText()
-    expression = /\w+/g
-    match = t.match(expression)
-    item = match[distance] or match[distance - 1]
+    results = []
+    start = undefined
+    selecting = false
+    expression = /\w/
+    _.each t.split(''), (item, index) =>
+      if item.match(expression)
+        selecting = true
+        start ?= index
+      else
+        if selecting
+          results.push [start, index]
+          selecting = false
+          start = undefined
+
     @key "Left"
-    if item?
-      index = t.indexOf(item)
-      _(index).times =>
+    console.log results
+    if results[distance]?
+      span = results[distance][1] - results[distance][0]
+    # match = t.match(expression)
+    # item = match[distance] or match[distance - 1]
+    # if item?
+      # index = t.indexOf(item)
+      _(results[distance][0]).times =>
         @key "Right"
-      _(item.length).times =>
+      _(span).times =>
         @key "Right", ['shift']
 

@@ -32,6 +32,7 @@ Commands.create
     grammarType: "individual"
     description: "shift+click"
     tags: ["mouse", "recommended"]
+    aliases: ["chicks"]
     action: ->
       @shiftClick()
   "comlick":
