@@ -254,6 +254,22 @@ class OSX.Actions
     end tell
     """
 
+  openMenuBarPath: (itemArray) ->
+    @notUndoable()
+    elements = _.map itemArray.reverse(), (item, index) ->
+      if index is 0
+        "click menu item \"#{item}\""  
+      else if index != (itemArray.length - 1)
+        "of menu \"#{item}\" of menu item \"#{item}\""
+      else
+        "of menu \"#{item}\" of menu bar item \"#{item}\" of menu bar 1"
+    script = """
+    tell application "System Events" to tell (process 1 where frontmost is true)
+      #{elements.join(" ")}
+    end tell
+    """
+    @applescript script
+
   scrollDown: (amount) ->
     @notUndoable()
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, -1 * (amount or 1))
