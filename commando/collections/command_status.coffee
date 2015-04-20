@@ -85,7 +85,7 @@ CommandStatuses.helpers
 
       tell application "System Events"
         tell process "#{@dictateName()}"
-          click button "#{@commandsWindowName()}" of splitter group 1 of window "#{@commandsWindowName()}"
+          click button "#{@saveButtonName()}" of splitter group 1 of window "#{@commandsWindowName()}"
         end tell
       end tell
 
@@ -213,7 +213,7 @@ CommandStatuses.helpers
 
     tell application "System Events"
       tell process "#{@dictateName()}"
-        click button "#{@commandsWindowName()}" of splitter group 1 of window "#{@commandsWindowName()}"
+        click button "#{@saveButtonName()}" of splitter group 1 of window "#{@commandsWindowName()}"
       end tell
     end tell
     """
