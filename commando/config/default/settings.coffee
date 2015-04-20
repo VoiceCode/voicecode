@@ -183,6 +183,7 @@ _.extend Settings,
     cat: "cat "
     chat: "cat " # dragon doesn't like the word 'cat'
     copy: "cp "
+    cd: "cd "
     move: "mv "
     remove: "rm "
     "remove recursive": "rm -rf "
@@ -285,4 +286,10 @@ _.extend Settings,
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
   ]
-  dragonApplicationName: "Dragon Dictate"
+  locale: "en"
+  localeSettings:
+    en:
+      dragonApplicationName: "Dragon Dictate"
+      dragonCommandsWindowName: "Commands"
+      dragonSaveButtonName: "Save"
+      dragonGlobalName: "Global"

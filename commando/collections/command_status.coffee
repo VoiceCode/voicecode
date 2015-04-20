@@ -38,8 +38,16 @@ CommandStatuses.helpers
       when "dirty"
         @performUpdate()
     CommandStatuses.remove @_id
+  locale: ->
+    Settings.localeSettings[Settings.locale]
   dictateName: ->
-    Settings.dragonApplicationName or "Dragon Dictate"
+    @locale().dragonApplicationName or "Dragon Dictate"
+  commandsWindowName: ->
+    @locale().dragonCommandsWindowName or "Commands"
+  saveButtonName: ->
+    @locale().dragonSaveButtonName or "Save"
+  globalName: ->
+    @locale().dragonGlobalName or "Global"
   performCreate: ->
     command = @getCommand()
     body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
@@ -47,7 +55,7 @@ CommandStatuses.helpers
     scope = command.getTriggerScope()
     digest = command.digest()
     script = ""
-    script += CommandUpdater.activateScope(scope) unless scope is "Global"
+    script += CommandUpdater.activateScope(scope) unless scope is @globalName()
     script += """
       tell application "#{@dictateName()}" to activate
       delay 0.1
@@ -60,7 +68,7 @@ CommandStatuses.helpers
 
       tell application "System Events"
         tell process "#{@dictateName()}"
-          tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
+          tell table 1 of scroll area 1 of splitter group 1 of window "#{@commandsWindowName()}"
             select (row 1 where value of text field 1 is "#{scope}")
           end tell
         end tell
@@ -77,7 +85,7 @@ CommandStatuses.helpers
 
       tell application "System Events"
         tell process "#{@dictateName()}"
-          click button "Save" of splitter group 1 of window "Commands"
+          click button "#{@commandsWindowName()}" of splitter group 1 of window "#{@commandsWindowName()}"
         end tell
       end tell
 
@@ -92,7 +100,7 @@ CommandStatuses.helpers
 
   performDelete: ->
     script = ""
-    script += CommandUpdater.activateScope(@scope) unless @scope is "Global"
+    script += CommandUpdater.activateScope(@scope) unless @scope is @globalName()
     script += """
       tell application "#{@dictateName()}" to activate
 
@@ -106,7 +114,7 @@ CommandStatuses.helpers
 
       tell application "System Events"
         tell process "#{@dictateName()}"
-          tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
+          tell table 1 of scroll area 1 of splitter group 1 of window "#{@commandsWindowName()}"
             select (row 1 where value of text field 1 is "#{@scope}")
           end tell
         end tell
@@ -120,7 +128,7 @@ CommandStatuses.helpers
 
       tell application "System Events"
         tell process "#{@dictateName()}"
-          set value of attribute "AXFocused" of button 2 of group 2 of splitter group 1 of window "Commands" to true
+          set value of attribute "AXFocused" of button 2 of group 2 of splitter group 1 of window "#{@commandsWindowName()}" to true
         end tell
       end tell
 
@@ -151,7 +159,7 @@ CommandStatuses.helpers
     digest = command.digest()
 
     script = ""
-    script += CommandUpdater.activateScope(scope) unless scope is "Global"
+    script += CommandUpdater.activateScope(scope) unless scope is @globalName()
     script += """
     tell application "#{@dictateName()}" to activate
 
@@ -166,7 +174,7 @@ CommandStatuses.helpers
 
     tell application "System Events"
       tell process "#{@dictateName()}"
-        tell table 1 of scroll area 1 of splitter group 1 of window "Commands"
+        tell table 1 of scroll area 1 of splitter group 1 of window "#{@commandsWindowName()}"
           select (row 1 where value of text field 1 is "#{scope}")
         end tell
       end tell
@@ -178,7 +186,7 @@ CommandStatuses.helpers
 
     tell application "System Events"
       tell process "#{@dictateName()}"
-        click pop up button 1 of splitter group 1 of window "Commands"
+        click pop up button 1 of splitter group 1 of window "#{@commandsWindowName()}"
       end tell
     end tell
 
@@ -194,18 +202,18 @@ CommandStatuses.helpers
 
     tell application "System Events"
       tell process "#{@dictateName()}"
-        set value of attribute "AXFocused" of (text field 2 of splitter group 1 of window "Commands") to true
+        set value of attribute "AXFocused" of (text field 2 of splitter group 1 of window "#{@commandsWindowName()}") to true
         delay 0.2
         keystroke "#{digest}"
         delay 0.2
-        set value of text area 1 of scroll area 3 of splitter group 1 of window "Commands"  to "#{body}"
+        set value of text area 1 of scroll area 3 of splitter group 1 of window "#{@commandsWindowName()}"  to "#{body}"
       end tell
     end tell
     delay 0.4
 
     tell application "System Events"
       tell process "#{@dictateName()}"
-        click button "Save" of splitter group 1 of window "Commands"
+        click button "#{@commandsWindowName()}" of splitter group 1 of window "#{@commandsWindowName()}"
       end tell
     end tell
     """

@@ -1,6 +1,14 @@
 @CommandUpdater = 
+  locale: ->
+    Settings.localeSettings[Settings.locale]
   dictateName: ->
-    Settings.dragonApplicationName or "Dragon Dictate"
+    @locale().dragonApplicationName or "Dragon Dictate"
+  commandsWindowName: ->
+    @locale().dragonCommandsWindowName or "Commands"
+  saveButtonName: ->
+    @locale().dragonSaveButtonName or "Save"
+  globalName: ->
+    @locale().dragonGlobalName or "Global"
   activateScope: (scope) ->
     """
 
@@ -40,9 +48,9 @@
   getAllStatuses: (scope) ->
     # digests = []
     Commands.loadConditionalModules()
-    scope = scope or "Global"
+    scope = scope or @globalName()
     script = ""
-    script += CommandUpdater.activateScope(scope) unless scope is "Global"
+    script += CommandUpdater.activateScope(scope) unless scope is @globalName()
     script += """
 
     set prevDelimiter to AppleScript's text item delimiters
@@ -125,7 +133,7 @@
       dragonName = command.generateDragonCommandName()
       scope = command.getTriggerScope()
       script = ""
-      unless scope is "Global"
+      unless scope is @globalName()
         script += """
 
         tell application "System Events"

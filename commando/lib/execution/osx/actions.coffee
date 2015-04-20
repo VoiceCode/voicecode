@@ -48,9 +48,9 @@ class OSX.Actions
       @_keyUp code, @_normalizeModifiers(modifiers)
 
   _keyDown: (key, modifiers) ->
-    console.log
-      keydown: key
-      modifiers: modifiers
+    # console.log
+    #   keydown: key
+    #   modifiers: modifiers
     e = $.CGEventCreateKeyboardEvent(null, key, true)
     if modifiers?.length
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
@@ -59,9 +59,9 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, e)
 
   _keyUp: (key, modifiers) ->
-    console.log
-      keyup: key
-      modifiers: modifiers
+    # console.log
+    #   keyup: key
+    #   modifiers: modifiers
     e = $.CGEventCreateKeyboardEvent(null, key, false)
     if modifiers
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
