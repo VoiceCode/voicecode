@@ -95,3 +95,7 @@ class OSX.displayActions
     "selectPreviousWord()"
   selectFollowingWord: ->
     "selectFollowingWord()"
+  exec: (script) ->
+    "exec(#{script})"
+  openMenuBarPath: (path) ->
+    "openMenuBarPath(#{path})"

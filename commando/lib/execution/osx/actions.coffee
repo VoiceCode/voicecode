@@ -246,6 +246,9 @@ class OSX.Actions
     else
       null
 
+  exec: (script) ->
+    Execute script
+    
   openMenuBarItem: (item) ->
     @notUndoable()
     @applescript """

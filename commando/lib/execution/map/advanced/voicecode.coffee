@@ -38,6 +38,7 @@ Commands.create
     description: "repeat last individual command 3 times"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
+    aliases: ["traced"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         3

@@ -120,7 +120,7 @@ Commands.create
     grammarType: "individual"
     description: "selects the entire line"
     tags: ["selection", "recommended"]
-    aliases: ["sheqel", "shikel"]
+    aliases: ["sheqel", "shikel", "shekel"]
     action: ->
       @key "Left", ['command']
       @key "Right", ['command', 'shift']
