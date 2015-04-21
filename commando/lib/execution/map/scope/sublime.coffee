@@ -66,3 +66,19 @@ Commands.create
         --command 'clear_bookmarks {"name": "mark"}'
         """
         @exec script
+  
+  "seltil":
+    kind: "action"
+    grammarType: "numberCapture"
+    description: "selects text from current position through ('til) spoken line number: seltil five five. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    tags: ["domain-specific", "sublime"]
+    triggerScope: "Sublime Text"
+    action: (input) ->
+      if input?
+        script = """
+        subl --command 'set_mark' \
+        --command 'goto_line {"line": #{input}}' \
+        --command 'select_to_mark' \
+        --command 'clear_bookmarks {"name": "mark"}'
+        """
+        @exec script

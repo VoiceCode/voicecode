@@ -549,10 +549,10 @@ Commands.create
     # aliases: ["^"]
     action: ->
       @key "^"
-  "pox":
+  "pixel":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     # aliases: ["^"]
     action: ->
-      @string "px"
+      @string "px "
