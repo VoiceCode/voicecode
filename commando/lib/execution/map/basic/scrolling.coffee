@@ -8,6 +8,7 @@ Commands.create
     action: (input) ->
       _(input or 1).times =>
         @key "PageUp"
+        @delay 200
   "scroll-page-down":
     kind: "action"
     description: "press PageDown key [N] times"
@@ -17,6 +18,7 @@ Commands.create
     action: (input) ->
       _(input or 1).times =>
         @key "PageDown"
+        @delay 200
   "scrodge":
     kind: "action"
     description: "scroll down"
