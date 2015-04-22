@@ -306,6 +306,7 @@ Commands.create
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
+    aliases: ["clamber", "clamour"]
     action: ->
       @key "!"
   "loco":

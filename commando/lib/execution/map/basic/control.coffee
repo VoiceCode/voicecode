@@ -45,7 +45,7 @@ Commands.create
     kind: "action"
     description: "Inserts a new line above the current line"
     grammarType: "individual"
-    aliases: ["chalky", "shocking"]
+    aliases: ["chalky", "shocking", "shocky"]
     tags: ["return", "combo", "recommended"]
     action: ->
       if @currentApplication() is "sublime"
