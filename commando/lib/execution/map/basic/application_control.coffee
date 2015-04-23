@@ -40,7 +40,7 @@ Commands.create
     kind: "action"
     description: "open application"
     tags: ["application", "system", "launching", "recommended"]
-    grammarType: "oneArgument"
+    grammarType: "textCapture"
     action: (name) ->
       if name?.length
         application = Scripts.fuzzyMatch Settings.applications, name

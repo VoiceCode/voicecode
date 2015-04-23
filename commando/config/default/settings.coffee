@@ -45,6 +45,7 @@ _.extend Settings,
     store: "App Store"
     quicktime: "QuickTime Player"
     parallels: "Parallels Desktop"
+    "app store": "App Store"
   abbreviations:
     standing: "stdin"
     standout: "stdout"
@@ -285,7 +286,12 @@ _.extend Settings,
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
+    "iOS Simulator"
   ]
+  clickDelayRequired:
+    "Sublime Text": 0
+    "Xcode": 100
+    "default": 50
   locale: "en"
   localeSettings:
     en:

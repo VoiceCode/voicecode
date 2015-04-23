@@ -87,6 +87,9 @@ class OSX.Actions
   needsExplicitModifierPresses: ->
     _.contains Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication()
 
+  clickDelayRequired: ->
+    Settings.clickDelayRequired[@currentApplication()] or Settings.clickDelayRequired["default"] or 0
+
   _pressKey: (key, modifiers) ->
     if modifiers? and @needsExplicitModifierPresses()
       _.each modifiers, (m) =>
@@ -126,6 +129,7 @@ class OSX.Actions
     # console.log position
     @mouseDown(position)
     @mouseUp(position)
+    @delay(@clickDelayRequired())
 
   doubleClick: ->
     @notUndoable()
@@ -141,6 +145,7 @@ class OSX.Actions
     # Meteor.sleep(30)
     $.CGEventSetIntegerValueField(up, $.kCGMouseEventClickState, 2)
     $.CGEventPost($.kCGSessionEventTap, up)
+    @delay(@clickDelayRequired())
 
   tripleClick: ->
     @notUndoable()
@@ -162,6 +167,7 @@ class OSX.Actions
 
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
+    @delay(@clickDelayRequired())
   
   rightClick: ->    
     @notUndoable()
@@ -170,6 +176,7 @@ class OSX.Actions
     up = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseUp, position, $.kCGMouseButtonRight)
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
+    @delay(@clickDelayRequired())
 
   shiftClick: ->    
     @notUndoable()
@@ -185,6 +192,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
     @keyUp "Shift"
+    @delay(@clickDelayRequired())
 
   commandClick: ->    
     @notUndoable()
@@ -200,6 +208,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
     @keyUp "Command"
+    @delay(@clickDelayRequired())
 
   optionClick: ->    
     @notUndoable()
@@ -215,6 +224,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
     @keyUp "Option"
+    @delay(@clickDelayRequired())
 
   positionMouse: (x, y) ->
     @notUndoable()
