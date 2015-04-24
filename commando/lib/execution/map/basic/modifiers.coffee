@@ -84,7 +84,6 @@ recommended =
     "brov"
     "dell"
     "etch"
-    "ice"
     "lug"
     "mowsh"
     "nerb"

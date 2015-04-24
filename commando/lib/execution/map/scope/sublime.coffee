@@ -39,6 +39,47 @@ Commands.create
       else
         @key "G", ['control']
 
+  "sprinkler":
+    kind: "action"
+    grammarType: "numberCapture"
+    description: "go to line number then position cursor at end of line. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    tags: ["domain-specific", "sublime"]
+    triggerScope: "Sublime Text"
+    action: (input) ->
+      if input
+        @exec """subl --command 'goto_line {"line": #{input}}' """
+        @key "Right", ['command']
+      else
+        @key "G", ['control']
+
+  "sprinkoon":
+    kind: "action"
+    grammarType: "numberCapture"
+    description: "go to line number then insert a new line below. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    tags: ["domain-specific", "sublime"]
+    triggerScope: "Sublime Text"
+    action: (input) ->
+      if input
+        @exec """subl --command 'goto_line {"line": #{input}}' """
+        @key "Return", ['command']
+      else
+        @key "G", ['control']
+
+  "spackle":
+    kind: "action"
+    grammarType: "numberCapture"
+    description: "go to line number then select entire line. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    tags: ["domain-specific", "sublime"]
+    triggerScope: "Sublime Text"
+    action: (input) ->
+      if input
+        @exec """
+        subl --command 'goto_line {"line": #{input}}' \
+        --command 'expand_selection {"to": "line"}'
+        """
+      else
+        @key "G", ['control']
+
   "selrang":
     kind: "action"
     grammarType: "numberCapture"
