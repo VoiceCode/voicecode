@@ -35,7 +35,7 @@ Commands.create
     aliases: ["chicks"]
     action: ->
       @shiftClick()
-  "comlick":
+  "chommlick":
     kind: "action"
     grammarType: "individual"
     description: "command+click"

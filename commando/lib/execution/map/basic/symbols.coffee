@@ -53,7 +53,7 @@ Commands.create
     tags: ["symbol", "recommended"]
     action: ->
       @key "="
-  "qualquo":
+  "qualcoif":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "quotes", "recommended"]
@@ -170,7 +170,7 @@ Commands.create
     action: ->
       @string " []"
       @key "Left"
-  "tranquil":
+  "minquall":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
@@ -553,7 +553,13 @@ Commands.create
   "pixel":
     kind: "action"
     grammarType: "individual"
-    tags: ["symbol", "recommended"]
+    tags: ["symbol"]
     # aliases: ["^"]
     action: ->
       @string "px "
+  "quesquall":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["symbol"]
+    action: ->
+      @string " ?= "

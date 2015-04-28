@@ -258,6 +258,10 @@ class OSX.Actions
 
   exec: (script) ->
     Execute script
+
+  runCommand: (name, input) ->
+    command = new Commands.Base(name, input)
+    command.generate().call(@)
     
   openMenuBarItem: (item) ->
     @notUndoable()
@@ -567,70 +571,69 @@ class OSX.Actions
         _(width).times => 
           @key "Right", ['shift']
 
-  selectPreviousWord: (input) ->
+  ###
+  @params object
+    @input integer
+    @expression regex
+    @direction integer: +1 or -1
+    @splitterExpression regex: when to start a new match inside a contiguous match
+  ###
+  selectContiguousMatching: (params) ->
+    distance = (parseInt(params.input) or 1) - 1
+    expression = params.expression or /\w/
+    direction = params.direction or 1
+    splitterExpression = params.splitterExpression
+
+    if direction > 0
+      horizontalForward = "Right"
+      horizontalBackward = "Left"
+      verticalForward = "Down"
+    else
+      horizontalForward = "Left"
+      horizontalBackward = "Right"
+      verticalForward = "Up"
+
     @notUndoable()
-    distance = (parseInt(input) or 1) - 1
+
     if @canDetermineSelections() and @isTextSelected()
-      @key "Left"
-    @key "Up", ["shift"]
-    @key "Up", ["shift"]
-    @key "Left", ['shift', 'command']
-    t = _s.reverse @getSelectedText()
+      @key horizontalForward
+
+    @key verticalForward, ['shift']
+    @key verticalForward, ['shift']
+    @key horizontalForward, ['shift', 'command']
+    
+    selection = if direction > 0
+      @getSelectedText()
+    else
+      _s.reverse @getSelectedText()
+
     results = []
     start = undefined
     selecting = false
-    expression = /\w/
-    _.each t.split(''), (item, index) =>
+    _.each selection.split(''), (item, index) =>
       if item.match(expression)
-        selecting = true
-        start ?= index
+        if splitterExpression? and item.match(splitterExpression)
+          if selecting
+            results.push [start, index]
+            results.push [index, index + 1]
+            selecting = false
+            start = undefined
+          else
+            results.push [index, index + 1]
+        else
+          selecting = true
+          start ?= index
       else
         if selecting
           results.push [start, index]
           selecting = false
           start = undefined
-          
-    @key "Right"
+
+    @key horizontalBackward
+
     if results[distance]?
       span = results[distance][1] - results[distance][0]
       _(results[distance][0]).times =>
-        @key "Left"
+        @key horizontalForward
       _(span).times =>
-        @key "Left", ['shift']
-
-  selectFollowingWord: (input) ->
-    @notUndoable()
-    distance = (parseInt(input) or 1) - 1
-    if @canDetermineSelections() and @isTextSelected()
-      @key "Right"
-    @key "Down", ['shift']
-    @key "Down", ['shift']
-    @key "Right", ['shift', 'command']
-    t = @getSelectedText()
-    results = []
-    start = undefined
-    selecting = false
-    expression = /\w/
-    _.each t.split(''), (item, index) =>
-      if item.match(expression)
-        selecting = true
-        start ?= index
-      else
-        if selecting
-          results.push [start, index]
-          selecting = false
-          start = undefined
-
-    @key "Left"
-    console.log results
-    if results[distance]?
-      span = results[distance][1] - results[distance][0]
-    # match = t.match(expression)
-    # item = match[distance] or match[distance - 1]
-    # if item?
-      # index = t.indexOf(item)
-      _(results[distance][0]).times =>
-        @key "Right"
-      _(span).times =>
-        @key "Right", ['shift']
-
+        @key horizontalForward, ['shift']

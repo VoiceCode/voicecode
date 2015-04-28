@@ -299,3 +299,9 @@ _.extend Settings,
       dragonCommandsWindowName: "Commands"
       dragonSaveButtonName: "Save"
       dragonGlobalName: "Global"
+      
+  # regex's for selection commands
+  regex:
+    symbols: /[\/\.,\?*&^%$#@:;\|\+\-\!\\]/
+    quotes: /["'`]/
+    parens: /[\(\)\{\}\[\]]/
