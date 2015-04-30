@@ -4,7 +4,7 @@ Commands.create
     grammarType: "individual"
     description: "change directory"
     tags: ["domain-specific", "shell"]
-    triggerScope: "iTerm"
+    triggerScopes: ["iTerm", "Terminal"]
     triggerPhrase: "cd"
     action: ->
       @string "cd ; ls"
@@ -29,7 +29,7 @@ Commands.create
     grammarType: "textCapture"
     description: "list directory contents (takes dynamic arguments)"
     tags: ["domain-specific", "shell"]
-    triggerScope: "iTerm"
+    triggerScopes: ["iTerm", "Terminal"]
     triggerPhrase: "shell list"
     action: (input) ->
       options = _.map((input or []), (item) ->
@@ -44,7 +44,7 @@ Commands.create
     description: "display the last [n](default all) shell commands executed"
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell history"
-    triggerScope: "iTerm"
+    triggerScopes: ["iTerm", "Terminal"]
     action: (input) ->
       @string "history #{input or ""}"
       @key "Return"
@@ -79,7 +79,7 @@ Commands.create
     description: "navigate to the parent directory"
     grammarType: "individual"
     tags: ["domain-specific", "shell"]
-    triggerScope: "iTerm"
+    triggerScopes: ["iTerm", "Terminal"]
     action: ->
       @string "cd ..; ls"
       @key "Return"
