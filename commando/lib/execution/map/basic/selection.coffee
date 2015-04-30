@@ -65,7 +65,7 @@ Commands.create
       if @currentApplication() is "Sublime Text"
         @key "L", ['command']
       else
-        Scripts.selectBlock()
+        @selectBlock()
   "spando":
     kind: "action"
     description: "expand selection symmetrically (horizontally)"

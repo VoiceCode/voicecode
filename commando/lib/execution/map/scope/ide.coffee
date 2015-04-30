@@ -1,30 +1,4 @@
 Commands.create
-  "switchy":
-    kind: "action"
-    grammarType: "individual"
-    description: "move current line up"
-    tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode"]
-    action: (input) ->
-      switch @currentApplication()
-        when "Sublime Text"
-          @key "Up", ['control', 'command']
-        when "Xcode"
-          @key "[", ['command', 'option']
-
-  "switcho":
-    kind: "action"
-    grammarType: "individual"
-    description: "move current line down"
-    tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode"]
-    action: (input) ->
-      switch @currentApplication()
-        when "Sublime Text"
-          @key "Down", ['control', 'command']
-        when "Xcode"
-          @key "]", ['command', 'option']
-
   "spring":
     kind: "action"
     grammarType: "numberCapture"

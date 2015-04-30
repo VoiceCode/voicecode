@@ -643,3 +643,22 @@ class OSX.Actions
         @key horizontalForward
       _(span).times =>
         @key horizontalForward, ['shift']
+
+  selectBlock: ->
+    @notUndoable()
+    clipboard = if @canDetermineSelections() and @isTextSelected()
+      @getSelectedText()
+    else
+      ""
+    match = clipboard.match(/\r/g)
+    console.log match
+    numberOfLines = (match?.length or 0) + 1
+    if clipboard.charAt(clipboard.length - 1).match(/\r/)
+      numberOfLines -= 1
+    @key "Left", ['command']
+    _(numberOfLines).times => @key "Down", ['shift']
+
+    # return some info in case someone wants to do something with it
+    {
+      height: numberOfLines
+    }
