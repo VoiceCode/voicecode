@@ -2,8 +2,8 @@ Commands.create
   "switchy":
     kind: "action"
     grammarType: "individual"
-    description: "move current line up"
-    tags: ["sublime", "xcode"]
+    description: "move current line (or multiline selection) up"
+    tags: ["text-manipulation"]
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
@@ -20,8 +20,8 @@ Commands.create
   "switcho":
     kind: "action"
     grammarType: "individual"
-    description: "move current line down"
-    tags: ["sublime", "xcode"]
+    description: "move current line (or multiline selection) down"
+    tags: ["text-manipulation"]
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
