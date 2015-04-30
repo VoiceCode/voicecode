@@ -233,3 +233,9 @@ Commands.create
         expression: Settings.regex.parens
         splitterExpression: Settings.regex.parens
         direction: -1
+
+  # "fuzzneck"
+  # "fuzzpreev": archbrov
+  # "stringneck" => coif nike
+  # "stringpreev" => coif trail
+

@@ -42,9 +42,16 @@ class Commands.Base
   generate: ->
     funk = switch @kind
       when "action"
-        action = @info.action
-        input = @input
-        -> action.call(@, input)
+        if @info.findable?
+          console.log 
+            findable: @input
+          action = @info.action
+          input = @input
+          -> action.call(@, input)
+        else
+          action = @info.action
+          input = @input
+          -> action.call(@, input)
       when "historic"
         action = @info.action
         input = @input
@@ -129,8 +136,8 @@ class Commands.Base
       1
   getTriggerPhrase: () ->
     @info.triggerPhrase or @namespace
-  getTriggerScope: ->
-    @info.triggerScope or "Global"
+  getTriggerScopes: ->
+    @info.triggerScopes or [@info.triggerScope or "Global"]
   isSpoken: ->
     @info.isSpoken != false
   generateFullCommand: () ->

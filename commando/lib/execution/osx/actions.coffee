@@ -259,9 +259,14 @@ class OSX.Actions
   exec: (script) ->
     Execute script
 
-  runCommand: (name, input) ->
+  # run another command
+  do: (name, input) ->
     command = new Commands.Base(name, input)
     command.generate().call(@)
+    
+  runCommand: (name, input) ->
+    @do(name, input)
+
     
   openMenuBarItem: (item) ->
     @notUndoable()
@@ -578,6 +583,7 @@ class OSX.Actions
     @direction integer: +1 or -1
     @splitterExpression regex: when to start a new match inside a contiguous match
   ###
+
   selectContiguousMatching: (params) ->
     distance = (parseInt(params.input) or 1) - 1
     expression = params.expression or /\w/

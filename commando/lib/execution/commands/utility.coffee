@@ -16,7 +16,14 @@ Commands.Utility =
     _.sortBy(r, (e) -> e).reverse()
   individualCommands: ->
     r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].grammarType is "individual"
+      command = Commands.mapping[key]
+      command.grammarType is "individual" and not command.findable?
+    )
+    _.sortBy(r, (e) -> e).reverse()
+  findableCommands: ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
+      command = Commands.mapping[key]
+      command.grammarType is "individual" and command.findable?
     )
     _.sortBy(r, (e) -> e).reverse()
   oneArgumentCommands: ->

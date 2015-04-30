@@ -3,7 +3,7 @@
 Schemas.CommandStatus = new SimpleSchema
   name:
     type: String
-    index: 1
+    index: false
     unique: true
   status:
     type: String
@@ -52,7 +52,7 @@ CommandStatuses.helpers
     command = @getCommand()
     body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
     dragonName = command.generateDragonCommandName()
-    scope = command.getTriggerScope()
+    scope = @scope
     digest = command.digest()
     script = ""
     script += CommandUpdater.activateScope(scope) unless scope is @globalName()
@@ -155,7 +155,7 @@ CommandStatuses.helpers
     command = @getCommand()
     body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
     dragonName = command.generateDragonCommandName()
-    scope = command.getTriggerScope()
+    scope = @scope
     digest = command.digest()
 
     script = ""

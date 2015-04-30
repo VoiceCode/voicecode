@@ -174,7 +174,6 @@ _.extend Settings,
     mate: "textmate"
   dragonContexts: [
     "Global"
-    "iTerm"
   ]
   workflows:
     "workflow test": "yellsnik it worked clamor"
@@ -283,6 +282,7 @@ _.extend Settings,
   applicationsThatCanNotHandleBlankSelections: [
     "Sublime Text"
     "Google Chrome"
+    "Parallels Desktop"
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"

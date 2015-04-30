@@ -6,6 +6,8 @@ class @Grammar
     @buildCommandList Commands.Utility.numberCaptureCommands()
   individualCommands: ->
     @buildCommandList Commands.Utility.individualCommands()
+  findableCommands: ->
+    @buildCommandList Commands.Utility.findableCommands()
   oneArgumentCommands: ->
     @buildCommandList Commands.Utility.oneArgumentCommands()
   buildCommandList: (keys) ->
@@ -77,7 +79,7 @@ class @Grammar
       = command+
 
     command
-      = textCaptureCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalCommand
+      = textCaptureCommand / numberCaptureCommand / findableCommand / individualCommand / oneArgumentCommand / literalCommand
       // = textCaptureCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalNumber / literalCommand
 
     textCaptureCommand
@@ -109,6 +111,12 @@ class @Grammar
     numberCaptureCommand
       = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
 
+    findableCommand
+      = left:findableIdentifier right:findableArgument? {return {command: left, arguments: right};}
+
+    findableArgument
+      = direction:("trail" / "nike") ss distance:spokenInteger? {return {direction: direction, distance: distance};}
+
     numberCaptureIdentifier
       = identifier:(#{@numberCaptureCommands()}) ss {return identifier;}
 
@@ -123,6 +131,9 @@ class @Grammar
 
     individualCommand
       = identifier:individualIdentifier {return {command: identifier};}
+
+    findableIdentifier
+      = identifier:(#{@findableCommands()}) ss {return identifier;}
 
     individualIdentifier
       = identifier:(#{@individualCommands()}) ss {return identifier;}

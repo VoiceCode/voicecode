@@ -2,48 +2,50 @@ Commands.create
   "dot":
     kind: "action"
     grammarType: "individual"
+    # findable: "."
     aliases: ["."]
     tags: ["symbol", "recommended"]
     action: ->
-      @key "."
+      @string "."
   "star":
     kind: "action"
     grammarType: "individual"
     aliases: ["*"]
     tags: ["symbol", "recommended"]
     action: ->
-      @key "*"
+      @string "*"
   "slash":
     kind: "action"
     grammarType: "individual"
     aliases: ["/"]
     tags: ["symbol", "recommended"]
     action: ->
-      @key "/"
+      @string "/"
   "comma":
     kind: "action"
     grammarType: "individual"
     aliases: [","]
     tags: ["symbol", "recommended"]
     action: ->
-      @key ","
+      @string ","
   "tilde":
     kind: "action"
     grammarType: "individual"
     aliases: ["~"]
     tags: ["symbol", "recommended"]
     action: ->
-      @key "~"
+      @string "~"
   "colon":
     kind: "action"
     grammarType: "individual"
     aliases: [":"]
     tags: ["symbol", "recommended"]
     action: ->
-      @key ":"
+      @string ":"
   "equeft":
     kind: "action"
     grammarType: "individual"
+    # findable: " = "
     tags: ["symbol", "recommended"]
     action: ->
       @string " = "
@@ -52,7 +54,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "="
+      @string "="
   "qualcoif":
     kind: "action"
     grammarType: "individual"
@@ -115,13 +117,13 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "{"
+      @string "{"
   "kirkos":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "}"
+      @string "}"
   "kirk":
     kind: "action"
     grammarType: "individual"
@@ -314,7 +316,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "@"
+      @string "@"
   "deloco":
     kind: "action"
     grammarType: "individual"
@@ -326,7 +328,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "&"
+      @string "&"
   "damper":
     kind: "action"
     grammarType: "individual"
@@ -338,13 +340,13 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "#"
+      @string "#"
   "questo":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "?"
+      @string "?"
   "bartrap":
     kind: "action"
     grammarType: "individual"
@@ -369,7 +371,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "|"
+      @string "|"
   "angler":
     kind: "action"
     grammarType: "individual"
@@ -387,7 +389,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "+"
+      @string "+"
   "deplush":
     kind: "action"
     grammarType: "individual"
@@ -399,7 +401,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "minus", "recommended"]
     action: ->
-      @key "-"
+      @string "-"
   "deminus":
     kind: "action"
     grammarType: "individual"
@@ -424,19 +426,19 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "quotes", "recommended"]
     action: ->
-      @key '"'
+      @string '"'
   "quatchet":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "quotes", "recommended"]
     action: ->
-      @key "'"
+      @string "'"
   "percy":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "%"
+      @string "%"
   "depercy":
     kind: "action"
     grammarType: "individual"
@@ -456,13 +458,13 @@ Commands.create
     tags: ["symbol", "recommended"]
     aliases: ["dalai", "dawley", "donnelly", "donley", "dali"]
     action: ->
-      @key "$"
+      @string "$"
   "clangle":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "<"
+      @string "<"
   "declangle":
     kind: "action"
     grammarType: "individual"
@@ -481,7 +483,7 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key ">"
+      @string ">"
   "derangle":
     kind: "action"
     grammarType: "individual"
@@ -500,31 +502,31 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "("
+      @string "("
   "prekose":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key ")"
+      @string ")"
   "brackorp":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "["
+      @string "["
   "brackose":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "]"
+      @string "]"
   "crunder":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "_"
+      @string "_"
   "coaltwice":
     kind: "action"
     grammarType: "individual"
@@ -542,14 +544,14 @@ Commands.create
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     action: ->
-      @key "`"
+      @string "`"
   "caret":
     kind: "action"
     grammarType: "individual"
     tags: ["symbol", "recommended"]
     # aliases: ["^"]
     action: ->
-      @key "^"
+      @string "^"
   "pixel":
     kind: "action"
     grammarType: "individual"

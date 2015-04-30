@@ -87,8 +87,8 @@
       command = new Commands.Base(name, null)
       digest = command.digest()
       dragonName = command.generateDragonCommandName()
-      myScope = command.getTriggerScope()
-      if myScope is scope     
+      myScopes = command.getTriggerScopes()
+      if _.contains myScopes, scope     
         value = resultMap[dragonName]
         status = if value?
           if value.indexOf(digest) >= 0
