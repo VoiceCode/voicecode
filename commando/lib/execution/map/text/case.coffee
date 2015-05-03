@@ -81,7 +81,7 @@ Commands.create
     kind: "text"
     description: "StudCaseText"
     tags: ["text", "recommended"]
-    aliases: ["chaffed"]
+    aliases: ["chaffed", "crisped"]
     grammarType: "textCapture"
     transform: "stud"
     fallbackService: "vc case criffed"

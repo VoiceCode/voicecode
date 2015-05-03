@@ -131,12 +131,19 @@ Commands.create
       @key "V", ["command"]
   "spark":
     kind: "action"
-    grammarType: "individual"
-    description: "paste the clipboard"
+    grammarType: "oneArgument"
+    description: "paste the clipboard (or named item from stoosh command)"
     aliases: ["sparked"]
     tags: ["copy-paste", "recommended"]
-    action: ->
-      @key "V", ["command"]
+    action: (input) ->
+      if input?
+        previous = @retrieveClipboardWithName(input)
+        if previous?.length
+          @setClipboard(previous)
+          @delay 50
+          @key "V", ["command"]
+      else
+        @key "V", ["command"]
   "sparshock":
     kind: "action"
     grammarType: "individual"
@@ -170,11 +177,14 @@ Commands.create
       @key "Tab", ["command"]
   "stoosh":
     kind: "action"
-    grammarType: "individual"
-    description: "copy whatever is selected"
+    grammarType: "oneArgument"
+    description: "copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via `spark [name]`)"
     tags: ["copy-paste", "recommended"]
-    action: ->
+    action: (input) ->
       @key "C", ["command"]
+      if input?
+        @waitForClipboard()
+        @storeCurrentClipboardWithName(input)
   "allstoosh":
     kind: "action"
     grammarType: "individual"

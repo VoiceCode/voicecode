@@ -13,6 +13,7 @@ Commands.create
   "wink":
     kind: "historic"
     grammarType: "individual"
+    repeater: 1
     description: "repeat last individual command once"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
@@ -21,10 +22,11 @@ Commands.create
   "soup":
     kind: "historic"
     grammarType: "individual"
+    repeater: 2
     description: "repeat last individual command twice"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
-    aliases: ["chew"]
+    aliases: ["chew", "twice"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         2
@@ -35,6 +37,7 @@ Commands.create
   "trace":
     kind: "historic"
     grammarType: "individual"
+    repeater: 3
     description: "repeat last individual command 3 times"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
@@ -49,6 +52,7 @@ Commands.create
   "quarr":
     kind: "historic"
     grammarType: "individual"
+    repeater: 4
     description: "repeat last individual command 4 times"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
@@ -62,6 +66,7 @@ Commands.create
   "fypes":
     kind: "historic"
     grammarType: "individual"
+    repeater: 5
     description: "repeat last individual command 5 times"
     ignoreHistory: true
     tags: ["repetition", "voicecode"]
@@ -75,6 +80,7 @@ Commands.create
   "repple":
     kind: "historic"
     grammarType: "numberCapture"
+    repeater: "variable"
     description: "Repeats an individual command component. Right after any command say [repple X] to repeat it X times"
     tags: ["voicecode", "repetition"]
     ignoreHistory: true
@@ -135,5 +141,6 @@ Commands.create
       count = Commands.previousUndoByDeletingCount
       if count? and count > 0
         _.times count, =>
-          @key "Delete"
+          @key 'Left', ['shift']
+        @key "Delete"
           

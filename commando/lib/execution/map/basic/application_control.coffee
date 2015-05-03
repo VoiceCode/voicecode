@@ -21,9 +21,9 @@ Commands.create
     grammarType: "individual"
     tags: ["application", "system", "launching", "tab", "recommended"]
     action: ->
-      @keyDown "Command"
+      @keyDown "Command", ["command"]
       @keyDown "Tab", ["command"]
-      @keyUp "Tab"
+      @keyUp "Tab", ["command"]
       @delay 10000
       @keyUp "Tab", ["command"]
       @keyUp "Command"

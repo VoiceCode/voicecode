@@ -29,6 +29,7 @@ Commands.create
     kind: "action"
     grammarType: "textCapture"
     description: "set the size of the current active window to one of the preset sizes"
+    aliases: ["wendy"]
     tags: ["system", "window", "recommended"]
     action: (input) ->
       if input?.length      

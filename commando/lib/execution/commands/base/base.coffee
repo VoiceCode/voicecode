@@ -42,16 +42,9 @@ class Commands.Base
   generate: ->
     funk = switch @kind
       when "action"
-        if @info.findable?
-          console.log 
-            findable: @input
-          action = @info.action
-          input = @input
-          -> action.call(@, input)
-        else
-          action = @info.action
-          input = @input
-          -> action.call(@, input)
+        action = @info.action
+        input = @input
+        -> action.call(@, input)
       when "historic"
         action = @info.action
         input = @input

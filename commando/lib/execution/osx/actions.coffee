@@ -28,16 +28,19 @@ class OSX.Actions
 
   string: (string) ->
     if string?.length
-      @setUndoByDeleting string.length
-      _.each string.split(''), (item) =>
-        Meteor.sleep(4)
-        code = OSX.keyCodesRegular[item]
-        if code?
-          @_pressKey code
-        else
-          code = OSX.keyCodesShift[item]
+      if @_capturingText
+        @_capturedText += string
+      else
+        @setUndoByDeleting string.length
+        _.each string.split(''), (item) =>
+          Meteor.sleep(4)
+          code = OSX.keyCodesRegular[item]
           if code?
-            @_pressKey code, ["Shift"]
+            @_pressKey code
+          else
+            code = OSX.keyCodesShift[item]
+            if code?
+              @_pressKey code, ["Shift"]
   keyDown: (key, modifiers) ->
     code = OSX.keyCodes[key]
     if code?
@@ -356,8 +359,12 @@ class OSX.Actions
     # result
   setCurrentApplication: (application) ->
     @_currentApplication = application
-  setGlobalMode: (context) ->
+
+  setGlobalMode: (mode) ->
     Commands.mode = mode
+
+  getGlobalMode: ->
+    Commands.mode
 
   revealFinderDirectory: (directory) ->
     @notUndoable()
@@ -422,12 +429,36 @@ class OSX.Actions
   #   if (focussedElement != NULL) CFRelease(focussedElement);
   #   CFRelease(systemWideElement);
   getClipboard: ->
-    @applescript("return the clipboard as text")
+    # @applescript("return the clipboard as text")
+    p = $.NSPasteboard('generalPasteboard')
+    # item = p('pasteboardItems')('objectAtIndex', 0)
+    item = p('stringForType', $('public.utf8-plain-text'))
+    if item
+      item.toString()
+    else
+      ""
+  setClipboard: (text) ->
+    if text.length
+      p = $.NSPasteboard('generalPasteboard')
+      types = $.NSMutableArray('alloc')('init')
+      types('addObject', $('public.utf8-plain-text'))
+      p('declareTypes', types, 'owner', null)
+      p('setString', $(text), 'forType', $('public.utf8-plain-text'))
 
   getSelectedText: ->
+    old = @getClipboard()
     @key "C", ['command']
-    @delay 150
-    @getClipboard()
+    @waitForClipboard()
+    result = @getClipboard()
+    @setClipboard(old)
+    console.log
+      oldClipboard: old
+      newClipboard: result
+    result
+
+  waitForClipboard: ->
+    delay = Settings.clipboardLatency[@currentApplication()] or 200
+    @delay delay
 
   canDetermineSelections: ->
     not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication())
@@ -470,12 +501,10 @@ class OSX.Actions
     if input?.length
       first = input[0]
       last = input[1]
-      if last?.length
-        @key "Left", ['command']
-        @key "Right", ['command', 'shift']
-        @key "C", ['command']
-        @delay 100
-        clipboard = @getClipboard().toLowerCase()
+      @key "Left", ['command']
+      @key "Right", ['command', 'shift']
+      clipboard = @getSelectedText().toLowerCase()
+      if last?.length and clipboard.indexOf(last) >= 0 and clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
@@ -488,12 +517,7 @@ class OSX.Actions
         width = totalLength - distanceLeft - distanceRight
         _(width).times => 
           @key "Right", ['shift']
-      else
-        @key "Left", ['command']
-        @key "Right", ['command', 'shift']
-        @key "C", ['command']
-        @delay 100
-        clipboard = @getClipboard().toLowerCase()
+      else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
@@ -512,10 +536,8 @@ class OSX.Actions
       @key "Left"
       @key "Right"
       _(20).times => @key "Up", ['shift']
-      @key "C", ['command']
-      @delay 100
-      clipboard = @getClipboard().toLowerCase()
-      if last?.length
+      clipboard = @getSelectedText().toLowerCase()
+      if last?.length and clipboard.indexOf(last) >= 0 and clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
@@ -528,8 +550,7 @@ class OSX.Actions
         width = distanceLeft - first.length - distanceRight
         _(width).times => 
           @key "Left", ['shift']
-      else
-        clipboard = @getClipboard().toLowerCase()
+      else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceRight = firstResults[firstResults.length - 1]?.length or 0
@@ -540,6 +561,8 @@ class OSX.Actions
         width = first.length
         _(width).times => 
           @key "Left", ['shift']
+      else
+        @key "Right"
   selectFollowingOccurrence: (input) ->
     @notUndoable()
     if input?.length
@@ -548,10 +571,8 @@ class OSX.Actions
       @key "Right"
       @key "Left"
       _(20).times => @key "Down", ['shift']
-      @key "C", ['command']
-      @delay 100
-      clipboard = @getClipboard().toLowerCase()
-      if last?.length
+      clipboard = @getSelectedText().toLowerCase()
+      if last?.length and clipboard.indexOf(last) >= 0 and clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
@@ -564,8 +585,7 @@ class OSX.Actions
         width = totalLength - distanceLeft - distanceRight
         _(width).times => 
           @key "Right", ['shift']
-      else
-        clipboard = @getClipboard().toLowerCase()
+      else if clipboard.indexOf(first) >= 0
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
         @key "Left"
@@ -575,6 +595,89 @@ class OSX.Actions
         width = first.length
         _(width).times => 
           @key "Right", ['shift']
+      else
+        @key "Left"
+
+  selectFollowingOccurrenceWithDistance: (phrase, distance) ->
+    @notUndoable()
+    if phrase?.length
+      distance = (distance or 1)
+      @key "Left"
+      @key "Right"
+      _(20).times => @key "Down", ['shift']
+      selected = @getSelectedText().toLowerCase()
+      if selected.indexOf(phrase) >= 0
+        results = selected.split(phrase)
+        distanceLeft = results.splice(0, distance).join(phrase).length
+        @key "Left"
+        _(distanceLeft).times => 
+          @key "Right"
+        width = phrase.length
+        _(width).times => 
+          @key "Right", ['shift']
+
+  selectPreviousOccurrenceWithDistance: (phrase, distance) ->
+    @notUndoable()
+    if phrase?.length
+      distance = (distance or 1)
+      @key "Right"
+      @key "Left"
+      _(20).times => @key "Up", ['shift']
+      selected = @getSelectedText().toLowerCase()
+      if selected.indexOf(phrase) >= 0
+        results = selected.split(phrase).reverse()
+        distanceLeft = results.splice(0, distance).join(phrase).length
+        @key "Right"
+        _(distanceLeft).times => 
+          @key "Left"
+        width = phrase.length
+        _(width).times => 
+          @key "Left", ['shift']
+
+  extendSelectionToFollowingOccurrenceWithDistance: (phrase, distance) ->
+    @notUndoable()
+    if phrase?.length
+      if @canDetermineSelections() and @isTextSelected()
+        existing = @getSelectedText()
+      distance = (distance or 1)
+      _(20).times => @key "Down", ['shift']
+      selected = @getSelectedText().toLowerCase()
+      @key "Left"
+      if existing? and selected.indexOf(existing) is 0
+        selected = selected.slice(existing.length)
+        _(existing.length).times => 
+          @key "Right", ['shift']
+      if selected.indexOf(phrase) >= 0
+        results = selected.split(phrase)
+        distanceLeft = results.splice(0, distance).join(phrase).length
+        _(distanceLeft).times => 
+          @key "Right", ['shift']
+        width = phrase.length
+        _(width).times => 
+          @key "Right", ['shift']
+
+  extendSelectionToPreviousOccurrenceWithDistance: (phrase, distance) ->
+    @notUndoable()
+    if phrase?.length
+      if @canDetermineSelections() and @isTextSelected()
+        existing = @getSelectedText()
+      distance = (distance or 1)
+      _(20).times => @key "Up", ['shift']
+      selected = @getSelectedText().toLowerCase()
+      @key "Right"
+      if existing? and selected.indexOf(existing) is (selected.length - existing.length)
+        selected = selected.slice(0, selected.length - existing.length)
+        _(existing.length).times => 
+          @key "Left", ['shift']
+      if selected.indexOf(phrase) >= 0
+        results = selected.split(phrase).reverse()
+        distanceLeft = results.splice(0, distance).join(phrase).length
+        _(distanceLeft).times => 
+          @key "Left", ['shift']
+        width = phrase.length
+        _(width).times => 
+          @key "Left", ['shift']
+      
 
   ###
   @params object
@@ -662,3 +765,16 @@ class OSX.Actions
     {
       height: numberOfLines
     }
+
+  startTextCapture: (callback) ->
+    @_capturedText = ""
+    @_capturingText = true
+    @_captureTextCallback = callback
+
+  retrieveClipboardWithName: (name) ->
+    @_storedClipboard ?= {}
+    @_storedClipboard[name]
+
+  storeCurrentClipboardWithName: (name) ->
+    @_storedClipboard ?= {}
+    @_storedClipboard[name] = @getClipboard()

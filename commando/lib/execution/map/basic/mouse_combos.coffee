@@ -9,47 +9,64 @@ Commands.create
       @key "Left", ['command']
       @key "Right", ['command', 'shift']
   "dookoosh":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "mouse double click, then copy"
     tags: ["mouse", "combo", "recommended"]
-    combo: ["duke", "stoosh"]
+    action: (input) ->
+      @do "duke"
+      @do "stoosh", input
   "doopark":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "mouse double click, then paste"
     tags: ["mouse", "combo"]
-    combo: ["duke", "spark"]
+    action: (input) ->
+      @do "duke"
+      @do "spark", input
   "chiffpark":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "mouse single click, then paste"
     tags: ["mouse", "combo", "recommended"]
-    combo: ["chiff", "spark"]
+    action: (input) ->
+      @do "chiff"
+      @do "spark", input
   "shackloosh":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "select entire line, then copy"
     tags: ["selection", "copy-paste", "combo"]
-    combo: ["shackle", "stoosh"]
+    action: (input) ->
+      @do "shackle"
+      @do "stoosh", input
   "shacklark":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "select entire line, then paste"
     tags: ["selection", "copy-paste", "combo"]
     combo: ["shackle", "spark"]
+    action: (input) ->
+      @do "shackle"
+      @do "spark", input
   "chibloosh":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "select entire line, then copy"
     tags: ["selection", "copy-paste", "combo"]
     combo: ["chibble", "stoosh"]
+    action: (input) ->
+      @do "chibble"
+      @do "stoosh", input
   "chiblark":
-    kind: "combo"
-    grammarType: "individual"
+    kind: "action"
+    grammarType: "oneArgument"
     description: "select entire line, then paste"
     tags: ["selection", "copy-paste", "combo"]
     combo: ["chibble", "spark"]
+    action: (input) ->
+      @do "chibble"
+      @do "spark", input
   "chiffacoon":
     kind: "combo"
     grammarType: "individual"

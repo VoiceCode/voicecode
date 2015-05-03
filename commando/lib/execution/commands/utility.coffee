@@ -17,13 +17,22 @@ Commands.Utility =
   individualCommands: ->
     r = _.filter(_.keys(Commands.mapping), (key) ->
       command = Commands.mapping[key]
-      command.grammarType is "individual" and not command.findable?
+      command.grammarType is "individual" # and not command.findable?
     )
     _.sortBy(r, (e) -> e).reverse()
   findableCommands: ->
     r = _.filter(_.keys(Commands.mapping), (key) ->
-      command = Commands.mapping[key]
-      command.grammarType is "individual" and command.findable?
+      Commands.mapping[key].findable?
+    )
+    _.sortBy(r, (e) -> e).reverse()
+  singleSearchCommands: ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
+      Commands.mapping[key].grammarType is "singleSearch"
+    )
+    _.sortBy(r, (e) -> e).reverse()
+  repeaterCommands: ->
+    r = _.filter(_.keys(Commands.mapping), (key) ->
+      Commands.mapping[key].repeater?
     )
     _.sortBy(r, (e) -> e).reverse()
   oneArgumentCommands: ->

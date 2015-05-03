@@ -1,3 +1,4 @@
 Template.Grammar.helpers
   grammar: ->
-    Grammar.build()
+  	if enablesSubscription.ready()
+	    Grammar.build()

@@ -83,6 +83,7 @@ Commands.create
     grammarType: "individual"
     description: "moves the cursor on the way to the right than inserts a space"
     tags: ["cursor", "space", "right", "combo", "recommended"]
+    aliases: ["derrick"]
     action: ->
       @key "Right", ['command']
       @key " "

@@ -18,34 +18,36 @@ _.extend Settings,
     gmail: "http://mail.google.com"
     "google docs": "http://docs.google.com"
   applications:
-    term: "iTerm"
-    web: "Google Chrome"
-    chrome: "Google Chrome"
-    sky: "Skype"
+    "app store": "App Store"
+    activity: "Activity Monitor"
+    adam: "Atom"
+    atom: "Atom"
+    automate: "Automator"
     billy: "Adobe Illustrator"
-    shop: "Adobe Photoshop CC 2014"
     calendar: "Calendar"
+    chrome: "Google Chrome"
     drag: "Dragon Dictate"
     find: "Path Finder"
     logic: "Logic Pro X"
     mail: "Mail"
     message: "Messages"
-    pass: "1Password"
     page: "Pages"
+    parallels: "Parallels Desktop"
+    pass: "1Password"
+    preview: "Preview"
+    quicktime: "QuickTime Player"
     robo: "Robomongo"
+    safari: "Safari"
+    shop: "Adobe Photoshop CC 2014"
+    sky: "Skype"
+    store: "App Store"
+    sublime: "Sublime Text"
     system: "System Preferences"
+    term: "iTerm"
     tree: "SourceTree"
     tune: "iTunes"
-    preview: "Preview"
-    sublime: "Sublime Text"
-    activity: "Activity Monitor"
-    safari: "Safari"
+    web: "Google Chrome"
     xcode: "Xcode"
-    automate: "Automator"
-    store: "App Store"
-    quicktime: "QuickTime Player"
-    parallels: "Parallels Desktop"
-    "app store": "App Store"
   abbreviations:
     standing: "stdin"
     standout: "stdout"
@@ -221,6 +223,7 @@ _.extend Settings,
     security: "com.apple.preference.security"
     sharing: "com.apple.preferences.sharing"
     sound: "com.apple.preference.sound"
+    audio: "com.apple.preference.sound"
     spotlight: "com.apple.preference.spotlight"
     "startup disk": "com.apple.preference.startupdisk"
     backup: "com.apple.prefs.backup"
@@ -283,6 +286,7 @@ _.extend Settings,
     "Sublime Text"
     "Google Chrome"
     "Parallels Desktop"
+    "Atom"
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
@@ -305,3 +309,8 @@ _.extend Settings,
     symbols: /[\/\.,\?*&^%$#@:;\|\+\-\!\\]/
     quotes: /["'`]/
     parens: /[\(\)\{\}\[\]]/
+
+  # delay for how long the clipboard takes to populate after a copy is different in different applications
+  clipboardLatency:
+    "Sublime Text": 300
+    "Mail": 200

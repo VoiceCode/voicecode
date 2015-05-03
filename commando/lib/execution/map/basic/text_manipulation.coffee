@@ -8,6 +8,8 @@ Commands.create
       switch @currentApplication()
         when "Sublime Text"
           @key "Up", ['control', 'command']
+        when "Atom"
+          @key "Up", ['control', 'command']
         when "Xcode"
           @key "[", ['command', 'option']
         else
@@ -25,6 +27,8 @@ Commands.create
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
+          @key "Down", ['control', 'command']
+        when "Atom"
           @key "Down", ['control', 'command']
         when "Xcode"
           @key "]", ['command', 'option']

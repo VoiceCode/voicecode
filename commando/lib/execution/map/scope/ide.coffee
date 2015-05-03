@@ -4,7 +4,7 @@ Commands.create
     grammarType: "numberCapture"
     description: "go to line number."
     tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode"]
+    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
@@ -12,6 +12,11 @@ Commands.create
             @exec "subl --command 'goto_line {\"line\": #{input}}'"
           else
             @key "G", ['control']
+        when "Atom"
+          @key "G", ['control']
+          if input
+            @string input
+            @key "Return"
         when "Xcode"
           @key "L", ['command']
           if input?
@@ -25,7 +30,7 @@ Commands.create
     grammarType: "numberCapture"
     description: "go to line number then position cursor at end of line."
     tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode"]
+    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
     action: (input) ->
       @do "spring", input
       if input?
@@ -36,7 +41,7 @@ Commands.create
     grammarType: "numberCapture"
     description: "go to line number then position cursor at end of line."
     tags: ["xcode"]
-    triggerScopes: ["Xcode"]
+    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
     action: (input) ->
       @do "spring", input
       if input?
@@ -47,7 +52,7 @@ Commands.create
     grammarType: "numberCapture"
     description: "go to line number then insert a new line below."
     tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode"]
+    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
     action: (input) ->
       @do "spring", input
       if input?
@@ -58,7 +63,7 @@ Commands.create
     grammarType: "numberCapture"
     description: "go to line number then select entire line."
     tags: ["sublime"]
-    triggerScopes: ["Sublime Text"]
+    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
     action: (input) ->
       @do "spring", input
       if input?

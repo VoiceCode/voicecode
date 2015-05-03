@@ -6,10 +6,14 @@ class @Grammar
     @buildCommandList Commands.Utility.numberCaptureCommands()
   individualCommands: ->
     @buildCommandList Commands.Utility.individualCommands()
+  singleSearchCommands: ->
+    @buildCommandList Commands.Utility.singleSearchCommands()
   findableCommands: ->
     @buildCommandList Commands.Utility.findableCommands()
   oneArgumentCommands: ->
     @buildCommandList Commands.Utility.oneArgumentCommands()
+  repeaterCommands: ->
+    @buildCommandList Commands.Utility.repeaterCommands()
   buildCommandList: (keys) ->
     results = []
     _.each keys, (name) ->
@@ -38,7 +42,6 @@ class @Grammar
         results.push aliasLine
     results.join("\n")
   translationIdentifiers: ->
-    # = transBoom / transHello
     _.map(Settings.translations, (value, key) -> "\"#{key}\"").join(" / ")
   build: -> """
     {
@@ -79,8 +82,7 @@ class @Grammar
       = command+
 
     command
-      = textCaptureCommand / numberCaptureCommand / findableCommand / individualCommand / oneArgumentCommand / literalCommand
-      // = textCaptureCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalNumber / literalCommand
+      = textCaptureCommand / singleSearchCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalCommand
 
     textCaptureCommand
       = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}
@@ -103,25 +105,34 @@ class @Grammar
      }
 
     overrideIdentifier
-     = identifier:("keeper") ss {return identifier;}
+      = identifier:("keeper") ss {return identifier;}
 
     textArgument
       = (overrideCommand / nestableTextCommand / translation / exactInteger / word)+
 
+    singleSearchCommand
+      = left:singleSearchIdentifier right:singleSearchArgument? distance:repeaterIdentifier? {return {command: left, arguments: {value: right, distance: distance}};}
+
+    repeaterIdentifier
+      = identifier:(#{@repeaterCommands()}) ss {return Commands.mapping[identifier].repeater;}
+
+    singleSearchIdentifier
+      = identifier:(#{@singleSearchCommands()}) ss {return identifier;}
+
+    singleSearchArgument
+      = (findableIdentifier / nestableTextCommand / translation / singleTextArgument / spokenInteger)
+
+    findableIdentifier
+      = identifier:(#{@findableCommands()}) ss {return Commands.mapping[identifier].findable;}
+
     numberCaptureCommand
       = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
-
-    findableCommand
-      = left:findableIdentifier right:findableArgument? {return {command: left, arguments: right};}
-
-    findableArgument
-      = direction:("trail" / "nike") ss distance:spokenInteger? {return {direction: direction, distance: distance};}
 
     numberCaptureIdentifier
       = identifier:(#{@numberCaptureCommands()}) ss {return identifier;}
 
     oneArgumentCommand
-      = left:oneArgumentIdentifier right:(singleTextArgument / spokenInteger) {return {command: left, arguments: right};}
+      = left:oneArgumentIdentifier right:(singleTextArgument / spokenInteger)? {return {command: left, arguments: right};}
 
     oneArgumentIdentifier
       = identifier:(#{@oneArgumentCommands()}) ss {return identifier;}
@@ -131,9 +142,6 @@ class @Grammar
 
     individualCommand
       = identifier:individualIdentifier {return {command: identifier};}
-
-    findableIdentifier
-      = identifier:(#{@findableCommands()}) ss {return identifier;}
 
     individualIdentifier
       = identifier:(#{@individualCommands()}) ss {return identifier;}
