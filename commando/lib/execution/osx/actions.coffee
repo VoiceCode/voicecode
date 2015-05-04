@@ -270,6 +270,10 @@ class OSX.Actions
   runCommand: (name, input) ->
     @do(name, input)
 
+  runAtomCommand: (info) ->
+    command = """echo "#{JSON.stringify(info).replace(/"/g, '\\"')}" | nc -U /tmp/voicecode-atom.sock"""
+    console.log command
+    @exec command
     
   openMenuBarItem: (item) ->
     @notUndoable()

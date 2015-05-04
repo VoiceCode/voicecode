@@ -112,16 +112,21 @@ Commands.create
     grammarType: "numberCapture"
     tags: ["text-manipulation", "cursor", "selection"]
     action: (input) ->
-      if @currentApplication() is "Sublime Text"
-        script = "subl"
-        _(input or 1).times =>
-          script += " --command 'select_next_word'"
-        @exec script
-      else
-        @selectContiguousMatching
-          input: input
-          expression: /\w/
-          direction: 1
+      switch @currentApplication()
+        when "Sublime Text"
+          script = "subl"
+          _(input or 1).times =>
+            script += " --command 'select_next_word'"
+          @exec script
+        when "Atom"
+          @runAtomCommand 
+            command: "selectNextWord"
+            options: input or 1
+        else
+          @selectContiguousMatching
+            input: input
+            expression: /\w/
+            direction: 1
 
   "wordpreev":
     kind: "action"
@@ -129,16 +134,21 @@ Commands.create
     grammarType: "numberCapture"
     tags: ["text-manipulation", "cursor", "selection"]
     action: (input) ->
-      if @currentApplication() is "Sublime Text"
-        script = "subl"
-        _(input or 1).times =>
-          script += " --command 'select_previous_word'"
-        @exec script
-      else
-        @selectContiguousMatching
-          input: input
-          expression: /\w/
-          direction: -1
+      switch @currentApplication()
+        when "Sublime Text"
+          script = "subl"
+          _(input or 1).times =>
+            script += " --command 'select_previous_word'"
+          @exec script
+        when "Atom"
+          @runAtomCommand
+            command: "selectPreviousWord"
+            options: input or 1
+        else
+          @selectContiguousMatching
+            input: input
+            expression: /\w/
+            direction: -1
 
   # "fuzzneck"
   # "fuzzpreev": archbrov

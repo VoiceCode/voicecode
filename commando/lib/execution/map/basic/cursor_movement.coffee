@@ -132,12 +132,15 @@ Commands.create
     tags: ["deleting", "recommended"]
     aliases: ["snipeline"]
     action: ->
-      if @currentApplication() is "Sublime Text"
-        @key "K", ['control', 'shift']
-      else
-        @key "Delete"
-        @key "Right", ['command']
-        @key "Delete", ['command']
+      switch @currentApplication()
+        when "Sublime Text"
+          @key "K", ['control', 'shift']
+        when "Atom"
+          @key "K", ['control', 'shift']
+        else
+          @key "Delete"
+          @key "Right", ['command']
+          @key "Delete", ['command']
   "snipper":
     kind: "action"
     grammarType: "individual"
