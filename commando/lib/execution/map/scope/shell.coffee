@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "shell-cd":
     description: "change directory"
     tags: ["domain-specific", "shell"]

@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "dot":
     findable: "."
     aliases: ["."]
@@ -468,7 +468,6 @@ Commands.create
   "pixel":
     tags: ["symbol"]
     findable: "px"
-    # aliases: ["^"]
     action: ->
       @string "px "
   "quesquall":

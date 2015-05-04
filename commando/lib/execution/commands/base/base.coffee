@@ -13,6 +13,15 @@ Commands.previousUndoByDeletingCount = 0
 
 Commands.create = (name, options) ->
   if typeof name is "string"
+    options.enabled = true
+    Commands.mapping[name] = options
+  else if typeof name is "object"
+    _.extend Commands.mapping, name
+    for key in _.keys(name)
+      Commands.mapping[key].enabled = true
+
+Commands.createDisabled = (name, options) ->
+  if typeof name is "string"
     Commands.mapping[name] = options
   else if typeof name is "object"
     _.extend Commands.mapping, name

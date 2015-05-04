@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "swash":
     grammarType: "oneArgument"
     description: "opens drop-down menu by name"

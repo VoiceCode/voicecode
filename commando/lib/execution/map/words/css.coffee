@@ -12,7 +12,7 @@ singleWords = [
 ]
 
 _.each singleWords, (word) ->
-  Commands.create "word-#{word}",
+  Commands.createDisabled "word-#{word}",
     kind: "word"
     grammarType: "textCapture"
     description: "insert the word '#{word}'"

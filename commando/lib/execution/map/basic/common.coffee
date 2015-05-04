@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "shock":
     aliases: ["shocked", "shox", "chalk"]
     description: "press the return key"

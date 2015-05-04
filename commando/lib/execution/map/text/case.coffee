@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "vc-literal":
     kind: "text"
     grammarType: "textCapture"

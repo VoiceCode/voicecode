@@ -50,4 +50,4 @@ _.each git, (value, key) ->
   options = _.extend value,
     grammarType: "individual"
     tags: ["domain-specific", "git"]
-  Commands.create key, options
+  Commands.createDisabled key, options

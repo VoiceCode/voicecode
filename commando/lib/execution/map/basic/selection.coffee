@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "shroomway":
     kind: "action"
     grammarType: "individual"

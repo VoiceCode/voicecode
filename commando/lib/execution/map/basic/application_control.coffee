@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "swick":
     description: "Switch to most recent application"
     tags: ["application", "tab", "recommended"]

@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "dotspark":
     description: "contraction of: dot spark"
     aliases: ["chin"]

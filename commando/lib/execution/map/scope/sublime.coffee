@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "bracken":
     description: "expand selection to brackets"
     tags: ["sublime"]

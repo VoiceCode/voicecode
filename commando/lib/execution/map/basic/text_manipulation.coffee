@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "switchy":
     description: "move current line (or multiline selection) up"
     tags: ["text-manipulation"]

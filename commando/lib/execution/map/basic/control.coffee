@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "shin":
     description: "does nothing, but enters into voice code"
     aliases: ["chin"]

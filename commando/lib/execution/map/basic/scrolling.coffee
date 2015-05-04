@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "scroll-page-up":
     kind: "action"
     description: "press PageUp key [N] times"

@@ -27,7 +27,7 @@ letters =
 	z: "zooch"
 
 _.each letters, (value, key) ->
-	Commands.create value,
+	Commands.createDisabled value,
     grammarType: "textCapture"
     description: "Enters the single letter: #{key}"
     tags: ["letter", "recommended"]

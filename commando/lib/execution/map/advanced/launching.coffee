@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "webs":
     grammarType: "textCapture"
     description: "opens a website by name"

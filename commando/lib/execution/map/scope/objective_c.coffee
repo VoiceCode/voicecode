@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "tennis":
     kind: "text"
     grammarType: "textCapture"

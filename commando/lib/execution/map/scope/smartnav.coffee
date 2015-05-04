@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "mousy":
     description: "center the mouse in the middle of the screen (requires smartnav)"
     tags: ["smartnav", "mouse"]

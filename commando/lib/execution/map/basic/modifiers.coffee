@@ -136,7 +136,7 @@ _.each commandModifiers, (mods, prefix) ->
     tags = ["modifiers"]
     if recommended[prefix]?[value]?
       tags = ["modifiers", "recommended"]
-    Commands.create "#{prefix}#{value}",
+    Commands.createDisabled "#{prefix}#{value}",
       description: "#{mods.join(' + ')} + #{key}"
       tags: tags
       action: ->

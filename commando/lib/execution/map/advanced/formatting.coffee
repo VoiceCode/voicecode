@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "hytag":
     grammarType: "textCapture"
     description: "inserts an html tag with a dynamic name and dynamic attributes"

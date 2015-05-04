@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "kef":
     description: "press option-delete"
     tags: ["deleting", "recommended"]

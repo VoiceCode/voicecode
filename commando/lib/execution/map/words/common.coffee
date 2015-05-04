@@ -24,7 +24,7 @@ wordsWithTriggerPhrase =
   "id": "ID"
 
 _.each singleWords, (word) ->
-  Commands.create "word-#{word}",
+  Commands.createDisabled "word-#{word}",
     kind: "word"
     grammarType: "textCapture"
     description: "insert the word '#{word}'"
@@ -34,7 +34,7 @@ _.each singleWords, (word) ->
     word: word
 
 _.each wordsWithTriggerPhrase, (trigger, word) ->
-  Commands.create "word-#{word}",
+  Commands.createDisabled "word-#{word}",
     kind: "word"
     grammarType: "textCapture"
     description: "insert the word '#{word}'"

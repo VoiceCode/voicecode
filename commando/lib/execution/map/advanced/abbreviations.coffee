@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "frank":
     grammarType: "textCapture"
     description: "inserts a common abbreviation"

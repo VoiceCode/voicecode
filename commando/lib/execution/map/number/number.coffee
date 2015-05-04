@@ -38,7 +38,7 @@ numbers =
   ninety: 90
 
 _.each numbers, (value, key) ->
-  Commands.create key,
+  Commands.createDisabled key,
     grammarType: "none"
     description: "Enters the number: #{value}"
     namespace: "#{value}"

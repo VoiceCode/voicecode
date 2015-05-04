@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "spring":
     grammarType: "numberCapture"
     description: "go to line number."

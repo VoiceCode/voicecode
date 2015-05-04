@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "duke":
     description: "double click"
     tags: ["mouse", "recommended"]

@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "chibble":
     kind: "action"
     grammarType: "individual"

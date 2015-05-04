@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "trail":
     grammarType: "singleSearch"
     description: "search backward for the next thing you say, then select it"

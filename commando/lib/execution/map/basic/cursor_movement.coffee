@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "doomway":
     description: "move the cursor to the bottom of the page"
     tags: ["cursor", "recommended"]

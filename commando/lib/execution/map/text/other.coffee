@@ -1,4 +1,4 @@
-Commands.create
+Commands.createDisabled
   "snitch":
     kind: "text"
     grammarType: "textCapture"
