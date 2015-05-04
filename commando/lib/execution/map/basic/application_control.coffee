@@ -1,24 +1,18 @@
 Commands.create
   "swick":
-    kind: "action"
     description: "Switch to most recent application"
-    grammarType: "individual"
     tags: ["application", "tab", "recommended"]
     action: ->
       @key "Tab", ['command']
       @delay(150)
   "launcher":
-    kind: "action"
     description: "open application launcher"
-    grammarType: "individual"
     tags: ["application", "system", "launching", "alfred"]
     action: ->
       @key " ", ['option']
       @delay 100
   "foxwitch":
-    kind: "action"
     description: "open application switcher"
-    grammarType: "individual"
     tags: ["application", "system", "launching", "tab", "recommended"]
     action: ->
       @keyDown "Command", ["command"]
@@ -28,16 +22,13 @@ Commands.create
       @keyUp "Tab", ["command"]
       @keyUp "Command"
   "webseek":
-    kind: "action"
     description: "open a new browser tab (from anywhere)"
-    grammarType: "individual"
     tags: ["system", "launching", "recommended"]
     action: ->
       @openBrowser()
       @key "T", ['command']
       @delay 200
   "fox":
-    kind: "action"
     description: "open application"
     tags: ["application", "system", "launching", "recommended"]
     grammarType: "textCapture"

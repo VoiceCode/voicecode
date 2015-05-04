@@ -17,7 +17,7 @@ Commands.Utility =
   individualCommands: ->
     r = _.filter(_.keys(Commands.mapping), (key) ->
       command = Commands.mapping[key]
-      command.grammarType is "individual" # and not command.findable?
+      command.grammarType is "individual" or command.grammarType is undefined # and not command.findable?
     )
     _.sortBy(r, (e) -> e).reverse()
   findableCommands: ->

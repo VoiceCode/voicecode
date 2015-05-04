@@ -39,7 +39,6 @@ numbers =
 
 _.each numbers, (value, key) ->
   Commands.create key,
-    kind: "action"
     grammarType: "none"
     description: "Enters the number: #{value}"
     namespace: "#{value}"

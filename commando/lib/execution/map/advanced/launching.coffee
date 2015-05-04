@@ -1,6 +1,5 @@
 Commands.create
   "webs":
-    kind: "action"
     grammarType: "textCapture"
     description: "opens a website by name"
     tags: ["system", "launching"]
@@ -13,7 +12,6 @@ Commands.create
         @delay(50)
         @key "T", ['command']
   "dears":
-    kind: "action"
     grammarType: "textCapture"
     description: "opens a directory in the finder"
     tags: ["system", "launching"]
@@ -22,7 +20,6 @@ Commands.create
         directory = Scripts.fuzzyMatch Settings.directories, input.join(' ')
         @revealFinderDirectory directory
   "sispref":
-    kind: "action"
     grammarType: "textCapture"
     description: "opens a specific system preference item (if no argument given, just opens System Preferences)"
     tags: ["system", "launching"]

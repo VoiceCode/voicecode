@@ -1,7 +1,5 @@
 Commands.create
   "switchy":
-    kind: "action"
-    grammarType: "individual"
     description: "move current line (or multiline selection) up"
     tags: ["text-manipulation"]
     action: (input) ->
@@ -20,8 +18,6 @@ Commands.create
           _(height).times => @key "Up", ['shift']
 
   "switcho":
-    kind: "action"
-    grammarType: "individual"
     description: "move current line (or multiline selection) down"
     tags: ["text-manipulation"]
     action: (input) ->

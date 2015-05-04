@@ -137,10 +137,7 @@ _.each commandModifiers, (mods, prefix) ->
     if recommended[prefix]?[value]?
       tags = ["modifiers", "recommended"]
     Commands.create "#{prefix}#{value}",
-      kind: "action"
-      grammarType: "individual"
       description: "#{mods.join(' + ')} + #{key}"
       tags: tags
-      module: "modifiers"
       action: ->
         @key key, mods

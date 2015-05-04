@@ -12,7 +12,6 @@ Commands.create
             command.call(@)
   "wink":
     kind: "historic"
-    grammarType: "individual"
     repeater: 1
     description: "repeat last individual command once"
     ignoreHistory: true
@@ -21,7 +20,6 @@ Commands.create
       context.lastIndividualCommand.call(@)
   "soup":
     kind: "historic"
-    grammarType: "individual"
     repeater: 2
     description: "repeat last individual command twice"
     ignoreHistory: true
@@ -36,7 +34,6 @@ Commands.create
         context.lastIndividualCommand.call(@)
   "trace":
     kind: "historic"
-    grammarType: "individual"
     repeater: 3
     description: "repeat last individual command 3 times"
     ignoreHistory: true
@@ -51,7 +48,6 @@ Commands.create
         context.lastIndividualCommand.call(@)
   "quarr":
     kind: "historic"
-    grammarType: "individual"
     repeater: 4
     description: "repeat last individual command 4 times"
     ignoreHistory: true
@@ -65,7 +61,6 @@ Commands.create
         context.lastIndividualCommand.call(@)
   "fypes":
     kind: "historic"
-    grammarType: "individual"
     repeater: 5
     description: "repeat last individual command 5 times"
     ignoreHistory: true
@@ -95,15 +90,12 @@ Commands.create
           for i in [1..times]
             context.lastIndividualCommand.call(@)
   "recon":
-    kind: "action"
-    grammarType: "individual"
     description: "show previous commands in Alfred"
     tags: ["voicecode", "alfred"]
     action: ->
       @key " ", ['option']
       @string "vc "
   "flak":
-    kind: "action"
     grammarType: "textCapture"
     description: "execute predefined voice script"
     tags: ["voicecode"]
@@ -115,7 +107,6 @@ Commands.create
         _.each results, (command) =>
           command.call(@)
   "keeper":
-    kind: "action"
     grammarType: "none" # treated specially in the grammar
     description: "whatever follows this command will be interpreted literally"
     tags: ["voicecode"]
@@ -123,7 +114,6 @@ Commands.create
       if input?.length
         @string input.join(" ")
   "voicecode-mode":
-    kind: "action"
     grammarType: "textCapture"
     description: "change voicecode command execution mode"
     tags: ["system", "voicecode"]
@@ -133,8 +123,6 @@ Commands.create
         mode = Scripts.fuzzyMatch Settings.modes, input.join(' ')
         @setGlobalMode(mode)
   "scratchy":
-    kind: "action"
-    grammarType: "individual"
     description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"
     tags: ["system", "voicecode"]
     action: () ->

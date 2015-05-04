@@ -1,6 +1,5 @@
 Commands.create
   "swash":
-    kind: "action"
     grammarType: "oneArgument"
     description: "opens drop-down menu by name"
     tags: ["application", "system", "recommended"]
@@ -9,15 +8,12 @@ Commands.create
       @openMenuBarItem menuItem
       
   "blerch":
-    kind: "action"
-    grammarType: "individual"
     description: "search the menubar items (opens help menu)"
     tags: ["application", "system", "recommended"]
     action: ->
       @openMenuBarItem "help"
 
   "system-volume":
-    kind: "action"
     grammarType: "numberCapture"
     description: "adjust the system volume [0-100]"
     triggerPhrase: "volume"
@@ -26,7 +22,6 @@ Commands.create
       @setVolume(input)
 
   "windy":
-    kind: "action"
     grammarType: "textCapture"
     description: "set the size of the current active window to one of the preset sizes"
     aliases: ["wendy"]

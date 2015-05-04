@@ -1,7 +1,5 @@
 Commands.create
   "shell-cd":
-    kind: "action"
-    grammarType: "individual"
     description: "change directory"
     tags: ["domain-specific", "shell"]
     triggerScopes: ["iTerm", "Terminal"]
@@ -11,8 +9,6 @@ Commands.create
       _(4).times =>
         @key "Left"
   "shell-engage":
-    kind: "action"
-    grammarType: "individual"
     description: "hover your mouse over a directory name output from a 'ls' command in the terminal, and this command will 'cd' to that directory"
     tags: ["domain-specific", "shell"]
     triggerScope: "iTerm"
@@ -25,7 +21,6 @@ Commands.create
       @string "; ls"
       @key "Return"
   "shell-list":
-    kind: "action"
     grammarType: "textCapture"
     description: "list directory contents (takes dynamic arguments)"
     tags: ["domain-specific", "shell"]
@@ -39,7 +34,6 @@ Commands.create
       @key "Return"
       
   "shell-history":
-    kind: "action"
     grammarType: "numberCapture"
     description: "display the last [n](default all) shell commands executed"
     tags: ["domain-specific", "shell"]
@@ -49,8 +43,6 @@ Commands.create
       @string "history #{input or ""}"
       @key "Return"
   "shell-recall":
-    kind: "action"
-    grammarType: "individual"
     description: "hovering the mouse over the left-hand number of a result from the history output, this will re-execute the command"
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell recall"
@@ -62,9 +54,7 @@ Commands.create
       @key "V", ["command"]
       @key "Return"
   "shell-edit":
-    kind: "action"
     description: "open file in editor"
-    grammarType: "individual"
     tags: ["domain-specific", "shell"]
     triggerPhrase: "shell edit"
     triggerScope: "iTerm"
@@ -75,16 +65,13 @@ Commands.create
       @key "V", ["command"]
       @key "Return"
   "durrup":
-    kind: "action"
     description: "navigate to the parent directory"
-    grammarType: "individual"
     tags: ["domain-specific", "shell"]
     triggerScopes: ["iTerm", "Terminal"]
     action: ->
       @string "cd ..; ls"
       @key "Return"
   "shell-direct":
-    kind: "action"
     grammarType: "textCapture"
     description: "changes directory to any directory in the predefined list"
     tags: ["text", "domain-specific", "shell"]
@@ -102,7 +89,6 @@ Commands.create
           @string "cd #{directory} ; ls"
           @key "Return"
   "shell":
-    kind: "action"
     grammarType: "textCapture"
     description: "insert a shell command from the predefined shell commands list"
     tags: ["text", "shell"]

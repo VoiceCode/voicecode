@@ -1,7 +1,5 @@
 Commands.create
   "bracken":
-    kind: "action"
-    grammarType: "individual"
     description: "expand selection to brackets"
     tags: ["sublime"]
     triggerScopes: ["Sublime Text"]
@@ -9,7 +7,6 @@ Commands.create
       @key "S", ['control', 'command', 'option']
 
   "selrang":
-    kind: "action"
     grammarType: "numberCapture"
     description: "selects text in a line range: selrang ten twenty. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
     tags: ["domain-specific", "sublime"]
@@ -37,7 +34,6 @@ Commands.create
         @exec script
   
   "seltil":
-    kind: "action"
     grammarType: "numberCapture"
     description: "selects text from current position through ('til) spoken line number: seltil five five. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
     tags: ["domain-specific", "sublime"]

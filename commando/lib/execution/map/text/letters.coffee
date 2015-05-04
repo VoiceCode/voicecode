@@ -28,7 +28,6 @@ letters =
 
 _.each letters, (value, key) ->
 	Commands.create value,
-    kind: "action"
     grammarType: "textCapture"
     description: "Enters the single letter: #{key}"
     tags: ["letter", "recommended"]

@@ -1,6 +1,5 @@
 Commands.create
   "hytag":
-    kind: "action"
     grammarType: "textCapture"
     description: "inserts an html tag with a dynamic name and dynamic attributes"
     tags: ["domain-specific", "html"]

@@ -31,12 +31,12 @@ Commands.changeName = (old, newName) ->
 Commands.loadConditionalModules = ->
   _.each Commands.mapping, (value, key) ->
     enabled = !!Enables.findOne(name: key)?.enabled
-    Commands.mapping[key].enabled = enabled
+    Commands.mapping[key].enabled ?= enabled
 
 class Commands.Base
   constructor: (@namespace, @input) ->
     @info = Commands.mapping[@namespace] 
-    @kind = @info.kind
+    @kind = @info.kind or "action"
   transform: ->
     Transforms[@info.transform]
   generate: ->

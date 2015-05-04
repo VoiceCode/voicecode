@@ -46,7 +46,7 @@ actions = new OSX.displayActions()
 
 Template.CommandSummaryRow.helpers
   isAction: ->
-    Commands.mapping[@].kind is "action"
+    (Commands.mapping[@].kind or "action") is "action"
   isText: ->
     Commands.mapping[@].kind is "text"
   isModifier: ->
@@ -54,10 +54,10 @@ Template.CommandSummaryRow.helpers
   name: ->
     Commands.mapping[@].triggerPhrase or @toString()
   kind: ->
-    Commands.mapping[@].kind
+    Commands.mapping[@].kind or "action"
   enabled: ->
     # Commands.mapping[@].enabled
-    Enables.findOne(name: @toString())?.enabled
+    Commands.mapping[@].enabled or Enables.findOne(name: @toString())?.enabled
   actions: ->
     Commands.mapping[@].actions
   transform: ->
@@ -65,7 +65,7 @@ Template.CommandSummaryRow.helpers
   description: ->
     Commands.mapping[@].description
   grammarType: ->
-    Commands.mapping[@].grammarType
+    Commands.mapping[@].grammarType or "individual"
   modifierText: ->
     Commands.mapping[@].modifiers.join('+')
   tags: ->

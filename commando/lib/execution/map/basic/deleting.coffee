@@ -1,14 +1,10 @@
 Commands.create
   "kef":
-    kind: "action"
-    grammarType: "individual"
     description: "press option-delete"
     tags: ["deleting", "recommended"]
     action: ->
       @key "Delete", ["option"]
   "steffi":
-    kind: "action"
-    grammarType: "individual"
     description: "delete a partial word at a time"
     tags: ["deleting"]
     action: ->
@@ -22,8 +18,6 @@ Commands.create
       else
         @key "Delete", ["option"]
   "stippy":
-    kind: "action"
-    grammarType: "individual"
     description: "forward delete a partial word at a time"
     tags: ["deleting"]
     action: ->
@@ -32,8 +26,6 @@ Commands.create
       else
         @key "ForwardDelete", ["option"]
   "kite":
-    kind: "action"
-    grammarType: "individual"
     description: "forward delete a word at a time"
     tags: ["deleting", "recommended"]
     action: ->

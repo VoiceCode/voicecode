@@ -1,6 +1,5 @@
 Commands.create
   "spring":
-    kind: "action"
     grammarType: "numberCapture"
     description: "go to line number."
     tags: ["sublime", "xcode"]
@@ -26,7 +25,6 @@ Commands.create
             @key "Return"
 
   "sprinkler":
-    kind: "action"
     grammarType: "numberCapture"
     description: "go to line number then position cursor at end of line."
     tags: ["sublime", "xcode"]
@@ -37,7 +35,6 @@ Commands.create
         @do "ricky"
 
   "sprinkle":
-    kind: "action"
     grammarType: "numberCapture"
     description: "go to line number then position cursor at end of line."
     tags: ["xcode"]
@@ -48,7 +45,6 @@ Commands.create
         @do "lefty"
 
   "sprinkoon":
-    kind: "action"
     grammarType: "numberCapture"
     description: "go to line number then insert a new line below."
     tags: ["sublime", "xcode"]
@@ -59,7 +55,6 @@ Commands.create
         @do "shockoon"
 
   "spackle":
-    kind: "action"
     grammarType: "numberCapture"
     description: "go to line number then select entire line."
     tags: ["sublime"]
