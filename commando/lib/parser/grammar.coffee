@@ -23,7 +23,7 @@ class @Grammar
           if name is "."
             results.push "dot"
           else
-            results.push name
+            results.push name.split(" ").join('')
         else
           results.push "\"#{name}\""
     results.join(' / ')
@@ -37,7 +37,7 @@ class @Grammar
         normalName = if name is "."
           "dot"
         else
-          name
+          name.split(" ").join('')
         aliasLine = "#{normalName} = (#{alternates.join(" / ")}) {return '#{name}';}"
         results.push aliasLine
     results.join("\n")

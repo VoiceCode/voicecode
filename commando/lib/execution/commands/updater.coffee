@@ -46,6 +46,7 @@
 
     """
   getAllStatuses: (scope) ->
+    console.log "getting all command statuses for: #{scope}"
     # digests = []
     Commands.loadConditionalModules()
     scope = scope or @globalName()

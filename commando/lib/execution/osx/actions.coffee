@@ -113,22 +113,25 @@ class OSX.Actions
       _.map modifiers, (m) ->
         m.charAt(0).toUpperCase() + m.slice(1)
 
+  getMousePosition: ->
+    $.CGEventGetLocation($.CGEventCreate(null))
+
   mouseDown: (position) ->    
     @notUndoable()
-    position ?= $.CGEventGetLocation($.CGEventCreate(null))
+    position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
 
   mouseUp: (position) ->    
     @notUndoable()
-    position ?= $.CGEventGetLocation($.CGEventCreate(null))
+    position ?= @getMousePosition()
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, up)
 
   click: ->    
     @notUndoable()
     # position = $.NSEvent('mouseLocation')
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     # console.log position
     @mouseDown(position)
     @mouseUp(position)
@@ -136,7 +139,7 @@ class OSX.Actions
 
   doubleClick: ->
     @notUndoable()
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
@@ -152,7 +155,7 @@ class OSX.Actions
 
   tripleClick: ->
     @notUndoable()
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
@@ -174,7 +177,7 @@ class OSX.Actions
   
   rightClick: ->    
     @notUndoable()
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseDown, position, $.kCGMouseButtonRight)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseUp, position, $.kCGMouseButtonRight)
     $.CGEventPost($.kCGSessionEventTap, down)
@@ -183,7 +186,7 @@ class OSX.Actions
 
   shiftClick: ->    
     @notUndoable()
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
@@ -199,7 +202,7 @@ class OSX.Actions
 
   commandClick: ->    
     @notUndoable()
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
@@ -215,7 +218,7 @@ class OSX.Actions
 
   optionClick: ->    
     @notUndoable()
-    position = $.CGEventGetLocation($.CGEventCreate(null))
+    position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
@@ -229,19 +232,52 @@ class OSX.Actions
     @keyUp "Option"
     @delay(@clickDelayRequired())
 
+  getScreenInfo: ->
+    screens = $.NSScreen('screens')
+    count = screens('count') or 1
+    i = 0
+    mainScreen = screens('objectAtIndex', 0)('visibleFrame')
+    results = []
+    while i < count
+      s = screens('objectAtIndex', i)('visibleFrame')
+      results.push
+        origin:
+          x: s.origin.x
+          y: mainScreen.size.height - s.origin.y - s.size.height
+        size:
+          width: s.size.width
+          height: s.size.height
+      i++
+
+    frame = $.NSScreen('mainScreen')('visibleFrame')
+
+    final =
+      screens: results
+      currentFrame: 
+        origin:
+          x: frame.origin.x
+          y: mainScreen.size.height - frame.origin.y - frame.size.height
+        size:
+          width: frame.size.width
+          height: frame.size.height
+
   positionMouse: (x, y) ->
     @notUndoable()
-    screen = @getScreenInfo()
-    # console.log screen
-    offsetX = if x <= 1
-      screen.size.width * x
-    else
-      x
+    position = @getMousePosition()
+    for s in @getScreenInfo().screens
+      if position.x > s.origin.x and position.x < (s.origin.x + s.size.width) and position.y > s.origin.y and position.y < (s.origin.y + s.size.height)
+        screen = s
 
-    offsetY = if y <= 1
-      screen.size.height * y
-    else
-      y
+    if screen
+      offsetX = if x <= 1
+        screen.size.width * x
+      else
+        x
+
+      offsetY = if y <= 1
+        screen.size.height * y
+      else
+        y
     
     newOriginX = screen.origin.x + offsetX
     newOriginY = screen.origin.y + offsetY
@@ -466,16 +502,6 @@ class OSX.Actions
 
   canDetermineSelections: ->
     not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication())
-
-  getScreenInfo: ->
-    frame = $.NSScreen('mainScreen')('visibleFrame')
-    result =
-      origin: 
-        x: frame.origin.x
-        y: frame.origin.y
-      size: 
-        width: frame.size.width
-        height: frame.size.height
 
   verticalSelectionExpansion: (number) ->
     @notUndoable()

@@ -29,7 +29,7 @@ Commands.createDisabled
     action: (input) ->
       if input?.length      
         preset = Scripts.fuzzyMatch Settings.windowPositions, input.join(' ')
-        screen = @getScreenInfo()
+        screen = @getScreenInfo().currentFrame
         # console.log screen
         newWidth = if preset.width <= 1
           screen.size.width * preset.width
