@@ -1,7 +1,7 @@
 Commands.createDisabled
   "mousy":
     grammarType: "numberCapture"
-    description: "moves the mouse by grid coordinates [1-9] => grid on current monitor; 10 => center of monitor 1; 20 => center of monitor 2; [11-19] => grid on monitor 1; [21-29] => grid on monitoandr 2"
+    description: "moves the mouse by grid coordinates [1-9] => grid on current monitor; 10 => center of monitor 1; 20 => center of monitor 2; [11-19] => grid on monitor 1; [21-29] => grid on monitor 2"
     tags: ["smartnav", "mouse"]
     action: (input) ->
       console.log input: input
