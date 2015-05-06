@@ -23,7 +23,8 @@ class OSX.Actions
     else
       code = OSX.keyCodesShift[key]
       if code?
-        @_pressKey code, ["Shift"]
+        mods = _.unique((modifiers or []).concat("shift"))
+        @_pressKey code, @_normalizeModifiers(mods)
         Meteor.sleep(10)
 
   string: (string) ->
