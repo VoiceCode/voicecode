@@ -119,8 +119,7 @@ Commands.createDisabled
             script += " --command 'select_next_word'"
           @exec script
         when "Atom"
-          @runAtomCommand 
-            command: "selectNextWord"
+          @runAtomCommand "selectNextWord",
             options: input or 1
         else
           @selectContiguousMatching
@@ -141,8 +140,7 @@ Commands.createDisabled
             script += " --command 'select_previous_word'"
           @exec script
         when "Atom"
-          @runAtomCommand
-            command: "selectPreviousWord"
+          @runAtomCommand "selectPreviousWord",
             options: input or 1
         else
           @selectContiguousMatching

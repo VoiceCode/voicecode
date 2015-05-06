@@ -12,9 +12,9 @@ Commands.createDisabled
     tags: ["domain-specific", "sublime"]
     triggerScope: "Sublime Text"
     action: (input) ->
-      if input
+      if input?
         number = input.toString()
-        length = Math.floor(input.length / 2)
+        length = Math.floor(number.length / 2)
         first = number.substr(0, length)
         last = number.substr(length, length + 1)
         first = parseInt(first)
@@ -31,6 +31,8 @@ Commands.createDisabled
         --command 'select_to_mark' \
         --command 'clear_bookmarks {"name": "mark"}'
         """
+        console.log 
+          script: script
         @exec script
   
   "seltil":
