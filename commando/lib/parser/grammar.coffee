@@ -16,7 +16,7 @@ class @Grammar
     @buildCommandList Commands.Utility.repeaterCommands()
   buildCommandList: (keys) ->
     results = []
-    _.each keys, (name) ->
+    for name in keys
       command = Commands.mapping[name]
       if command.enabled
         if command.aliases?.length
@@ -29,7 +29,7 @@ class @Grammar
     results.join(' / ')
   aliases: ->
     results = []
-    _.each Commands.mapping, (command, name) ->
+    for name, command of Commands.mapping
       if command.aliases?.length
         alternates = _.map command.aliases, (alt) ->
           "'#{alt}'"
@@ -126,7 +126,7 @@ class @Grammar
       = identifier:(#{@findableCommands()}) ss {return Commands.mapping[identifier].findable;}
 
     numberCaptureCommand
-      = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: right};}
+      = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
 
     numberCaptureIdentifier
       = identifier:(#{@numberCaptureCommands()}) ss {return identifier;}

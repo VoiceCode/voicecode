@@ -17,6 +17,12 @@ Commands.createDisabled
     tags: ["symbol", "recommended"]
     action: ->
       @string "/"
+  "quackish":
+    # aliases: ["\\"]
+    findable: "\\"
+    tags: ["symbol", "recommended"]
+    action: ->
+      @string "\\"
   "comma":
     aliases: [","]
     findable: ","

@@ -19,7 +19,7 @@ Template.Vocab.helpers
       commands = []
       me = @toString()
       _.each Commands.mapping, (value, key) ->
-        if value.enabled and value.grammarType is "individual" and (value.isSpoken isnt false)
+        if value.enabled and (value.grammarType is "individual" or value.grammarType is undefined) and (value.isSpoken isnt false)
           spoken = value.triggerPhrase or key
           commands.push spoken
       _.map(['soup', 'trace', 'quarr', 'fypes'], (item) ->

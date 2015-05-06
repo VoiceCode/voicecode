@@ -32,7 +32,7 @@ class OSX.Actions
         @_capturedText += string
       else
         @setUndoByDeleting string.length
-        _.each string.split(''), (item) =>
+        for item in string.split('')
           Meteor.sleep(4)
           code = OSX.keyCodesRegular[item]
           if code?
@@ -74,7 +74,7 @@ class OSX.Actions
 
   _modifierMask: (modifiers) ->
     mask = 0
-    _.each modifiers, (m) =>
+    for m in modifiers
       bits = switch m
         when "Shift"
           $.kCGEventFlagMaskShift
@@ -95,16 +95,14 @@ class OSX.Actions
 
   _pressKey: (key, modifiers) ->
     if modifiers? and @needsExplicitModifierPresses()
-      _.each modifiers, (m) =>
+      for m in modifiers
         @_keyDown OSX.keyCodes[m], [m]
-        # @delay(10)
 
     @_keyDown key, modifiers
     @_keyUp key #, modifiers
 
     if modifiers? and @needsExplicitModifierPresses()
-      _.each modifiers, (m) =>
-        # @delay(10)
+      for m in modifiers
         @_keyUp OSX.keyCodes[m] #, [m]
 
   _normalizeModifiers: (modifiers) ->
@@ -261,12 +259,17 @@ class OSX.Actions
           width: frame.size.width
           height: frame.size.height
 
-  positionMouse: (x, y) ->
+  positionMouse: (x, y, screenIndex) ->
     @notUndoable()
     position = @getMousePosition()
-    for s in @getScreenInfo().screens
-      if position.x > s.origin.x and position.x < (s.origin.x + s.size.width) and position.y > s.origin.y and position.y < (s.origin.y + s.size.height)
-        screen = s
+    if screenIndex?
+      screen = @getScreenInfo().screens[screenIndex - 1]
+    # find current screen
+    else
+      for s in @getScreenInfo().screens
+        if position.x > s.origin.x and position.x < (s.origin.x + s.size.width) and position.y > s.origin.y and position.y < (s.origin.y + s.size.height)
+          screen = s
+
 
     if screen
       offsetX = if x <= 1
@@ -279,11 +282,11 @@ class OSX.Actions
       else
         y
     
-    newOriginX = screen.origin.x + offsetX
-    newOriginY = screen.origin.y + offsetY
+      newOriginX = screen.origin.x + offsetX
+      newOriginY = screen.origin.y + offsetY
 
-    event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, $.CGPointMake(newOriginX, newOriginY), 0
-    $.CGEventPost($.kCGSessionEventTap, event)
+      event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, $.CGPointMake(newOriginX, newOriginY), 0
+      $.CGEventPost($.kCGSessionEventTap, event)
 
 
   applescript: (content, shouldReturn=true) ->
@@ -749,7 +752,7 @@ class OSX.Actions
     results = []
     start = undefined
     selecting = false
-    _.each selection.split(''), (item, index) =>
+    for item, index in selection.split('')
       if item.match(expression)
         if splitterExpression? and item.match(splitterExpression)
           if selecting
