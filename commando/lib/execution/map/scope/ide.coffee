@@ -36,7 +36,7 @@ Commands.createDisabled
 
   "sprinkle":
     grammarType: "numberCapture"
-    description: "go to line number then position cursor at end of line."
+    description: "go to line number then position cursor at beginning of line."
     tags: ["xcode"]
     triggerScopes: ["Sublime Text", "Xcode", "Atom"]
     action: (input) ->

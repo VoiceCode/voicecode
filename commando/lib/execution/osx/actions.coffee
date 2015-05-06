@@ -15,6 +15,7 @@ class OSX.Actions
       @key "Delete"
 
   key: (key, modifiers) ->
+    key = key.toString()
     @notUndoable()
     code = OSX.keyCodes[key]
     if code?
@@ -28,6 +29,7 @@ class OSX.Actions
         Meteor.sleep(10)
 
   string: (string) ->
+    string = string.toString()
     if string?.length
       if @_capturingText
         @_capturedText += string
