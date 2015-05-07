@@ -56,17 +56,17 @@
   "\\": "pike"
 
 @commandModifiers =
-  chomm: ["command"]
-  shoff: ["command", "shift"]
-  shay: ["command", "option"]
-  flock: ["command", "option", "shift"]
-  crop: ["option"]
-  snoop: ["option", "shift"]
-  troll: ["control"]
-  mack: ["command", "control"]
-  triff: ["control", "shift"]
-  prick: ["command", "control", "shift"]
-  sky: ["shift"]
+  chomm: "command"
+  shoff: "command shift"
+  shay: "command option"
+  flock: "command option shift"
+  crop: "option"
+  snoop: "option shift"
+  troll: "control"
+  mack: "command control"
+  triff: "control shift"
+  prick: "command control shift"
+  sky: "shift"
 
 recommended =
   chomm: [
@@ -137,7 +137,7 @@ _.each commandModifiers, (mods, prefix) ->
     if recommended[prefix]?[value]?
       tags = ["modifiers", "recommended"]
     Commands.createDisabled "#{prefix}#{value}",
-      description: "#{mods.join(' + ')} + #{key}"
+      description: "#{mods} #{key}"
       tags: tags
       action: ->
         @key key, mods

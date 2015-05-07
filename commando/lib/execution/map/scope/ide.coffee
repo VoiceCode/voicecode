@@ -75,10 +75,10 @@ Commands.createDisabled
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
-          @key "S", ['control', 'command', 'option']
+          @key "S", 'control command option'
         when "Atom"
           # @runAtomCommand "expandSelectionByScope"
-          @key "M", ['command', 'control']
+          @key "M", 'command control'
 
   "selrang":
     grammarType: "numberCapture"

@@ -3,7 +3,7 @@ Commands.createDisabled
     kind: "historic"
     grammarType: "numberCapture"
     description: "repeat last complete spoken phrase [n] times (default 1)"
-    tags: ["repetition", "voicecode"]
+    tags: ["voicecode", "repetition", "recommended"]
     action: (context, input) ->
       previous = context.lastFullCommand
       if previous
@@ -15,7 +15,7 @@ Commands.createDisabled
     repeater: 1
     description: "repeat last individual command once"
     ignoreHistory: true
-    tags: ["repetition", "voicecode"]
+    tags: ["voicecode", "repetition", "recommended"]
     action: (context, input) ->
       context.lastIndividualCommand.call(@)
   "soup":
@@ -23,7 +23,7 @@ Commands.createDisabled
     repeater: 2
     description: "repeat last individual command twice"
     ignoreHistory: true
-    tags: ["repetition", "voicecode"]
+    tags: ["voicecode", "repetition", "recommended"]
     aliases: ["chew", "twice"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
@@ -37,7 +37,7 @@ Commands.createDisabled
     repeater: 3
     description: "repeat last individual command 3 times"
     ignoreHistory: true
-    tags: ["repetition", "voicecode"]
+    tags: ["voicecode", "repetition", "recommended"]
     aliases: ["traced"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
@@ -51,7 +51,7 @@ Commands.createDisabled
     repeater: 4
     description: "repeat last individual command 4 times"
     ignoreHistory: true
-    tags: ["repetition", "voicecode"]
+    tags: ["voicecode", "repetition", "recommended"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         4
@@ -64,7 +64,7 @@ Commands.createDisabled
     repeater: 5
     description: "repeat last individual command 5 times"
     ignoreHistory: true
-    tags: ["repetition", "voicecode"]
+    tags: ["voicecode", "repetition", "recommended"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         5
@@ -77,7 +77,7 @@ Commands.createDisabled
     grammarType: "numberCapture"
     repeater: "variable"
     description: "Repeats an individual command component. Right after any command say [repple X] to repeat it X times"
-    tags: ["voicecode", "repetition"]
+    tags: ["voicecode", "repetition", "recommended"]
     ignoreHistory: true
     action: (context, input) ->
       times = parseInt(input)
@@ -93,7 +93,7 @@ Commands.createDisabled
     description: "show previous commands in Alfred"
     tags: ["voicecode", "alfred"]
     action: ->
-      @key " ", ['option']
+      @key " ", 'option'
       @string "vc "
   "flak":
     grammarType: "textCapture"
@@ -109,7 +109,7 @@ Commands.createDisabled
   "keeper":
     grammarType: "none" # treated specially in the grammar
     description: "whatever follows this command will be interpreted literally"
-    tags: ["voicecode"]
+    tags: ["voicecode", "recommended"]
     action: (input) ->
       if input?.length
         @string input.join(" ")
@@ -124,11 +124,19 @@ Commands.createDisabled
         @setGlobalMode(mode)
   "scratchy":
     description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"
-    tags: ["system", "voicecode"]
+    tags: ["system", "voicecode", "recommended"]
     action: () ->
       count = Commands.previousUndoByDeletingCount
       if count? and count > 0
-        _.times count, =>
-          @key 'Left', ['shift']
+        for i in [1..count]
+          @key 'Left', 'shift'
         @key "Delete"
+  "tragic":
+    description: "tries to select the previously inserted text if possible"
+    tags: ["system", "voicecode", "recommended"]
+    action: () ->
+      count = Commands.previousUndoByDeletingCount
+      if count? and count > 0
+        for i in [1..count]
+          @key 'Left', 'shift'
           

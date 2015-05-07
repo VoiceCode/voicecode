@@ -15,15 +15,15 @@ Commands.createDisabled
     tags: ["space", "combo", "copy-paste"]
     action: ->
       @key " "
-      @key "V", ["command"]
+      @key "V", "command"
   "shockoon":
     description: "Inserts a new line below the current line"
     tags: ["return", "combo", "recommended"]
     action: ->
       if @currentApplication() is "sublime"
-        @key "Return", ["command"]
+        @key "Return", "command"
       else
-        @key "Right", ["command"]
+        @key "Right", "command"
         @key "Return"
   "shocktar":
     description: "Inserts a new line then a tab"
@@ -37,8 +37,8 @@ Commands.createDisabled
     tags: ["return", "combo", "recommended"]
     action: ->
       if @currentApplication() is "sublime"
-        @key "Return", ["command", "shift"]
+        @key "Return", "command shift"
       else
-        @key "Left", ["command"]
+        @key "Left", "command"
         @key "Return"
         @key "Up"

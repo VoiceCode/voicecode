@@ -17,7 +17,7 @@ Commands.createDisabled
       @rightClick()
       @delay 50
       @string "cd "
-      @key "V", ['command']
+      @key "V", 'command'
       @string "; ls"
       @key "Return"
   "shell-list":
@@ -51,7 +51,7 @@ Commands.createDisabled
       @rightClick()
       @delay 50
       @key "!"
-      @key "V", ["command"]
+      @key "V", 'command'
       @key "Return"
   "shell-edit":
     description: "open file in editor"
@@ -62,7 +62,7 @@ Commands.createDisabled
       @rightClick()
       @delay 50
       @key "$EDITOR "
-      @key "V", ["command"]
+      @key "V", 'command'
       @key "Return"
   "durrup":
     description: "navigate to the parent directory"
@@ -84,7 +84,7 @@ Commands.createDisabled
           @string "cd #{directory} ; ls \n"
         else
           @openApplication("iTerm")
-          @key "T", ["command"]
+          @key "T", 'command'
           @delay 200
           @string "cd #{directory} ; ls"
           @key "Return"

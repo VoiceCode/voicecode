@@ -20,12 +20,12 @@ Commands.createDisabled
     description: "undo"
     tags: ["application", "recommended"]
     action: (input) ->
-      @key "Z", ["command"]
+      @key "Z", "command"
   "rizzle":
     description: "redo"
     tags: ["application", "recommended"]
     action: (input) ->
-      @key "Z", ["command", "shift"]
+      @key "Z", "command shift"
   "tarp":
     description: "inserts a tab"
     tags: ["tab", "recommended"]
@@ -35,64 +35,64 @@ Commands.createDisabled
     description: "inserts a shift + tab"
     tags: ["tab", "recommended"]
     action: (input) ->
-      @key "Tab", ["shift"]
+      @key "Tab", "shift"
   "gibby":
     description: "Switch to next window in same application"
     tags: ["application", "window", "recommended"]
     action: (input) ->
-      @key "`", ["command"]
+      @key "`", "command"
   "shibby":
     description: "Switch to previous window in same application"
     tags: ["application", "window", "recommended"]
     action: (input) ->
-      @key "`", ["command", "shift"]
+      @key "`", "command shift"
   "shompla":
     description: "zoom in"
     tags: ["application", "plus", "recommended"]
     action: (input) ->
-      @key "=", ["command"]
+      @key "=", "command"
   "shaman":
     description: "zoom out"
     tags: ["application", "minus", "recommended"]
     action: (input) ->
-      @key "-", ["command"]
+      @key "-", "command"
   "shabble":
     description: ""
     tags: ["[", "recommended"]
     action: (input) ->
-      @key "[", ["command"]
+      @key "[", "command"
   "shabber":
     description: ""
     aliases: ["shammar"]
     tags: ["]", "recommended"]
     action: (input) ->
-      @key "]", ["command"]
+      @key "]", "command"
   "marneck":
     description: "find the next occurrence of a search term"
     tags: ["application", "recommended"]
     action: (input) ->
-      @key "G", ["command"]
+      @key "G", "command"
   "marpreev":
     description: "find the previous occurrence of a search term"
     tags: ["application", "recommended"]
     action: (input) ->
-      @key "G", ["command", "shift"]
+      @key "G", "command shift"
   "olly":
     description: "select all"
     tags: ["selection", "recommended"]
     action: ->
-      @key "A", ["command"]
+      @key "A", "command"
   "sparky":
     description: "paste the alternate clipboard"
     tags: ["copy-paste"]
     action: ->
-      @key "V", ["command", "shift"]
+      @key "V", "command shift"
   "allspark":
     description: "select all then paste the clipboard"
     tags: ["copy-paste", "selection", "recommended"]
     action: ->
-      @key "A", ["command"]
-      @key "V", ["command"]
+      @key "A", "command"
+      @key "V", "command"
   "spark":
     grammarType: "oneArgument"
     description: "paste the clipboard (or named item from stoosh command)"
@@ -104,38 +104,38 @@ Commands.createDisabled
         if previous?.length
           @setClipboard(previous)
           @delay 50
-          @key "V", ["command"]
+          @key "V", "command"
       else
-        @key "V", ["command"]
+        @key "V", "command"
   "sparshock":
     description: "paste the clipboard then press enter"
     tags: ["copy-paste", "combo", "return"]
     action: ->
-      @key "V", ["command"]
+      @key "V", "command"
       @key "Return"
   "sage":
     description: "file > save"
     tags: ["application", "recommended"]
     action: ->
-      @key "S", ["command"]
+      @key "S", "command"
   "sagewick":
     description: "file > save"
     tags: ["application", "combo"]
     action: ->
-      @key "S", ["command"]
-      @key "Tab", ["command"]
+      @key "S", "command"
+      @key "Tab", "command"
   "stooshwick":
     description: "copy whatever is selected then switch applications"
     tags: ["copy-paste", "application", "system", "combo", "recommended"]
     action: ->
-      @key "C", ["command"]
-      @key "Tab", ["command"]
+      @key "C", "command"
+      @key "Tab", "command"
   "stoosh":
     grammarType: "oneArgument"
     description: "copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via `spark [name]`)"
     tags: ["copy-paste", "recommended"]
     action: (input) ->
-      @key "C", ["command"]
+      @key "C", "command"
       if input?
         @waitForClipboard()
         @storeCurrentClipboardWithName(input)
@@ -143,29 +143,29 @@ Commands.createDisabled
     description: "select all then copy whatever is selected"
     tags: ["copy-paste", "selection", "recommended"]
     action: ->
-      @key "A", ["command"]
-      @key "C", ["command"]
+      @key "A", "command"
+      @key "C", "command"
   "snatch":
     description: "cut whatever is selected"
     tags: ["copy-paste", "recommended"]
     aliases: ["snatched"]
     action: ->
-      @key "X", ["command"]
+      @key "X", "command"
   "totch":
     description: "close a window or tab"
     tags: ["application", "window", "recommended"]
     action: ->
-      @key "W", ["command"]
+      @key "W", "command"
   "marco":
     description: "find"
     tags: ["application", "recommended"]
     action: ->
-      @key "F", ["command"]
+      @key "F", "command"
   "talky":
     description: "open a new tab"
     tags: ["application", "window", "recommended"]
     action: ->
-      @key "T", ["command"]
+      @key "T", "command"
   "randall":
     description: "press escape"
     tags: ["escape", "recommended"]

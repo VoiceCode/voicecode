@@ -4,4 +4,4 @@ Commands.createDisabled
     tags: ["safari"]
     triggerScopes: ["Safari"]
     action: (input) ->
-      @key "\\", ['command', 'shift']
+      @key "\\", 'command shift'

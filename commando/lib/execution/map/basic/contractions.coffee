@@ -5,4 +5,4 @@ Commands.createDisabled
     tags: ["copy-paste", "combo"]
     action: -> 
       @key "."
-      @key "V", ['command']
+      @key "V", 'command'

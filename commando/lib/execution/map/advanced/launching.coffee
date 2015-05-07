@@ -10,7 +10,7 @@ Commands.createDisabled
       else
         @openBrowser()
         @delay(50)
-        @key "T", ['command']
+        @key "T", 'command'
   "dears":
     grammarType: "textCapture"
     description: "opens a directory in the finder"
