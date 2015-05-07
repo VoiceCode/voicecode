@@ -33,12 +33,24 @@ Commands.createDisabled
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
       if input?.value?
-        @extendSelectionToPreviousOccurrenceWithDistance input.value, input.distance
+        switch @currentApplication()
+          when "Atom"
+            @runAtomCommand "selectToPreviousOccurrence", options:
+              value: input.value
+              distance: input.distance or 1
+          else
+            @extendSelectionToPreviousOccurrenceWithDistance input.value, input.distance
   "selcrew":
     grammarType: "singleSearch"
     description: "search forward for the next thing you say, then select from current position until found position"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
       if input?.value?
-        @extendSelectionToFollowingOccurrenceWithDistance input.value, input.distance
+        switch @currentApplication()
+          when "Atom"
+            @runAtomCommand "selectToNextOccurrence", options:
+              value: input.value
+              distance: input.distance or 1
+          else
+            @extendSelectionToFollowingOccurrenceWithDistance input.value, input.distance
     

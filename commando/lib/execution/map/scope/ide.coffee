@@ -12,10 +12,10 @@ Commands.createDisabled
           else
             @key "G", ['control']
         when "Atom"
-          @key "G", ['control']
           if input
-            @string input
-            @key "Return"
+            @runAtomCommand "goToLine", options: input
+          else
+            @key "G", ['control']
         when "Xcode"
           @key "L", ['command']
           if input?
@@ -67,3 +67,68 @@ Commands.createDisabled
       # subl --command 'goto_line {"line": #{input}}' \
       # --command 'expand_selection {"to": "line"}'
       # """
+
+  "bracken":
+    description: "expand selection to quotes, parens, braces, or brackets"
+    tags: ["sublime"]
+    triggerScopes: ["Atom", "Sublime Text"]
+    action: (input) ->
+      switch @currentApplication()
+        when "Sublime Text"
+          @key "S", ['control', 'command', 'option']
+        when "Atom"
+          # @runAtomCommand "expandSelectionByScope"
+          @key "M", ['command', 'control']
+
+  "selrang":
+    grammarType: "numberCapture"
+    description: "selects text in a line range: selrang ten twenty. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    tags: ["domain-specific", "sublime"]
+    triggerScopes: ["Atom", "Sublime Text"]
+    action: (input) ->
+      if input?
+        number = input.toString()
+        length = Math.floor(number.length / 2)
+        first = number.substr(0, length)
+        last = number.substr(length, length + 1)
+        first = parseInt(first)
+        last = parseInt(last)
+        if last < first
+          temp = last
+          last = first
+          first = temp
+        last += 1
+        switch @currentApplication()
+          when "Sublime Text"
+            script = """
+            subl --command 'goto_line {"line": #{first}}' \
+            --command 'set_mark' \
+            --command 'goto_line {"line": #{last}}' \
+            --command 'select_to_mark' \
+            --command 'clear_bookmarks {"name": "mark"}'
+            """
+            @exec script
+          when "Atom"
+            @runAtomCommand "selectLineRange", options:
+              from: first
+              to: last
+  
+  "seltil":
+    grammarType: "numberCapture"
+    description: "selects text from current position through ('til) spoken line number: seltil five five. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    tags: ["domain-specific", "sublime"]
+    triggerScopes: ["Atom", "Sublime Text"]
+    action: (input) ->
+      if input?
+        switch @currentApplication()
+          when "Sublime Text"
+            script = """
+            subl --command 'set_mark' \
+            --command 'goto_line {"line": #{input}}' \
+            --command 'select_to_mark' \
+            --command 'clear_bookmarks {"name": "mark"}'
+            """
+            @exec script
+          when "Atom"
+            @runAtomCommand "extendSelectionToLine", options: input
+
