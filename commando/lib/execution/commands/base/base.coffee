@@ -74,11 +74,15 @@ class Commands.Base
           transform = @info.transform
           -> 
             if fallback?
-              if @isTextSelected()
-                contents = @getSelectedText()
-                transformed = SelectionTransforms[transform](contents)
-                @string transformed
-            # Commands.incomingSelectionHandler = SelectionTransforms[transform]
+              switch @currentApplication()
+                when "Atom"
+                  @runAtomCommand "transformSelectedText", transform
+                else
+                  if @isTextSelected()
+                    contents = @getSelectedText()
+                    transformed = SelectionTransformer[transform](contents)
+                    @string transformed
+            # Commands.incomingSelectionHandler = SelectionTransformer[transform]
             # @clickServiceItem("send-selection-to-voicecode")
               # @clickServiceItem(fallback)
       when "word"

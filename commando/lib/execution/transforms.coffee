@@ -66,131 +66,119 @@
       ""
 
 # selection transforms
+class Transformer
+  hasSpace = /\s/
+  hasSeparator = /[\W_]/
+  separatorSplitter = /[\W_]+(.|$)/g
+  camelSplitter = /(.)([A-Z]+)/g
 
-hasSpace = /\s/
-hasSeparator = /[\W_]/
-separatorSplitter = /[\W_]+(.|$)/g
-camelSplitter = /(.)([A-Z]+)/g
+  unseparate: (string) ->
+    string.replace separatorSplitter, (m, next) ->
+      if next then ' ' + next else ''
 
-unseparate = (string) ->
-  string.replace separatorSplitter, (m, next) ->
-    if next then ' ' + next else ''
+  uncamelize: (string) ->
+    string.replace camelSplitter, (m, previous, uppers) ->
+      previous + ' ' + uppers.toLowerCase().split('').join(' ')
 
-uncamelize = (string) ->
-  string.replace camelSplitter, (m, previous, uppers) ->
-    previous + ' ' + uppers.toLowerCase().split('').join(' ')
+  toNoCase: (string) ->
+    if hasSpace.test(string)
+      return string.toLowerCase()
+    if hasSeparator.test(string)
+      return (@unseparate(string) or string).toLowerCase()
+    @uncamelize(string).toLowerCase()
 
-toNoCase = (string) ->
-  if hasSpace.test(string)
-    return string.toLowerCase()
-  if hasSeparator.test(string)
-    return (unseparate(string) or string).toLowerCase()
-  uncamelize(string).toLowerCase()
+  identity: (string) ->
+    @toNoCase(string).replace /[\W_]+(.|$)/g, (matches, match) ->
+      if match then ' ' + match else ''
 
-toSpaceCase = (string) ->
-  toNoCase(string).replace /[\W_]+(.|$)/g, (matches, match) ->
-    if match then ' ' + match else ''
+  snake: (string) ->
+    @identity(string).replace /\s/g, '_'
 
-toSnakeCase = (string) ->
-  toSpaceCase(string).replace /\s/g, '_'
+  camel: (string) ->
+    @identity(string).replace /\s(\w)/g, (matches, letter) ->
+      letter.toUpperCase()
 
-toCamelCase = (string) ->
-  toSpaceCase(string).replace /\s(\w)/g, (matches, letter) ->
-    letter.toUpperCase()
+  toDotCase: (string) ->
+    @identity(string).replace /\s/g, '.'
 
-toDotCase = (string) ->
-  toSpaceCase(string).replace /\s/g, '.'
+  toConstantCase: (string) ->
+    @snake(string).toUpperCase()
 
-toConstantCase = (string) ->
-  toSnakeCase(string).toUpperCase()
+  titleFirstSentance: (string) ->
+    @toNoCase(string).replace /[a-z]/i, (letter) ->
+      letter.toUpperCase()
 
-toSentenceCase = (string) ->
-  toNoCase(string).replace /[a-z]/i, (letter) ->
-    letter.toUpperCase()
+  spine: (string) ->
+    @identity(string).replace /\s/g, '-'
 
-toSlugCase = (string) ->
-  toSpaceCase(string).replace /\s/g, '-'
+  toCapitalCase: (string) ->
+    @toNoCase(string).replace /(^|\s)(\w)/g, (matches, previous, letter) ->
+      previous + letter.toUpperCase()
 
-toCapitalCase = (string) ->
-  toNoCase(string).replace /(^|\s)(\w)/g, (matches, previous, letter) ->
-    previous + letter.toUpperCase()
+  stud: (string) ->
+    @identity(string).replace /(?:^|\s)(\w)/g, (matches, letter) ->
+      letter.toUpperCase()
 
-toPascalCase = (string) ->
-  toSpaceCase(string).replace /(?:^|\s)(\w)/g, (matches, letter) ->
-    letter.toUpperCase()
+  upperCase: (string) ->
+    @identity(string).toUpperCase()
 
-toYellerCase = (string) ->
-  toSpaceCase(string).toUpperCase()
+  lowerSlam: (string) ->
+    @identity(string).replace /\s/g, ''
 
-toSmashCase = (string) ->
-  toSpaceCase(string).replace /\s/g, ''
+  upperSlam: (string) ->
+    @identity(string).replace(/\s/g, '').toUpperCase()
 
-toYellsmashCase = (string) ->
-  toSpaceCase(string).replace(/\s/g, '').toUpperCase()
+  titleSentance: (string) ->
+    escape = (str) ->
+      String(str).replace /([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'
+    minors = [
+      'a'
+      'an'
+      'and'
+      'as'
+      'at'
+      'but'
+      'by'
+      'en'
+      'for'
+      'from'
+      'how'
+      'if'
+      'in'
+      'neither'
+      'nor'
+      'of'
+      'on'
+      'only'
+      'onto'
+      'out'
+      'or'
+      'per'
+      'so'
+      'than'
+      'that'
+      'the'
+      'to'
+      'until'
+      'up'
+      'upon'
+      'v'
+      'v.'
+      'versus'
+      'vs'
+      'vs.'
+      'via'
+      'when'
+      'with'
+      'without'
+      'yet'
+    ]
+    escaped = minors.map(escape)
+    minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig')
+    colonMatcher = /:\s*(\w)/g
+    toCapitalCase(string).replace(minorMatcher, (minor) ->
+      minor.toLowerCase()
+    ).replace colonMatcher, (letter) ->
+      letter.toUpperCase()
 
-toTitleCase = (string) ->
-  escape = (str) ->
-    String(str).replace /([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'
-  minors = [
-    'a'
-    'an'
-    'and'
-    'as'
-    'at'
-    'but'
-    'by'
-    'en'
-    'for'
-    'from'
-    'how'
-    'if'
-    'in'
-    'neither'
-    'nor'
-    'of'
-    'on'
-    'only'
-    'onto'
-    'out'
-    'or'
-    'per'
-    'so'
-    'than'
-    'that'
-    'the'
-    'to'
-    'until'
-    'up'
-    'upon'
-    'v'
-    'v.'
-    'versus'
-    'vs'
-    'vs.'
-    'via'
-    'when'
-    'with'
-    'without'
-    'yet'
-  ]
-  escaped = minors.map(escape)
-  minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig')
-  colonMatcher = /:\s*(\w)/g
-  toCapitalCase(string).replace(minorMatcher, (minor) ->
-    minor.toLowerCase()
-  ).replace colonMatcher, (letter) ->
-    letter.toUpperCase()
-
-@SelectionTransforms =
-  snake: toSnakeCase
-  camel: toCamelCase
-  stud: toPascalCase
-  spine: toSlugCase
-  lowerSlam: toSmashCase
-  upperSlam: toYellsmashCase
-  upperCase: toYellerCase
-  titleSentance: toTitleCase
-  titleFirstSentance: toSentenceCase
-  
-
-
+@SelectionTransformer = new Transformer()

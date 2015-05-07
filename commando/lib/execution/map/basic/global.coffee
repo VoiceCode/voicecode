@@ -14,9 +14,7 @@ Commands.createDisabled
     tags: ["recommended", "navigation"]
     action: ->
       switch @currentApplication()
-        when "Safari"
-          @key "[", 'command'
-        when "Google Chrome"
+        when "Safari", "Google Chrome", "Firefox"
           @key "[", 'command'
         when "Sublime Text"
           @key "-", 'control'
@@ -25,9 +23,7 @@ Commands.createDisabled
     tags: ["recommended", "navigation"]
     action: ->
       switch @currentApplication()
-        when "Safari"
-          @key "]", 'command'
-        when "Google Chrome"
+        when "Safari", "Google Chrome", "Firefox"
           @key "]", 'command'
         when "Sublime Text"
           @key "-", "control shift"
@@ -36,9 +32,7 @@ Commands.createDisabled
     tags: ["recommended", "navigation"]
     action: ->
       switch @currentApplication()
-        when "Safari"
-          @key "R", 'command'
-        when "Google Chrome"
+        when "Safari", "Google Chrome", "Firefox"
           @key "R", 'command'
         when "Atom"
           @key "L", 'control option command'
