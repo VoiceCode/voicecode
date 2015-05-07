@@ -143,6 +143,7 @@ Commands.createDisabled
     description: "UPPER-CASE-SPINE"
     tags: ["text"]
     transform: "upperSpine"
+    fallbackService: "vc case yellspin"
   "pathway":
     kind: "text"
     grammarType: "textCapture"

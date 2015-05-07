@@ -71,6 +71,48 @@ class Transformer
   hasSeparator = /[\W_]/
   separatorSplitter = /[\W_]+(.|$)/g
   camelSplitter = /(.)([A-Z]+)/g
+  minors = [
+    'a'
+    'an'
+    'and'
+    'as'
+    'at'
+    'but'
+    'by'
+    'en'
+    'for'
+    'from'
+    'how'
+    'if'
+    'in'
+    'neither'
+    'nor'
+    'of'
+    'on'
+    'only'
+    'onto'
+    'out'
+    'or'
+    'per'
+    'so'
+    'than'
+    'that'
+    'the'
+    'to'
+    'until'
+    'up'
+    'upon'
+    'v'
+    'v.'
+    'versus'
+    'vs'
+    'vs.'
+    'via'
+    'when'
+    'with'
+    'without'
+    'yet'
+  ]
 
   unseparate: (string) ->
     string.replace separatorSplitter, (m, next) ->
@@ -111,7 +153,7 @@ class Transformer
   spine: (string) ->
     @identity(string).replace /\s/g, '-'
 
-  toCapitalCase: (string) ->
+  capital: (string) ->
     @toNoCase(string).replace /(^|\s)(\w)/g, (matches, previous, letter) ->
       previous + letter.toUpperCase()
 
@@ -128,55 +170,19 @@ class Transformer
   upperSlam: (string) ->
     @identity(string).replace(/\s/g, '').toUpperCase()
 
+  upperSnake: (string) ->
+    @snake(string).toUpperCase()
+
+  upperSpine: (string) ->
+    @spine(string).toUpperCase()
+
   titleSentance: (string) ->
     escape = (str) ->
       String(str).replace /([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'
-    minors = [
-      'a'
-      'an'
-      'and'
-      'as'
-      'at'
-      'but'
-      'by'
-      'en'
-      'for'
-      'from'
-      'how'
-      'if'
-      'in'
-      'neither'
-      'nor'
-      'of'
-      'on'
-      'only'
-      'onto'
-      'out'
-      'or'
-      'per'
-      'so'
-      'than'
-      'that'
-      'the'
-      'to'
-      'until'
-      'up'
-      'upon'
-      'v'
-      'v.'
-      'versus'
-      'vs'
-      'vs.'
-      'via'
-      'when'
-      'with'
-      'without'
-      'yet'
-    ]
     escaped = minors.map(escape)
     minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig')
     colonMatcher = /:\s*(\w)/g
-    toCapitalCase(string).replace(minorMatcher, (minor) ->
+    @capital(string).replace(minorMatcher, (minor) ->
       minor.toLowerCase()
     ).replace colonMatcher, (letter) ->
       letter.toUpperCase()
