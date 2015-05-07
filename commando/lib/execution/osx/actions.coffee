@@ -313,7 +313,10 @@ class OSX.Actions
     @do(name, input)
 
   runAtomCommand: (name, options) ->
-    info = _.extend options, {command: name}
+    info = 
+      command: name
+      options: options
+      
     command = """echo "#{JSON.stringify(info).replace(/"/g, '\\"')}" | nc -U /tmp/voicecode-atom.sock"""
     console.log command
     @exec command

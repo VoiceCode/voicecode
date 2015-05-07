@@ -7,7 +7,7 @@ Commands.createDisabled
       if input?.value?
         switch @currentApplication()
           when "Atom"
-            @runAtomCommand "selectPreviousOccurrence", options:
+            @runAtomCommand "selectPreviousOccurrence",
               value: input.value
               distance: input.distance or 1
           else
@@ -21,7 +21,7 @@ Commands.createDisabled
       if input?.value?
         switch @currentApplication()
           when "Atom"
-            @runAtomCommand "selectNextOccurrence", options:
+            @runAtomCommand "selectNextOccurrence",
               value: input.value
               distance: input.distance or 1
           else
@@ -35,7 +35,7 @@ Commands.createDisabled
       if input?.value?
         switch @currentApplication()
           when "Atom"
-            @runAtomCommand "selectToPreviousOccurrence", options:
+            @runAtomCommand "selectToPreviousOccurrence",
               value: input.value
               distance: input.distance or 1
           else
@@ -48,7 +48,7 @@ Commands.createDisabled
       if input?.value?
         switch @currentApplication()
           when "Atom"
-            @runAtomCommand "selectToNextOccurrence", options:
+            @runAtomCommand "selectToNextOccurrence",
               value: input.value
               distance: input.distance or 1
           else

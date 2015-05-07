@@ -13,7 +13,7 @@ Commands.createDisabled
             @key "G", ['control']
         when "Atom"
           if input
-            @runAtomCommand "goToLine", options: input
+            @runAtomCommand "goToLine", input
           else
             @key "G", ['control']
         when "Xcode"
@@ -109,7 +109,7 @@ Commands.createDisabled
             """
             @exec script
           when "Atom"
-            @runAtomCommand "selectLineRange", options:
+            @runAtomCommand "selectLineRange",
               from: first
               to: last
   
@@ -130,5 +130,5 @@ Commands.createDisabled
             """
             @exec script
           when "Atom"
-            @runAtomCommand "extendSelectionToLine", options: input
+            @runAtomCommand "extendSelectionToLine", input
 
