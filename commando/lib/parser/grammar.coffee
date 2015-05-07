@@ -120,7 +120,7 @@ class @Grammar
       = identifier:(#{@singleSearchCommands()}) ss {return identifier;}
 
     singleSearchArgument
-      = (findableIdentifier / nestableTextCommand / translation / singleTextArgument / spokenInteger)
+      = (overrideCommand / findableIdentifier / nestableTextCommand / translation / singleTextArgument / spokenInteger)
 
     findableIdentifier
       = identifier:(#{@findableCommands()}) ss {return Commands.mapping[identifier].findable;}

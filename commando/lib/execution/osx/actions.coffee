@@ -16,6 +16,7 @@ class OSX.Actions
 
   key: (key, modifiers) ->
     key = key.toString()
+
     @notUndoable()
     code = OSX.keyCodes[key]
     if code?
@@ -110,8 +111,12 @@ class OSX.Actions
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
+      mods = if typeof modifiers is "string"
+        modifiers.split(" ")
+      else
+        modifiers
       # titleize mods
-      _.map modifiers, (m) ->
+      _.map mods, (m) ->
         m.charAt(0).toUpperCase() + m.slice(1)
 
   getMousePosition: ->
