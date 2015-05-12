@@ -1,37 +1,10 @@
-# @Updates =
-#   "v0.4.3":
-#     added:
-#       "creek": {}
-#       "keeper": {}
-#       "shell": {}
-#       "wink": {}
-#       "foo": {}
-#       "trace": {}
-#       "quarr": {}
-#       "fypes": {}
-#       "eleven": {}
-#       "twelve": {}
-#       "thirteen": {}
-#       "fourteen": {}
-#       "fifteen": {}
-#       "sixteen": {}
-#       "seventeen": {}
-#       "eighteen": {}
-#       "nineteen": {}
-#       "word-error": {}
-#       "comlick": {}
-#       "durrup": {scope: "iTerm"}
-#       "engage": {scope: "iTerm"}
-#     changed:
-#       "repple": {}
-#     removed:
-#       "voice code": {}
-#       "engage": {static: true, scope: "iTerm"}
-#       "parent dir": {static: true, scope: "iTerm"}
-
 Template.Updates.events
   "click #run": ->
     Meteor.call "getAllCommandStatuses", (error, result) ->
+      if error
+        alert(error.message)
+  "click #runScope": ->
+    Meteor.call "getCommandStatuses", @context, (error, result) ->
       if error
         alert(error.message)
   "click #updateAll": ->
@@ -58,9 +31,6 @@ Template.Updates.helpers
     CommandStatuses.find({status: "removed", scope: @context})
   dirty: ->
     CommandStatuses.find({status: "dirty", scope: @context})
-
-# Template.commandUpdateAdded.created = ->
-#   Meteor.call "currentCommandStatus", @data.name, @data.scope
 
 Template.commandNeedsUpdate.events
   "click #performAction": ->

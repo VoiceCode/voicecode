@@ -31,7 +31,7 @@ class Commands.Chain
       Commands.previousUndoByDeletingCount = Commands.aggregateUndoByDeletingCount
       Commands.aggregateUndoByDeletingCount = 0
       if shouldInvoke
-        pool = $.NSAutoreleasePool('alloc')('init')
+        # pool = $.NSAutoreleasePool('alloc')('init')
         _.each combined, (callback) ->
           if callback?
             Commands.currentUndoByDeletingCount = 0
@@ -41,7 +41,7 @@ class Commands.Chain
             else
               Commands.aggregateUndoByDeletingCount = 0
             
-        pool('release')
+        # pool('release')
 
         # @invokeShell appleScript
 

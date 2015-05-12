@@ -4,7 +4,7 @@ Commands.createDisabled
     grammarType: "textCapture"
     description: "words with spaces between. This command is for internal grammar use (not spoken)"
     tags: ["text", "recommended"]
-    isSpoken: false
+    needsDragonCommand: false
     transform: "literal"
   "cram":
     kind: "text"

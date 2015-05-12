@@ -195,7 +195,8 @@ CommandStatuses.helpers
     end tell
 
     tell application "System Events"
-    key code "36" 
+    key code 36
+    key code 48 
     end tell
 
     delay 0.1
@@ -211,6 +212,13 @@ CommandStatuses.helpers
     end tell
     delay 0.4
 
+    delay 0.3
+    tell application "System Events"
+    key code 48 
+    end tell
+    delay 0.3
+
+
     tell application "System Events"
       tell process "#{@dictateName()}"
         click button "#{@saveButtonName()}" of splitter group 1 of window "#{@commandsWindowName()}"
@@ -221,7 +229,7 @@ CommandStatuses.helpers
     #{script}
     EOD
     """
-    # console.log script
+    console.log script
     Execute script
     true
   getCommand: ->

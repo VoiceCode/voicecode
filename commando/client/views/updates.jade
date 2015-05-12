@@ -14,28 +14,32 @@ template(name="Updates")
         li Open Dragon's "Show Available Commands" window
         li Restart Dragon Dictate
     a.btn.btn-primary#run Run Command Check
-    h3 Needs Creating
+    h5 Or check commands for each application individually
+    each dragonContexts
+      a.btn#runScope= context
+
+    h4 Needs Creating
     .well
       each dragonContexts
-        h4
+        h5
           =context 
           a.smallButton#createAll Create All These
         ul
           each added
             +commandNeedsUpdate
-    h3 Needs Deleting
+    h4 Needs Deleting
     .well
       each dragonContexts
-        h4
+        h5
           =context 
           a.smallButton#deleteAll Delete All These
         ul
           each removed
             +commandNeedsUpdate
-    h3 Needs Updating
+    h4 Needs Updating
     .well
       each dragonContexts
-        h4
+        h5
           =context 
           a.smallButton#updateAll Update All These
         ul

@@ -319,6 +319,12 @@ Meteor.methods
         CommandUpdater.getAllStatuses(context)
     catch e
       console.log e
+  getCommandStatuses: (scope) ->
+    try
+      CommandStatuses.remove({scope: scope})
+      CommandUpdater.getAllStatuses(scope)
+    catch e
+      console.log e
   updateAllCommandStatuses: (scope) ->
     try
       CommandUpdater.updateAll(scope)

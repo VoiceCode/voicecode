@@ -4,7 +4,7 @@ Commands.createDisabled
     description: "search backward for the next thing you say, then select it"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      term = input.value or @storage.previousSearchTerm
+      term = input?.value or @storage.previousSearchTerm
       if term?.length
         @storage.previousSearchTerm = term
         switch @currentApplication()
@@ -20,7 +20,7 @@ Commands.createDisabled
     aliases: ["crews", "cruise"]
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      term = input.value or @storage.previousSearchTerm
+      term = input?.value or @storage.previousSearchTerm
       if term?.length
         @storage.previousSearchTerm = term
         switch @currentApplication()
@@ -36,7 +36,7 @@ Commands.createDisabled
     description: "search backward for the next thing you say, then select from current position until found position"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      term = input.value or @storage.previousSearchTerm
+      term = input?.value or @storage.previousSearchTerm
       if term?.length
         @storage.previousSearchTerm = term
         switch @currentApplication()
@@ -51,7 +51,7 @@ Commands.createDisabled
     description: "search forward for the next thing you say, then select from current position until found position"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      term = input.value or @storage.previousSearchTerm
+      term = input?.value or @storage.previousSearchTerm
       if term?.length
         @storage.previousSearchTerm = term
         switch @currentApplication()

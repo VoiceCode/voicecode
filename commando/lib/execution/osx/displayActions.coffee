@@ -1,5 +1,6 @@
 class OSX.displayActions
   constructor: () ->
+    @storage = {}
   reset: () ->
     @result = ""
   key: (key, modifiers) ->
@@ -56,23 +57,24 @@ class OSX.displayActions
   clickServiceItem: (item) ->
     @result += "clickServiceItem(#{item or ''})"
   getClipboard: ->
+    @result += "getClipboard()"
     ""
   verticalSelectionExpansion: (number) ->
     ""
   positionMouse: (x, y) ->
-    "positionMouse(#{x or ''}, #{y or ''})"
+    @result += "positionMouse(#{x or ''}, #{y or ''})"
   mouseUp: ->
-    "mouseUp"
+    @result += "mouseUp()"
   mouseDown: ->
-    "mouseDown"
+    @result +=  "mouseDown()"
   symmetricSelectionExpansion: ->
-    "symmetricSelectionExpansion()"
+    @result +=  "symmetricSelectionExpansion()"
   selectCurrentOccurrence: ->
-    "selectCurrentOccurrence()"
+    @result += "selectCurrentOccurrence()"
   selectPreviousOccurrence: ->
-    "selectPreviousOccurrence()"
+    @result += "selectPreviousOccurrence()"
   selectFollowingOccurrence: ->
-    "selectFollowingOccurrence()"
+    @result += "selectFollowingOccurrence()"
   makeModifierText: (modifiers) ->
     r = _.map modifiers, (m) ->
       modifierCodes[m]
@@ -92,10 +94,16 @@ class OSX.displayActions
   isTextSelected: ->
     false
   selectPreviousWord: ->
-    "selectPreviousWord()"
+    @result += "selectPreviousWord()"
   selectFollowingWord: ->
-    "selectFollowingWord()"
+    @result += "selectFollowingWord()"
   exec: (script) ->
-    "exec(#{script})"
+    @result += "exec(#{script})"
   openMenuBarPath: (path) ->
-    "openMenuBarPath(#{path})"
+    @result += "openMenuBarPath(#{path})"
+  do: (other) ->
+    @result += "do(#{other})"
+  selectContiguousMatching: ->
+    @result += "selectContiguousMatching()"
+  selectBlock: ->
+    @result += "selectBlock()"

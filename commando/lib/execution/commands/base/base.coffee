@@ -175,11 +175,14 @@ class Commands.Base
     else
       1
   getTriggerPhrase: () ->
-    @info.triggerPhrase or @namespace
+    if @info.triggerPhrase is undefined
+      @namespace
+    else
+      @info.triggerPhrase
   getTriggerScopes: ->
     @info.triggerScopes or [@info.triggerScope or "Global"]
-  isSpoken: ->
-    @info.isSpoken != false
+  needsDragonCommand: ->
+    @info.needsDragonCommand != false
   generateFullCommand: () ->
     space = @info.namespace or @namespace
     # if @info.contextSensitive

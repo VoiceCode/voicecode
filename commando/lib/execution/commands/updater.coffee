@@ -29,17 +29,12 @@
         end tell
 
         tell application "#{scope}" to activate
-
         delay 0.5
+        set g to group "#{scope}"
 
         tell application "#{@dictateName()}"
           set listening to false
         end tell
-
-        delay 0.5
-
-        tell application currentName to activate
-
       end try
     end tell
 
@@ -97,7 +92,7 @@
           else
             console.log name
             "dirty"
-        else if command.isSpoken()
+        else if command.needsDragonCommand()
           "missing"
         else
           "unspoken"

@@ -1,10 +1,12 @@
-Commands.createDisabled
+Commands.create
   "vc-catch-all":
     kind: "none"
     grammarType: "none"
-    description: "just for creation in Dragon"
+    description: "catches all text - just for creation in Dragon"
     tags: ["voicecode", "recommended", "required"]
     triggerPhrase: ""
+    
+Commands.createDisabled
   "creek":
     kind: "historic"
     grammarType: "numberCapture"

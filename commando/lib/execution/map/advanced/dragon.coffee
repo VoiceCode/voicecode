@@ -9,9 +9,11 @@ Commands.createDisabled
         set microphone to sleep
       end tell
       """
+Commands.create
   "wakeup":
     description: "put dragon into command mode if it is sleeping"
     tags: ["dragon"]
+    needsDragonCommand: false
     action: (input) ->
       # dictateName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
       # @applescript """

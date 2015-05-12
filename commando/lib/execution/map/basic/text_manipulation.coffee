@@ -11,7 +11,7 @@ Commands.createDisabled
         when "Xcode"
           @key "[", 'command option'
         else
-          height = @do("folly").height
+          height = @do("folly").height or 1
           @key "X", 'command'
           @key "Up"
           @key "V", 'command'
@@ -29,7 +29,7 @@ Commands.createDisabled
         when "Xcode"
           @key "]", 'command option'
         else
-          height = @do("folly").height
+          height = @do("folly").height or 1
           @key "X", 'command'
           @key "Down"
           @key "V", 'command'
