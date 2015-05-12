@@ -5,6 +5,7 @@ class OSX.Actions
     # @command = $.kCGEventFlagMaskCommand
     # @option = $.kCGEventFlagMaskOption
     # @control = $.kCGEventFlagMaskControl
+  storage: {}
   setUndoByDeleting: (amount) ->
     Commands.currentUndoByDeletingCount = amount
   notUndoable: ->

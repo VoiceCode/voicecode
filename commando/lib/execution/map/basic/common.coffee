@@ -130,6 +130,7 @@ Commands.createDisabled
     action: ->
       @key "C", "command"
       @key "Tab", "command"
+      @delay 250
   "stoosh":
     grammarType: "oneArgument"
     description: "copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via `spark [name]`)"

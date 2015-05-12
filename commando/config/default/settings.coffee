@@ -257,6 +257,11 @@ _.extend Settings,
       y: 0.5
       width: 1
       height: 0.5
+    middle:
+      x: "auto"
+      y: "auto"
+      width: 0.75
+      height: 0.75
     "top left":
       x: 0
       y: 0

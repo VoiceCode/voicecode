@@ -36,5 +36,13 @@ Commands.createDisabled
           @key "R", 'command'
         when "Atom"
           @key "L", 'control option command'
-
-
+  "cheese":
+    description: "presses the down arrow [x] times then presses return (for choosing items from lists that don't have direct shortcuts)"
+    tags: ["navigation"]
+    grammarType: "numberCapture"
+    action: (input) ->
+      times = input or 1
+      for i in [1..times]
+        @key "Down"
+      @key "Return"
+      

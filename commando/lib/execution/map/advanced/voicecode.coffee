@@ -1,4 +1,10 @@
 Commands.createDisabled
+  "vc-catch-all":
+    kind: "none"
+    grammarType: "none"
+    description: "just for creation in Dragon"
+    tags: ["voicecode", "recommended", "required"]
+    triggerPhrase: ""
   "creek":
     kind: "historic"
     grammarType: "numberCapture"
@@ -113,11 +119,11 @@ Commands.createDisabled
     action: (input) ->
       if input?.length
         @string input.join(" ")
-  "voicecode-mode":
+  "set mode":
     grammarType: "textCapture"
     description: "change voicecode command execution mode"
     tags: ["system", "voicecode"]
-    triggerPhrase: "set mode"
+    continuous: false
     action: (input) ->
       if input?.length
         mode = Scripts.fuzzyMatch Settings.modes, input.join(' ')

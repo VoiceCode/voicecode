@@ -10,6 +10,26 @@ Commands.repetitionIndex = 0
 Commands.currentUndoByDeletingCount = 0
 Commands.aggregateUndoByDeletingCount = 0
 Commands.previousUndoByDeletingCount = 0
+Commands.primaryGrammarTypes = [
+  "numberCapture"
+  "textCapture"
+  "individual"
+  "singleSearch"
+  "oneArgument"
+]
+Commands.keys =
+  oneArgument: []
+  oneArgumentContinuous: []
+  singleSearch: []
+  singleSearchContinuous: []
+  individual: []
+  individualContinuous: []
+  numberCapture: []
+  numberCaptureContinuous: []
+  textCapture: []
+  textCaptureContinuous: []
+  repeater: []
+  findable: []
 
 Commands.create = (name, options) ->
   if typeof name is "string"
@@ -41,6 +61,20 @@ Commands.loadConditionalModules = ->
   _.each Commands.mapping, (value, key) ->
     enabled = !!Enables.findOne(name: key)?.enabled
     Commands.mapping[key].enabled = Commands.mapping[key].enabled or enabled
+
+    type = value.grammarType or "individual"
+    
+    if type in Commands.primaryGrammarTypes
+      Commands.keys[type].push key
+      unless value.continuous is false
+        Commands.keys[type + "Continuous"].push key
+
+    if value.findable?
+      Commands.keys.findable.push key
+
+    if value.repeater?
+      Commands.keys.repeater.push key
+
 
 class Commands.Base
   constructor: (@namespace, @input) ->
@@ -186,6 +220,6 @@ class Commands.Base
     echo -e "#{space} ${varText}" | nc -U /tmp/voicecode.sock
     """
   generateDragonCommandName: () ->
-    "#{@getTriggerPhrase()} /!Text!/"
+    _.compact([@getTriggerPhrase(), "/!Text!/"]).join(' ')
   digest: ->
     CryptoJS.MD5(@generateDragonBody()).toString()

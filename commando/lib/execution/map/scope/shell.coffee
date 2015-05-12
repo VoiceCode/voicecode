@@ -1,18 +1,18 @@
 Commands.createDisabled
-  "shell-cd":
+  "cd":
     description: "change directory"
     tags: ["domain-specific", "shell"]
     triggerScopes: ["iTerm", "Terminal"]
-    triggerPhrase: "cd"
+    continuous: false
     action: ->
       @string "cd ; ls"
       _(4).times =>
         @key "Left"
-  "shell-engage":
+  "engage":
     description: "hover your mouse over a directory name output from a 'ls' command in the terminal, and this command will 'cd' to that directory"
     tags: ["domain-specific", "shell"]
     triggerScope: "iTerm"
-    triggerPhrase: "engage"
+    continuous: false
     action: ->
       @rightClick()
       @delay 50
@@ -20,12 +20,12 @@ Commands.createDisabled
       @key "V", 'command'
       @string "; ls"
       @key "Return"
-  "shell-list":
+  "shell list":
     grammarType: "textCapture"
     description: "list directory contents (takes dynamic arguments)"
     tags: ["domain-specific", "shell"]
     triggerScopes: ["iTerm", "Terminal"]
-    triggerPhrase: "shell list"
+    continuous: false
     action: (input) ->
       options = _.map((input or []), (item) ->
         " -#{item}"
@@ -33,31 +33,31 @@ Commands.createDisabled
       @string "ls #{options}"
       @key "Return"
       
-  "shell-history":
+  "shell history":
     grammarType: "numberCapture"
     description: "display the last [n](default all) shell commands executed"
     tags: ["domain-specific", "shell"]
-    triggerPhrase: "shell history"
     triggerScopes: ["iTerm", "Terminal"]
+    continuous: false
     action: (input) ->
       @string "history #{input or ""}"
       @key "Return"
-  "shell-recall":
+  "shell recall":
     description: "hovering the mouse over the left-hand number of a result from the history output, this will re-execute the command"
     tags: ["domain-specific", "shell"]
-    triggerPhrase: "shell recall"
     triggerScope: "iTerm"
+    continuous: false
     action: ->
       @rightClick()
       @delay 50
       @key "!"
       @key "V", 'command'
       @key "Return"
-  "shell-edit":
+  "shell edit":
     description: "open file in editor"
     tags: ["domain-specific", "shell"]
-    triggerPhrase: "shell edit"
     triggerScope: "iTerm"
+    continuous: false
     action: ->
       @rightClick()
       @delay 50
@@ -71,11 +71,11 @@ Commands.createDisabled
     action: ->
       @string "cd ..; ls"
       @key "Return"
-  "shell-direct":
+  "direct":
     grammarType: "textCapture"
     description: "changes directory to any directory in the predefined list"
     tags: ["text", "domain-specific", "shell"]
-    triggerPhrase: "direct"
+    continuous: false
     action: (input) ->
       if input?.length
         current = @currentApplication()
@@ -93,6 +93,7 @@ Commands.createDisabled
     description: "insert a shell command from the predefined shell commands list"
     tags: ["text", "shell"]
     aliases: ["shall", "chell"]
+    continuous: false
     action: (input) ->
       if input?.length
         text = Scripts.fuzzyMatch Settings.shellCommands, input.join(' ')

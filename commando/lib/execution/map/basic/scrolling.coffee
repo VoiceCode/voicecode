@@ -1,18 +1,18 @@
 Commands.createDisabled
-  "scroll-page-up":
+  "page up":
     description: "press PageUp key [N] times"
     grammarType: "numberCapture"
-    triggerPhrase: "page up"
     tags: ["scroll", "up", "recommended"]
+    continuous: false
     action: (input) ->
       _(input or 1).times =>
         @key "PageUp"
         @delay 200
-  "scroll-page-down":
+  "page down":
     description: "press PageDown key [N] times"
     grammarType: "numberCapture"
-    triggerPhrase: "page down"
     tags: ["scroll", "down", "recommended"]
+    continuous: false
     action: (input) ->
       _(input or 1).times =>
         @key "PageDown"
@@ -22,13 +22,13 @@ Commands.createDisabled
     grammarType: "numberCapture"
     tags: ["scroll", "down", "recommended"]
     action: (input) ->
-      @scrollDown(input or 1)
+      @scrollDown(input or 10)
   "scroop":
     description: "scroll up"
     grammarType: "numberCapture"
     tags: ["scroll", "up", "recommended"]
     action: (input) ->
-      @scrollUp(input or 1)
+      @scrollUp(input or 10)
   "scrodgeway":
     description: "scroll way down"
     tags: ["scroll", "down", "recommended"]

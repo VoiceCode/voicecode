@@ -1,55 +1,9 @@
 Commands.Utility =
-  numberCaptureCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].grammarType is "numberCapture"
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  repeatableCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].grammarType is "repeatable"
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  textCaptureCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].grammarType is "textCapture"
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  individualCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      command = Commands.mapping[key]
-      command.grammarType is "individual" or command.grammarType is undefined # and not command.findable?
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  findableCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].findable?
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  singleSearchCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].grammarType is "singleSearch"
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  repeaterCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].repeater?
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  oneArgumentCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].grammarType is "oneArgument"
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  numberCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      _.contains (Commands.mapping[key].tags or []), "number"
-    )
-    _.sortBy(r, (e) -> e).reverse()
-  letterCommands: ->
-    r = _.filter(_.keys(Commands.mapping), (key) ->
-      _.contains (Commands.mapping[key].tags or []), "letter"
-    )
-    _.sortBy(r, (e) -> e).reverse()
+  sortedCommandKeys: (kind, continuous=false) ->
+    if continuous
+      _.sortBy(Commands.keys["#{kind}Continuous"], (e) -> e).reverse()
+    else
+      _.sortBy(Commands.keys[kind], (e) -> e).reverse()
   allTags: ->
     result = []
     _.each(Commands.mapping, (command, key) ->

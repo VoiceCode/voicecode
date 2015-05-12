@@ -9,10 +9,6 @@ Template.Commands.helpers
     Commands.Utility.individualCommands()
   oneArgumentCommands: ->
     Commands.Utility.oneArgumentCommands()
-  letterCommands: ->
-    Commands.Utility.letterCommands()
-  numberCommands: ->
-    Commands.Utility.numberCommands()
   tags: ->
     toggle = Session.get("enabledDisabledToggle")
     _.sortBy Commands.Utility.allEnabledTags(toggle), (i) -> i.toLowerCase()

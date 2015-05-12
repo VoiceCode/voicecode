@@ -7,6 +7,7 @@ Commands.createDisabled
       null
   "skoosh":
     description: "insert a space"
+    findable: " "
     tags: ["space", "recommended"]
     action: ->
       @key " "

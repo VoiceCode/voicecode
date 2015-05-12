@@ -1,48 +1,43 @@
 git =
-  "git-base":
+  "jet":
     description: "git"
-    triggerPhrase: "jet"
     action: ->
       @string "git "
-  "git-status":
+  "jet status":
     description: "git status"
-    triggerPhrase: "jet status"
     action: ->
-      @string "git status \n"
-  "git-commit":
+      @string "git status"
+      switch @currentApplication()
+        when "iTerm", "Terminal"
+          @key "Return"
+          
+  "jet commit":
     description: "git commit -a -m ''"
-    triggerPhrase: "jet commit"
     action: ->
       @string "git commit -a -m ''"
       @key "Left"
-  "git-add":
+  "jet add":
     description: "git add"
-    triggerPhrase: "jet add"
     action: ->
       @string "git add "
-  "git-diff":
+  "jet diff":
     description: "git diff"
-    triggerPhrase: "jet diff"
     action: ->
       @string "git diff "
-  "git-init":
+  "jet in it":
     description: "git init"
-    triggerPhrase: "jet in it"
     action: ->
       @string "git init "
-  "git-push":
+  "jet push":
     description: "git push"
-    triggerPhrase: "jet push"
     action: ->
       @string "git push "
-  "git-rebase":
+  "jet rebase":
     description: "git rebase"
-    triggerPhrase: "jet rebase"
     action: ->
       @string "git rebase "
-  "git-pull":
+  "jet pull":
     description: "git pull"
-    triggerPhrase: "jet pull"
     action: ->
       @string "git pull "
 

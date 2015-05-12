@@ -4,53 +4,61 @@ Commands.createDisabled
     description: "search backward for the next thing you say, then select it"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      if input?.value?
+      term = input.value or @storage.previousSearchTerm
+      if term?.length
+        @storage.previousSearchTerm = term
         switch @currentApplication()
           when "Atom"
             @runAtomCommand "selectPreviousOccurrence",
-              value: input.value
+              value: term
               distance: input.distance or 1
           else
-            @selectPreviousOccurrenceWithDistance input.value, input.distance
+            @selectPreviousOccurrenceWithDistance term, input.distance
   "crew":
     grammarType: "singleSearch"
     description: "search forward for the next thing you say, then select it"
     aliases: ["crews", "cruise"]
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      if input?.value?
+      term = input.value or @storage.previousSearchTerm
+      if term?.length
+        @storage.previousSearchTerm = term
         switch @currentApplication()
           when "Atom"
             @runAtomCommand "selectNextOccurrence",
-              value: input.value
+              value: term
               distance: input.distance or 1
           else
-            @selectFollowingOccurrenceWithDistance input.value, input.distance
+            @selectFollowingOccurrenceWithDistance term, input.distance
 
   "seltrail":
     grammarType: "singleSearch"
     description: "search backward for the next thing you say, then select from current position until found position"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      if input?.value?
+      term = input.value or @storage.previousSearchTerm
+      if term?.length
+        @storage.previousSearchTerm = term
         switch @currentApplication()
           when "Atom"
             @runAtomCommand "selectToPreviousOccurrence",
-              value: input.value
+              value: term
               distance: input.distance or 1
           else
-            @extendSelectionToPreviousOccurrenceWithDistance input.value, input.distance
+            @extendSelectionToPreviousOccurrenceWithDistance term, input.distance
   "selcrew":
     grammarType: "singleSearch"
     description: "search forward for the next thing you say, then select from current position until found position"
     tags: ["search", "voicecode", "selection"]
     action: (input) ->
-      if input?.value?
+      term = input.value or @storage.previousSearchTerm
+      if term?.length
+        @storage.previousSearchTerm = term
         switch @currentApplication()
           when "Atom"
             @runAtomCommand "selectToNextOccurrence",
-              value: input.value
+              value: term
               distance: input.distance or 1
           else
-            @extendSelectionToFollowingOccurrenceWithDistance input.value, input.distance
+            @extendSelectionToFollowingOccurrenceWithDistance term, input.distance
     

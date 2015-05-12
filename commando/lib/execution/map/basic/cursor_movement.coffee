@@ -125,15 +125,16 @@ Commands.createDisabled
     tags: ["text-manipulation", "recommended"]
     aliases: ["joel"]
     action: ->
-      if @currentApplication() is "Sublime Text"
-        @key "D", 'command shift'
-      else
-        @key "Left", 'command'
-        @key "Right", 'command shift'
-        @key "C", 'command'
-        @key "Right"
-        @key "Return"
-        @key "V", 'command'
+      switch @currentApplication()
+        when "Sublime Text", "Atom"
+          @key "D", 'command shift'
+        else
+          @key "Left", 'command'
+          @key "Right", 'command shift'
+          @key "C", 'command'
+          @key "Right"
+          @key "Return"
+          @key "V", 'command'
   "swan":
     description: "Enters 'Ace Jump' / 'Easy Motion' mode"
     tags: ["cursor"]

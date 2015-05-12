@@ -4,7 +4,7 @@ Commands.createDisabled
     tags: ["application", "tab", "recommended"]
     action: ->
       @key "Tab", 'command'
-      @delay(150)
+      @delay(250)
   "launcher":
     description: "open application launcher"
     tags: ["application", "system", "launching", "alfred"]

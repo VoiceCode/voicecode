@@ -170,6 +170,14 @@ Commands.createDisabled
     tags: ["text", "recommended"]
     transform: "titleFirstSentance"
     fallbackService: "vc case senchen"
+  "trench":
+    kind: "text"
+    grammarType: "textCapture"
+    description: "space then Sentence case with spaces"
+    tags: ["text", "recommended"]
+    transform: "titleFirstSentance"
+    fallbackService: "vc case senchen"
+    prefix: " "
   "datsun":
     kind: "text"
     grammarType: "textCapture"

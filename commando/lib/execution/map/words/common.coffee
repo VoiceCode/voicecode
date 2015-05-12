@@ -1,5 +1,7 @@
 singleWords = [
   "and"
+  "right"
+  "left"
   "class"
   "each"
   "else"
@@ -13,10 +15,8 @@ singleWords = [
   "null"
   "or"
   "true"
-  "undefined"
-  "while"
-  "yes"
-  "user"
+  "height"
+  "width"
 ]
 
 wordsWithTriggerPhrase =
@@ -24,21 +24,19 @@ wordsWithTriggerPhrase =
   "id": "ID"
 
 _.each singleWords, (word) ->
-  Commands.createDisabled "word-#{word}",
+  Commands.createDisabled word,
     kind: "word"
-    grammarType: "textCapture"
+    grammarType: "none"
     description: "insert the word '#{word}'"
     tags: ["words"]
-    module: "words"
-    triggerPhrase: word
-    word: word
+    # triggerPhrase: word
+    continuous: false
 
 _.each wordsWithTriggerPhrase, (trigger, word) ->
-  Commands.createDisabled "word-#{word}",
+  Commands.createDisabled word,
     kind: "word"
-    grammarType: "textCapture"
+    grammarType: "none"
     description: "insert the word '#{word}'"
     tags: ["words"]
-    module: "words"
     triggerPhrase: trigger
-    word: word
+    continuous: false

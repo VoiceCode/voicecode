@@ -13,11 +13,11 @@ Commands.createDisabled
     action: ->
       @openMenuBarItem "help"
 
-  "system-volume":
+  "volume":
     grammarType: "numberCapture"
     description: "adjust the system volume [0-100]"
-    triggerPhrase: "volume"
     tags: ["system", "recommended"]
+    continuous: false
     action: (input) ->
       @setVolume(input)
 
