@@ -247,6 +247,11 @@ _.extend Settings,
       y: 0
       width: 0.5
       height: 1
+    rate: 
+      x: 0.5
+      y: 0
+      width: 0.5
+      height: 1
     top:
       x: 0
       y: 0

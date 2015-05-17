@@ -389,7 +389,7 @@ Commands.createDisabled
       @key " "
   "dolly":
     tags: ["symbol", "recommended"]
-    aliases: ["dalai", "dawley", "donnelly", "donley", "dali"]
+    aliases: ["dalai", "dawley", "donnelly", "donley", "dali", "dollies"]
     findable: "$"
     action: ->
       @string "$"

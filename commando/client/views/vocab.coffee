@@ -35,6 +35,11 @@ Template.Vocab.helpers
           commands.push spoken
       _.sample(commands, commands.length).join(" keeper ")
 
+  phonetics: ->
+    # results = []
+    # for letter in phoneticLetters
+      
+    #   for second in phoneticLetters
 
     # websites = _.keys Settings.websites
     # applications = _.keys Settings.applications

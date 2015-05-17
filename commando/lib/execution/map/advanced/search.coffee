@@ -29,7 +29,7 @@ Commands.createDisabled
               value: term
               distance: input.distance or 1
           else
-            @selectFollowingOccurrenceWithDistance term, input.distance
+            @selectNextOccurrenceWithDistance term, input.distance
 
   "seltrail":
     grammarType: "singleSearch"
@@ -61,4 +61,43 @@ Commands.createDisabled
               distance: input.distance or 1
           else
             @extendSelectionToFollowingOccurrenceWithDistance term, input.distance
+  "trapreev":
+    grammarType: "singleSearch"
+    description: "search backwards for the next word that starts and ends with the given two letters, i.e. trapreev [char etch] would select the preceding occurrence of 'CoTrSee' - good for unpronounceable words"
+    tags: ["search", "voicecode", "selection"]
+    action: (input) ->
+      term = input?.value or @storage.previousTrapSearchTerm
+      if term?.length
+        @storage.previousTrapSearchTerm = term
+        switch @currentApplication()
+          when "Atom"
+            @runAtomCommand "selectSurroundedOccurrence",
+              expression: term
+              distance: input.distance or 1
+              direction: -1
+          else
+            @selectSurroundedOccurrence
+              expression: term
+              distance: input.distance or 1
+              direction: -1
+  "trapneck":
+    grammarType: "singleSearch"
+    description: "search forward for the next word that starts and ends with the given two letters, i.e. trapneck [char dell] would select the preceding occurrence of 'cKred' - good for unpronounceable words"
+    tags: ["search", "voicecode", "selection"]
+    action: (input) ->
+      term = input?.value or @storage.previousTrapSearchTerm
+      if term?.length
+        @storage.previousTrapSearchTerm = term
+        switch @currentApplication()
+          when "Atom"
+            @runAtomCommand "selectSurroundedOccurrence",
+              expression: term
+              distance: input.distance or 1
+              direction: 1
+          else
+            @selectSurroundedOccurrence
+              expression: term, 
+              distance: input.distance
+              direction: 1
+
     

@@ -387,7 +387,7 @@
         """
     else
       ""
-  selectFollowingOccurrence: (textArray) ->
+  selectNextOccurrence: (textArray) ->
     if textArray?.length
       first = textArray[0]
       last = textArray[1]

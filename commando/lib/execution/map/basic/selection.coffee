@@ -81,7 +81,7 @@ Commands.createDisabled
     grammarType: "textCapture"
     tags: ["text-manipulation", "cursor", "selection"]
     action: (input) ->
-      @selectFollowingOccurrence(input)
+      @selectNextOccurrence(input)
 
   "wordneck":
     description: "select the following whole word"

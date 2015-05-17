@@ -609,7 +609,7 @@ class OSX.Actions
           @key "Left", ['shift']
       else
         @key "Right"
-  selectFollowingOccurrence: (input) ->
+  selectNextOccurrence: (input) ->
     @notUndoable()
     if input?.length
       first = input[0]
@@ -644,7 +644,7 @@ class OSX.Actions
       else
         @key "Left"
 
-  selectFollowingOccurrenceWithDistance: (phrase, distance) ->
+  selectNextOccurrenceWithDistance: (phrase, distance) ->
     @notUndoable()
     if phrase?.length
       distance = (distance or 1)
@@ -792,6 +792,81 @@ class OSX.Actions
         @key horizontalForward
       _(span).times =>
         @key horizontalForward, ['shift']
+
+
+  selectSurroundedOccurrence: (params) ->
+    distance = (parseInt(params.input) or 1) - 1
+    expression = params.expression
+    return unless expression?.length
+
+    direction = params.direction or 1
+
+    if direction > 0
+      horizontalForward = "Right"
+      horizontalBackward = "Left"
+      verticalForward = "Down"
+    else
+      horizontalForward = "Left"
+      horizontalBackward = "Right"
+      verticalForward = "Up"
+
+    @notUndoable()
+
+    if @canDetermineSelections() and @isTextSelected()
+      @key horizontalForward
+
+    @key verticalForward, ['shift']
+    @key verticalForward, ['shift']
+    @key verticalForward, ['shift']
+    @key verticalForward, ['shift']
+    @key horizontalForward, ['shift', 'command']
+    
+    selection = if direction > 0
+      @getSelectedText()
+    else
+      _s.reverse @getSelectedText()
+
+    if direction is 1
+      first = expression[0]
+      last = expression[expression.length - 1]
+    else
+      last = expression[0]
+      first = expression[expression.length - 1]
+
+    results = []
+    start = undefined
+    selecting = false
+    canStart = true
+    candidate = null
+    for item, index in selection.split('')
+      if item is first and not selecting and canStart
+        start = index
+        selecting = true
+        canStart = false
+      else if item is last and selecting and start != index
+        candidate = [start, index + 1]
+      else if item.match(/\w/)
+        canStart = false
+        candidate = null
+      else
+        if selecting and candidate
+          results.push candidate
+        start = null
+        candidate = null
+        selecting = false
+        canStart = true
+
+    @key horizontalBackward
+
+    console.log results: results
+
+    if results[distance]?
+      span = results[distance][1] - results[distance][0]
+      _(results[distance][0]).times =>
+        @key horizontalForward
+      _(span).times =>
+        @key horizontalForward, ['shift']
+
 
   selectBlock: ->
     @notUndoable()

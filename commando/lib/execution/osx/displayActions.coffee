@@ -73,8 +73,8 @@ class OSX.displayActions
     @result += "selectCurrentOccurrence()"
   selectPreviousOccurrence: ->
     @result += "selectPreviousOccurrence()"
-  selectFollowingOccurrence: ->
-    @result += "selectFollowingOccurrence()"
+  selectNextOccurrence: ->
+    @result += "selectNextOccurrence()"
   makeModifierText: (modifiers) ->
     r = _.map modifiers, (m) ->
       modifierCodes[m]

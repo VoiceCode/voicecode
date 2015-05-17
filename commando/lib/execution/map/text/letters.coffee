@@ -1,4 +1,4 @@
-letters = 
+@phoneticLetters = 
 	a: "arch"
 	b: "brov"
 	c: "char"
@@ -26,7 +26,7 @@ letters =
 	y: "yang"
 	z: "zooch"
 
-_.each letters, (value, key) ->
+_.each phoneticLetters, (value, key) ->
 	Commands.createDisabled value,
     grammarType: "textCapture"
     description: "Enters the single letter: #{key}"
