@@ -3,12 +3,20 @@ Commands.createDisabled
     description: "go to next thing (application-specific), tab, message, etc."
     tags: ["recommended", "navigation"]
     action: ->
-      @key "]", 'command shift'
+      switch @currentApplication()
+        when "Skype"
+          @key "Right", 'command option'
+        else
+          @key "]", 'command shift'
   "gopreev":
     description: "go to previous thing (application-specific), tab, message, etc."
     tags: ["recommended", "navigation"]
     action: ->
-      @key "[", 'command shift'
+      switch @currentApplication()
+        when "Skype"
+          @key "Left", 'command option'
+        else
+          @key "[", 'command shift'
   "baxley":
     description: "go 'back' - whatever that might mean in context"
     tags: ["recommended", "navigation"]
