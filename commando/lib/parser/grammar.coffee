@@ -178,7 +178,7 @@ class @Grammar
 
     literalCommand
       = text:(overrideCommand / nestableTextCommand / translation / exactInteger / word / symbol)+ {return {command: "vc-literal", arguments: text};}
-   
+
     nestableTextIdentifier
       = "frank" / "treemail" / "trusername" / "trassword"
 

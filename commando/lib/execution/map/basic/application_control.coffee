@@ -36,4 +36,3 @@ Commands.createDisabled
       if name?.length
         application = Scripts.fuzzyMatch Settings.applications, name
         @openApplication application
-

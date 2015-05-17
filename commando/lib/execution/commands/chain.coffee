@@ -40,7 +40,7 @@ class Commands.Chain
               Commands.aggregateUndoByDeletingCount += Commands.currentUndoByDeletingCount
             else
               Commands.aggregateUndoByDeletingCount = 0
-            
+
         # pool('release')
 
         # @invokeShell appleScript
@@ -55,7 +55,7 @@ class Commands.Chain
         # console.log "result is #{inserted}"
 
       {interpretation: results, generated: combined}
-    
+
 
   generateNestedInterpretation: ->
     results = @parse()

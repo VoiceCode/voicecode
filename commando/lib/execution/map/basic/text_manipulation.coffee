@@ -34,5 +34,3 @@ Commands.createDisabled
           @key "Down"
           @key "V", 'command'
           _(height).times => @key "Up", 'shift'
-
-

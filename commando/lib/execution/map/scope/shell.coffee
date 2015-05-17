@@ -32,7 +32,7 @@ Commands.createDisabled
       ).join(" ")
       @string "ls #{options}"
       @key "Return"
-      
+
   "shell history":
     grammarType: "numberCapture"
     description: "display the last [n](default all) shell commands executed"

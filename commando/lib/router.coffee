@@ -71,7 +71,7 @@ Router.route 'api/history', ->
   body = @request.body
   items = PreviousCommands.find({}, {sort: {createdAt: -1}, limit: 50}).fetch()
   # console.log items
-  itemString = _.map items, (item, index) -> 
+  itemString = _.map items, (item, index) ->
     """
     <item arg="#{item._id}" valid="YES">
       <title>#{item.spoken}</title>
@@ -104,7 +104,7 @@ Router.route 'api/websites', ->
   else
     formatted
 
-  itemString = _.map results, (item) -> 
+  itemString = _.map results, (item) ->
     """
     <item arg="#{item.trigger}" valid="YES">
       <title>#{item.value}</title>
@@ -137,7 +137,7 @@ Router.route 'api/abbreviations', ->
   else
     formatted
 
-  itemString = _.map results, (item) -> 
+  itemString = _.map results, (item) ->
     """
     <item arg="#{item.trigger}" valid="YES">
       <title>#{item.value}</title>
@@ -170,7 +170,7 @@ Router.route 'api/directories', ->
   else
     formatted
 
-  itemString = _.map results, (item) -> 
+  itemString = _.map results, (item) ->
     """
     <item arg="#{item.trigger}" valid="YES">
       <title>#{item.value}</title>
@@ -203,7 +203,7 @@ Router.route 'api/emails', ->
   else
     formatted
 
-  itemString = _.map results, (item) -> 
+  itemString = _.map results, (item) ->
     """
     <item arg="#{item.trigger}" valid="YES">
       <title>#{item.value}</title>
@@ -237,7 +237,7 @@ Router.route 'api/usernames', ->
   else
     formatted
 
-  itemString = _.map results, (item) -> 
+  itemString = _.map results, (item) ->
     """
     <item arg="#{item.trigger}" valid="YES">
       <title>#{item.value}</title>

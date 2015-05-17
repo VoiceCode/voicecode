@@ -4,7 +4,7 @@
 #     grammarType: "none"
 #     description: "not spoken. used indirectly by other commands"
 
-numbers = 
+numbers =
   one: 1
   two: 2
   twah: 2
@@ -44,4 +44,3 @@ _.each numbers, (value, key) ->
     # namespace: "#{value}"
     tags: ["number", "recommended"]
     module: "number"
-

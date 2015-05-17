@@ -16,7 +16,7 @@ Meteor.methods
     dragonName = command.generateDragonCommandName()
     scope = command.getTriggerScope()
 
-    script = 
+    script =
       """osascript <<EOD
       tell application "Dragon Dictate" to activate
       delay 0.1
@@ -56,11 +56,11 @@ Meteor.methods
       end tell
 
       tell application "System Events"
-      keystroke "s" 
+      keystroke "s"
       end tell
 
       tell application "System Events"
-      key code "36" 
+      key code "36"
       end tell
 
       delay 0.1
@@ -90,7 +90,7 @@ Meteor.methods
       command = new Commands.Base("#{modifier}#{value}", null)
       body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
       dragonName = command.generateDragonCommandName()
-      script = 
+      script =
         """
         tell application "Dragon Dictate" to activate
         delay 0.1
@@ -118,13 +118,13 @@ Meteor.methods
         delay 0.1
 
         tell application "System Events"
-        key code "0" 
+        key code "0"
         end tell
-        
+
         delay 0.1
 
         tell application "System Events"
-        key code "36" 
+        key code "36"
         end tell
 
         delay 0.1
@@ -142,7 +142,7 @@ Meteor.methods
             click button "Compile" of splitter group 1 of window "Commands"
           end tell
         end tell
-        
+
         delay 0.4
 
         tell application "System Events"
@@ -163,7 +163,7 @@ Meteor.methods
     # console.log f
     Shell.exec f, async: true
     true
-    
+
   # Meteor.call("makeDragonCommandsForList", a)
   makeDragonCommandsForList: (keys) ->
     final = []
@@ -171,7 +171,7 @@ Meteor.methods
       command = new Commands.Base(key, null)
       body = command.generateDragonBody().replace(/["]/g, "\\\"").replace(/\\\\/g, "\\\\\\\\\\").replace(/\$/, "\\$")
       dragonName = command.generateDragonCommandName()
-      script = 
+      script =
         """
         tell application "Dragon Dictate" to activate
         delay 0.1
@@ -199,13 +199,13 @@ Meteor.methods
         delay 0.1
 
         tell application "System Events"
-        key code "0" 
+        key code "0"
         end tell
-        
+
         delay 0.1
 
         tell application "System Events"
-        key code "36" 
+        key code "36"
         end tell
 
         delay 0.1
@@ -223,7 +223,7 @@ Meteor.methods
             click button "Compile" of splitter group 1 of window "Commands"
           end tell
         end tell
-        
+
         delay 0.4
 
         tell application "System Events"
@@ -272,7 +272,7 @@ Meteor.methods
         click button "Compile" of splitter group 1 of window "Commands"
       end tell
     end tell
-    
+
     delay 0.4
 
     tell application "System Events"
@@ -342,5 +342,3 @@ Meteor.methods
       console.log e
   currentCommandStatus: (name, scope) ->
     CommandUpdater.getCommandStatus(name, scope)
-
-

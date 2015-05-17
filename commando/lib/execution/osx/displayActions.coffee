@@ -18,19 +18,19 @@ class OSX.displayActions
     ""
   keyUp: (key, modifiers) ->
     ""
-  click: ->    
+  click: ->
     @result += "click"
   doubleClick: ->
     @result += "double-click"
   tripleClick: ->
     @result += "triple-click"
-  rightClick: ->    
+  rightClick: ->
     @result += "right-click"
-  shiftClick: ->    
+  shiftClick: ->
     @result += "shift-click"
-  commandClick: ->    
+  commandClick: ->
     @result += "command-click"
-  optionClick: ->    
+  optionClick: ->
     @result += "option-click"
   applescript: (content) ->
     @result += "applescript: #{content}"

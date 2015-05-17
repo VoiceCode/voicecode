@@ -66,7 +66,7 @@
     """
   makeTextCommand: (text, modifiers) ->
     strokes = _.map text.split(''), (character) ->
-      result = switch character 
+      result = switch character
         when "."
           Scripts.makeKeycode 47, modifiers
         when "/"
@@ -98,7 +98,7 @@
             Scripts.makeKeystroke character, modifiers
       result
     joined = strokes.join("\ndelay 0.01\n") + "\ndelay 0.02"
-    Scripts.makeSystemEventsCommand joined 
+    Scripts.makeSystemEventsCommand joined
   joinActionCommands: (actions, input) ->
     _.map(actions, (action) ->
       Scripts.generateActionCommand(action, input)
@@ -259,7 +259,7 @@
 
         set distanceLeft to length of item 1 of sections1
         set distanceRight to length of item -1 of sections2
-        
+
         tell application "System Events"
         key code 123
         repeat distanceLeft times
@@ -291,7 +291,7 @@
         set AppleScript's text item delimiters to astid
 
         set distanceLeft to length of item 1 of sections1
-        
+
         tell application "System Events"
         key code 123
         repeat distanceLeft times
@@ -339,7 +339,7 @@
 
         set distanceLeft to length of item -1 of sections1
         set distanceRight to length of item -1 of sections2
-        
+
         tell application "System Events"
         key code 124
         repeat (distanceRight) times
@@ -373,7 +373,7 @@
         set AppleScript's text item delimiters to astid
 
         set distanceLeft to length of item -1 of sections1
-        
+
         tell application "System Events"
         key code 124
         repeat distanceLeft times
@@ -420,7 +420,7 @@
 
         set distanceLeft to length of item 1 of sections1
         set distanceRight to length of item 1 of sections2
-        
+
         tell application "System Events"
         key code 123
         repeat (distanceLeft) times
@@ -455,7 +455,7 @@
         set AppleScript's text item delimiters to astid
 
         set distanceLeft to length of item 1 of sections1
-        
+
         tell application "System Events"
         key code 123
         repeat distanceLeft times
@@ -488,11 +488,11 @@
     tell application "System Events"
       set currentApplication to name of first application process whose frontmost is true
     end tell
-    
-    
+
+
     set theOutputFolder to path to preferences folder from user domain as string
     set plist_file to theOutputFolder & "voicecode.plist"
-    
+
     try
       tell application "System Events"
         tell property list file plist_file
@@ -515,5 +515,3 @@
     """
     display notification "wrong context for command" with title "VoiceCode" subtitle "#{name}" sound name "Sosumi"
     """
-      
-      

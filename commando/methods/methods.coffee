@@ -6,7 +6,7 @@ Meteor.methods
         CommandStatuses.remove s._id
       else
         s.performReconciliation()
-      
+
   enableCommand: (name) ->
     Commands.mapping[name].enabled = true
     Enables.update

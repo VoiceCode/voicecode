@@ -23,7 +23,7 @@
         end tell
 
         delay 0.3
-        
+
         tell application "System Events"
           set currentName to name of first application process whose frontmost is true
         end tell
@@ -55,7 +55,7 @@
       set show Available Commands to true
       delay 0.5
       set show Available Commands to false
-      
+
       set names to (name of commands of (group "#{scope}")) as string
       set descriptions to (description of commands of (group "#{scope}")) as string
       set results to names & "||" & descriptions
@@ -84,7 +84,7 @@
       digest = command.digest()
       dragonName = command.generateDragonCommandName()
       myScopes = command.getTriggerScopes()
-      if _.contains myScopes, scope     
+      if _.contains myScopes, scope
         value = resultMap[dragonName]
         status = if value?
           if value.indexOf(digest) >= 0
@@ -97,19 +97,19 @@
         else
           "unspoken"
         delete resultMap[dragonName]
-      
-        # CommandStatuses.findOrCreate name, status, scope   
+
+        # CommandStatuses.findOrCreate name, status, scope
         CommandStatuses.insert
           name: name
           status: status
-          scope: scope   
+          scope: scope
 
     _.each resultMap, (value, key) ->
       # CommandStatuses.findOrCreate key, "removed", scope
       CommandStatuses.insert
         name: key
         status: "removed"
-        scope: scope   
+        scope: scope
 
 
 
@@ -173,11 +173,11 @@
       catch e
         console.log e
         status = "error"
-      
-      CommandStatuses.findOrCreate name, status, scope   
+
+      CommandStatuses.findOrCreate name, status, scope
     else
-      status = "missing"      
-      CommandStatuses.findOrCreate name, status, scope   
+      status = "missing"
+      CommandStatuses.findOrCreate name, status, scope
 
   updateAll: (scope) ->
     _.each CommandStatuses.find({scope: scope, status: "dirty"}, {limit: 90}).fetch(), (item) ->

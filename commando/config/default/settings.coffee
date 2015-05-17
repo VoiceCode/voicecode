@@ -147,7 +147,7 @@ _.extend Settings,
     "each with index": "eawi"
     "find all": "fina"
   # this can be changed. Tab, Return, Escape, etc
-  codeSnippetCompletions: 
+  codeSnippetCompletions:
     "Sublime Text": "Tab"
   directories:
     home: "~"
@@ -232,22 +232,22 @@ _.extend Settings,
   windowPositions:
     # units <= 1 are proportions
     # units > 1 are absolute
-    max: 
+    max:
       x: 0
       y: 0
       width: 1
       height: 1
-    left: 
+    left:
       x: 0
       y: 0
       width: 0.5
       height: 1
-    right: 
+    right:
       x: 0.5
       y: 0
       width: 0.5
       height: 1
-    rate: 
+    rate:
       x: 0.5
       y: 0
       width: 0.5
@@ -313,7 +313,7 @@ _.extend Settings,
       dragonCommandsWindowName: "Commands"
       dragonSaveButtonName: "Save"
       dragonGlobalName: "Global"
-      
+
   # regex's for selection commands
   regex:
     symbols: /[\/\.,\?*&^%$#@:;\|\+\-\!\\]/

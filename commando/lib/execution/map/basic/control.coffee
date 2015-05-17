@@ -3,7 +3,7 @@ Commands.createDisabled
     description: "does nothing, but enters into voice code"
     aliases: ["chin"]
     tags: ["text", "recommended"]
-    action: -> 
+    action: ->
       null
   "skoosh":
     description: "insert a space"

@@ -112,7 +112,7 @@ Commands.createDisabled
             @runAtomCommand "selectLineRange",
               from: first
               to: last
-  
+
   "seltil":
     grammarType: "numberCapture"
     description: "selects text from current position through ('til) spoken line number: seltil five five. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
@@ -131,4 +131,3 @@ Commands.createDisabled
             @exec script
           when "Atom"
             @runAtomCommand "extendSelectionToLine", input
-

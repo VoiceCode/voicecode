@@ -126,7 +126,7 @@ tock()
 
 # server.on "request", ->
 #   console.log "booom"
-#   console.log 
+#   console.log
 
 
 net = Meteor.npmRequire("net")
@@ -155,7 +155,7 @@ commandHandler2 = Meteor.bindEnvironment (data) ->
   body = data.toString('utf8')
   console.log body
   phrase = body.replace("\n", "")
-  console.log 
+  console.log
     previousPhrase: previousPhrase
     phrase: phrase.toLowerCase().replace(/[\W]+/g, "")
   if phrase.toLowerCase().replace(/[\W]+/g, "") != previousPhrase

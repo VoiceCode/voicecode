@@ -6,7 +6,7 @@ Commands.createDisabled
     action: (input) ->
       menuItem = Settings.menuItemAliases[input] or input
       @openMenuBarItem menuItem
-      
+
   "blerch":
     description: "search the menubar items (opens help menu)"
     tags: ["application", "system", "recommended"]
@@ -27,7 +27,7 @@ Commands.createDisabled
     aliases: ["wendy"]
     tags: ["system", "window", "recommended"]
     action: (input) ->
-      if input?.length      
+      if input?.length
         preset = Scripts.fuzzyMatch Settings.windowPositions, input.join(' ')
         screen = @getScreenInfo().currentFrame
         # console.log screen
@@ -54,7 +54,7 @@ Commands.createDisabled
           screen.size.height * preset.y
         else
           preset.y
-        
+
         newOriginX = screen.origin.x + offsetX
         newOriginY = screen.origin.y + offsetY
 
@@ -66,6 +66,3 @@ Commands.createDisabled
         """
         # console.log script
         @applescript(script, false)
-
-
-      

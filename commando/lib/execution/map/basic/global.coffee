@@ -45,4 +45,3 @@ Commands.createDisabled
       for i in [1..times]
         @key "Down"
       @key "Return"
-      

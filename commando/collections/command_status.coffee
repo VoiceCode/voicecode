@@ -15,7 +15,7 @@ CommandStatuses.attachSchema(Schemas.CommandStatus)
 Meteor.startup ->
   if Meteor.isServer
     CommandStatuses.remove({})
-  
+
 CommandStatuses.findOrCreate = (name, status, scope) ->
   record = CommandStatuses.update
     name: name,
@@ -119,7 +119,7 @@ CommandStatuses.helpers
           end tell
         end tell
       end tell
-        
+
       tell application "#{@dictateName()}"
         reveal command "#{@name}" of group "#{@scope}"
       end tell
@@ -133,7 +133,7 @@ CommandStatuses.helpers
       end tell
 
       delay 0.3
-      
+
       tell application "System Events"
         key code 125
         delay 0.1
@@ -167,7 +167,7 @@ CommandStatuses.helpers
 
     tell application "#{@dictateName()}"
       set c to command "#{dragonName}" of group "#{scope}"
-      tell c to reveal 
+      tell c to reveal
     end tell
 
     delay 0.3
@@ -179,7 +179,7 @@ CommandStatuses.helpers
         end tell
       end tell
     end tell
-      
+
     tell application "#{@dictateName()}"
       reveal command "#{dragonName}" of group "#{scope}"
     end tell
@@ -196,7 +196,7 @@ CommandStatuses.helpers
 
     tell application "System Events"
     key code 36
-    key code 48 
+    key code 48
     end tell
 
     delay 0.1
@@ -214,7 +214,7 @@ CommandStatuses.helpers
 
     delay 0.3
     tell application "System Events"
-    key code 48 
+    key code 48
     end tell
     delay 0.3
 

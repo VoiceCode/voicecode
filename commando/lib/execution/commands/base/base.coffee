@@ -63,7 +63,7 @@ Commands.loadConditionalModules = ->
     Commands.mapping[key].enabled = Commands.mapping[key].enabled or enabled
 
     type = value.grammarType or "individual"
-    
+
     if type in Commands.primaryGrammarTypes
       Commands.keys[type].push key
       unless value.continuous is false
@@ -78,7 +78,7 @@ Commands.loadConditionalModules = ->
 
 class Commands.Base
   constructor: (@namespace, @input) ->
-    @info = Commands.mapping[@namespace] 
+    @info = Commands.mapping[@namespace]
     @kind = @info.kind or "action"
   transform: ->
     Transforms[@info.transform]
@@ -106,7 +106,7 @@ class Commands.Base
         else
           fallback = @info.fallbackService
           transform = @info.transform
-          -> 
+          ->
             if fallback?
               switch @currentApplication()
                 when "Atom"
@@ -136,7 +136,7 @@ class Commands.Base
       override = @info.override
       input = @input
       -> override.call(@, input, funk)
-    else        
+    else
       funk
       # when "number"
       #   preCommand = if @info.padLeft
@@ -157,7 +157,7 @@ class Commands.Base
       #       Scripts.joinActionCommands(@actions, @input)
       #     else
       #       Scripts.outOfContext(@namespace)
-            
+
       #     Scripts.applicationScope scopeCases, fallback
       #   else
       #     if @actions?.length

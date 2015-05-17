@@ -20,7 +20,7 @@ Commands.createDisabled
       quadrant = 0
       if input?
         # current monitor
-        if input < 10 
+        if input < 10
           quadrant = input
         # monitor number 1
         else if input is 10

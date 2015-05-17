@@ -145,4 +145,3 @@ Commands.createDisabled
       if count? and count > 0
         for i in [1..count]
           @key 'Left', 'shift'
-          

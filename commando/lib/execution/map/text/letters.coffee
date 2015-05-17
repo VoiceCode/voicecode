@@ -35,7 +35,7 @@ _.each phoneticLetters, (value, key) ->
       @string "#{key}#{(input or []).join('')}"
 
 # _.each letters, (value, key) ->
-# 	Commands.mapping["sky#{value}"] = 
+# 	Commands.mapping["sky#{value}"] =
 #     kind: "action"
 #     grammarType: "textCapture"
 #     description: "Enters capital letter: #{key}"

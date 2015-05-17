@@ -10,7 +10,7 @@ git =
       switch @currentApplication()
         when "iTerm", "Terminal"
           @key "Return"
-          
+
   "jet commit":
     description: "git commit -a -m ''"
     action: ->

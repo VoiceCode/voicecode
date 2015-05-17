@@ -4,9 +4,9 @@ Schemas.Cash = new SimpleSchema
   key:
     type: String
     index: 1
-  fingerprint: 
+  fingerprint:
     type: String
-  content: 
+  content:
     type: String
   updatedAt:
     type: Date

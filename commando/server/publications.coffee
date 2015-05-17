@@ -9,5 +9,3 @@ Meteor.publish "enables", (limit) ->
 
 Meteor.publish "parserCash", (limit) ->
   Cashes.find(key: "parseGenerator")
-
-

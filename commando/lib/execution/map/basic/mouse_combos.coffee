@@ -98,4 +98,3 @@ Commands.createDisabled
     description: "click, then delete line to the left"
     tags: ["mouse", "combo"]
     combo: ["chiff", "snipple"]
-

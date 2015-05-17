@@ -96,8 +96,6 @@ Commands.createDisabled
               direction: 1
           else
             @selectSurroundedOccurrence
-              expression: term, 
+              expression: term
               distance: input.distance
               direction: 1
-
-    

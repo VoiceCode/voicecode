@@ -1,4 +1,3 @@
-
 class OSX.Actions
   constructor: () ->
     # @shift = $.kCGEventFlagMaskShift
@@ -123,19 +122,19 @@ class OSX.Actions
   getMousePosition: ->
     $.CGEventGetLocation($.CGEventCreate(null))
 
-  mouseDown: (position) ->    
+  mouseDown: (position) ->
     @notUndoable()
     position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
 
-  mouseUp: (position) ->    
+  mouseUp: (position) ->
     @notUndoable()
     position ?= @getMousePosition()
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, up)
 
-  click: ->    
+  click: ->
     @notUndoable()
     # position = $.NSEvent('mouseLocation')
     position = @getMousePosition()
@@ -168,7 +167,7 @@ class OSX.Actions
 
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
-    
+
     $.CGEventSetIntegerValueField(down, $.kCGMouseEventClickState, 2)
     $.CGEventSetIntegerValueField(up, $.kCGMouseEventClickState, 2)
 
@@ -181,8 +180,8 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
     @delay(@clickDelayRequired())
-  
-  rightClick: ->    
+
+  rightClick: ->
     @notUndoable()
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseDown, position, $.kCGMouseButtonRight)
@@ -191,7 +190,7 @@ class OSX.Actions
     $.CGEventPost($.kCGSessionEventTap, up)
     @delay(@clickDelayRequired())
 
-  shiftClick: ->    
+  shiftClick: ->
     @notUndoable()
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
@@ -207,7 +206,7 @@ class OSX.Actions
     @keyUp "Shift"
     @delay(@clickDelayRequired())
 
-  commandClick: ->    
+  commandClick: ->
     @notUndoable()
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
@@ -223,7 +222,7 @@ class OSX.Actions
     @keyUp "Command"
     @delay(@clickDelayRequired())
 
-  optionClick: ->    
+  optionClick: ->
     @notUndoable()
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
@@ -260,7 +259,7 @@ class OSX.Actions
 
     final =
       screens: results
-      currentFrame: 
+      currentFrame:
         origin:
           x: frame.origin.x
           y: mainScreen.size.height - frame.origin.y - frame.size.height
@@ -290,7 +289,7 @@ class OSX.Actions
         screen.size.height * y
       else
         y
-    
+
       newOriginX = screen.origin.x + offsetX
       newOriginY = screen.origin.y + offsetY
 
@@ -314,19 +313,19 @@ class OSX.Actions
   do: (name, input) ->
     command = new Commands.Base(name, input)
     command.generate().call(@)
-    
+
   runCommand: (name, input) ->
     @do(name, input)
 
   runAtomCommand: (name, options) ->
-    info = 
+    info =
       command: name
       options: options
-      
+
     command = """echo "#{JSON.stringify(info).replace(/"/g, '\\"')}" | nc -U /tmp/voicecode-atom.sock"""
     console.log command
     @exec command
-    
+
   openMenuBarItem: (item) ->
     @notUndoable()
     @applescript """
@@ -339,7 +338,7 @@ class OSX.Actions
     @notUndoable()
     elements = _.map itemArray.reverse(), (item, index) ->
       if index is 0
-        "click menu item \"#{item}\""  
+        "click menu item \"#{item}\""
       else if index != (itemArray.length - 1)
         "of menu \"#{item}\" of menu item \"#{item}\""
       else
@@ -379,7 +378,7 @@ class OSX.Actions
 
   openBrowser: ->
     @notUndoable()
-    defaultBrowser = Settings.defaultBrowser or "Safari"    
+    defaultBrowser = Settings.defaultBrowser or "Safari"
     @openApplication(defaultBrowser)
 
   openURL: (url) ->
@@ -396,7 +395,7 @@ class OSX.Actions
     if @_currentApplication
       console.log @_currentApplication
       @_currentApplication
-    else    
+    else
       w = $.NSWorkspace('sharedWorkspace')
       app = w('frontmostApplication')
       # app = w('menuBarOwningApplication')
@@ -529,7 +528,7 @@ class OSX.Actions
     console.log numberOfLines
     _(number).times => @key "Up"
     _(numberOfLines + (number * 2) - 1).times => @key "Down", ['shift']
-  
+
   symmetricSelectionExpansion: (number) ->
     @notUndoable()
     @key "C", ["command"]
@@ -557,22 +556,22 @@ class OSX.Actions
         lastResults = clipboard.split(last)
         distanceRight = lastResults[lastResults.length - 1]?.length or 0
         @key "Left"
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Right"
 
         width = totalLength - distanceLeft - distanceRight
-        _(width).times => 
+        _(width).times =>
           @key "Right", ['shift']
       else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
         @key "Left"
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Right"
 
         width = first.length
-        _(width).times => 
+        _(width).times =>
           @key "Right", ['shift']
   selectPreviousOccurrence: (input) ->
     @notUndoable()
@@ -590,22 +589,22 @@ class OSX.Actions
         lastResults = clipboard.split(last)
         distanceRight = lastResults[lastResults.length - 1]?.length or 0
         @key "Right"
-        _(distanceRight).times => 
+        _(distanceRight).times =>
           @key "Left"
 
         width = distanceLeft - first.length - distanceRight
-        _(width).times => 
+        _(width).times =>
           @key "Left", ['shift']
       else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceRight = firstResults[firstResults.length - 1]?.length or 0
         @key "Right"
-        _(distanceRight).times => 
+        _(distanceRight).times =>
           @key "Left"
 
         width = first.length
-        _(width).times => 
+        _(width).times =>
           @key "Left", ['shift']
       else
         @key "Right"
@@ -625,21 +624,21 @@ class OSX.Actions
         lastResults = clipboard.split(last)
         distanceRight = lastResults[lastResults.length - 1]?.length or 0
         @key "Left"
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Right"
 
         width = totalLength - distanceLeft - distanceRight
-        _(width).times => 
+        _(width).times =>
           @key "Right", ['shift']
       else if clipboard.indexOf(first) >= 0
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
         @key "Left"
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Right"
 
         width = first.length
-        _(width).times => 
+        _(width).times =>
           @key "Right", ['shift']
       else
         @key "Left"
@@ -656,10 +655,10 @@ class OSX.Actions
         results = selected.split(phrase)
         distanceLeft = results.splice(0, distance).join(phrase).length
         @key "Left"
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Right"
         width = phrase.length
-        _(width).times => 
+        _(width).times =>
           @key "Right", ['shift']
 
   selectPreviousOccurrenceWithDistance: (phrase, distance) ->
@@ -674,10 +673,10 @@ class OSX.Actions
         results = selected.split(phrase).reverse()
         distanceLeft = results.splice(0, distance).join(phrase).length
         @key "Right"
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Left"
         width = phrase.length
-        _(width).times => 
+        _(width).times =>
           @key "Left", ['shift']
 
   extendSelectionToFollowingOccurrenceWithDistance: (phrase, distance) ->
@@ -691,15 +690,15 @@ class OSX.Actions
       @key "Left"
       if existing? and selected.indexOf(existing) is 0
         selected = selected.slice(existing.length)
-        _(existing.length).times => 
+        _(existing.length).times =>
           @key "Right", ['shift']
       if selected.indexOf(phrase) >= 0
         results = selected.split(phrase)
         distanceLeft = results.splice(0, distance).join(phrase).length
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Right", ['shift']
         width = phrase.length
-        _(width).times => 
+        _(width).times =>
           @key "Right", ['shift']
 
   extendSelectionToPreviousOccurrenceWithDistance: (phrase, distance) ->
@@ -713,17 +712,17 @@ class OSX.Actions
       @key "Right"
       if existing? and selected.indexOf(existing) is (selected.length - existing.length)
         selected = selected.slice(0, selected.length - existing.length)
-        _(existing.length).times => 
+        _(existing.length).times =>
           @key "Left", ['shift']
       if selected.indexOf(phrase) >= 0
         results = selected.split(phrase).reverse()
         distanceLeft = results.splice(0, distance).join(phrase).length
-        _(distanceLeft).times => 
+        _(distanceLeft).times =>
           @key "Left", ['shift']
         width = phrase.length
-        _(width).times => 
+        _(width).times =>
           @key "Left", ['shift']
-      
+
 
   ###
   @params object
@@ -756,7 +755,7 @@ class OSX.Actions
     @key verticalForward, ['shift']
     @key verticalForward, ['shift']
     @key horizontalForward, ['shift', 'command']
-    
+
     selection = if direction > 0
       @getSelectedText()
     else
@@ -820,7 +819,7 @@ class OSX.Actions
     @key verticalForward, ['shift']
     @key verticalForward, ['shift']
     @key horizontalForward, ['shift', 'command']
-    
+
     selection = if direction > 0
       @getSelectedText()
     else

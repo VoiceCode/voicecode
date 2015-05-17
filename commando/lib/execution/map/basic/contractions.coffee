@@ -3,6 +3,6 @@ Commands.createDisabled
     description: "contraction of: dot spark"
     aliases: ["chin"]
     tags: ["copy-paste", "combo"]
-    action: -> 
+    action: ->
       @key "."
       @key "V", 'command'
