@@ -58,7 +58,7 @@ Commands.changeName = (old, newName) ->
   delete Commands.mapping[old]
 
 Commands.loadConditionalModules = ->
-  _.each Commands.mapping, (value, key) ->
+  for key, value of Commands.mapping
     enabled = !!Enables.findOne(name: key)?.enabled
     Commands.mapping[key].enabled = Commands.mapping[key].enabled or enabled
 
@@ -180,7 +180,7 @@ class Commands.Base
     else
       @info.triggerPhrase
   getTriggerScopes: ->
-    @info.triggerScopes or [@info.triggerScope or "Global"]
+    @info.triggerScopes or [@info.triggerScope or "global"]
   needsDragonCommand: ->
     @info.needsDragonCommand != false
   generateFullCommand: () ->

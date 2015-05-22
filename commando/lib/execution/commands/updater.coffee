@@ -1,4 +1,4 @@
-@CommandUpdater = 
+@CommandUpdater =
   locale: ->
     Settings.localeSettings[Settings.locale]
   dictateName: ->

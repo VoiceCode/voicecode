@@ -297,6 +297,12 @@ _.extend Settings,
     "Google Chrome"
     "Parallels Desktop"
     "Atom"
+    "IntelliJ IDEA"
+    "PhpStorm"
+    "PyCharm"
+    "RubyMine"
+    "WebStorm"
+    "AppCode"
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
@@ -320,7 +326,19 @@ _.extend Settings,
     quotes: /["'`]/
     parens: /[\(\)\{\}\[\]]/
 
-  # delay for how long the clipboard takes to populate after a copy is different in different applications
+  # delay for how long the clipboard takes to populate after a copy operation is different in different applications
   clipboardLatency:
     "Sublime Text": 300
     "Mail": 200
+
+  # For JetBrains IDEs and possibly other applications that do not work with Dragon Dictate
+  dragonIncompatibleApplications: [
+    "IntelliJ IDEA"
+    "PhpStorm"
+    "PyCharm"
+    "RubyMine"
+    "WebStorm"
+    "AppCode"
+  ]
+  # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
+  dragonIncompatibleApplicationDelay: 5000

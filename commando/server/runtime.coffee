@@ -25,9 +25,20 @@ app = $.NSApplication('sharedApplication')
 
 AppDelegate = $.NSObject.extend('AppDelegate')
 
+listeningOnMainSocket = true
+
 AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notif) ->
   current = notif('object')('frontmostApplication')('localizedName').toString()
   Actions.setCurrentApplication current
+  if current in Settings.dragonIncompatibleApplications
+    console.log "disabling main command socket for compatibility with: #{current}"
+    listeningOnMainSocket = false
+  else if listeningOnMainSocket is false
+    Meteor.setTimeout ->
+      listeningOnMainSocket = true
+      console.log "re-enabling main command socket"
+    , Settings.dragonIncompatibleApplicationDelay or 5000
+
 
 # AppDelegate.addMethod 'applicationDidFinishLaunching:', 'v@:@', (self, _cmd, notif) ->
 #   console.log('got applicationDidFinishLauching')
@@ -143,12 +154,13 @@ serverHandler2 = Meteor.bindEnvironment (localSerialConnection) ->
 previousPhrase = null
 
 commandHandler = Meteor.bindEnvironment (data) ->
-  body = data.toString('utf8')
-  console.log body
-  phrase = body.replace("\n", "")
-  previousPhrase = phrase.toLowerCase().replace(/[\W]+/g, "")
-  chain = new Commands.Chain(phrase + " ")
-  results = chain.execute(true)
+  if listeningOnMainSocket
+    body = data.toString('utf8')
+    console.log body
+    phrase = body.replace("\n", "")
+    previousPhrase = phrase.toLowerCase().replace(/[\W]+/g, "")
+    chain = new Commands.Chain(phrase + " ")
+    results = chain.execute(true)
 
 # comes from growl
 commandHandler2 = Meteor.bindEnvironment (data) ->

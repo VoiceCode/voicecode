@@ -1,6 +1,8 @@
 loadGrammar = ->
   console.log "reloading grammar"
   Commands.loadConditionalModules()
+  synchronizer?.updateAllCommands(true)
+
   try
     fingerprint =
       data:
@@ -52,21 +54,13 @@ loadGrammar = ->
 isReloading = false
 needsReloading = false
 Commands.reloadGrammar = ->
-  console.log "reload request:"
-  console.log isReloading
-  console.log needsReloading
-
   if isReloading
     needsReloading = true
   else
+    console.log "reloading grammar"
     isReloading = true
     loadGrammar()
     isReloading = false
     if needsReloading
       needsReloading = false
       Commands.reloadGrammar()
-
-Meteor.startup ->
-  @Grammar = new Grammar()
-  @ParseGenerator = {}
-  Commands.reloadGrammar()

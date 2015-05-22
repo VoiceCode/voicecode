@@ -17,3 +17,11 @@
 #   EOD
 #   """
 #   Shell.exec command, async: true
+
+Meteor.startup ->
+  console.log "Copyright (c) VoiceCode.io 2015 - all rights reserved"
+  @Grammar = new Grammar()
+  @ParseGenerator = {}
+  Commands.reloadGrammar()
+  @synchronizer = new Synchronizer()
+  synchronizer.updateAllCommands(true)

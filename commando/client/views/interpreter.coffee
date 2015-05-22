@@ -16,7 +16,7 @@ Template.Interpreter.events
 
 
       actions = new OSX.displayActions()
-      display = _.map result.interpretation, (e) -> 
+      display = _.map result.interpretation, (e) ->
         actions.reset()
         command = new Commands.Base(e.command, e.arguments)
         individual = command.generate()
@@ -28,5 +28,3 @@ Template.Interpreter.events
       console.log e
       Session.set "generated", null
       Session.set "interpretation", JSON.stringify(e)
-      
-    

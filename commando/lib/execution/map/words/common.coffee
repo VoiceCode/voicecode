@@ -16,11 +16,9 @@ singleWords = [
   "or"
   "true"
   "height"
-  "width"
 ]
 
 wordsWithTriggerPhrase =
-  # "word": "trigger"
   "id": "ID"
 
 _.each singleWords, (word) ->
@@ -29,7 +27,6 @@ _.each singleWords, (word) ->
     grammarType: "none"
     description: "insert the word '#{word}'"
     tags: ["words"]
-    # triggerPhrase: word
     continuous: false
 
 _.each wordsWithTriggerPhrase, (trigger, word) ->

@@ -3,7 +3,7 @@ Commands.createDisabled
     kind: "none"
     grammarType: "none"
     description: "catches all text - just for creation in Dragon"
-    tags: ["voicecode", "recommended", "required"]
+    tags: ["voicecode", "recommended"]
     triggerPhrase: ""
   "creek":
     kind: "historic"

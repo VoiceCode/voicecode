@@ -1,4 +1,5 @@
 {
   "shelljs": "0.3.0",
-  "NodObjC": "1.0.0"
+  "NodObjC": "1.0.0",
+  "sqlite3": "3.0.8"
 }

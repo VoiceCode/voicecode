@@ -1,4 +1,4 @@
-Meteor.subscribe "history"
+# Meteor.subscribe "history"
 Meteor.subscribe "commandStatuses"
 Meteor.subscribe "parserCash"
 @enablesSubscription = Meteor.subscribe "enables"

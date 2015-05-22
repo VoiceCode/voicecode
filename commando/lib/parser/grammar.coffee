@@ -249,14 +249,14 @@ class @Grammar
     eighteen = "eighteen" ss {return 18;}
     nineteen = "nineteen" ss {return 19;}
 
-    twenty = "twenty" ("-" / " ") {return 20;}
-    thirty = "thirty" ("-" / " ") {return 30;}
-    forty = "forty" ("-" / " ") {return 40;}
-    fifty = "fifty" ("-" / " ") {return 50;}
-    sixty = "sixty" ("-" / " ") {return 60;}
-    seventy = "seventy" ("-" / " ") {return 70;}
-    eighty = "eighty" ("-" / " ") {return 80;}
-    ninety = "ninety" ("-" / " ") {return 90;}
+    twenty = "twenty" ("-" / " ")+ {return 20;}
+    thirty = "thirty" ("-" / " ")+ {return 30;}
+    forty = "forty" ("-" / " ")+ {return 40;}
+    fifty = "fifty" ("-" / " ")+ {return 50;}
+    sixty = "sixty" ("-" / " ")+ {return 60;}
+    seventy = "seventy" ("-" / " ")+ {return 70;}
+    eighty = "eighty" ("-" / " ")+ {return 80;}
+    ninety = "ninety" ("-" / " ")+ {return 90;}
 
     hundred = "hundred" ss {return '00';}
     thousand = "thousand" ss {return '000';}
