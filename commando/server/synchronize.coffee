@@ -28,13 +28,19 @@ class @Synchronizer
     if @bundles[name]
       @bundles[name]
     else
-      bundle = Execute("osascript -e 'return id of app \"#{name}\"'")?.trim()
+      bundle = Applescript("""
+      try
+        return id of app \"#{name}\"
+      on error errMsg number errNum
+        return ""
+      end try
+      """)?.trim()
       if bundle?.length
         @bundles[name] = bundle
         @applicationNames[bundle] = name
         bundle
       else
-        throw new Error("could not get bundle identifier for: #{name}")
+        console.log "could not get bundle identifier for: #{name}"
   getApplicationVersion: (bundle) ->
     name = @applicationNames[bundle]
     if @applicationVersions[name]?
@@ -114,27 +120,28 @@ class @Synchronizer
       body = command.generateDragonBody().trim()
       for scope in command.getTriggerScopes()
         bundle = @getBundleId(scope)
-        value = results[bundle]?[dragonName]
-        if value?
-          if value.ZTEXT?.trim() is body
-            # everything is fine, command is good
-          else
-            # command body needs updating
-            needsUpdating.push
-              id: value.Z_PK
-              body: body
+        if bundle?.length
+          value = results[bundle]?[dragonName]
+          if value?
+            if value.ZTEXT?.trim() is body
+              # everything is fine, command is good
+            else
+              # command body needs updating
+              needsUpdating.push
+                id: value.Z_PK
+                body: body
+                bundle: bundle
+          else if command.needsDragonCommand()
+            # command is missing
+            needsCreating.push
               bundle: bundle
-        else if command.needsDragonCommand()
-          # command is missing
-          needsCreating.push
-            bundle: bundle
-            triggerPhrase: dragonName
-            body: body
-        else
-          # command doesn't need to exist in dragon
+              triggerPhrase: dragonName
+              body: body
+          else
+            # command doesn't need to exist in dragon
 
-        if results[bundle]?[dragonName]?
-          delete results[bundle][dragonName]
+          if results[bundle]?[dragonName]?
+            delete results[bundle][dragonName]
 
     # leftovers
     for bundle, items of results
