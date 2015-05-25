@@ -5,6 +5,7 @@ class @Synchronizer
   constructor: (@database) ->
     @bundles = {global: "global"}
     @applicationNames = {}
+    @lastId = (new Date()).getTime()
     @applicationVersions = {}
     file = @databaseFile()
     exists = fs.existsSync(file)
@@ -17,7 +18,7 @@ class @Synchronizer
       @get = Meteor.wrapAsync(@database.get.bind(@database))
       @run = Meteor.wrapAsync(@database.run.bind(@database))
     else
-      console.log "error: Dragon Dictate commands database was not found at: #{databaseFile}"
+      console.log "error: Dragon Dictate commands database was not found at: #{file}"
   home: ->
     process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
   whoami: ->
@@ -172,9 +173,16 @@ class @Synchronizer
     result = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
     result.Z_PK + 1
     # @get "SELECT last_insert_rowid() FROM ZTRIGGER"
+  createCommandId: ->
+    id = (new Date()).getTime()
+    if id is @lastId
+      id = @lastId + 1
+    @lastId = id
+    id
   createCommand: (bundleId, triggerPhrase, body) ->
     last = "last_insert_rowid()"
     spoken = @getDragonInfo().spokenLanguage
+    commandId = @createCommandId()
     applicationVersion = if bundleId is "global"
       0
     else
@@ -189,7 +197,7 @@ class @Synchronizer
     @run "INSERT INTO ZACTION (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZOSLANGUAGE, ZTEXT) VALUES (1, 1, 1, #{id}, #{id}, '#{os}', $body);", {$body: body}
     @run "INSERT INTO ZCOMMAND (Z_ENT, Z_OPT, ZACTIVE, ZAPPVERSION, ZCOMMANDID, ZDISPLAY, ZENGINEID, ZISCOMMAND,
     ZISCORRECTION, ZISDICTATION, ZISSLEEP, ZISSPELLING, ZVERSION, ZCURRENTACTION, ZCURRENTTRIGGER, ZLOCATION,
-    ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, 1, '#{@digest(triggerPhrase, bundleId)}',
+    ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, 1, '#{commandId}',
     1, -1, 1, 0, 0, 0, 0, 0, #{id}, #{id}, NULL, $bundle, '#{os}', '#{spoken}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'action'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'trigger'"
