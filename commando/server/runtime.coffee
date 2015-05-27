@@ -1,10 +1,11 @@
-@$ = Meteor.npmRequire('NodObjC')
+@$ = Meteor.npmRequire('nodobjc')
 # uvcf = Meteor.npmRequire('uvcf')
 
 # First you import the "Foundation" framework
 $.framework 'Foundation'
 $.framework 'Quartz'
 $.framework 'AppKit'
+# $.framework 'PFAssistive'
 
 # [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(foremostAppActivated:) name:NSWorkspaceDidActivateApplicationNotification object:nil];
 
@@ -23,12 +24,13 @@ app = $.NSApplication('sharedApplication')
 
 # obj = $.NSObject('alloc')('init')
 
+
 AppDelegate = $.NSObject.extend('AppDelegate')
 
 listeningOnMainSocket = true
 
-AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notif) ->
-  current = notif('object')('frontmostApplication')('localizedName').toString()
+AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notification) ->
+  current = notification('object')('frontmostApplication')('localizedName').toString()
   Actions.setCurrentApplication current
   if current in Settings.dragonIncompatibleApplications
     console.log "disabling main command socket for compatibility with: #{current}"
@@ -40,13 +42,17 @@ AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notif) ->
     , Settings.dragonIncompatibleApplicationDelay or 5000
 
 
-# AppDelegate.addMethod 'applicationDidFinishLaunching:', 'v@:@', (self, _cmd, notif) ->
+# AppDelegate.addMethod 'applicationDidFinishLaunching:', 'v@:@', (self, _cmd, notification) ->
 #   console.log('got applicationDidFinishLauching')
-#   console.log(notif)
+#   console.log(notification)
 
-AppDelegate.addMethod 'applicationWillTerminate:', 'v@:@', (self, _cmd, notif) ->
+AppDelegate.addMethod 'applicationWillTerminate:', 'v@:@', (self, _cmd, notification) ->
   console.log('got applicationWillTerminate')
-  console.log(notif)
+  console.log(notification)
+
+# AppDelegate.addMethod 'textRecognized:', 'v@:@', (self, _cmd, notification) ->
+#   console.log('got textRecognized')
+#   console.log(notification)
 
 # n('addObserverForName', $.NSWorkspaceDidActivateApplicationNotification, 'object', AppDelegate, 'queue', q, 'usingBlock', wrapped)
 
@@ -68,6 +74,44 @@ n('addObserver', delegate, 'selector', 'applicationChanged:', 'name', $('NSWorks
 # NSStrings and JavaScript Strings are distinct objects, you must create an
 # NSString from a JS String when an Objective-C class method requires one.
 # string = $.NSString('stringWithUTF8String', 'Hello Objective-C World!')
+
+# class @DragonObserver
+#   constructor: ->
+#     @location = $("/Applications/Dragon Dictate.app")
+#     @dragon = $.PFApplicationUIElement("alloc")("initWithPath", @location, "delegate", null)
+#   findStatusWindow: ->
+#     children = @dragon('AXChildren')
+#     size = children('count')
+#     for i in [0..(size - 1)]
+#       item = children('objectAtIndex', i)
+#       # console.log item: item
+#       if item('AXTitle')?.toString() is "Dictate Status Window"
+#         return item
+#   findRecognizedTextElement: ->
+#     statusWindow = @findStatusWindow()
+#     if statusWindow?
+#       children = statusWindow('AXChildren')
+#       size = children('count')
+#       for i in [0..(size - 1)]
+#         item = children('objectAtIndex', i)
+#         console.log item: item
+#         if item('AXDescription')?.toString() is "Recognized speech"
+#           return item
+#   getCurrentTextValue: ->
+#     textElement = @findRecognizedTextElement()
+#     if textElement?
+#       textElement('AXValue')
+#   getObserver: ->
+#     $.PFObserver("observerWithPath", @location, 'notificationDelegate', delegate, 'callbackSelector', 'textRecognized:')
+#   observe: ->
+#     observer = @getObserver()
+#     element = @findRecognizedTextElement()
+#     observer('registerForNotification', $.kAXValueChangedNotification, 'fromElement', element, 'contextInfo', $.NSDictionary('dictionary'))
+
+
+
+# @dragonObserver = new DragonObserver()
+# dragonObserver.observe()
 
 
 # Print out the contents (toString() ends up calling [string description])

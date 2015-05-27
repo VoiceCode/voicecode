@@ -58,6 +58,7 @@ Commands.createDisabled
     description: "repeat last individual command 4 times"
     ignoreHistory: true
     tags: ["voicecode", "repetition", "recommended"]
+    aliases: ["quail", "quell"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         4

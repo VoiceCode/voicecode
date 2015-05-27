@@ -293,6 +293,8 @@ _.extend Settings,
       width: 1024
       height: 768
   applicationsThatCanNotHandleBlankSelections: [
+    "iTerm"
+    "Terminal"
     "Sublime Text"
     "Google Chrome"
     "Parallels Desktop"

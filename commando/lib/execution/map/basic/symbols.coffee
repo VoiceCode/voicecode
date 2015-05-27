@@ -270,6 +270,7 @@ Commands.createDisabled
       @key "!"
   "loco":
     tags: ["symbol", "recommended"]
+    aliases: ["@"]
     findable: "@"
     action: ->
       @string "@"

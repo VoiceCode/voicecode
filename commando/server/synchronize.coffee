@@ -22,9 +22,13 @@ class @Synchronizer
   home: ->
     process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
   whoami: ->
-    Execute("whoami")?.trim()
+    # Execute("whoami")?.trim()
+    path = process.env.HOME?.split('/')
+    path[path.length - 1]
   databaseFile: ->
-    [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.ddictatecommands"].join("/")
+    file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.ddictatecommands"].join("/")
+    console.log file
+    file
   getBundleId: (name) ->
     if @bundles[name]
       @bundles[name]
@@ -51,7 +55,7 @@ class @Synchronizer
       found = if existing?.ZAPPVERSION?
         existing.ZAPPVERSION
       else
-        version = Execute("osascript -e 'version of application \"#{name}\"'")?.trim()
+        version = Applescript("version of application \"#{name}\"")?.trim()
         if version?
           first = version.toString().split('')[0]
           number = parseInt first

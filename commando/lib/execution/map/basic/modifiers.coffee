@@ -1,4 +1,4 @@
-@commandLetters = 
+@commandLetters =
   A: "arch"
   B: "brov"
   C: "char"
@@ -133,9 +133,10 @@ recommended =
 
 _.each commandModifiers, (mods, prefix) ->
   _.each commandLetters, (value, key) ->
-    tags = ["modifiers"]
-    if recommended[prefix]?[value]?
-      tags = ["modifiers", "recommended"]
+    tags = if value in (recommended[prefix] or [])
+      ["modifiers", "recommended"]
+    else
+      ["modifiers"]
     Commands.createDisabled "#{prefix}#{value}",
       description: "#{mods} #{key}"
       tags: tags

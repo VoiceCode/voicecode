@@ -77,12 +77,11 @@ Commands.createDisabled
         when "Sublime Text"
           @key "S", 'control command option'
         when "Atom"
-          # @runAtomCommand "expandSelectionByScope"
-          @key "M", 'command control'
+          @runAtomCommand "trigger", "expand-selection:expand"
 
   "selrang":
     grammarType: "numberCapture"
-    description: "selects text in a line range: selrang ten twenty. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    description: "selects text in a line range: selrang ten twenty."
     tags: ["domain-specific", "sublime"]
     triggerScopes: ["Atom", "Sublime Text"]
     action: (input) ->
@@ -115,7 +114,7 @@ Commands.createDisabled
 
   "seltil":
     grammarType: "numberCapture"
-    description: "selects text from current position through ('til) spoken line number: seltil five five. Requires subl - https://github.com/VoiceCode/docs/wiki/Sublime-Text-Setup"
+    description: "selects text from current position through ('til) spoken line number: seltil five five."
     tags: ["domain-specific", "sublime"]
     triggerScopes: ["Atom", "Sublime Text"]
     action: (input) ->
