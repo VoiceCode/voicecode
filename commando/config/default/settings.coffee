@@ -324,6 +324,10 @@ _.extend Settings,
       dragonOsLanguage: "en_GB"
       dragonCommandSpokenLanguage: "en_US"
       dragonTriggerSpokenLanguage: "en_US"
+    de:
+      dragonOsLanguage: "de_DE"
+      dragonCommandSpokenLanguage: "de_DE"
+      dragonTriggerSpokenLanguage: "de_DE"
 
   # regex's for selection commands
   regex:
