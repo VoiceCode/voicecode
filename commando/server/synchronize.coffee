@@ -176,7 +176,7 @@ class @Synchronizer
     final
   getNextRecordId: ->
     result = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
-    result.Z_PK + 1
+    (result?.Z_PK or 0) + 1
     # @get "SELECT last_insert_rowid() FROM ZTRIGGER"
   createCommandId: ->
     id = Date.now()
