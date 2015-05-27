@@ -321,6 +321,9 @@ _.extend Settings,
       dragonCommandsWindowName: "Commands"
       dragonSaveButtonName: "Save"
       dragonGlobalName: "Global"
+      dragonOsLanguage: "en_GB"
+      dragonCommandSpokenLanguage: "en_US"
+      dragonTriggerSpokenLanguage: "en_US"
 
   # regex's for selection commands
   regex:

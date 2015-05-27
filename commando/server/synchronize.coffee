@@ -97,10 +97,11 @@ class @Synchronizer
     else
       command = @get "SELECT * FROM ZCOMMAND ORDER BY Z_PK LIMIT 1"
       trigger = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
+      locale = Settings.localeSettings[Settings.locale]
       @_dragonInfo =
-        osLanguage: command.ZOSLANGUAGE
-        spokenLanguage: command.ZSPOKENLANGUAGE
-        triggerLanguage: trigger.ZSPOKENLANGUAGE
+        osLanguage: command?.ZOSLANGUAGE or locale.dragonOsLanguage
+        spokenLanguage: command?.ZSPOKENLANGUAGE or locale.dragonCommandSpokenLanguage
+        triggerLanguage: trigger?.ZSPOKENLANGUAGE or locale.dragonTriggerSpokenLanguage
       @_dragonInfo
   updateAllCommands: (perform=false) ->
     if @error
@@ -178,13 +179,13 @@ class @Synchronizer
     result.Z_PK + 1
     # @get "SELECT last_insert_rowid() FROM ZTRIGGER"
   createCommandId: ->
-    id = (new Date()).getTime()
+    id = Date.now()
+    # in case of collision
     if id is @lastId
       id = @lastId + 1
     @lastId = id
     id
   createCommand: (bundleId, triggerPhrase, body) ->
-    last = "last_insert_rowid()"
     spoken = @getDragonInfo().spokenLanguage
     commandId = @createCommandId()
     applicationVersion = if bundleId is "global"
@@ -201,8 +202,8 @@ class @Synchronizer
     @run "INSERT INTO ZACTION (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZOSLANGUAGE, ZTEXT) VALUES (1, 1, 1, #{id}, #{id}, '#{os}', $body);", {$body: body}
     @run "INSERT INTO ZCOMMAND (Z_ENT, Z_OPT, ZACTIVE, ZAPPVERSION, ZCOMMANDID, ZDISPLAY, ZENGINEID, ZISCOMMAND,
     ZISCORRECTION, ZISDICTATION, ZISSLEEP, ZISSPELLING, ZVERSION, ZCURRENTACTION, ZCURRENTTRIGGER, ZLOCATION,
-    ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, 1, '#{commandId}',
-    1, -1, 1, 0, 0, 0, 0, 0, #{id}, #{id}, NULL, $bundle, '#{os}', '#{spoken}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
+    ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, #{applicationVersion}, '#{commandId}',
+    1, -1, 1, 0, 0, 0, 1, 1, #{id}, #{id}, NULL, $bundle, '#{os}', '#{spoken}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'action'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'trigger'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'command'"
