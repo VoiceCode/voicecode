@@ -17,3 +17,11 @@ Commands.createDisabled
     # triggerScopes: ["Atom"]
     action: (input) ->
       @runAtomCommand "trigger", "symbols-view:toggle-file-symbols"
+  "marthis":
+    kind: "action"
+    grammarType: "individual"
+    tags: ["atom"]
+    description: "Use the currently selected text as a search term"
+    triggerScope: "Atom"
+    action: ->
+      @key "e", ["command"]
