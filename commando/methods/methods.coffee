@@ -9,25 +9,19 @@ Meteor.methods
 
   enableCommand: (name) ->
     Commands.mapping[name].enabled = true
-    Enables.update
-      name: name,
-    ,
-      $set:
-        enabled: true
-        name: name
-    ,
-      upsert: true
     if @isSimulation
-      Session.set "commandsAreDirty", true
+
     else
       @unblock()
+      enabledCommandsManager.enable(name)
       Commands.reloadGrammar()
+      synchronizer.updateAllCommands(true)
   disableCommand: (name) ->
     Commands.mapping[name].enabled = false
-    Enables.remove
-      name: name
     if @isSimulation
       Session.set "commandsAreDirty", true
     else
       @unblock()
+      enabledCommandsManager.disable(name)
       Commands.reloadGrammar()
+      synchronizer.updateAllCommands(true)

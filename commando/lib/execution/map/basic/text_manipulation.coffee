@@ -15,7 +15,7 @@ Commands.createDisabled
           @key "X", 'command'
           @key "Up"
           @key "V", 'command'
-          _(height).times => @key "Up", ['shift']
+          _(height).times => @key "Up", 'shift'
 
   "switcho":
     description: "move current line (or multiline selection) down"

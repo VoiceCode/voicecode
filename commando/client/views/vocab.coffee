@@ -7,7 +7,7 @@ Template.Vocab.helpers
   #     keys.splice(0, 4).join(", ")
   #   )
   vocabList: ->
-    if enablesSubscription.ready()
+    unless Session.get("loading")
       commands = []
       _.each Commands.mapping, (value, key) ->
         if value.enabled and value.grammarType? and (value.isSpoken isnt false)
@@ -15,19 +15,19 @@ Template.Vocab.helpers
           commands.push spoken
       _.sample(commands, commands.length).join(" ")
   repeatableList: ->
-    if enablesSubscription.ready()
+    unless Session.get("loading")
       commands = []
       me = @toString()
       _.each Commands.mapping, (value, key) ->
         if value.enabled and (value.grammarType is "individual" or value.grammarType is undefined) and (value.isSpoken isnt false)
           spoken = value.triggerPhrase or key
           commands.push spoken
-      _.map(['soup', 'trace', 'quarr', 'fypes'], (item) ->
+      _.map(_.keys(Settings.repetitionWords), (item) ->
         _.sample(commands, commands.length).join(" #{item} ")
       ).join(" ")
 
   keeperList: ->
-    if enablesSubscription.ready()
+    unless Session.get("loading")
       commands = []
       _.each Commands.mapping, (value, key) ->
         if value.enabled and value.grammarType? and (value.isSpoken isnt false)
@@ -36,10 +36,13 @@ Template.Vocab.helpers
       _.sample(commands, commands.length).join(" keeper ")
 
   phonetics: ->
-    # results = []
-    # for letter in phoneticLetters
-      
-    #   for second in phoneticLetters
+    results = []
+    for letter, name of alphabet.roots
+      for letter2, name2 of alphabet.roots
+        for letter3, name3 of alphabet.roots
+          results.push [letter, letter2, letter3].join(" ")
+    results.join(" ")
+
 
     # websites = _.keys Settings.websites
     # applications = _.keys Settings.applications
@@ -59,4 +62,3 @@ Template.Vocab.events
       range.selectNodeContents target
       selection.removeAllRanges()
       selection.addRange range
-

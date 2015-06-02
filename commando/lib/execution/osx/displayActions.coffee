@@ -76,9 +76,10 @@ class OSX.displayActions
   selectNextOccurrence: ->
     @result += "selectNextOccurrence()"
   makeModifierText: (modifiers) ->
-    r = _.map modifiers, (m) ->
-      modifierCodes[m]
-    r.join('')
+    if modifiers?.length
+      r = _.map modifiers.split(" "), (m) ->
+        modifierCodes[m]
+      r.join('')
   scrollRight: ->
     "scrollRight()"
   scrollLeft: ->
@@ -107,3 +108,5 @@ class OSX.displayActions
     @result += "selectContiguousMatching()"
   selectBlock: ->
     @result += "selectBlock()"
+  runAtomCommand: (command) ->
+    @result += "runAtomCommand(#{command})"

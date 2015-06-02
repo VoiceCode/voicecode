@@ -248,7 +248,7 @@ Commands.createDisabled
     tags: ["symbol", "recommended"]
     findable: ";"
     action: ->
-      @key "Right", ['command']
+      @key "Right", 'command'
       @key ';'
   "sunkshock":
     tags: ["symbol", "recommended"]

@@ -29,4 +29,4 @@ Commands.createDisabled
     description: "forward delete a word at a time"
     tags: ["deleting", "recommended"]
     action: ->
-      @key "ForwardDelete", ['option']
+      @key "ForwardDelete", 'option'

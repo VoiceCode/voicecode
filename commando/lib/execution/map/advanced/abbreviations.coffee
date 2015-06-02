@@ -1,14 +1,13 @@
 Commands.createDisabled
-  "frank":
+  "shrink":
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
     tags: ["text"]
-    aliases: ["franca"]
     action: (input) ->
       if input?.length
         result = Scripts.fuzzyMatch Settings.abbreviations, input.join(' ')
         @string result
-  "skoofrank":
+  "skooshrink":
     grammarType: "textCapture"
     description: "inserts a common abbreviation preceded by a space"
     tags: ["text"]

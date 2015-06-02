@@ -1,4 +1,4 @@
 Template.Grammar.helpers
   grammar: ->
-  	if enablesSubscription.ready()
-	    Grammar.build()
+    unless Session.get("loading")
+      Grammar.build()

@@ -5,6 +5,7 @@ Commands.createDisabled
     description: "words with spaces between. This command is for internal grammar use (not spoken)"
     tags: ["text", "recommended"]
     needsDragonCommand: false
+    isSpoken: false
     transform: "literal"
   "cram":
     kind: "text"
@@ -67,6 +68,7 @@ Commands.createDisabled
     kind: "text"
     grammarType: "textCapture"
     description: "spinal-case-text"
+    aliases: ["spying"]
     tags: ["text", "recommended"]
     transform: "spine"
     fallbackService: "vc case spine"

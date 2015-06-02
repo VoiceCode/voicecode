@@ -6,8 +6,8 @@ Commands.createDisabled
     tags: ["mouse", "combo", "recommended"]
     action: ->
       @click()
-      @key "Left", ['command']
-      @key "Right", ['command', 'shift']
+      @key "Left", 'command'
+      @key "Right", 'command shift'
   "dookoosh":
     kind: "action"
     grammarType: "oneArgument"

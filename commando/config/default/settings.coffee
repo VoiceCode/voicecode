@@ -76,6 +76,8 @@ _.extend Settings,
     care: "char"
     column: "col"
     command: "cmd"
+    configure: "config"
+    configuration: "config"
     constant: "const"
     define: "def"
     descending: "desc"
@@ -83,6 +85,7 @@ _.extend Settings,
     directory: "dir"
     divider: "div"
     document: "doc"
+    environment: "env"
     execute: "exec"
     favorite: "fav"
     function: "func"
@@ -115,6 +118,8 @@ _.extend Settings,
     standard: "std"
     string: "str"
     system: "sys"
+    thanks: "thx"
+    thinks: "thx"
     temporary: "tmp"
     text: "txt"
     utilities: "utils"
@@ -157,6 +162,49 @@ _.extend Settings,
     documents: "~/Documents"
     music: "~/Music"
     downloads: "~/Downloads"
+  letters:
+    a: "arch"
+    b: "brov"
+    c: "char"
+    d: "dell"
+    e: "etch"
+    f: "fomp"
+    g: "goof"
+    h: "hark"
+    i: "ice"
+    j: "jinks"
+    k: "koop"
+    l: "lug"
+    m: "mowsh"
+    n: "nerb"
+    o: "ork"
+    p: "pooch"
+    q: "quash"
+    r: "rosh"
+    s: "souk"
+    t: "teek"
+    u: "unks"
+    v: "verge"
+    w: "womp"
+    x: "trex"
+    y: "yang"
+    z: "zooch"
+  uppercaseLetterPrefix: "sky"
+  singleLetterSuffix: "ling"
+  repetitionWords:
+    # you can add more repetition commands like this
+    wink:
+      times: 1
+    twice:
+      times: 2
+    trace:
+      times: 3
+      aliases: ["traced"]
+    quail:
+      times: 4
+      aliases: ["quell"]
+    fypes:
+      times: 5
   passwords:
     example: "password"
   emails:
@@ -170,6 +218,17 @@ _.extend Settings,
     "i'll": "I'll"
     "maine": "main"
     "o'clock": ":00"
+    "adam": "atom"
+  vocabulary: [
+    "trello"
+    "github"
+  ]
+  # vocabularyNonstandard:
+  #   # "spoken": "result"
+  #   # + means create an actual command as well as a vocab item
+  #   # "+get hub": "github"
+  #   "get hub": "github"
+  #   "I term": "iTerm"
   modes:
     global: "global"
     emacs: "emacs"

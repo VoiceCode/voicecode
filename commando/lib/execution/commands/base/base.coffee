@@ -57,9 +57,9 @@ Commands.changeName = (old, newName) ->
   Commands.mapping[newName] = Commands.mapping[old]
   delete Commands.mapping[old]
 
-Commands.loadConditionalModules = ->
+Commands.loadConditionalModules = (enabledCommands) ->
   for key, value of Commands.mapping
-    enabled = !!Enables.findOne(name: key)?.enabled
+    enabled = enabledCommands[key]
     Commands.mapping[key].enabled = Commands.mapping[key].enabled or enabled
 
     type = value.grammarType or "individual"

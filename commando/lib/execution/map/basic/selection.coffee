@@ -3,42 +3,42 @@ Commands.createDisabled
     description: "select all text downward"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Down', ['shift', 'command']
+      @key 'Down', 'shift command'
   "shroom":
     description: "shift down, select text by line downward"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Down', ['shift']
+      @key 'Down', 'shift'
   "shreepway":
     description: "select all text upward"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Up', ['shift', 'command']
+      @key 'Up', 'shift command'
   "shreep":
     description: "shift up, select text by line upward"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Up', ['shift']
+      @key 'Up', 'shift'
   "shrim":
     description: "extend selection by character to the left"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Left', ['shift']
+      @key 'Left', 'shift'
   "shrish":
     description: "extend selection by character to the right"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Right', ['shift']
+      @key 'Right', 'shift'
   "scram":
     description: "extend selection by word to the left"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Left', ['option', 'shift']
+      @key 'Left', 'option shift'
   "scrish":
     description: "extend selection by word to the right"
     tags: ["selection", "recommended"]
     action: ->
-      @key 'Right', ['option', 'shift']
+      @key 'Right', 'option shift'
   "folly":
     description: "expand selection to block"
     tags: ["text-manipulation"]

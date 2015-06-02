@@ -53,10 +53,14 @@ class @Grammar
     results.join("\n")
   translationIdentifiers: ->
     _.map(Settings.translations, (value, key) -> "\"#{key}\"").join(" / ")
+  buildPhonemeChain: ->
+    _.map Settings.letters, (value, key) ->
+      "'#{value}'"
+    .join " / "
   build: -> """
     {
       var grammarTransforms = {
-        frank: function(arguments) {
+        shrink: function(arguments) {
           return Scripts.fuzzyMatch(Settings.abbreviations, arguments.join(' '));
         },
         treemail: function(arguments) {
@@ -122,7 +126,7 @@ class @Grammar
       = identifier:("keeper") ss {return identifier;}
 
     textArgument
-      = (overrideCommand / nestableTextCommand / translation / exactInteger / word)+
+      = (overrideCommand / nestableTextCommand / translation / exactInteger / phonemeString / word)+
 
     singleSearchCommand
       = left:singleSearchIdentifier right:singleSearchArgument? distance:repeaterIdentifier? {return {command: left, arguments: {value: right, distance: distance}};}
@@ -164,7 +168,7 @@ class @Grammar
       = identifier:(#{@oneArgumentCommandsContinuous()}) ss {return identifier;}
 
     singleTextArgument
-      = (word / exactInteger / symbol)
+      = (phonemeString / word / exactInteger / symbol)
 
     individualCommand
       = identifier:individualIdentifier {return {command: identifier};}
@@ -177,10 +181,10 @@ class @Grammar
       = identifier:(#{@individualCommandsContinuous()}) ss {return identifier;}
 
     literalCommand
-      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / word / symbol)+ {return {command: "vc-literal", arguments: text};}
+      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / phonemeString / word / symbol)+ {return {command: "vc-literal", arguments: text};}
 
     nestableTextIdentifier
-      = "frank" / "treemail" / "trusername" / "trassword"
+      = "shrink" / "treemail" / "trusername" / "trassword"
 
     nestableTextCommand
       = identifier:nestableTextIdentifier ss arguments:(word)+
@@ -202,9 +206,9 @@ class @Grammar
     // identifier = id:(textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
     identifier = id:(textCaptureIdentifierContinuous / numberCaptureIdentifierContinuous / individualIdentifierContinuous / oneArgumentIdentifierContinuous / singleSearchIdentifierContinuous / overrideIdentifier) s {return id;}
 
-    word = !identifier text:([a-z]i / "." / "'" / "-")+ ss {return text.join('')}
+    word = !identifier text:([a-z]i / '.' / "'" / '-' / '&' / '`')+ ss {return text.join('')}
 
-    symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\') s {return symbol}
+    symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
 
 
     integer "integer"
@@ -263,5 +267,15 @@ class @Grammar
     million = "million" ss {return '000000';}
     billion = "billion" ss {return '000000000';}
     trillion = "trillion" ss {return '000000000000';}
+
+    phonemeRoot = letter:(#{@buildPhonemeChain()})
+      {return alphabet.roots[letter];}
+
+    phonemeIndividual = first:phonemeRoot ss {return first;}
+    phonemeCapital = '#{Settings.uppercaseLetterPrefix}' ss root:phonemeRoot ss {return root.toUpperCase();}
+    phonemeSuffix = root:phonemeRoot ss '#{Settings.singleLetterSuffix}' ss {return root;}
+    phonemeString =
+      phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
+      {return phonemes.join('');}
 
     """

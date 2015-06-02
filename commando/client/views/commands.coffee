@@ -1,4 +1,6 @@
 Template.Commands.helpers
+  loading: ->
+    Session.get("loading")
   showModifiers: ->
     Session.equals("commandTag.current", "modifiers")
   numberCaptureCommands: ->
@@ -20,7 +22,7 @@ Template.commandsGeneric.helpers
     tag = Session.get("commandTag.current") or "all"
     toggle = Session.get("enabledDisabledToggle")
     Commands.Utility.scopedCommandsWithToggle(tag, toggle)
-    
+
 Template.commandsGeneric.events
   'click #toggleAll': (e, t) ->
     checks = $("input[type='checkbox']")
@@ -52,8 +54,7 @@ Template.CommandSummaryRow.helpers
   kind: ->
     Commands.mapping[@].kind or "action"
   enabled: ->
-    # Commands.mapping[@].enabled
-    Commands.mapping[@].enabled or Enables.findOne(name: @toString())?.enabled
+    Commands.mapping[@].enabled
   actions: ->
     Commands.mapping[@].actions
   transform: ->

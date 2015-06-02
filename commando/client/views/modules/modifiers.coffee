@@ -1,29 +1,29 @@
 Template.moduleModifiers.helpers
-	prefixes: ->
-		_.map commandModifiers, (value, key) ->
-			name: key
-			modifiers: _.map(value, (m) -> modifierCodes[m])
-	letters: ->
-		_.map commandLetters, (value, key) ->
-			name: modifierCodes[key] or key
-			spoken: value
-	prefixCombos: ->
-		spoken = @spoken
-		_.map commandModifiers, (value, key) ->
-			name = [key, spoken].join ''
+  prefixes: ->
+    _.map commandModifiers, (value, key) ->
+      name: key
+      modifiers: _.map(value.split(' '), (m) -> modifierCodes[m])
+  letters: ->
+    _.map commandLetters, (value, key) ->
+      name: modifierCodes[key] or key
+      spoken: value
+  prefixCombos: ->
+    spoken = @spoken
+    _.map commandModifiers, (value, key) ->
+      name = [key, spoken].join ''
 
-			name: name
-			modifiers: _.map(value, (m) -> modifierCodes[m])
-			record: Enables.findOne(name: name)
+      name: name
+      modifiers: _.map(value.split(' '), (m) -> modifierCodes[m])
+      enabled: Commands.mapping[name].enabled
 
 Template.enabledModifier.helpers
-	enabled: ->
-		if @record?.enabled
-			"checked"
+  enabled: ->
+    if @enabled
+      "checked"
 
 Template.enabledModifier.events
-	"change input": (e, t) ->
-		if e.target.checked
-			Meteor.call "enableCommand", @name
-		else
-			Meteor.call "disableCommand", @name
+  "change input": (e, t) ->
+    if e.target.checked
+      Meteor.call "enableCommand", @name
+    else
+      Meteor.call "disableCommand", @name

@@ -2,17 +2,20 @@ template(name="Commands")
   .container
     h1 Commands
       small Click on the tags below to see related commands
-    .well
-      each enabledDisabledAll
-        +enabledDisabledToggle
-    .well
-      +each tags
-        +commandTag
-
-    if showModifiers
-      +moduleModifiers
+    if loading
+      .well loading
     else
-      +commandsGeneric
+      .well
+        each enabledDisabledAll
+          +enabledDisabledToggle
+      .well
+        +each tags
+          +commandTag
+
+      if showModifiers
+        +moduleModifiers
+      else
+        +commandsGeneric
 
 template(name="commandsGeneric")
   table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
