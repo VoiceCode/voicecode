@@ -351,3 +351,9 @@ _.extend Settings,
   ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000
+  emotions:
+    smile: ":)"
+    chagrin: ":P"
+    sheep: ":}"
+    frown: ":("
+    winkle: ";)"
