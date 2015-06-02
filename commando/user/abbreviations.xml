@@ -1,0 +1,1397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Version</key>
+  <string>3.0/1</string>
+  <key>Words</key>
+  <array>
+  <dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink standing</string>
+  <key>Written</key>
+  <string>shrink standing</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink standout</string>
+  <key>Written</key>
+  <string>shrink standout</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink administrator</string>
+  <key>Written</key>
+  <string>shrink administrator</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink administrators</string>
+  <key>Written</key>
+  <string>shrink administrators</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink alternate</string>
+  <key>Written</key>
+  <string>shrink alternate</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink apartment</string>
+  <key>Written</key>
+  <string>shrink apartment</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink application</string>
+  <key>Written</key>
+  <string>shrink application</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink applications</string>
+  <key>Written</key>
+  <string>shrink applications</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink architecture</string>
+  <key>Written</key>
+  <string>shrink architecture</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink argument</string>
+  <key>Written</key>
+  <string>shrink argument</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink arguments</string>
+  <key>Written</key>
+  <string>shrink arguments</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink attribute</string>
+  <key>Written</key>
+  <string>shrink attribute</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink attributes</string>
+  <key>Written</key>
+  <string>shrink attributes</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink allocate</string>
+  <key>Written</key>
+  <string>shrink allocate</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink authenticate</string>
+  <key>Written</key>
+  <string>shrink authenticate</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink authentic</string>
+  <key>Written</key>
+  <string>shrink authentic</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink author</string>
+  <key>Written</key>
+  <string>shrink author</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink binary</string>
+  <key>Written</key>
+  <string>shrink binary</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink button</string>
+  <key>Written</key>
+  <string>shrink button</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink calculate</string>
+  <key>Written</key>
+  <string>shrink calculate</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink call</string>
+  <key>Written</key>
+  <string>shrink call</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink character</string>
+  <key>Written</key>
+  <string>shrink character</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink c</string>
+  <key>Written</key>
+  <string>shrink c</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink car</string>
+  <key>Written</key>
+  <string>shrink car</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink care</string>
+  <key>Written</key>
+  <string>shrink care</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink column</string>
+  <key>Written</key>
+  <string>shrink column</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink command</string>
+  <key>Written</key>
+  <string>shrink command</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink configure</string>
+  <key>Written</key>
+  <string>shrink configure</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink configuration</string>
+  <key>Written</key>
+  <string>shrink configuration</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink constant</string>
+  <key>Written</key>
+  <string>shrink constant</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink define</string>
+  <key>Written</key>
+  <string>shrink define</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink descending</string>
+  <key>Written</key>
+  <string>shrink descending</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink develop</string>
+  <key>Written</key>
+  <string>shrink develop</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink directory</string>
+  <key>Written</key>
+  <string>shrink directory</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink divider</string>
+  <key>Written</key>
+  <string>shrink divider</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink document</string>
+  <key>Written</key>
+  <string>shrink document</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink environment</string>
+  <key>Written</key>
+  <string>shrink environment</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink execute</string>
+  <key>Written</key>
+  <string>shrink execute</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink favorite</string>
+  <key>Written</key>
+  <string>shrink favorite</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink function</string>
+  <key>Written</key>
+  <string>shrink function</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink image</string>
+  <key>Written</key>
+  <string>shrink image</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink initialize</string>
+  <key>Written</key>
+  <string>shrink initialize</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink integer</string>
+  <key>Written</key>
+  <string>shrink integer</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink imager</string>
+  <key>Written</key>
+  <string>shrink imager</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink iterate</string>
+  <key>Written</key>
+  <string>shrink iterate</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink jason</string>
+  <key>Written</key>
+  <string>shrink jason</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink large</string>
+  <key>Written</key>
+  <string>shrink large</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink length</string>
+  <key>Written</key>
+  <string>shrink length</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink library</string>
+  <key>Written</key>
+  <string>shrink library</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink medium</string>
+  <key>Written</key>
+  <string>shrink medium</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink minimum</string>
+  <key>Written</key>
+  <string>shrink minimum</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink number</string>
+  <key>Written</key>
+  <string>shrink number</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink navigate</string>
+  <key>Written</key>
+  <string>shrink navigate</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink navigation</string>
+  <key>Written</key>
+  <string>shrink navigation</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink object</string>
+  <key>Written</key>
+  <string>shrink object</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink parameter</string>
+  <key>Written</key>
+  <string>shrink parameter</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink parameters</string>
+  <key>Written</key>
+  <string>shrink parameters</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink position</string>
+  <key>Written</key>
+  <string>shrink position</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink previous</string>
+  <key>Written</key>
+  <string>shrink previous</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink pseudo</string>
+  <key>Written</key>
+  <string>shrink pseudo</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink reference</string>
+  <key>Written</key>
+  <string>shrink reference</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink references</string>
+  <key>Written</key>
+  <string>shrink references</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink request</string>
+  <key>Written</key>
+  <string>shrink request</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink result</string>
+  <key>Written</key>
+  <string>shrink result</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink revision</string>
+  <key>Written</key>
+  <string>shrink revision</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink source</string>
+  <key>Written</key>
+  <string>shrink source</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink standard</string>
+  <key>Written</key>
+  <string>shrink standard</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink string</string>
+  <key>Written</key>
+  <string>shrink string</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink system</string>
+  <key>Written</key>
+  <string>shrink system</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink thanks</string>
+  <key>Written</key>
+  <string>shrink thanks</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink thinks</string>
+  <key>Written</key>
+  <string>shrink thinks</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink temporary</string>
+  <key>Written</key>
+  <string>shrink temporary</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink text</string>
+  <key>Written</key>
+  <string>shrink text</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink utilities</string>
+  <key>Written</key>
+  <string>shrink utilities</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink utility</string>
+  <key>Written</key>
+  <string>shrink utility</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink value</string>
+  <key>Written</key>
+  <string>shrink value</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink variable</string>
+  <key>Written</key>
+  <string>shrink variable</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink increment</string>
+  <key>Written</key>
+  <string>shrink increment</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink inc.</string>
+  <key>Written</key>
+  <string>shrink inc.</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink stripe test card</string>
+  <key>Written</key>
+  <string>shrink stripe test card</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my phone</string>
+  <key>Written</key>
+  <string>shrink my phone</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my zip</string>
+  <key>Written</key>
+  <string>shrink my zip</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my address</string>
+  <key>Written</key>
+  <string>shrink my address</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my address to</string>
+  <key>Written</key>
+  <string>shrink my address to</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my social</string>
+  <key>Written</key>
+  <string>shrink my social</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my birthday</string>
+  <key>Written</key>
+  <string>shrink my birthday</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my name</string>
+  <key>Written</key>
+  <string>shrink my name</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink first name</string>
+  <key>Written</key>
+  <string>shrink first name</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink last name</string>
+  <key>Written</key>
+  <string>shrink last name</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink cheers ben</string>
+  <key>Written</key>
+  <string>shrink cheers ben</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink voicecode wiki</string>
+  <key>Written</key>
+  <string>shrink voicecode wiki</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink meteor timeout</string>
+  <key>Written</key>
+  <string>shrink meteor timeout</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink session set</string>
+  <key>Written</key>
+  <string>shrink session set</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink session get</string>
+  <key>Written</key>
+  <string>shrink session get</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink medcap</string>
+  <key>Written</key>
+  <string>shrink medcap</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink my plantronics mike</string>
+  <key>Written</key>
+  <string>shrink my plantronics mike</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink meteor userId</string>
+  <key>Written</key>
+  <string>shrink meteor userId</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink meteor user</string>
+  <key>Written</key>
+  <string>shrink meteor user</string>
+</dict>
+<dict>
+  <key>EngineFlags</key>
+  <integer>17</integer>
+  <key>Flags</key>
+  <string></string>
+  <key>Sense</key>
+  <string></string>
+  <key>Source</key>
+  <string>User</string>
+  <key>Spoken</key>
+  <string>shrink voicecode</string>
+  <key>Written</key>
+  <string>shrink voicecode</string>
+</dict>
+  </array>
+</dict>
+</plist>
