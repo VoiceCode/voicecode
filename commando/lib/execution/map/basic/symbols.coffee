@@ -482,3 +482,8 @@ Commands.createDisabled
     findable: " ?= "
     action: ->
       @string " ?= "
+  "ellipsis":
+    tags: ["symbol", "recommended"]
+    findable: "..."
+    action: ->
+      @string "..."

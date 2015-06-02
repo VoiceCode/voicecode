@@ -2,10 +2,17 @@ class Commands.Chain
   constructor: (phrase) ->
     @phrase = @normalizePhrase phrase
   normalizePhrase: (phrase) ->
-    phrase.toLowerCase()#.replace(/\s\./g, ".")
-    _.map phrase.split("I "), (segment) ->
-      segment.toLowerCase()
-    .join("I ")
+    result = []
+    parts = phrase.toLowerCase().split('')
+    for c, index in parts
+      item = c
+      # capitalize I's
+      if c is "i" and (index is 0 or parts[index - 1] is " ") and (index is (parts.length - 1) or parts[index + 1] is " ")
+        item = "I"
+      else if c is "…"
+        item = "ellipsis"
+      result.push item
+    result.join('')
   parse: ->
     Parser.parse @phrase
   execute: (shouldInvoke) ->
