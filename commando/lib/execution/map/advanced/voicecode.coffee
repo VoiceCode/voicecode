@@ -30,7 +30,7 @@ Commands.createDisabled
     description: "repeat last individual command twice"
     ignoreHistory: true
     tags: ["voicecode", "repetition", "recommended"]
-    aliases: ["chew", "twice"]
+    aliases: ["chew"]
     action: (context, input) ->
       times = if context.repetitionIndex is 0
         2
