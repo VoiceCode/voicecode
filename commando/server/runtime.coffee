@@ -1,3 +1,4 @@
+
 @$ = Meteor.npmRequire('nodobjc')
 # uvcf = Meteor.npmRequire('uvcf')
 
@@ -196,9 +197,12 @@ serverHandler2 = Meteor.bindEnvironment (localSerialConnection) ->
   localSerialConnection.on 'data', commandHandler2
 
 previousPhrase = null
+previousPhraseTime = Date.now()
+threshold = 200
 
 commandHandler = Meteor.bindEnvironment (data) ->
-  if listeningOnMainSocket
+  if listeningOnMainSocket and (Date.now() - previousPhraseTime) > threshold
+    previousPhraseTime = Date.now()
     body = data.toString('utf8')
     console.log body
     phrase = body.replace("\n", "")
@@ -214,7 +218,8 @@ commandHandler2 = Meteor.bindEnvironment (data) ->
   console.log
     previousPhrase: previousPhrase
     phrase: phrase.toLowerCase().replace(/[\W]+/g, "")
-  if phrase.toLowerCase().replace(/[\W]+/g, "") != previousPhrase
+  if phrase.toLowerCase().replace(/[\W]+/g, "") != previousPhrase and (Date.now() - previousPhraseTime) > threshold
+    previousPhraseTime = Date.now()
     chain = new Commands.Chain(phrase + " ")
     results = chain.execute(true)
 
