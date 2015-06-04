@@ -197,29 +197,52 @@ serverHandler2 = Meteor.bindEnvironment (localSerialConnection) ->
   localSerialConnection.on 'data', commandHandler2
 
 previousPhrase = null
+previousPhraseGrowl = null
 previousPhraseTime = Date.now()
-threshold = 200
+previousPhraseGrowlTime = Date.now()
+threshold = 400
+threshold2 = 400
+
+
+normalizePhraseComparison = (phrase) ->
+  phrase.toLowerCase().replace(/[\W]+/g, "")
 
 commandHandler = Meteor.bindEnvironment (data) ->
-  if listeningOnMainSocket and (Date.now() - previousPhraseTime) > threshold
+  if listeningOnMainSocket
+    phrase = data.toString('utf8').replace("\n", "")
+    normal = normalizePhraseComparison(phrase)
+    console.log
+      handler: 1
+      difference: (Date.now() - previousPhraseTime)
+      differenceGrowl: (Date.now() - previousPhraseGrowlTime)
+      phrase: phrase
+      previous: previousPhrase
+      previousGrowl: previousPhraseGrowl
+      normalized: normal
     previousPhraseTime = Date.now()
-    body = data.toString('utf8')
-    console.log body
-    phrase = body.replace("\n", "")
-    previousPhrase = phrase.toLowerCase().replace(/[\W]+/g, "")
-    chain = new Commands.Chain(phrase + " ")
-    results = chain.execute(true)
+    if normal is previousPhraseGrowl and normal isnt previousPhrase and (Date.now() - previousPhraseGrowlTime) < 700
+      # probably a duplicate
+      previousPhrase = normalizePhraseComparison(phrase)
+    else
+      previousPhrase = normalizePhraseComparison(phrase)
+      chain = new Commands.Chain(phrase + " ")
+      results = chain.execute(true)
 
 # comes from growl
 commandHandler2 = Meteor.bindEnvironment (data) ->
-  body = data.toString('utf8')
-  console.log body
-  phrase = body.replace("\n", "")
+  phrase = data.toString('utf8').replace("\n", "")
   console.log
-    previousPhrase: previousPhrase
-    phrase: phrase.toLowerCase().replace(/[\W]+/g, "")
-  if phrase.toLowerCase().replace(/[\W]+/g, "") != previousPhrase and (Date.now() - previousPhraseTime) > threshold
-    previousPhraseTime = Date.now()
+    handler: 2
+    differenceGrowl: (Date.now() - previousPhraseGrowlTime)
+    difference: (Date.now() - previousPhraseTime)
+    phrase: phrase
+    previous: previousPhrase
+    previousGrowl: previousPhraseGrowl
+    normalized: normalizePhraseComparison(phrase)
+  normalized = normalizePhraseComparison(phrase)
+  previousPhraseGrowl = normalized
+  previousPhraseGrowlTime = Date.now()
+  if normalized != previousPhrase # and ((normalized != previousPhraseGrowl) or ((Date.now() - previousPhraseGrowlTime) > threshold2))
     chain = new Commands.Chain(phrase + " ")
     results = chain.execute(true)
 
