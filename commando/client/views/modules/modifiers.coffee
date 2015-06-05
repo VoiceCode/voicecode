@@ -1,20 +1,19 @@
 Template.moduleModifiers.helpers
   prefixes: ->
-    _.map commandModifiers, (value, key) ->
+    _.map Settings.modifierPrefixes, (value, key) ->
       name: key
       modifiers: _.map(value.split(' '), (m) -> modifierCodes[m])
-  letters: ->
-    _.map commandLetters, (value, key) ->
-      name: modifierCodes[key] or key
+  suffixes: ->
+    _.map modifiers.suffixes(), (value, key) ->
+      name: key
       spoken: value
-  prefixCombos: ->
+  combination: ->
     spoken = @spoken
-    _.map commandModifiers, (value, key) ->
-      name = [key, spoken].join ''
-
-      name: name
-      modifiers: _.map(value.split(' '), (m) -> modifierCodes[m])
-      enabled: Commands.mapping[name].enabled
+    _.map Settings.modifierPrefixes, (value, key) ->
+      name = [key, spoken].join ' '
+      results =
+        name: name
+        enabled: Commands.mapping[name].enabled
 
 Template.enabledModifier.helpers
   enabled: ->

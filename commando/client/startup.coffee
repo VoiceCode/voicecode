@@ -19,6 +19,7 @@ Meteor.startup ->
   @Grammar = new Grammar()
   @alphabet = new Alphabet()
   repetition = new Repetition()
+  @modifiers = new Modifiers()
   reloadGrammar()
   Meteor.call "loadSettings", "enabled_commands", (error, result) =>
     if error

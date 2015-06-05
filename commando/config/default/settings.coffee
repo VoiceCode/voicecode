@@ -191,18 +191,59 @@ _.extend Settings,
     z: "zooch"
   uppercaseLetterPrefix: "sky"
   singleLetterSuffix: "ling"
+  modifierPrefixes:
+    chom: "command"
+    shoff: "command shift"
+    shay: "command option"
+    flock: "command option shift"
+    crop: "option"
+    snoop: "option shift"
+    troll: "control"
+    mack: "command control"
+    triff: "control shift"
+    prick: "command control shift"
+  modifierSuffixes:
+    "1": "one"
+    "2": "two"
+    "3": "three"
+    "4": "four"
+    "5": "five"
+    "6": "six"
+    "7": "seven"
+    "8": "eight"
+    "9": "nine"
+    "0": "zero"
+    Return: "return"
+    "/": "slash"
+    ".": "period"
+    ",": "comma"
+    ";": "sunk"
+    Delete: "junk"
+    ForwardDelete: "spunk"
+    " ": "skoosh"
+    Escape: "cape"
+    Tab: "tarp"
+    "=": "equal"
+    "-": "minus"
+    Up: "up"
+    Down: "down"
+    Left: "left"
+    Right: "right"
+    "]": "race"
+    "[": "lets"
+    "\\": "pike"
   repetitionWords:
     # you can add more repetition commands like this
     wink:
       times: 1
-    twice:
+    soup:
       times: 2
     trace:
       times: 3
       aliases: ["traced"]
     quail:
       times: 4
-      aliases: ["quell"]
+      aliases: ["quell", "quarr"]
     fypes:
       times: 5
   passwords:
@@ -385,8 +426,8 @@ _.extend Settings,
       dragonTriggerSpokenLanguage: "en_US"
     de:
       dragonOsLanguage: "de_DE"
-      dragonCommandSpokenLanguage: "de_DE"
-      dragonTriggerSpokenLanguage: "de_DE"
+      dragonCommandSpokenLanguage: "en_US"
+      dragonTriggerSpokenLanguage: "en_US"
 
   # regex's for selection commands
   regex:

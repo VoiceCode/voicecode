@@ -24,4 +24,4 @@ Commands.createDisabled
     description: "Use the currently selected text as a search term"
     triggerScope: "Atom"
     action: ->
-      @key "e", ["command"]
+      @key "e", "command"

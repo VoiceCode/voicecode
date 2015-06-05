@@ -1,107 +1,116 @@
-@commandLetters =
-  A: "arch"
-  B: "brov"
-  C: "char"
-  D: "dell"
-  E: "etch"
-  F: "fomp"
-  G: "goof"
-  H: "hark"
-  I: "ice"
-  J: "jinks"
-  K: "koop"
-  L: "lug"
-  M: "mowsh"
-  N: "nerb"
-  O: "ork"
-  P: "pooch"
-  Q: "quash"
-  R: "rosh"
-  S: "souk"
-  T: "teek"
-  U: "unks"
-  V: "verge"
-  W: "womp"
-  X: "trex"
-  Y: "yang"
-  Z: "zooch"
-  "1": "won"
-  "2": "too"
-  "3": "three"
-  "4": "four"
-  "5": "five"
-  "6": "six"
-  "7": "seven"
-  "8": "ate"
-  "9": "nine"
-  "0": "zer"
-  Return: "turn"
-  "/": "slush"
-  ".": "peer"
-  ",": "com"
-  ";": "sink"
-  Delete: "leet"
-  ForwardDelete: "kit"
-  " ": "oosh"
-  Escape: "cape"
-  Tab: "raff"
-  "=": "queff"
-  "-": "min"
-  Up: "up"
-  Down: "own"
-  Left: "left"
-  Right: "right"
-  "]": "race"
-  "[": "lets"
-  "\\": "pike"
+class @Modifiers
+  # singleton
+  instance = null
+  constructor: ->
+    if instance
+      return instance
+    else
+      instance = @
+      @roots = _.invert Settings.letters
+      @loadCommands()
+  buildPhonemeString: (individuals) ->
+    _.map individuals, (letter) ->
+      @roots[letter]
+    .join('')
+  suffixes: ->
+    _.extend {}, Settings.letters, Settings.modifierSuffixes
+  loadCommands: ->
+    suffixes = @suffixes()
+    _.each Settings.modifierPrefixes, (mods, name) ->
+      _.each suffixes, (value, key) ->
+        Commands.createDisabled "#{name} #{value}",
+          description: "#{mods} #{key}"
+          grammarType: "none"
+          tags: ["modifiers"]
+          action: ->
+            @key key, mods
+  fingerprint: ->
+    data =
+      letters: Settings.letters
+      modifierSuffixes: Settings.modifierSuffixes
+      modifierPrefixes: Settings.modifierPrefixes
+    CryptoJS.MD5(JSON.stringify(data)).toString()
+  checkVocabulary: ->
+    if Meteor.isServer
+      @createVocabFile()
+  createVocabFile: ->
+    content = """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>Version</key>
+      <string>3.0/1</string>
+      <key>Words</key>
+      <array>
+      #{@createVocabContent()}
+      </array>
+    </dict>
+    </plist>
+    """
+    file = [process.env.PWD, "/user/modifiers.xml"].join('')
+    fs = Meteor.npmRequire('fs')
+    fs.writeFileSync file, content, 'utf8'
+  createVocabContent: ->
+    results = []
+    _.each Settings.modifierPrefixes, (mods, name) =>
+      _.each @suffixes(), (value, key) =>
+        command = [name, value].join(' ')
+        if Commands.mapping[command]?.enabled
+          results.push @buildLetter(command)
+    results.join('\n')
+  buildLetter: (item) ->
+    """
+    <dict>
+      <key>EngineFlags</key>
+      <integer>17</integer>
+      <key>Flags</key>
+      <string></string>
+      <key>Sense</key>
+      <string></string>
+      <key>Source</key>
+      <string>User</string>
+      <key>Spoken</key>
+      <string>#{item}</string>
+      <key>Written</key>
+      <string>#{item}</string>
+    </dict>
+    """
 
-@commandModifiers =
-  chomm: "command"
-  shoff: "command shift"
-  shay: "command option"
-  flock: "command option shift"
-  crop: "option"
-  snoop: "option shift"
-  troll: "control"
-  mack: "command control"
-  triff: "control shift"
-  prick: "command control shift"
-  # sky: "shift"
-
-recommended =
-  chomm: [
-    "won"
-    "too"
-    "three"
-    "four"
-    "five"
-    "six"
-    "seven"
-    "ate"
-    "nine"
-    "zer"
-    "arch"
-    "brov"
-    "dell"
-    "etch"
-    "lug"
-    "mowsh"
-    "nerb"
-    "pooch"
-    "quash"
-    "rosh"
-    "slush"
-    "turn"
-    "leet"
-  ]
-  shoff: [
-    "dell"
-    "souk"
-  ]
-  troll: [
-    "char"
-    "zooch"
-  ]
+# recommended =
+#   chomm: [
+#     "won"
+#     "too"
+#     "three"
+#     "four"
+#     "five"
+#     "six"
+#     "seven"
+#     "ate"
+#     "nine"
+#     "zer"
+#     "arch"
+#     "brov"
+#     "dell"
+#     "etch"
+#     "lug"
+#     "mowsh"
+#     "nerb"
+#     "pooch"
+#     "quash"
+#     "rosh"
+#     "slush"
+#     "turn"
+#     "leet"
+#   ]
+#   shoff: [
+#     "dell"
+#     "souk"
+#   ]
+#   troll: [
+#     "char"
+#     "zooch"
+#   ]
   # sky: [
   #   "arch"
   #   "brov"
@@ -130,15 +139,3 @@ recommended =
   #   "yang"
   #   "zooch"
   # ]
-
-_.each commandModifiers, (mods, prefix) ->
-  _.each commandLetters, (value, key) ->
-    tags = if value in (recommended[prefix] or [])
-      ["modifiers", "recommended"]
-    else
-      ["modifiers"]
-    Commands.createDisabled "#{prefix}#{value}",
-      description: "#{mods} #{key}"
-      tags: tags
-      action: ->
-        @key key, mods

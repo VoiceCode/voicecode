@@ -220,11 +220,13 @@ commandHandler = Meteor.bindEnvironment (data) ->
       previousGrowl: previousPhraseGrowl
       normalized: normal
     previousPhraseTime = Date.now()
-    if normal is previousPhraseGrowl and normal isnt previousPhrase and (Date.now() - previousPhraseGrowlTime) < 700
+    if normal is previousPhraseGrowl # and normal isnt previousPhrase and (Date.now() - previousPhraseGrowlTime) < 700
       # probably a duplicate
       previousPhrase = normalizePhraseComparison(phrase)
+      previousPhraseGrowl = null
     else
       previousPhrase = normalizePhraseComparison(phrase)
+      previousPhraseGrowl = null
       chain = new Commands.Chain(phrase + " ")
       results = chain.execute(true)
 
@@ -245,6 +247,8 @@ commandHandler2 = Meteor.bindEnvironment (data) ->
   if normalized != previousPhrase # and ((normalized != previousPhraseGrowl) or ((Date.now() - previousPhraseGrowlTime) > threshold2))
     chain = new Commands.Chain(phrase + " ")
     results = chain.execute(true)
+  else
+    previousPhraseGrowl = null
 
 fs.stat socketPath, (err) ->
   if !err

@@ -91,18 +91,6 @@ class @Synchronizer
     LEFT OUTER JOIN ZACTION AS A ON A.Z_PK=C.Z_PK
     LEFT OUTER JOIN ZTRIGGER AS T ON T.Z_PK=C.Z_PK
     """
-  getDragonInfo: ->
-    if @_dragonInfo?
-      @_dragonInfo
-    else
-      command = @get "SELECT * FROM ZCOMMAND ORDER BY Z_PK LIMIT 1"
-      trigger = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
-      locale = Settings.localeSettings[Settings.locale]
-      @_dragonInfo =
-        osLanguage: command?.ZOSLANGUAGE or locale.dragonOsLanguage
-        spokenLanguage: command?.ZSPOKENLANGUAGE or locale.dragonCommandSpokenLanguage
-        triggerLanguage: trigger?.ZSPOKENLANGUAGE or locale.dragonTriggerSpokenLanguage
-      @_dragonInfo
   updateAllCommands: (perform=false) ->
     if @error
       console.log "error: dragon database not connected"
@@ -186,24 +174,22 @@ class @Synchronizer
     @lastId = id
     id
   createCommand: (bundleId, triggerPhrase, body) ->
-    spoken = @getDragonInfo().spokenLanguage
+    locale = Settings.localeSettings[Settings.locale]
     commandId = @createCommandId()
     applicationVersion = if bundleId is "global"
       0
     else
      @getApplicationVersion bundleId
 
-    triggerLanguage = @getDragonInfo().triggerLanguage
-    os = @getDragonInfo().osLanguage
     id = @getNextRecordId()
     username = @getUsername()
     @run "BEGIN TRANSACTION;"
-    @run "INSERT INTO ZTRIGGER (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZDESC, ZSPOKENLANGUAGE, ZSTRING) VALUES (4, 1, 1, #{id}, #{id}, 'command description', '#{triggerLanguage}', $triggerPhrase);", {$triggerPhrase: triggerPhrase}
-    @run "INSERT INTO ZACTION (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZOSLANGUAGE, ZTEXT) VALUES (1, 1, 1, #{id}, #{id}, '#{os}', $body);", {$body: body}
+    @run "INSERT INTO ZTRIGGER (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZDESC, ZSPOKENLANGUAGE, ZSTRING) VALUES (4, 1, 1, #{id}, #{id}, 'command description', '#{locale.dragonTriggerSpokenLanguage}', $triggerPhrase);", {$triggerPhrase: triggerPhrase}
+    @run "INSERT INTO ZACTION (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZOSLANGUAGE, ZTEXT) VALUES (1, 1, 1, #{id}, #{id}, '#{locale.dragonOsLanguage}', $body);", {$body: body}
     @run "INSERT INTO ZCOMMAND (Z_ENT, Z_OPT, ZACTIVE, ZAPPVERSION, ZCOMMANDID, ZDISPLAY, ZENGINEID, ZISCOMMAND,
     ZISCORRECTION, ZISDICTATION, ZISSLEEP, ZISSPELLING, ZVERSION, ZCURRENTACTION, ZCURRENTTRIGGER, ZLOCATION,
     ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, #{applicationVersion}, '#{commandId}',
-    1, -1, 1, 0, 0, 0, 1, 1, #{id}, #{id}, NULL, $bundle, '#{os}', '#{spoken}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
+    1, -1, 1, 0, 0, 0, 1, 1, #{id}, #{id}, NULL, $bundle, '#{locale.dragonOsLanguage}', '#{locale.dragonCommandSpokenLanguage}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'action'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'trigger'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'command'"

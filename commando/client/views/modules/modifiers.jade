@@ -11,12 +11,12 @@ template(name="moduleModifiers")
                 | {{{this}}}
             = name
     tbody
-      each letters
+      each suffixes
         tr
           td 
             code {{{name}}}
             = spoken
-          each prefixCombos
+          each combination
             +enabledModifier
 
 template(name="enabledModifier")
@@ -24,4 +24,3 @@ template(name="enabledModifier")
     label.modifierLabel
       input(type="checkbox" class="modifierCheckbox" checked=enabled)
       small= name
-

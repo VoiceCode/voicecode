@@ -22,14 +22,16 @@ class @Alphabet
 
       # uppers
       upper = key.toUpperCase()
-      Commands.create "#{Settings.uppercaseLetterPrefix} #{value}",
+      prefix = Settings.uppercaseLetterPrefix
+      Commands.create "#{prefix} #{value}",
         description: "Enters the capital letter: #{upper}"
         grammarType: "none"
 
       # with suffix
-      # Commands.create "#{value} ling",
-      #   description: "Enters the letter: #{value} (with better recognition because of suffix)"
-      #   grammarType: "none"
+      suffix = Settings.singleLetterSuffix
+      Commands.create "#{value} #{suffix}",
+        description: "Enters the letter: #{value} (with better recognition because of suffix: '#{suffix}')"
+        grammarType: "none"
 
       # nested
       _.each Settings.letters, (valueIn, keyIn) ->

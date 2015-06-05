@@ -5,8 +5,10 @@ Meteor.startup ->
   repetition = new Repetition()
   abbreviation = new Abbreviation()
   vocabulary = new Vocabulary()
+  @modifiers = new Modifiers()
   @enabledCommandsManager = new EnabledCommandsManager()
   Commands.loadConditionalModules(enabledCommandsManager.settings)
+  modifiers.checkVocabulary()
   @ParseGenerator = {}
   Commands.reloadGrammar()
   @synchronizer = new Synchronizer()

@@ -57,6 +57,10 @@ class @Grammar
     _.map Settings.letters, (value, key) ->
       "'#{value}'"
     .join " / "
+  modifierSuffixes: ->
+    '"' + _.values(modifiers.suffixes()).join('" / "') + '"'
+  modifierPrefixes: ->
+    '"' + _.keys(Settings.modifierPrefixes).join('" / "') + '"'
   build: -> """
     {
       var grammarTransforms = {
@@ -94,7 +98,7 @@ class @Grammar
     //  = "cx-sublimetext" ss first:(commandSublime) rest:(commandContinuousSublime)* {return [first].concat(rest);}
 
     command
-      = textCaptureCommand / singleSearchCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / literalCommand
+      = textCaptureCommand / singleSearchCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / modifierCommand / literalCommand
     commandContinuous
       = textCaptureCommandContinuous / singleSearchCommandContinuous / numberCaptureCommandContinuous / individualCommandContinuous / oneArgumentCommandContinuous / literalCommand
 
@@ -278,4 +282,9 @@ class @Grammar
       phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
       {return phonemes.join('');}
 
+    modifierCommand
+      = prefix:modifierPrefix ss suffix:modifierSuffix ss {return {command: prefix + " " + suffix};}
+
+    modifierPrefix = #{@modifierPrefixes()}
+    modifierSuffix = #{@modifierSuffixes()}
     """
