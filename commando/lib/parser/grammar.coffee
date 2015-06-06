@@ -100,7 +100,7 @@ class @Grammar
     command
       = textCaptureCommand / singleSearchCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / modifierCommand / literalCommand
     commandContinuous
-      = textCaptureCommandContinuous / singleSearchCommandContinuous / numberCaptureCommandContinuous / individualCommandContinuous / oneArgumentCommandContinuous / literalCommand
+      = textCaptureCommandContinuous / singleSearchCommandContinuous / numberCaptureCommandContinuous / individualCommandContinuous / oneArgumentCommandContinuous / modifierCommand / literalCommand
 
     textCaptureCommand
       = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}

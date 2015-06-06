@@ -40,11 +40,22 @@ Commands.create = (name, options) ->
     for key in _.keys(name)
       Commands.mapping[key].enabled = true
 
+Commands.createWithDefaults = (defaults, options) ->
+  for key, value of options
+    command = _.extend {}, defaults, value
+    command.enabled = true
+    Commands.mapping[key] = command
+
 Commands.createDisabled = (name, options) ->
   if typeof name is "string"
     Commands.mapping[name] = options
   else if typeof name is "object"
     _.extend Commands.mapping, name
+
+Commands.createDisabledWithDefaults = (defaults, options) ->
+  for key, value of options
+    command = _.extend {}, defaults, value
+    Commands.mapping[key] = command
 
 Commands.override = (name, callback) ->
   Commands.mapping[name].override = callback

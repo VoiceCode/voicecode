@@ -19,34 +19,17 @@ Commands.createDisabled
       delay 2
       tell application "#{dictateName}" to activate
       """
-Commands.create
+Commands.createWithDefaults
+  kind: "none"
+  tags: ["dragon"]
+  needsDragonCommand: false
+  continuous: false
+,
   "wakeup":
-    kind: "none"
     description: "wake dragon up if it is sleeping"
-    tags: ["dragon"]
-    needsDragonCommand: false
-    continuous: false
   "processing document":
-    kind: "none"
     description: "consume initialization text from dragon"
-    tags: ["dragon"]
-    needsDragonCommand: false
-    continuous: false
   "microphone off":
-    kind: "none"
     description: "consume command text from dragon"
-    tags: ["dragon"]
-    needsDragonCommand: false
-    continuous: false
   "go to sleep":
-    kind: "none"
     description: "consume command text from dragon"
-    tags: ["dragon"]
-    needsDragonCommand: false
-    continuous: false
-      # dictateName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
-      # @applescript """
-      # tell application "#{dictateName}"
-      #   set microphone to command operation
-      # end tell
-      # """

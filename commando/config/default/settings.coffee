@@ -262,14 +262,12 @@ _.extend Settings,
     "adam": "atom"
   vocabulary: [
     "trello"
-    "github"
   ]
-  # vocabularyNonstandard:
-  #   # "spoken": "result"
-  #   # + means create an actual command as well as a vocab item
-  #   # "+get hub": "github"
-  #   "get hub": "github"
-  #   "I term": "iTerm"
+  vocabularyAlternate:
+    # "spoken": "result"
+    # "+get hub": "github"
+    "get hub": "github"
+    "I term": "iTerm"
   modes:
     global: "global"
     emacs: "emacs"
