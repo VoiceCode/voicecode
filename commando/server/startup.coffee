@@ -3,7 +3,6 @@ Meteor.startup ->
   @Grammar = new Grammar()
   @alphabet = new Alphabet()
   repetition = new Repetition()
-  abbreviation = new Abbreviation()
   @modifiers = new Modifiers()
   @enabledCommandsManager = new EnabledCommandsManager()
   @vocabulary = new Vocabulary()

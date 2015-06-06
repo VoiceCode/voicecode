@@ -7,6 +7,7 @@ Commands.createDisabled
   "doom":
     description: "press the down arrow"
     tags: ["cursor", "recommended"]
+    repeatable: true
     action: ->
       @key "Down"
   "jeepway":
@@ -17,38 +18,45 @@ Commands.createDisabled
   "jeep":
     description: "Press the up arrow"
     tags: ["cursor", "recommended"]
+    repeatable: true
     action: ->
       @key "Up"
   "crimp":
     description: "press the left arrow"
     aliases: ["crimped"]
     tags: ["cursor", "recommended"]
+    repeatable: true
     action: ->
       @key "Left"
   "chris":
     description: "press the right arrow"
     tags: ["cursor", "recommended"]
     aliases: ["krist", "crist"]
+    repeatable: true
     action: ->
       @key "Right"
   "shunkrim":
     description: "move the cursor by word to the left"
     tags: ["cursor", "recommended"]
+    repeatable: true
     action: ->
       @key "Left", 'option'
   "wonkrim":
     description: "move the cursor by partial word to the left"
     tags: ["cursor"]
+    repeatable: true
     action: ->
       @key "Left", 'control'
   "wonkrish":
     description: "move the cursor by partial word to the right"
     tags: ["cursor"]
+    repeatable: true
     action: ->
       @key "Right", 'control'
   "shunkrish":
     description: "move the cursor by word to the right"
     tags: ["cursor", "recommended"]
+    repeatable: true
     action: ->
       @key "Right", 'option'
   "ricky":
@@ -66,6 +74,7 @@ Commands.createDisabled
   "nudgle":
     description: "remove a space before the adjacent word on the left"
     tags: ["cursor", "space", "deleting", "left", "combo", "recommended"]
+    repeatable: true
     action: ->
       @key "Left", 'option'
       @key "Delete"

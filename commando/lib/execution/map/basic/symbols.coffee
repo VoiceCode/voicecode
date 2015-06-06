@@ -253,6 +253,7 @@ Commands.createDisabledWithDefaults
       @string " & "
   "pounder":
     findable: "#"
+    repeatable: true
     action: ->
       @string "#"
   "questo":
@@ -296,6 +297,7 @@ Commands.createDisabledWithDefaults
       @string " + "
   "minus":
     tags: ["symbol", "minus", "recommended"]
+    repeatable: true
     findable: "-"
     action: ->
       @string "-"

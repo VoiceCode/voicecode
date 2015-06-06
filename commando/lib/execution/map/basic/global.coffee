@@ -2,6 +2,7 @@ Commands.createDisabled
   "goneck":
     description: "go to next thing (application-specific), tab, message, etc."
     tags: ["recommended", "navigation"]
+    repeatable: true
     action: ->
       switch @currentApplication()
         when "Skype"
@@ -11,6 +12,7 @@ Commands.createDisabled
   "gopreev":
     description: "go to previous thing (application-specific), tab, message, etc."
     tags: ["recommended", "navigation"]
+    repeatable: true
     action: ->
       switch @currentApplication()
         when "Skype"
@@ -20,6 +22,7 @@ Commands.createDisabled
   "baxley":
     description: "go 'back' - whatever that might mean in context"
     tags: ["recommended", "navigation"]
+    repeatable: true
     action: ->
       switch @currentApplication()
         when "Safari", "Google Chrome", "Firefox"
@@ -29,6 +32,7 @@ Commands.createDisabled
   "fourthly":
     description: "go 'forward' - whatever that might mean in context"
     tags: ["recommended", "navigation"]
+    repeatable: true
     action: ->
       switch @currentApplication()
         when "Safari", "Google Chrome", "Firefox"

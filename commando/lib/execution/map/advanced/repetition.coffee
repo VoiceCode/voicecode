@@ -4,6 +4,7 @@ Commands.createDisabled
     grammarType: "numberCapture"
     description: "repeat last complete spoken phrase [n] times (default 1)"
     tags: ["voicecode", "repetition", "recommended"]
+    repeatable: true
     action: (context, input) ->
       previous = context.lastFullCommand
       if previous
@@ -37,14 +38,15 @@ class @Repetition
       Commands.createDisabled key,
         kind: "historic"
         repeater: value
+        repeatable: true
         description: "repeat last individual command times [#{value.times}]"
         ignoreHistory: true
         tags: ["voicecode", "repetition", "recommended"]
-        aliases: value.aliases or []
         action: (context, input) ->
           times = if context.repetitionIndex is 0
-            value.times
+            value
           else
-            Math.max(value.times - 1, 1)
-          for i in [1..times]
-            context.lastIndividualCommand.call(@)
+            value - 1
+          if times > 0
+            for i in [1..times]
+              context.lastIndividualCommand.call(@)

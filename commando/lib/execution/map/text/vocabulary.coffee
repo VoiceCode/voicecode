@@ -7,7 +7,9 @@ class @Vocabulary
     else
       instance = @
       @standard = []
+      @listWords = []
       @alternate = {}
+      @repeatable = []
       @loadCommands()
       @loadCommandVocabulary()
       @loadVocabulary()
@@ -25,23 +27,23 @@ class @Vocabulary
         @standard.push key
       else if value.vocabulary?
         @alternate[value.vocabulary] = key
+      else if value.repeatable
+        @repeatable.push key
   loadVocabulary: ->
+    # from vocab list
     for item in Settings.vocabulary
       @standard.push item
     _.extend @alternate, Settings.vocabularyAlternate
-  fingerprint: ->
-    data =
-      standard: @standard
-      alternate: @alternate
-    CryptoJS.MD5(JSON.stringify(data)).toString()
+
+    # from commands with arguments
+    for prefix, listName of Settings.vocabularyListGenerators
+      list = Settings[listName]
+      for itemName, itemResult of list
+        @standard.push [prefix, itemName].join(' ')
+
   checkVocabulary: ->
     if Meteor.isServer
-      manager = new SettingsManager("versions")
-      fingerprint = manager.settings.vocabulary
-      unless fingerprint is @fingerprint()
-        @createVocabFile()
-        manager.settings.vocabulary = @fingerprint()
-        manager.save()
+      @createVocabFile()
   createVocabFile: ->
     content = """
     <?xml version="1.0" encoding="UTF-8"?>
@@ -54,6 +56,7 @@ class @Vocabulary
       <array>
       #{@createStandardContent()}
       #{@createAlternateContent()}
+      #{@createRepeatableContent()}
       </array>
     </dict>
     </plist>
@@ -65,6 +68,12 @@ class @Vocabulary
     _.map @standard, (value) =>
       @buildWord value, value
     .join("\n")
+  createRepeatableContent: ->
+    items = []
+    for name in @repeatable
+      for counter, value of Settings.repetitionWords
+        items.push @buildWord [name, counter].join(' ')
+    items.join("\n")
   createAlternateContent: ->
     items = []
     for spoken, written of @alternate

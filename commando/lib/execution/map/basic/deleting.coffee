@@ -2,11 +2,13 @@ Commands.createDisabled
   "kef":
     description: "press option-delete"
     tags: ["deleting", "recommended"]
+    repeatable: true
     action: ->
       @key "Delete", 'option'
   "steffi":
     description: "delete a partial word at a time"
     tags: ["deleting"]
+    repeatable: true
     action: ->
       current = @currentApplication()
       if current is "Sublime Text"
@@ -20,6 +22,7 @@ Commands.createDisabled
   "stippy":
     description: "forward delete a partial word at a time"
     tags: ["deleting"]
+    repeatable: true
     action: ->
       if @currentApplication() is "Sublime Text"
         @key "ForwardDelete", 'control'
@@ -28,5 +31,6 @@ Commands.createDisabled
   "kite":
     description: "forward delete a word at a time"
     tags: ["deleting", "recommended"]
+    repeatable: true
     action: ->
       @key "ForwardDelete", 'option'

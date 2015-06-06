@@ -9,6 +9,7 @@ Commands.createDisabled
     description: "insert a space"
     findable: " "
     tags: ["space", "recommended"]
+    repeatable: true
     action: ->
       @key " "
   "skoopark":
@@ -20,6 +21,7 @@ Commands.createDisabled
   "shockoon":
     description: "Inserts a new line below the current line"
     tags: ["return", "combo", "recommended"]
+    repeatable: true
     action: ->
       if @currentApplication() is "sublime"
         @key "Return", "command"
@@ -36,6 +38,7 @@ Commands.createDisabled
     description: "Inserts a new line above the current line"
     aliases: ["chalky", "shocking", "shocky"]
     tags: ["return", "combo", "recommended"]
+    repeatable: true
     action: ->
       if @currentApplication() is "sublime"
         @key "Return", "command shift"

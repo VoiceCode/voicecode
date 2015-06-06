@@ -234,18 +234,11 @@ _.extend Settings,
     "\\": "pike"
   repetitionWords:
     # you can add more repetition commands like this
-    wink:
-      times: 1
-    soup:
-      times: 2
-    trace:
-      times: 3
-      aliases: ["traced"]
-    quail:
-      times: 4
-      aliases: ["quell", "quarr"]
-    fypes:
-      times: 5
+    wink: 1
+    soup: 2
+    trace: 3
+    quail: 4
+    fypes: 5
   passwords:
     example: "password"
   emails:
@@ -268,6 +261,15 @@ _.extend Settings,
     # "+get hub": "github"
     "get hub": "github"
     "I term": "iTerm"
+  vocabularyListGenerators:
+    fox: "applications"
+    shrink: "abbreviations"
+    shell: "shellCommands"
+    dears: "directories"
+    direct: "directories"
+    windy: "windowPositions"
+    webs: "websites"
+    quinn: "codeSnippets"
   modes:
     global: "global"
     emacs: "emacs"
