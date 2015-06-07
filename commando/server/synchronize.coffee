@@ -40,12 +40,13 @@ class @Synchronizer
         return ""
       end try
       """)?.trim()
-      if bundle?.length
+      if bundle? and bundle.replace(/[^\w]/g, '').length
         @bundles[name] = bundle
         @applicationNames[bundle] = name
         bundle
       else
         console.log "could not get bundle identifier for: #{name}"
+        null
   getApplicationVersion: (bundle) ->
     name = @applicationNames[bundle]
     if @applicationVersions[name]?
@@ -188,7 +189,7 @@ class @Synchronizer
     @run "INSERT INTO ZACTION (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZOSLANGUAGE, ZTEXT) VALUES (1, 1, 1, #{id}, #{id}, '#{locale.dragonOsLanguage}', $body);", {$body: body}
     @run "INSERT INTO ZCOMMAND (Z_ENT, Z_OPT, ZACTIVE, ZAPPVERSION, ZCOMMANDID, ZDISPLAY, ZENGINEID, ZISCOMMAND,
     ZISCORRECTION, ZISDICTATION, ZISSLEEP, ZISSPELLING, ZVERSION, ZCURRENTACTION, ZCURRENTTRIGGER, ZLOCATION,
-    ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, #{applicationVersion}, '#{commandId}',
+    ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, #{applicationVersion}, #{commandId},
     1, -1, 1, 0, 0, 0, 1, 1, #{id}, #{id}, NULL, $bundle, '#{locale.dragonOsLanguage}', '#{locale.dragonCommandSpokenLanguage}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'action'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'trigger'"
