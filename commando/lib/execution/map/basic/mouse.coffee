@@ -25,12 +25,13 @@ Commands.createDisabled
     aliases: ["chicks"]
     action: ->
       @shiftClick()
-  "chommlick":
+  "chom lick":
     description: "command+click"
     tags: ["mouse"]
+    vocabulary: true
     action: ->
       @commandClick()
-  "croplick":
+  "crop lick":
     description: "option+click"
     tags: ["mouse"]
     action: ->

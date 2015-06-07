@@ -31,11 +31,15 @@ class @Vocabulary
         @repeatable.push key
   loadVocabulary: ->
     # from vocab list
+
+    # standard vocabulary
     for item in Settings.vocabulary
       @standard.push item
+
+    # vocab with alternate pronunciations
     _.extend @alternate, Settings.vocabularyAlternate
 
-    # from commands with arguments
+    # from lists of arguments in settings
     for prefix, listName of Settings.vocabularyListGenerators
       list = Settings[listName]
       for itemName, itemResult of list
