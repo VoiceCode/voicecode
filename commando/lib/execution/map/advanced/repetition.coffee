@@ -39,7 +39,7 @@ class @Repetition
         kind: "historic"
         repeater: value
         repeatable: true
-        description: "repeat last individual command times [#{value.times}]"
+        description: "repeat last individual command times [#{value}]"
         ignoreHistory: true
         tags: ["voicecode", "repetition", "recommended"]
         action: (context, input) ->
