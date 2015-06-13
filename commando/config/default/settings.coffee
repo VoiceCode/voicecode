@@ -308,7 +308,7 @@ _.extend Settings,
     spunk: w 'junk'
     swipe: w 'coif, posh, cram, criffed, spark'
     talky: w 'spark'
-    tragic:  w 'cram, criffed, tridal, senche'
+    tragic:  w 'cram, criffed, tridal, senchen, snake, yeller, smash, yellsmash'
     wordneck: w 'junk'
     wordpreev: w 'junk'
   modes:
