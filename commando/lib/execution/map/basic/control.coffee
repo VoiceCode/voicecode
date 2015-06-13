@@ -28,12 +28,6 @@ Commands.createDisabled
       else
         @key "Right", "command"
         @key "Return"
-  "shocktar":
-    description: "Inserts a new line then a tab"
-    tags: ["return", "tab", "combo"]
-    action: ->
-      @key "Return"
-      @key "Tab"
   "shockey":
     description: "Inserts a new line above the current line"
     aliases: ["chalky", "shocking", "shocky"]

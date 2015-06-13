@@ -7,14 +7,6 @@ Commands.createDisabled
       if input?.length
         result = Scripts.fuzzyMatch Settings.abbreviations, input.join(' ')
         @string result
-  "skooshrink":
-    grammarType: "textCapture"
-    description: "inserts a common abbreviation preceded by a space"
-    tags: ["text"]
-    action: (input) ->
-      if input?.length
-        result = Scripts.fuzzyMatch Settings.abbreviations, input.join(' ')
-        @string(" " + result)
   "quinn":
     grammarType: "textCapture"
     description: "inserts an IDE code snippet"

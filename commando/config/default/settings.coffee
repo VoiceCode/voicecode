@@ -1,22 +1,30 @@
 @Settings = {}
 
+extendArray = (original, extension) ->
+  original.concat extension
+
 Settings.extend = (key, map) ->
+  # check if we are extending an array
   if Object.prototype.toString.call(map) is '[object Array]'
     Settings[key] ?= []
-    Settings[key] = Settings[key].concat map
+    Settings[key] = extendArray Settings[key], map
+  # check if we are extending an object
   else if typeof map is "object"
     Settings[key] ?= {}
-    _.extend Settings[key], map
+    _.deepExtend Settings[key], map
+
+w = (commaSeparatedString) ->
+  commaSeparatedString.split(', ')
 
 _.extend Settings,
   maximumRepetitionCount: 100
   websites:
-    amazon: "http://www.amazon.com"
     "amazon console": "https://console.aws.amazon.com"
+    "google docs": "http://docs.google.com"
+    amazon: "http://www.amazon.com"
     craigslist: "http://craigslist.com"
     github: "https://github.com"
     gmail: "http://mail.google.com"
-    "google docs": "http://docs.google.com"
   applications:
     "app store": "App Store"
     activity: "Activity Monitor"
@@ -49,10 +57,10 @@ _.extend Settings,
     web: "Google Chrome"
     xcode: "Xcode"
   abbreviations:
-    standing: "stdin"
-    standout: "stdout"
+    "inc.": "inc"
     administrator: "admin"
     administrators: "admins"
+    allocate: "alloc"
     alternate: "alt"
     apartment: "apt"
     application: "app"
@@ -62,22 +70,21 @@ _.extend Settings,
     arguments: "args"
     attribute: "attr"
     attributes: "attrs"
-    allocate: "alloc"
-    authenticate: "auth"
     authentic: "auth"
+    authenticate: "auth"
     author: "auth"
     binary: "bin"
     button: "btn"
+    c: "char"
     calculate: "calc"
     call: "col"
-    character: "char"
-    c: "char"
     car: "char"
     care: "char"
+    character: "char"
     column: "col"
     command: "cmd"
-    configure: "config"
     configuration: "config"
+    configure: "config"
     constant: "const"
     define: "def"
     descending: "desc"
@@ -90,9 +97,10 @@ _.extend Settings,
     favorite: "fav"
     function: "func"
     image: "img"
+    imager: "int"
+    increment: "inc"
     initialize: "init"
     integer: "int"
-    imager: "int"
     iterate: "iter"
     jason: "json"
     large: "lg"
@@ -100,9 +108,9 @@ _.extend Settings,
     library: "lib"
     medium: "md"
     minimum: "min"
-    number: "num"
     navigate: "nav"
     navigation: "nav"
+    number: "num"
     object: "obj"
     parameter: "param"
     parameters: "params"
@@ -116,18 +124,17 @@ _.extend Settings,
     revision: "rev"
     source: "src"
     standard: "std"
+    standing: "stdin"
+    standout: "stdout"
     string: "str"
     system: "sys"
-    thanks: "thx"
-    thinks: "thx"
     temporary: "tmp"
     text: "txt"
+    thanks: "thx"
     utilities: "utils"
     utility: "util"
     value: "val"
     variable: "var"
-    increment: "inc"
-    "inc.": "inc"
     # multi word abbreviations
     "stripe test card": "4242424242424242"
   codeSnippets:
@@ -202,6 +209,7 @@ _.extend Settings,
     mack: "command control"
     triff: "control shift"
     prick: "command control shift"
+    flan: "command option control"
   modifierSuffixes:
     "1": "one"
     "2": "two"
@@ -270,6 +278,39 @@ _.extend Settings,
     windy: "windowPositions"
     webs: "websites"
     quinn: "codeSnippets"
+  commonSequences:
+    brax: w 'coif, posh'
+    chiff: w 'olly, junk, jolt, shock, junk, spunk'
+    chris: w 'swipe, spunk, snipper'
+    coalgap: w 'cram, criffed, snake, coif, posh'
+    coif: w 'spark'
+    comma: w 'shock'
+    crimp: w 'junk, skoosh, swipe'
+    doom: w 'shabble, shabber, shroom, switchy, switcho, shockoon, snipline'
+    dot: w 'spark, cram, criffed, snake'
+    duke: w 'snipper, snipple, ricksy, junk, cram, criffed, snatch'
+    jeep: w 'shabble, shabber, shreep, switchy, switcho'
+    jeep: w 'shock, shockey, snipline'
+    junk: w 'spunk, spark'
+    prex: w 'spark, coif, posh, kirk'
+    ricksy: w 'stoosh, snatch'
+    ricky: w 'junk'
+    sage: w 'swick'
+    shackle: w 'snatch'
+    shock: w 'cram, criffed, tarp'
+    shockey: w 'spark'
+    shockoon: w 'spark, cram, criffed'
+    shreep: w 'shabble, shabber'
+    shroom: w 'shabble, shabber'
+    skoosh: w 'cram, criffed, shrink'
+    snatch: w 'swick'
+    spark: w 'shock'
+    spunk: w 'junk'
+    swipe: w 'coif, posh, cram, criffed, spark'
+    talky: w 'spark'
+    tragic:  w 'cram, criffed, tridal, senche'
+    wordneck: w 'junk'
+    wordpreev: w 'junk'
   modes:
     global: "global"
     emacs: "emacs"
@@ -393,18 +434,18 @@ _.extend Settings,
       width: 1024
       height: 768
   applicationsThatCanNotHandleBlankSelections: [
-    "iTerm"
-    "Terminal"
-    "Sublime Text"
-    "Google Chrome"
-    "Parallels Desktop"
+    "AppCode"
     "Atom"
+    "Google Chrome"
     "IntelliJ IDEA"
+    "iTerm"
+    "Parallels Desktop"
     "PhpStorm"
     "PyCharm"
     "RubyMine"
+    "Sublime Text"
+    "Terminal"
     "WebStorm"
-    "AppCode"
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
@@ -442,18 +483,18 @@ _.extend Settings,
 
   # For JetBrains IDEs and possibly other applications that do not work with Dragon Dictate
   dragonIncompatibleApplications: [
+    "AppCode"
     "IntelliJ IDEA"
     "PhpStorm"
     "PyCharm"
     "RubyMine"
     "WebStorm"
-    "AppCode"
   ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000
   emotions:
-    smile: ":)"
     chagrin: ":P"
-    sheep: ":}"
     frown: ":("
+    sheep: ":}"
+    smile: ":)"
     winkle: ";)"

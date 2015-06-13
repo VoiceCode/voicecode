@@ -61,6 +61,7 @@ class @Vocabulary
       #{@createStandardContent()}
       #{@createAlternateContent()}
       #{@createRepeatableContent()}
+      #{@createSequenceContent()}
       </array>
     </dict>
     </plist>
@@ -72,16 +73,22 @@ class @Vocabulary
     _.map @standard, (value) =>
       @buildWord value, value
     .join("\n")
+  createAlternateContent: ->
+    items = []
+    for spoken, written of @alternate
+      items.push @buildWord(written, spoken)
+    items.join("\n")
   createRepeatableContent: ->
     items = []
     for name in @repeatable
       for counter, value of Settings.repetitionWords
         items.push @buildWord [name, counter].join(' ')
     items.join("\n")
-  createAlternateContent: ->
+  createSequenceContent: ->
     items = []
-    for spoken, written of @alternate
-      items.push @buildWord(written, spoken)
+    for name, followers of Settings.commonSequences
+      for suffix in followers
+        items.push @buildWord [name, suffix].join(' ')
     items.join("\n")
   buildWord: (item, spoken) ->
     """

@@ -82,7 +82,7 @@ Commands.createDisabled
   "selrang":
     grammarType: "numberCapture"
     description: "selects text in a line range: selrang ten twenty."
-    tags: ["domain-specific", "sublime"]
+    tags: ["atom", "sublime"]
     triggerScopes: ["Atom", "Sublime Text"]
     action: (input) ->
       if input?
@@ -115,7 +115,7 @@ Commands.createDisabled
   "seltil":
     grammarType: "numberCapture"
     description: "selects text from current position through ('til) spoken line number: seltil five five."
-    tags: ["domain-specific", "sublime"]
+    tags: ["atom", "sublime"]
     triggerScopes: ["Atom", "Sublime Text"]
     action: (input) ->
       if input?

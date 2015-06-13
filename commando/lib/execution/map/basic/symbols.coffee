@@ -197,10 +197,6 @@ Commands.createDisabledWithDefaults
     findable: ", "
     action: ->
       @string ", "
-  "swipshock":
-    action: ->
-      @key ","
-      @key "Return"
   "coalgap":
     findable: ": "
     action: ->

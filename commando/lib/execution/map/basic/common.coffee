@@ -122,12 +122,6 @@ Commands.createDisabled
           @key "V", "command"
       else
         @key "V", "command"
-  "sparshock":
-    description: "paste the clipboard then press enter"
-    tags: ["copy-paste", "combo", "return"]
-    action: ->
-      @key "V", "command"
-      @key "Return"
   "sage":
     description: "file > save"
     tags: ["application", "recommended"]
@@ -181,6 +175,7 @@ Commands.createDisabled
   "talky":
     description: "open a new tab"
     tags: ["application", "window", "recommended"]
+    aliases: ["talkie"]
     action: ->
       @key "T", "command"
   "randall":
