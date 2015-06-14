@@ -23,6 +23,7 @@ Commands.createDisabled
     tags: ["return", "combo", "recommended"]
     repeatable: true
     action: ->
+      console.log "running base command"
       if @currentApplication() is "sublime"
         @key "Return", "command"
       else

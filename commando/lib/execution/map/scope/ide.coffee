@@ -130,3 +130,14 @@ Commands.createDisabled
             @exec script
           when "Atom"
             @runAtomCommand "extendSelectionToLine", input
+
+  "clonesert":
+    grammarType: "numberCapture"
+    description: "Insert the text from another line at the current cursor position"
+    tags: ["atom"]
+    triggerScopes: ["Atom"]
+    action: (input) ->
+      if input?
+        switch @currentApplication()
+          when "Atom"
+            @runAtomCommand "insertContentFromLine", input

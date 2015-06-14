@@ -34,11 +34,9 @@ class Commands.Chain
         individual
       )
 
-      # appleScript = @makeAppleScriptCommand combined
       Commands.previousUndoByDeletingCount = Commands.aggregateUndoByDeletingCount
       Commands.aggregateUndoByDeletingCount = 0
       if shouldInvoke
-        # pool = $.NSAutoreleasePool('alloc')('init')
         _.each combined, (callback) ->
           if callback?
             Commands.currentUndoByDeletingCount = 0
@@ -48,18 +46,12 @@ class Commands.Chain
             else
               Commands.aggregateUndoByDeletingCount = 0
 
-        # pool('release')
-
-        # @invokeShell appleScript
-
       if Meteor.isServer
         Commands.lastFullCommand = combined
         inserted = PreviousCommands.insert
           createdAt: new Date()
           interpretation: results
           spoken: @phrase
-          # generated: combined
-        # console.log "result is #{inserted}"
 
       {interpretation: results, generated: combined}
 

@@ -57,8 +57,19 @@ Commands.createDisabledWithDefaults = (defaults, options) ->
     command = _.extend {}, defaults, value
     Commands.mapping[key] = command
 
-Commands.override = (name, callback) ->
-  Commands.mapping[name].override = callback
+Commands.override = (name, action) ->
+  console.log "ERROR: Commands.override is deprecated. Use Commands.extend"
+#   Commands.mapping[name].override = action
+
+Commands.extend = (name, extension) ->
+  Commands.mapping[name].extensions ?= []
+  Commands.mapping[name].extensions.push extension
+Commands.before = (name, extension) ->
+  Commands.mapping[name].before ?= []
+  Commands.mapping[name].before.push extension
+Commands.after = (name, extension) ->
+  Commands.mapping[name].after ?= []
+  Commands.mapping[name].after.push extension
 
 Commands.addAliases = (key, aliases) ->
   Commands.mapping[key].aliases ?= []
@@ -113,7 +124,6 @@ class Commands.Base
           prefix = @info.prefix or ""
           suffix = @info.suffix or ""
           -> @string([prefix, transformed, suffix].join(''))
-          # Scripts.makeTextCommand([prefix, transformed, suffix].join(''))
         else
           fallback = @info.fallbackService
           transform = @info.transform
@@ -127,55 +137,58 @@ class Commands.Base
                     contents = @getSelectedText()
                     transformed = SelectionTransformer[transform](contents)
                     @string transformed
-            # Commands.incomingSelectionHandler = SelectionTransformer[transform]
-            # @clickServiceItem("send-selection-to-voicecode")
-              # @clickServiceItem(fallback)
-      when "word"
-        transformed = Transforms.identity([@info.word].concat(@input or []))
-        -> @string(transformed)
-      when "combo"
-        combined = _.map(@info.combo, (subCommand) ->
-          command = new Commands.Base(subCommand)
-          command.generate()
-        )
-        ->
-          _.each combined, (callback) ->
-           if callback?
-             callback.call(Actions)
-
-    if @info.override?
-      override = @info.override
+    # if @info.override?
+    #   override = @info.override
+    #   input = @input
+    #   -> override.call(@, input, funk)
+    core = if @info.extensions?
       input = @input
-      -> override.call(@, input, funk)
+      extensions = []
+      extensions.push funk
+      _.each @info.extensions, (e) ->
+        extensions.push ->
+          e.call(@, input)
+      ->
+        @extensionsStopped = false
+        for callback in extensions.reverse()
+          unless @extensionsStopped
+            callback.call(@)
     else
       funk
-      # when "number"
-      #   preCommand = if @info.padLeft
-      #     Scripts.spacePad()
-      #   else
-      #     ""
-      #   [preCommand, Scripts.makeTextCommand "#{@input}"].join("\n")
-      # when "action"
-      #   if @info.contextualActions?
-      #     scopeCases = []
-      #     me = @
-      #     _.each @info.contextualActions, (scenarioInfo, scenarioName) ->
-      #       scopeCases.push(
-      #         requirements: scenarioInfo.requirements
-      #         generated: Scripts.joinActionCommands(scenarioInfo.actions, me.input)
-      #       )
-      #     fallback = if @actions
-      #       Scripts.joinActionCommands(@actions, @input)
-      #     else
-      #       Scripts.outOfContext(@namespace)
 
-      #     Scripts.applicationScope scopeCases, fallback
-      #   else
-      #     if @actions?.length
-      #       Scripts.joinActionCommands(@actions, @input)
+    segments = []
 
-      # when "modifier"
-      #   @makeModifierCommand @input
+    # before actions
+    if @info.before?
+      input = @input
+      beforeList = []
+      _.each @info.before, (e) ->
+        beforeList.push ->
+          e.call(@, input)
+      segments.push ->
+        for callback in beforeList.reverse()
+          callback.call(@)
+
+    # core actions
+    segments.push core
+
+    # after actions
+    if @info.after?
+      input = @input
+      afterList = []
+      _.each @info.after, (e) ->
+        afterList.push ->
+          e.call(@, input)
+      segments.push ->
+        for callback in afterList.reverse()
+          callback.call(@)
+
+    # needs to return an executable function that can be called later.
+    # context should be explicitly set to an 'Actions' instance when called
+    ->
+      for segment in segments
+        segment.call(@)
+
   applyTransform: (textArray) ->
     transform = @transform()
     @transform()(textArray)

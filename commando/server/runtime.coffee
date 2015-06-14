@@ -211,14 +211,14 @@ commandHandler = Meteor.bindEnvironment (data) ->
   if listeningOnMainSocket
     phrase = data.toString('utf8').replace("\n", "")
     normal = normalizePhraseComparison(phrase)
-    console.log
-      handler: 1
-      difference: (Date.now() - previousPhraseTime)
-      differenceGrowl: (Date.now() - previousPhraseGrowlTime)
-      phrase: phrase
-      previous: previousPhrase
-      previousGrowl: previousPhraseGrowl
-      normalized: normal
+    # console.log
+    #   handler: 1
+    #   difference: (Date.now() - previousPhraseTime)
+    #   differenceGrowl: (Date.now() - previousPhraseGrowlTime)
+    #   phrase: phrase
+    #   previous: previousPhrase
+    #   previousGrowl: previousPhraseGrowl
+    #   normalized: normal
     previousPhraseTime = Date.now()
     if normal is previousPhraseGrowl # and normal isnt previousPhrase and (Date.now() - previousPhraseGrowlTime) < 700
       # probably a duplicate
@@ -233,14 +233,14 @@ commandHandler = Meteor.bindEnvironment (data) ->
 # comes from growl
 commandHandler2 = Meteor.bindEnvironment (data) ->
   phrase = data.toString('utf8').replace("\n", "")
-  console.log
-    handler: 2
-    differenceGrowl: (Date.now() - previousPhraseGrowlTime)
-    difference: (Date.now() - previousPhraseTime)
-    phrase: phrase
-    previous: previousPhrase
-    previousGrowl: previousPhraseGrowl
-    normalized: normalizePhraseComparison(phrase)
+  # console.log
+  #   handler: 2
+  #   differenceGrowl: (Date.now() - previousPhraseGrowlTime)
+  #   difference: (Date.now() - previousPhraseTime)
+  #   phrase: phrase
+  #   previous: previousPhrase
+  #   previousGrowl: previousPhraseGrowl
+  #   normalized: normalizePhraseComparison(phrase)
   normalized = normalizePhraseComparison(phrase)
   previousPhraseGrowl = normalized
   previousPhraseGrowlTime = Date.now()
