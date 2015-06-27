@@ -4,6 +4,7 @@ Commands.createDisabledWithDefaults
 ,
   "trail":
     description: "search backward for the next thing you say, then select it"
+    aliases: ["trailed"]
     action: (input) ->
       term = input?.value or @storage.previousSearchTerm
       if term?.length

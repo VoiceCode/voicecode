@@ -45,7 +45,7 @@
         left: "steffi"
       word:
         right: "kite"
-        left: "kef"
+        left: "trough"
       line:
         right: "snipper"
         left: "snipple"

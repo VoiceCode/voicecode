@@ -11,6 +11,10 @@ class Commands.Chain
         item = "I"
       else if c is "…"
         item = "ellipsis"
+      else if c is "–"
+        item = "dash"
+      else if c is ","
+        item = "comma"
       result.push item
     result.join('')
   parse: ->

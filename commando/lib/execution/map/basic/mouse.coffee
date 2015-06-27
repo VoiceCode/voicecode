@@ -34,6 +34,7 @@ Commands.createDisabled
   "crop lick":
     description: "option+click"
     tags: ["mouse"]
+    vocabulary: true
     action: ->
       @optionClick()
   "pretzel":

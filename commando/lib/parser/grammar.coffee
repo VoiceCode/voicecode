@@ -48,7 +48,8 @@ class @Grammar
           "dot"
         else
           name.split(" ").join('_')
-        aliasLine = "#{normalName} = (#{alternates.join(" / ")}) {return '#{name}';}"
+        aliases = _.sortBy(alternates, (e) -> e).reverse()
+        aliasLine = "#{normalName} = (#{aliases.join(" / ")}) {return '#{name}';}"
         results.push aliasLine
     results.join("\n")
   translationIdentifiers: ->
@@ -75,6 +76,9 @@ class @Grammar
         },
         trassword: function(arguments) {
           return Scripts.fuzzyMatch(Settings.passwords, arguments.join(' '));
+        },
+        clap: function(word) {
+          return Transforms.titleSentance([word]);
         }
       }
 
@@ -187,11 +191,20 @@ class @Grammar
     literalCommand
       = text:(overrideCommand / nestableTextCommand / translation / exactInteger / phonemeString / word / symbol)+ {return {command: "vc-literal", arguments: text};}
 
-    nestableTextIdentifier
+    nestableFreeTextIdentifier
       = "shrink" / "treemail" / "trusername" / "trassword"
 
-    nestableTextCommand
-      = identifier:nestableTextIdentifier ss arguments:(word)+
+    nestableSingleTextIdentifier
+      = "clap"
+
+    nestableTextCommand = nestableFreeTextCommand / nestableSingleTextCommand
+
+    nestableFreeTextCommand
+      = identifier:nestableFreeTextIdentifier ss arguments:(word)+
+      {return grammarTransform(identifier, arguments);}
+
+    nestableSingleTextCommand
+      = identifier:nestableSingleTextIdentifier ss arguments:(word)
       {return grammarTransform(identifier, arguments);}
 
     // translations

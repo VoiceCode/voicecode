@@ -1,6 +1,6 @@
 Commands.createDisabled
-  "kef":
-    description: "press option-delete"
+  "trough":
+    description: "delete a word at a time (press option-delete)"
     tags: ["deleting", "recommended"]
     repeatable: true
     action: ->
@@ -9,6 +9,7 @@ Commands.createDisabled
     description: "delete a partial word at a time"
     tags: ["deleting"]
     repeatable: true
+    aliases: ["steffy"]
     action: ->
       current = @currentApplication()
       if current is "Sublime Text"
@@ -18,7 +19,7 @@ Commands.createDisabled
       else if current is "Emacs" or (current is "iTerm" and @mode is "emacs")
         @key "Delete", 'option'
       else
-        @key "Delete", 'option'
+        @deletePartialWord("left")
   "stippy":
     description: "forward delete a partial word at a time"
     tags: ["deleting"]
@@ -27,7 +28,7 @@ Commands.createDisabled
       if @currentApplication() is "Sublime Text"
         @key "ForwardDelete", 'control'
       else
-        @key "ForwardDelete", 'option'
+        @deletePartialWord("right")
   "kite":
     description: "forward delete a word at a time"
     tags: ["deleting", "recommended"]

@@ -13,6 +13,9 @@ Settings.extend = (key, map) ->
     Settings[key] ?= {}
     _.deepExtend Settings[key], map
 
+Settings.addContext = (determiningFunction) ->
+  Settings.contextChain.unshift determiningFunction
+
 w = (commaSeparatedString) ->
   commaSeparatedString.split(', ')
 
@@ -25,6 +28,9 @@ _.extend Settings,
     craigslist: "http://craigslist.com"
     github: "https://github.com"
     gmail: "http://mail.google.com"
+    "voicecode wiki": "https://github.com/VoiceCode/docs/wiki"
+    "voicecode github": "https://github.com/stratogee/voicecode"
+    "voicecode": "http://voicecode.io"
   applications:
     "app store": "App Store"
     activity: "Activity Monitor"
@@ -47,7 +53,7 @@ _.extend Settings,
     robo: "Robomongo"
     safari: "Safari"
     shop: "Adobe Photoshop CC 2014"
-    sky: "Skype"
+    skype: "Skype"
     store: "App Store"
     sublime: "Sublime Text"
     system: "System Preferences"
@@ -56,6 +62,7 @@ _.extend Settings,
     tune: "iTunes"
     web: "Google Chrome"
     xcode: "Xcode"
+    simulator: "iOS Simulator"
   abbreviations:
     "inc.": "inc"
     administrator: "admin"
@@ -280,14 +287,14 @@ _.extend Settings,
     quinn: "codeSnippets"
   commonSequences:
     brax: w 'coif, posh'
-    chiff: w 'olly, junk, jolt, shock, junk, spunk'
-    chris: w 'swipe, spunk, snipper'
+    chiff: w 'olly, junk, jolt, shock, junk, spunk, swipe, dot, shockey'
+    chris: w 'swipe, spunk, snipper, criffed, cram, snake'
     coalgap: w 'cram, criffed, snake, coif, posh'
     coif: w 'spark'
     comma: w 'shock'
-    crimp: w 'junk, skoosh, swipe'
+    crimp: w 'junk, skoosh, swipe, criffed, cram, snake'
     doom: w 'shabble, shabber, shroom, switchy, switcho, shockoon, snipline'
-    dot: w 'spark, cram, criffed, snake'
+    dot: w 'spark, cram, criffed, snake, smash'
     duke: w 'snipper, snipple, ricksy, junk, cram, criffed, snatch'
     jeep: w 'shabble, shabber, shreep, switchy, switcho'
     jeep: w 'shock, shockey, snipline'
@@ -295,14 +302,14 @@ _.extend Settings,
     prex: w 'spark, coif, posh, kirk'
     ricksy: w 'stoosh, snatch'
     ricky: w 'junk'
-    sage: w 'swick'
+    sage: w 'swick, totch'
     shackle: w 'snatch'
     shock: w 'cram, criffed, tarp'
     shockey: w 'spark'
     shockoon: w 'spark, cram, criffed'
     shreep: w 'shabble, shabber'
     shroom: w 'shabble, shabber'
-    skoosh: w 'cram, criffed, shrink'
+    skoosh: w 'cram, criffed, shrink, snake, smash'
     snatch: w 'swick'
     spark: w 'shock'
     spunk: w 'junk'
@@ -311,12 +318,13 @@ _.extend Settings,
     tragic:  w 'cram, criffed, tridal, senchen, snake, yeller, smash, yellsmash'
     wordneck: w 'junk'
     wordpreev: w 'junk'
+    shicks: w 'stoosh, junk, jolt, shabble, shabber'
   modes:
     global: "global"
     emacs: "emacs"
     mate: "textmate"
-  dragonContexts: [
-    "Global"
+  contextChain: [
+    -> @currentApplication()
   ]
   workflows:
     "workflow test": "yellsnik it worked clamor"

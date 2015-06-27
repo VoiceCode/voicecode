@@ -10,6 +10,7 @@ class @Vocabulary
       @listWords = []
       @alternate = {}
       @repeatable = []
+      @spaceBefore = []
       @loadCommands()
       @loadCommandVocabulary()
       @loadVocabulary()
@@ -29,6 +30,8 @@ class @Vocabulary
         @alternate[value.vocabulary] = key
       else if value.repeatable
         @repeatable.push key
+      else if value.spaceBefore
+        @spaceBefore.push key
   loadVocabulary: ->
     # from vocab list
 
@@ -61,6 +64,7 @@ class @Vocabulary
       #{@createStandardContent()}
       #{@createAlternateContent()}
       #{@createRepeatableContent()}
+      #{@createSpaceContent()}
       #{@createSequenceContent()}
       </array>
     </dict>
@@ -83,6 +87,11 @@ class @Vocabulary
     for name in @repeatable
       for counter, value of Settings.repetitionWords
         items.push @buildWord [name, counter].join(' ')
+    items.join("\n")
+  createSpaceContent: ->
+    items = []
+    for name in @spaceBefore
+      items.push @buildWord ["skoo", name].join(' ')
     items.join("\n")
   createSequenceContent: ->
     items = []

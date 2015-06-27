@@ -9,6 +9,7 @@ Commands.createDisabled
     description: "insert a space"
     findable: " "
     tags: ["space", "recommended"]
+    aliases: ["skoo", "sku"]
     repeatable: true
     action: ->
       @key " "

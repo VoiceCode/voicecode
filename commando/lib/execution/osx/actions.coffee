@@ -418,11 +418,26 @@ class OSX.Actions
   setCurrentApplication: (application) ->
     @_currentApplication = application
 
+  context: ->
+    for item in Settings.contextChain
+      result = item.call(@)
+      return result if result?
+
   setGlobalMode: (mode) ->
     Commands.mode = mode
 
   getGlobalMode: ->
     Commands.mode
+
+  transformSelectedText: (transform) ->
+    switch @currentApplication()
+      when "Atom"
+        @runAtomCommand "transformSelectedText", transform
+      else
+        if @isTextSelected()
+          contents = @getSelectedText()
+          transformed = SelectionTransformer[transform](contents)
+          @string transformed
 
   revealFinderDirectory: (directory) ->
     @notUndoable()
@@ -509,9 +524,9 @@ class OSX.Actions
     @waitForClipboard()
     result = @getClipboard()
     @setClipboard(old)
-    console.log
-      oldClipboard: old
-      newClipboard: result
+    # console.log
+    #   oldClipboard: old
+    #   newClipboard: result
     result
 
   waitForClipboard: ->
@@ -901,3 +916,38 @@ class OSX.Actions
   storeCurrentClipboardWithName: (name) ->
     @_storedClipboard ?= {}
     @_storedClipboard[name] = @getClipboard()
+
+  deletePartialWord: (direction) ->
+    distance = 1
+    if direction is "right"
+      @key 'Right', 'command shift'
+    else
+      @key 'Left', 'command shift'
+    content = @getSelectedText()
+    console.log content: content
+    components = SelectionTransformer.uncamelize(content).split(" ")
+    if direction is "left"
+      components = components.reverse()
+    foundContent = false
+    spacePadding = 0
+    for item in components
+      unless foundContent
+        if item.length is 0
+          spacePadding += 1
+        else
+          foundContent = true
+
+    chosenComponents = components.splice(0, distance + spacePadding)
+    console.log chosen: chosenComponents
+    characters = chosenComponents.join('').length + spacePadding
+    if direction is "right"
+      @key 'Left'
+    else
+      @key 'Right'
+    if characters > 0
+      for index in [1..characters]
+        if direction is "right"
+          @key 'Right', 'shift'
+        else
+          @key 'Left', 'shift'
+      @key 'Delete'

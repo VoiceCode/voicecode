@@ -7,6 +7,8 @@ Commands.createDisabled
       switch @currentApplication()
         when "Skype"
           @key "Right", 'command option'
+        when "Mail"
+          @key 'Down', 'command'
         else
           @key "]", 'command shift'
   "gopreev":
@@ -17,6 +19,8 @@ Commands.createDisabled
       switch @currentApplication()
         when "Skype"
           @key "Left", 'command option'
+        when "Mail"
+          @key 'Up', 'command'
         else
           @key "[", 'command shift'
   "baxley":

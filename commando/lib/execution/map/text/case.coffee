@@ -1,27 +1,41 @@
 Commands.createDisabled
   "vc-literal":
-    kind: "text"
-    grammarType: "textCapture"
+    # kind: "text"
+    grammarType: "none"
     description: "words with spaces between. This command is for internal grammar use (not spoken)"
     tags: ["text", "recommended"]
     needsDragonCommand: false
     isSpoken: false
-    transform: "literal"
+    # transform: "literal"
+    action: (input) ->
+      if input
+        @string Transforms.literal(input)
+  "clap":
+    grammarType: "none"
+    description: "capitalize the next individual word"
+    tags: ["text", "recommended"]
+    spaceBefore: true
   "cram":
-    kind: "text"
+    # kind: "text"
     grammarType: "textCapture"
     description: "camelCaseText"
     tags: ["text", "recommended"]
-    transform: "camel"
+    # transform: "camel"
     aliases: ["crammed", "crams", "tram", "kram"]
-    fallbackService: "vc case cram"
-  "decram":
-    kind: "text"
-    grammarType: "textCapture"
-    description: "space camelCaseText"
-    tags: ["text", "combo"]
-    transform: "camel"
-    prefix: " "
+    spaceBefore: true
+    # fallbackService: "vc case cram"
+    action: (input) ->
+      if input
+        @string Transforms.camel(input)
+      else
+        @transformSelectedText("camel")
+  # "decram":
+  #   kind: "text"
+  #   grammarType: "textCapture"
+  #   description: "space camelCaseText"
+  #   tags: ["text", "combo"]
+  #   transform: "camel"
+  #   prefix: " "
   "dockram":
     kind: "text"
     grammarType: "textCapture"
@@ -30,12 +44,18 @@ Commands.createDisabled
     transform: "camel"
     prefix: "."
   "snake":
-    kind: "text"
+    # kind: "text"
     grammarType: "textCapture"
     description: "snake_case_text"
     tags: ["text", "recommended"]
-    transform: "snake"
-    fallbackService: "vc case snake"
+    spaceBefore: true
+    # transform: "snake"
+    # fallbackService: "vc case snake"
+    action: (input) ->
+      if input
+        @string Transforms.snake(input)
+      else
+        @transformSelectedText("snake")
   "coalsnik":
     kind: "text"
     grammarType: "textCapture"
@@ -57,13 +77,13 @@ Commands.createDisabled
     tags: ["text"]
     transform: "camel"
     prefix: "$"
-  "deznik":
-    kind: "text"
-    grammarType: "textCapture"
-    description: "space snake_case_text"
-    tags: ["text", "combo"]
-    transform: "snake"
-    prefix: " "
+  # "deznik":
+  #   kind: "text"
+  #   grammarType: "textCapture"
+  #   description: "space snake_case_text"
+  #   tags: ["text", "combo"]
+  #   transform: "snake"
+  #   prefix: " "
   "spine":
     kind: "text"
     grammarType: "textCapture"
@@ -80,21 +100,27 @@ Commands.createDisabled
     transform: "spine"
     prefix: " "
   "criffed":
-    kind: "text"
+    # kind: "text"
     description: "StudCaseText"
     tags: ["text", "recommended"]
     aliases: ["chaffed", "crisped"]
     grammarType: "textCapture"
-    transform: "stud"
-    fallbackService: "vc case criffed"
-  "decriffed":
-    kind: "text"
-    description: "space StudCaseText"
-    tags: ["text", "combo"]
-    aliases: ["chaffed"]
-    grammarType: "textCapture"
-    transform: "stud"
-    prefix: " "
+    spaceBefore: true
+    # transform: "stud"
+    # fallbackService: "vc case criffed"
+    action: (input) ->
+      if input
+        @string Transforms.stud(input)
+      else
+        @transformSelectedText("stud")
+  # "decriffed":
+  #   kind: "text"
+  #   description: "space StudCaseText"
+  #   tags: ["text", "combo"]
+  #   aliases: ["chaffed"]
+  #   grammarType: "textCapture"
+  #   transform: "stud"
+  #   prefix: " "
   "dockriffed":
     kind: "text"
     description: "space StudCaseText"

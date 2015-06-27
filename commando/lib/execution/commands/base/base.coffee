@@ -187,7 +187,7 @@ class Commands.Base
     # context should be explicitly set to an 'Actions' instance when called
     ->
       for segment in segments
-        segment.call(@)
+        segment?.call(@)
 
   applyTransform: (textArray) ->
     transform = @transform()

@@ -4,16 +4,19 @@ Commands.createDisabledWithDefaults
   "dot":
     findable: "."
     aliases: ["."]
+    spaceBefore: true
     action: ->
       @string "."
   "star":
     aliases: ["*"]
     findable: "*"
+    spaceBefore: true
     action: ->
       @string "*"
   "slash":
     aliases: ["/"]
     findable: "/"
+    spaceBefore: true
     action: ->
       @string "/"
   "quackish":
@@ -29,11 +32,13 @@ Commands.createDisabledWithDefaults
   "tilde":
     aliases: ["~"]
     findable: "~"
+    spaceBefore: true
     action: ->
       @string "~"
   "colon":
     aliases: [":"]
     findable: ":"
+    spaceBefore: true
     action: ->
       @string ":"
   "equeft":
@@ -70,6 +75,7 @@ Commands.createDisabledWithDefaults
   "prex":
     description: "inserts parentheses leaving cursor inside them. If text is selected, will wrap the selected text"
     findable: "()"
+    spaceBefore: true
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
@@ -83,6 +89,7 @@ Commands.createDisabledWithDefaults
   "brax":
     description: "inserts brackets leaving cursor inside them. If text is selected, will wrap the selected text"
     findable: "[]"
+    spaceBefore: true
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
@@ -100,14 +107,15 @@ Commands.createDisabledWithDefaults
       @string "}"
   "kirk":
     findable: "{}"
+    spaceBefore: true
     action: ->
       @string "{}"
       @key "Left"
-  "dekirk":
-    findable: "{}"
-    action: ->
-      @string " {}"
-      @key "Left"
+  # "dekirk":
+  #   findable: "{}"
+  #   action: ->
+  #     @string " {}"
+  #     @key "Left"
   "kirblock":
     action: ->
       @string "{}"
@@ -123,16 +131,16 @@ Commands.createDisabledWithDefaults
       else
         @string "  "
         @key "Left"
-  "deprex":
-    findable: "()"
-    action: ->
-      @string " ()"
-      @key "Left"
-  "debrax":
-    findable: "[]"
-    action: ->
-      @string " []"
-      @key "Left"
+  # "deprex":
+  #   findable: "()"
+  #   action: ->
+  #     @string " ()"
+  #     @key "Left"
+  # "debrax":
+  #   findable: "[]"
+  #   action: ->
+  #     @string " []"
+  #     @key "Left"
   "minquall":
     findable: " -= "
     action: ->
@@ -160,21 +168,23 @@ Commands.createDisabledWithDefaults
   "posh":
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["pash"]
+    spaceBefore: true
     findable: "'"
     action: ->
       @string "''"
       @key "Left"
-  "deeposh":
-    tags: ["symbol", "quotes", "recommended"]
-    findable: "'"
-    action: ->
-      @string " ''"
-      @key "Left"
+  # "deeposh":
+  #   tags: ["symbol", "quotes", "recommended"]
+  #   findable: "'"
+  #   action: ->
+  #     @string " ''"
+  #     @key "Left"
   "coif":
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["coiffed"]
     description: "inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text"
     findable: "\""
+    spaceBefore: true
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
@@ -182,12 +192,12 @@ Commands.createDisabledWithDefaults
       else
         @string '""'
         @key "Left"
-  "decoif":
-    tags: ["symbol", "quotes", "recommended"]
-    findable: "\""
-    action: ->
-      @string ' ""'
-      @key "Left"
+  # "decoif":
+  #   tags: ["symbol", "quotes", "recommended"]
+  #   findable: "\""
+  #   action: ->
+  #     @string ' ""'
+  #     @key "Left"
   "shrocket":
     findable: " => "
     action: ->
@@ -233,12 +243,13 @@ Commands.createDisabledWithDefaults
   "loco":
     aliases: ["@"]
     findable: "@"
+    spaceBefore: true
     action: ->
       @string "@"
-  "deloco":
-    findable: " @"
-    action: ->
-      @string " @"
+  # "deloco":
+  #   findable: " @"
+  #   action: ->
+  #     @string " @"
   "amper":
     findable: "&"
     action: ->
@@ -250,6 +261,7 @@ Commands.createDisabledWithDefaults
   "pounder":
     findable: "#"
     repeatable: true
+    spaceBefore: true
     action: ->
       @string "#"
   "questo":
@@ -285,6 +297,7 @@ Commands.createDisabledWithDefaults
         @key "Left"
   "plus":
     findable: "+"
+    spaceBefore: true
     action: ->
       @string "+"
   "deplush":
@@ -295,6 +308,7 @@ Commands.createDisabledWithDefaults
     tags: ["symbol", "minus", "recommended"]
     repeatable: true
     findable: "-"
+    spaceBefore: true
     action: ->
       @string "-"
   "deminus":
@@ -302,14 +316,10 @@ Commands.createDisabledWithDefaults
     findable: " - "
     action: ->
       @string " - "
-  "skoofin":
-    tags: ["symbol", "minus", "recommended"]
-    findable: " -"
-    action: ->
-      @string " -"
   "lambo":
     aliases: ["limbo"]
     findable: "->"
+    spaceBefore: true
     action: ->
       @string "->"
   "quatches":
@@ -324,20 +334,17 @@ Commands.createDisabledWithDefaults
       @string "'"
   "percy":
     findable: "%"
+    spaceBefore: true
     action: ->
       @string "%"
   "depercy":
     findable: " % "
     action: ->
       @string " % "
-  "chriskoosh":
-    findable: " "
-    action: ->
-      @key "Right"
-      @key " "
   "dolly":
     aliases: ["dalai", "dawley", "donnelly", "donley", "dali", "dollies"]
     findable: "$"
+    spaceBefore: true
     action: ->
       @string "$"
   "clangle":

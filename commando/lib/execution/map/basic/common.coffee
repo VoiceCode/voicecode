@@ -113,6 +113,7 @@ Commands.createDisabled
     description: "paste the clipboard (or named item from stoosh command)"
     aliases: ["sparked"]
     tags: ["copy-paste", "recommended"]
+    spaceBefore: true
     action: (input) ->
       if input?
         previous = @retrieveClipboardWithName(input)

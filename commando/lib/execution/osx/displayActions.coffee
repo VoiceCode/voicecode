@@ -110,3 +110,7 @@ class OSX.displayActions
     @result += "selectBlock()"
   runAtomCommand: (command) ->
     @result += "runAtomCommand(#{command})"
+  deletePartialWord: (direction) ->
+    @result += "deletePartialWord(#{direction})"
+  transformSelectedText: (options) ->
+    @result += "transformSelectedText(#{options})"
