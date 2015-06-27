@@ -14,17 +14,17 @@ Template.Vocab.helpers
           spoken = value.triggerPhrase or key
           commands.push spoken
       _.sample(commands, commands.length).join(" ")
-  repeatableList: ->
-    unless Session.get("loading")
-      commands = []
-      me = @toString()
-      _.each Commands.mapping, (value, key) ->
-        if value.enabled and (value.grammarType is "individual" or value.grammarType is undefined) and (value.isSpoken isnt false)
-          spoken = value.triggerPhrase or key
-          commands.push spoken
-      _.map(_.keys(Settings.repetitionWords), (item) ->
-        _.sample(commands, commands.length).join(" #{item} ")
-      ).join(" ")
+  # repeatableList: ->
+  #   unless Session.get("loading")
+  #     commands = []
+  #     me = @toString()
+  #     _.each Commands.mapping, (value, key) ->
+  #       if value.enabled and (value.grammarType is "individual" or value.grammarType is undefined) and (value.isSpoken isnt false)
+  #         spoken = value.triggerPhrase or key
+  #         commands.push spoken
+  #     _.map(_.keys(Settings.repetitionWords), (item) ->
+  #       _.sample(commands, commands.length).join(" #{item} ")
+  #     ).join(" ")
 
   keeperList: ->
     unless Session.get("loading")
