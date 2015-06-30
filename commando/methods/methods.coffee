@@ -16,6 +16,7 @@ Meteor.methods
       enabledCommandsManager.enable(name)
       Commands.reloadGrammar()
       synchronizer.updateAllCommands(true)
+      modifiers.checkVocabulary()
   disableCommand: (name) ->
     Commands.mapping[name].enabled = false
     if @isSimulation
@@ -25,3 +26,4 @@ Meteor.methods
       enabledCommandsManager.disable(name)
       Commands.reloadGrammar()
       synchronizer.updateAllCommands(true)
+      modifiers.checkVocabulary()
