@@ -41,11 +41,7 @@ Router.route '/parse', ->
   results = chain.execute(true)
 
   if Meteor.settings.showRecognition
-    notice ="""osascript <<EOD
-    display notification "#{phrase}"
-    EOD
-    """
-    Shell.exec notice, async: true
+    Notify phrase
 
   @response.writeHead(200, {'Content-Type': 'text/plain'})
   @response.end("success")

@@ -506,3 +506,4 @@ _.extend Settings,
     sheep: ":}"
     smile: ":)"
     winkle: ";)"
+  notificationProvider: "OSX"
