@@ -122,7 +122,7 @@ Commands.createDisabled
           @delay 50
           @key "V", "command"
       else
-        @key "V", "command"
+        @key "V", "command"        
   "sage":
     description: "file > save"
     tags: ["application", "recommended"]

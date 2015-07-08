@@ -14,11 +14,12 @@ Commands.createDisabled
     action: ->
       @key " "
   "skoopark":
-    description: "insert a space then paste the clipboard"
-    tags: ["space", "combo", "copy-paste"]
-    action: ->
-      @key " "
-      @key "V", "command"
+    grammarType: "oneArgument"
+    description: "insert space then paste the clipboard (or named item from stoosh command)"
+    tags: ["copy-paste", "recommended"]
+    action: (input) ->
+      @key "Space"
+      @do "spark", input
   "shockoon":
     description: "Inserts a new line below the current line"
     tags: ["return", "combo", "recommended"]
