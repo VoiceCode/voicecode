@@ -30,14 +30,10 @@ loadGrammar = ->
       console.log "please check your license key"
       throw "invalid license key"
 
-    Applescript """
-    display notification "voicecode is running!" with title "VoiceCode"
-    """
+    Notify "voicecode is running!"
   catch e
     console.log e
-    Applescript """
-    display notification "please check your license key, and make sure you are online" with title "VoiceCode"
-    """
+    Notify "please check your license key, and make sure you are online"
 
 isReloading = false
 needsReloading = false

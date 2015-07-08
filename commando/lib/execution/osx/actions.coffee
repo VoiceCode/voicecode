@@ -951,3 +951,5 @@ class OSX.Actions
         else
           @key 'Left', 'shift'
       @key 'Delete'
+  notify: (text) ->
+    Notify(text)
