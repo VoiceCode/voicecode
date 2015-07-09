@@ -33,6 +33,7 @@ Commands.createDisabledWithDefaults
 
   "seltrail":
     tags: ["search", "voicecode", "selection"]
+    description: "extend the selection backward until the next occurrence of the spoken argument"
     action: (input) ->
       term = input?.value or @storage.previousSearchTerm
       if term?.length
@@ -46,6 +47,7 @@ Commands.createDisabledWithDefaults
             @extendSelectionToPreviousOccurrenceWithDistance term, input.distance
   "selcrew":
     tags: ["search", "voicecode", "selection"]
+    description: "extend the selection forward until the next occurrence of the spoken argument"
     action: (input) ->
       term = input?.value or @storage.previousSearchTerm
       if term?.length
@@ -59,6 +61,7 @@ Commands.createDisabledWithDefaults
             @extendSelectionToFollowingOccurrenceWithDistance term, input.distance
   "trapreev":
     tags: ["search", "voicecode", "selection"]
+    description: "select the previous word by its surrounding characters, so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell' - useful for unpronounceable or long words"
     action: (input) ->
       term = input?.value or @storage.previousTrapSearchTerm
       if term?.length
@@ -76,6 +79,7 @@ Commands.createDisabledWithDefaults
               direction: -1
   "trapneck":
     tags: ["search", "voicecode", "selection"]
+    description: "select the next word by its surrounding characters, so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell' - useful for unpronounceable or long words"
     action: (input) ->
       term = input?.value or @storage.previousTrapSearchTerm
       if term?.length
