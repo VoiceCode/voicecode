@@ -80,6 +80,8 @@ class OSX.displayActions
       r = _.map modifiers.split(" "), (m) ->
         modifierCodes[m]
       r.join('')
+    else
+      ""
   scrollRight: ->
     "scrollRight()"
   scrollLeft: ->
