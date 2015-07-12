@@ -1,4 +1,4 @@
-OSX.keyCodes =
+Platforms.osx.keyCodes =
   "A"                    : 0x00
   "S"                    : 0x01
   "D"                    : 0x02
@@ -144,7 +144,7 @@ OSX.keyCodes =
   "."                    : 0x2F
   "`"                    : 0x32
 
-OSX.keyCodesRegular =
+Platforms.osx.keyCodesRegular =
   "Grave"                : 0x32
   "KeypadDecimal"        : 0x41
   "KeypadMultiply"       : 0x43
@@ -264,7 +264,7 @@ OSX.keyCodesRegular =
   "."                    : 0x2F
   "`"                    : 0x32
 
-OSX.keyCodesShift =
+Platforms.osx.keyCodesShift =
   "A"                    : 0x00
   "S"                    : 0x01
   "D"                    : 0x02

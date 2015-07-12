@@ -79,7 +79,7 @@ Commands.createDisabled
     action: (input) ->
       if input?.length
         current = @currentApplication()
-        directory = Scripts.fuzzyMatch Settings.directories, input.join(' ')
+        directory = @fuzzyMatch Settings.directories, input.join(' ')
         if current is "iTerm" or current is "Terminal"
           @string "cd #{directory} ; ls \n"
         else
@@ -96,5 +96,5 @@ Commands.createDisabled
     continuous: false
     action: (input) ->
       if input?.length
-        text = Scripts.fuzzyMatch Settings.shellCommands, input.join(' ')
+        text = @fuzzyMatch Settings.shellCommands, input.join(' ')
         @string text

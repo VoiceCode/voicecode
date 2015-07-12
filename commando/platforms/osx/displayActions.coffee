@@ -1,4 +1,4 @@
-class OSX.displayActions
+class Platforms.osx.displayActions
   constructor: () ->
     @storage = {}
   reset: () ->

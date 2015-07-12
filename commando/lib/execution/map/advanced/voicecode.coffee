@@ -18,7 +18,7 @@ Commands.createDisabled
     tags: ["voicecode"]
     action: (input) ->
       if input?.length
-        workflow = Scripts.fuzzyMatch Settings.workflows, input.join(' ')
+        workflow = @fuzzyMatch Settings.workflows, input.join(' ')
         chain = new Commands.Chain(workflow + " ")
         results = chain.generateNestedInterpretation()
         _.each results, (command) =>
@@ -37,7 +37,7 @@ Commands.createDisabled
     continuous: false
     action: (input) ->
       if input?.length
-        mode = Scripts.fuzzyMatch Settings.modes, input.join(' ')
+        mode = @fuzzyMatch Settings.modes, input.join(' ')
         @setGlobalMode(mode)
   "scratchy":
     description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"

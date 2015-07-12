@@ -28,7 +28,7 @@ Commands.createDisabled
     tags: ["system", "window", "recommended"]
     action: (input) ->
       if input?.length
-        preset = Scripts.fuzzyMatch Settings.windowPositions, input.join(' ')
+        preset = @fuzzyMatch Settings.windowPositions, input.join(' ')
         screen = @getScreenInfo().currentFrame
         # console.log screen
         newWidth = if preset.width <= 1

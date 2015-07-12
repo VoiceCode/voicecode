@@ -132,7 +132,7 @@ app 'finishLaunching'
 # userInfo = $.NSDictionary('dictionaryWithObject', $(1), 'forKey', $('NSApplicationLaunchIsDefaultLaunchKey'))
 # notifCenter = $.NSNotificationCenter('defaultCenter')
 # notifCenter 'postNotificationName', $.NSApplicationDidFinishLaunchingNotification, 'object', app, 'userInfo', userInfo
-@Actions = new OSX.Actions()
+@Actions = new Platforms.osx.actions()
 
 tock()
 

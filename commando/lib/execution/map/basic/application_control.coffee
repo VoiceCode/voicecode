@@ -34,5 +34,5 @@ Commands.createDisabled
     grammarType: "textCapture"
     action: (name) ->
       if name?.length
-        application = Scripts.fuzzyMatch Settings.applications, name
+        application = @fuzzyMatch Settings.applications, name
         @openApplication application

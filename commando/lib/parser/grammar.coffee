@@ -66,16 +66,16 @@ class @Grammar
     {
       var grammarTransforms = {
         shrink: function(arguments) {
-          return Scripts.fuzzyMatch(Settings.abbreviations, arguments.join(' '));
+          return Actions.fuzzyMatch(Settings.abbreviations, arguments.join(' '));
         },
         treemail: function(arguments) {
-          return Scripts.fuzzyMatch(Settings.emails, arguments.join(' '));
+          return Actions.fuzzyMatch(Settings.emails, arguments.join(' '));
         },
         trusername: function(arguments) {
-          return Scripts.fuzzyMatch(Settings.usernames, arguments.join(' '));
+          return Actions.fuzzyMatch(Settings.usernames, arguments.join(' '));
         },
         trassword: function(arguments) {
-          return Scripts.fuzzyMatch(Settings.passwords, arguments.join(' '));
+          return Actions.fuzzyMatch(Settings.passwords, arguments.join(' '));
         },
         clap: function(word) {
           return Transforms.titleSentance([word]);

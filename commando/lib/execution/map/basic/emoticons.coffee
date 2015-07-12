@@ -5,6 +5,6 @@ Commands.createDisabled
     grammarType: "textCapture"
     action: (name) ->
       if name?.length
-        emoticon = Scripts.fuzzyMatch Settings.emoticons, name
+        emoticon = @fuzzyMatch Settings.emoticons, name
         if emoticon?.length
           @string emoticon

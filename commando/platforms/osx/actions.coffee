@@ -1,32 +1,14 @@
-class OSX.Actions
-  constructor: () ->
-    # @shift = $.kCGEventFlagMaskShift
-    # @command = $.kCGEventFlagMaskCommand
-    # @option = $.kCGEventFlagMaskOption
-    # @control = $.kCGEventFlagMaskControl
-    @storage = {}
-  stop: () ->
-    # for commands.extend
-    @extensionsStopped = true
-  setUndoByDeleting: (amount) ->
-    Commands.currentUndoByDeletingCount = amount
-  notUndoable: ->
-    Commands.currentUndoByDeletingCount = 0
-  undoByDeleting: ->
-    amount = Commands.previousUndoByDeletingCount or 0
-    _.times(amount) =>
-      @key "Delete"
-
+class Platforms.osx.actions extends Platforms.base.actions
   key: (key, modifiers) ->
     key = key.toString()
 
     @notUndoable()
-    code = OSX.keyCodes[key]
+    code = Platforms.osx.keyCodes[key]
     if code?
       @_pressKey(code, @_normalizeModifiers(modifiers))
       Meteor.sleep(10)
     else
-      code = OSX.keyCodesShift[key]
+      code = Platforms.osx.keyCodesShift[key]
       if code?
         mods = _.unique((modifiers or []).concat("shift"))
         @_pressKey code, @_normalizeModifiers(mods)
@@ -41,19 +23,19 @@ class OSX.Actions
         @setUndoByDeleting string.length
         for item in string.split('')
           Meteor.sleep(4)
-          code = OSX.keyCodesRegular[item]
+          code = Platforms.osx.keyCodesRegular[item]
           if code?
             @_pressKey code
           else
-            code = OSX.keyCodesShift[item]
+            code = Platforms.osx.keyCodesShift[item]
             if code?
               @_pressKey code, ["Shift"]
   keyDown: (key, modifiers) ->
-    code = OSX.keyCodes[key]
+    code = Platforms.osx.keyCodes[key]
     if code?
       @_keyDown code, @_normalizeModifiers(modifiers)
   keyUp: (key, modifiers) ->
-    code = OSX.keyCodes[key]
+    code = Platforms.osx.keyCodes[key]
     if code?
       @_keyUp code, @_normalizeModifiers(modifiers)
 
@@ -103,14 +85,14 @@ class OSX.Actions
   _pressKey: (key, modifiers) ->
     if modifiers? and @needsExplicitModifierPresses()
       for m in modifiers
-        @_keyDown OSX.keyCodes[m], [m]
+        @_keyDown Platforms.osx.keyCodes[m], [m]
 
     @_keyDown key, modifiers
     @_keyUp key #, modifiers
 
     if modifiers? and @needsExplicitModifierPresses()
       for m in modifiers
-        @_keyUp OSX.keyCodes[m] #, [m]
+        @_keyUp Platforms.osx.keyCodes[m] #, [m]
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
@@ -312,14 +294,6 @@ class OSX.Actions
   exec: (script) ->
     Execute script
 
-  # run another command
-  do: (name, input) ->
-    command = new Commands.Base(name, input)
-    command.generate().call(@)
-
-  runCommand: (name, input) ->
-    @do(name, input)
-
   runAtomCommand: (name, options) ->
     info =
       command: name
@@ -391,9 +365,6 @@ class OSX.Actions
     w = $.NSWorkspace('sharedWorkspace')
     w('openURL', u)
 
-  delay: (ms) ->
-    Meteor.sleep(ms)
-
   currentApplication: ->
     if @_currentApplication
       console.log @_currentApplication
@@ -406,28 +377,6 @@ class OSX.Actions
       @_currentApplication = result
       console.log result
       result
-
-    # result = @applescript """
-    # tell application "System Events"
-    #   set currentApplication to name of first application process whose frontmost is true
-    # end tell
-    # return currentApplication
-    # """
-    # console.log result
-    # result
-  setCurrentApplication: (application) ->
-    @_currentApplication = application
-
-  context: ->
-    for item in Settings.contextChain
-      result = item.call(@)
-      return result if result?
-
-  setGlobalMode: (mode) ->
-    Commands.mode = mode
-
-  getGlobalMode: ->
-    Commands.mode
 
   transformSelectedText: (transform) ->
     switch @currentApplication()
@@ -908,14 +857,6 @@ class OSX.Actions
     @_capturedText = ""
     @_capturingText = true
     @_captureTextCallback = callback
-
-  retrieveClipboardWithName: (name) ->
-    @_storedClipboard ?= {}
-    @_storedClipboard[name]
-
-  storeCurrentClipboardWithName: (name) ->
-    @_storedClipboard ?= {}
-    @_storedClipboard[name] = @getClipboard()
 
   deletePartialWord: (direction) ->
     distance = 1

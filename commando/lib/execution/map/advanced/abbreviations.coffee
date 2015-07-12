@@ -5,7 +5,7 @@ Commands.createDisabled
     tags: ["text"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch Settings.abbreviations, input.join(' ')
+        result = @fuzzyMatch Settings.abbreviations, input.join(' ')
         @string result
   "quinn":
     grammarType: "textCapture"
@@ -13,7 +13,7 @@ Commands.createDisabled
     tags: ["text"]
     action: (input) ->
       if input?.length
-        snippet = Scripts.fuzzyMatch Settings.codeSnippets, input.join(" ")
+        snippet = @fuzzyMatch Settings.codeSnippets, input.join(" ")
         @string snippet
         @delay 200
         completion = Settings.codeSnippetCompletions[@currentApplication()] or "Tab"
@@ -24,7 +24,7 @@ Commands.createDisabled
     tags: ["text", "utility"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch Settings.passwords, input.join(' ')
+        result = @fuzzyMatch Settings.passwords, input.join(' ')
         @string result
   "treemail":
     grammarType: "textCapture"
@@ -32,7 +32,7 @@ Commands.createDisabled
     tags: ["text", "utility"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch Settings.emails, input.join(' ')
+        result = @fuzzyMatch Settings.emails, input.join(' ')
         @string result
   "trusername":
     grammarType: "textCapture"
@@ -40,5 +40,5 @@ Commands.createDisabled
     tags: ["text", "utility"]
     action: (input) ->
       if input?.length
-        result = Scripts.fuzzyMatch Settings.usernames, input.join(' ')
+        result = @fuzzyMatch Settings.usernames, input.join(' ')
         @string result

@@ -1,4 +1,6 @@
-@HtmlTags = [
+@Html = {}
+
+Html.tags = [
   'a'
   'abbr'
   'acronym'
@@ -130,7 +132,7 @@
   'wbr'
 ]
 
-@SelfClosingTags = [
+Html.selfClosingTags = [
   "area"
   "base"
   "br"
