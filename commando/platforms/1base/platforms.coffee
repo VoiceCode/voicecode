@@ -33,6 +33,16 @@ class Platforms.base.actions
   delay: (ms) ->
     Meteor.sleep(ms)
 
+  _normalizeModifiers: (modifiers) ->
+    if modifiers?.length
+      mods = if typeof modifiers is "string"
+        modifiers.split(" ")
+      else
+        modifiers
+      # titleize mods
+      _.map mods, (m) ->
+        m.charAt(0).toUpperCase() + m.slice(1)
+
   setCurrentApplication: (application) ->
     @_currentApplication = application
 
@@ -55,6 +65,11 @@ class Platforms.base.actions
     @_storedClipboard ?= {}
     @_storedClipboard[name] = @getClipboard()
 
+  startTextCapture: (callback) ->
+    @_capturedText = ""
+    @_capturingText = true
+    @_captureTextCallback = callback
+    
   fuzzyMatch: (list, term) ->
       if list[term]?
         list[term]

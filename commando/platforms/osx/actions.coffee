@@ -94,16 +94,6 @@ class Platforms.osx.actions extends Platforms.base.actions
       for m in modifiers
         @_keyUp Platforms.osx.keyCodes[m] #, [m]
 
-  _normalizeModifiers: (modifiers) ->
-    if modifiers?.length
-      mods = if typeof modifiers is "string"
-        modifiers.split(" ")
-      else
-        modifiers
-      # titleize mods
-      _.map mods, (m) ->
-        m.charAt(0).toUpperCase() + m.slice(1)
-
   getMousePosition: ->
     $.CGEventGetLocation($.CGEventCreate(null))
 
@@ -852,11 +842,6 @@ class Platforms.osx.actions extends Platforms.base.actions
     {
       height: numberOfLines
     }
-
-  startTextCapture: (callback) ->
-    @_capturedText = ""
-    @_capturingText = true
-    @_captureTextCallback = callback
 
   deletePartialWord: (direction) ->
     distance = 1
