@@ -40,7 +40,7 @@ Template.Commands.created = ->
     Session.set "commandTag.current", "all"
     Session.set "commands.inScope", _.keys(Commands.mapping)
 
-actions = new OSX.displayActions()
+actions = new Platforms.base.displayActions()
 
 Template.CommandSummaryRow.helpers
   isAction: ->

@@ -213,7 +213,7 @@ class @NatLinkSynchronizer
 
 class @Synchronizer
   constructor: ->
-    if platform is "osx"
+    if platform is "darwin"
       @synchronizer = new DragonDictateSynchronizer()
     else if platform is "windows"
       @synchronizer = new NatLinkSynchronizer()

@@ -71,7 +71,7 @@ class @Alphabet
     """
     fs = Meteor.npmRequire('fs')
     path = Meteor.npmRequire('path')
-    file = path.resolve(process.env.PWD or process.env.CWD, "user", "alphabet.xml")
+    file = path.resolve(projectRoot, "user", "alphabet.xml")
     fs.writeFileSync file, content, 'utf8'
   createVocabComboContent: ->
     _.map Settings.letters, (value, key) =>

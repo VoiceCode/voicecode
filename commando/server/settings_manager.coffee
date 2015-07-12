@@ -3,7 +3,7 @@ path = Meteor.npmRequire('path')
 
 class @SettingsManager
   constructor: (@name) ->
-    @file = path.resolve(process.env.PWD or process.env.CWD, "user", "#{@name}.json")
+    @file = path.resolve(projectRoot, "user", "#{@name}.json")
     if @needsMigration()
       @migrate()
     else

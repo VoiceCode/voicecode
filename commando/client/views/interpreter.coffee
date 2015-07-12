@@ -15,7 +15,7 @@ Template.Interpreter.events
       Session.set "interpretation", interpretation.join("\n")
 
 
-      actions = new OSX.displayActions()
+      actions = new Platforms.base.displayActions()
       display = _.map result.interpretation, (e) ->
         actions.reset()
         command = new Commands.Base(e.command, e.arguments)
