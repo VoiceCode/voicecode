@@ -1,8 +1,8 @@
 fs = Meteor.npmRequire('fs')
-sqlite3 = Meteor.npmRequire("sqlite3").verbose()
 
 class @DragonDictateSynchronizer
   constructor: ->
+    sqlite3 = Meteor.npmRequire("sqlite3").verbose()
     @bundles = {global: "global"}
     @applicationNames = {}
     @lastId = (new Date()).getTime()
