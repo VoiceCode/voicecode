@@ -13,7 +13,7 @@ Commands.createDisabled
         ).join(" ")
       else
         ""
-      tag = if _.contains(SelfClosingTags, tagName)
+      tag = if _.contains(Html.selfClosingTags, tagName)
         "<#{tagName}#{attributes} />"
       else
         "<#{tagName}#{attributes}></#{tagName}>"

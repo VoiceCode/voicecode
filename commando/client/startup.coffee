@@ -15,6 +15,7 @@
 @enabledCommands = {}
 
 Meteor.startup ->
+  @displayActions = new Platforms.base.displayActions()
   Session.set("loading", true)
   @Grammar = new Grammar()
   @alphabet = new Alphabet()

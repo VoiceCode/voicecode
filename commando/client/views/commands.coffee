@@ -40,8 +40,6 @@ Template.Commands.created = ->
     Session.set "commandTag.current", "all"
     Session.set "commands.inScope", _.keys(Commands.mapping)
 
-actions = new Platforms.base.displayActions()
-
 Template.CommandSummaryRow.helpers
   isAction: ->
     (Commands.mapping[@].kind or "action") is "action"
@@ -68,9 +66,9 @@ Template.CommandSummaryRow.helpers
   tags: ->
     Commands.mapping[@].tags or []
   actionDescriptor: ->
-    actions.reset()
-    Commands.mapping[@].action?.call(actions)
-    actions.result
+    displayActions.reset()
+    Commands.mapping[@].action?.call(displayActions)
+    displayActions.result
 
 Template.CommandSummaryRow.events
   "change input": (e, t) ->
