@@ -1,8 +1,8 @@
 fs = Meteor.npmRequire('fs')
 sqlite3 = Meteor.npmRequire("sqlite3").verbose()
 
-class @Synchronizer
-  constructor: (@database) ->
+class @DragonDictateSynchronizer
+  constructor: ->
     @bundles = {global: "global"}
     @applicationNames = {}
     @lastId = (new Date()).getTime()
@@ -92,7 +92,7 @@ class @Synchronizer
     LEFT OUTER JOIN ZACTION AS A ON A.Z_PK=C.Z_PK
     LEFT OUTER JOIN ZTRIGGER AS T ON T.Z_PK=C.Z_PK
     """
-  updateAllCommands: (perform=false) ->
+  synchronize: (perform=false) ->
     if @error
       console.log "error: dragon database not connected"
       return false
@@ -204,3 +204,19 @@ class @Synchronizer
       @run "DELETE FROM ZACTION WHERE Z_PK = #{id};"
       @run "DELETE FROM ZTRIGGER WHERE Z_PK = #{id};"
       @run "COMMIT TRANSACTION;"
+
+
+class @NatLinkSynchronizer
+  constructor: ->
+  synchronize: (perform=false) ->
+    console.log "updating commands"
+
+class @Synchronizer
+  constructor: ->
+    if platform is "osx"
+      @synchronizer = new DragonDictateSynchronizer()
+    else if platform is "windows"
+      @synchronizer = new NatLinkSynchronizer()
+  synchronize: (perform=false) ->
+    @synchronizer.synchronize(perform)
+
