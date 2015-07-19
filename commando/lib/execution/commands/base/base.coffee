@@ -118,25 +118,6 @@ class Commands.Base
           lastIndividualCommand: Commands.lastIndividualCommand
           repetitionIndex: Commands.repetitionIndex
         -> action.call(@, context, input)
-      when "text"
-        if @input?.length or @info.transformWhenBlank
-          transformed = @applyTransform(@input)
-          prefix = @info.prefix or ""
-          suffix = @info.suffix or ""
-          -> @string([prefix, transformed, suffix].join(''))
-        else
-          fallback = @info.fallbackService
-          transform = @info.transform
-          ->
-            if fallback?
-              switch @currentApplication()
-                when "Atom"
-                  @runAtomCommand "transformSelectedText", transform
-                else
-                  if @isTextSelected()
-                    contents = @getSelectedText()
-                    transformed = SelectionTransformer[transform](contents)
-                    @string transformed
     # if @info.override?
     #   override = @info.override
     #   input = @input
@@ -189,15 +170,6 @@ class Commands.Base
       for segment in segments
         segment?.call(@)
 
-  applyTransform: (textArray) ->
-    transform = @transform()
-    @transform()(textArray)
-  repeatCount: ->
-    n = parseInt(@input)
-    if n? and n > 1
-      n
-    else
-      1
   getTriggerPhrase: () ->
     if @info.triggerPhrase is undefined
       @namespace
@@ -209,7 +181,6 @@ class Commands.Base
     @info.needsDragonCommand != false
   generateFullCommand: () ->
     space = @info.namespace or @namespace
-    # if @info.contextSensitive
     """
     on srhandler(vars)
       set dictatedText to (varText of vars)
@@ -217,20 +188,6 @@ class Commands.Base
       do shell script toExecute
     end srhandler
     """
-    # else
-    #   """
-    #   on srhandler(vars)
-    #     set dictatedText to (varText of vars)
-    #     if dictatedText = "" then
-    #     #{commandText}
-    #     set toExecute to "curl http://commando:5000/miss --data-urlencode space=\\\"#{space}\\\""
-    #     do shell script toExecute
-    #     else
-    #     set toExecute to "curl http://commando:5000/parse --data-urlencode space=\\\"#{space}\\\"" & " --data-urlencode phrase=\\\"" & dictatedText & "\\\""
-    #     do shell script toExecute
-    #     end if
-    #   end srhandler
-    #   """
   generateFullCommandWithDigest: ->
     script = @generateFullCommand()
     digest = @digest()

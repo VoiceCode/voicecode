@@ -40,9 +40,9 @@
     ).join('_').replace(/_\._/g, ".").replace(/\._/, ".")
   upperSpine: (textArray) ->
     _s.slugify(textArray.join(' ')).toUpperCase()
-  dotsWay: (textArray) ->
+  dots: (textArray) ->
     textArray.join('.').replace(/\.\.\./g, ".").replace(/\.\./, ".")
-  pathway: (textArray) ->
+  slashes: (textArray) ->
     textArray.join('/')
   titleSentance: (textArray) ->
     _.map(textArray, (item, index) ->
@@ -122,7 +122,7 @@ class Transformer
     string.replace camelSplitter, (m, previous, uppers) ->
       previous + ' ' + uppers.toLowerCase().split('').join(' ')
 
-  toNoCase: (string) ->
+  noCase: (string) ->
     if hasSpace.test(string)
       return string.toLowerCase()
     if hasSeparator.test(string)
@@ -130,7 +130,7 @@ class Transformer
     @uncamelize(string).toLowerCase()
 
   identity: (string) ->
-    @toNoCase(string).replace /[\W_]+(.|$)/g, (matches, match) ->
+    @noCase(string).replace /[\W_]+(.|$)/g, (matches, match) ->
       if match then ' ' + match else ''
 
   snake: (string) ->
@@ -140,21 +140,24 @@ class Transformer
     @identity(string).replace /\s(\w)/g, (matches, letter) ->
       letter.toUpperCase()
 
-  toDotCase: (string) ->
+  dots: (string) ->
     @identity(string).replace /\s/g, '.'
 
-  toConstantCase: (string) ->
+  slashes: (string) ->
+    @identity(string).replace /\s/g, '/'
+
+  constantCase: (string) ->
     @snake(string).toUpperCase()
 
   titleFirstSentance: (string) ->
-    @toNoCase(string).replace /[a-z]/i, (letter) ->
+    @noCase(string).replace /[a-z]/i, (letter) ->
       letter.toUpperCase()
 
   spine: (string) ->
     @identity(string).replace /\s/g, '-'
 
   capital: (string) ->
-    @toNoCase(string).replace /(^|\s)(\w)/g, (matches, previous, letter) ->
+    @noCase(string).replace /(^|\s)(\w)/g, (matches, previous, letter) ->
       previous + letter.toUpperCase()
 
   stud: (string) ->

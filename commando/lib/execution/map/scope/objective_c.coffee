@@ -1,28 +1,31 @@
 Commands.createDisabled
   "tennis":
-    kind: "text"
     grammarType: "textCapture"
     description: "formats spoken arguments in NSUpperCamelCase (automatically inserts the 'NS' part)"
     tags: ["text", "objective-c", "domain-specific"]
-    transform: "stud"
-    prefix: "NS"
-    transformWhenBlank: true
+    action: (input) ->
+      if input
+        @string "NS" + Transforms.stud(input)
+      else
+        @string "NS"
   "youey":
-    kind: "text"
     grammarType: "textCapture"
     description: "formats spoken arguments in UIUpperCamelCase - automatically inserts the 'UI' part. (pronounced like U-turn)"
     tags: ["text", "objective-c", "domain-specific"]
-    transform: "stud"
-    prefix: "UI"
-    transformWhenBlank: true
+    action: (input) ->
+      if input
+        @string "UI" + Transforms.stud(input)
+      else
+        @string "UI"
   "craggle":
-    kind: "text"
     grammarType: "textCapture"
     description: "formats spoken arguments in CGUpperCamelCase (automatically inserts the 'CG' part)"
     tags: ["text", "objective-c", "domain-specific"]
-    transform: "stud"
-    prefix: "CG"
-    transformWhenBlank: true
+    action: (input) ->
+      if input
+        @string "CG" + Transforms.stud(input)
+      else
+        @string "CG"
   "lowcoif":
     kind: "action"
     grammarType: "individual"

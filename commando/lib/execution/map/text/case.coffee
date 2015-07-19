@@ -1,12 +1,10 @@
 Commands.createDisabled
   "vc-literal":
-    # kind: "text"
     grammarType: "none"
     description: "words with spaces between. This command is for internal grammar use (not spoken)"
     tags: ["text", "recommended"]
     needsDragonCommand: false
     isSpoken: false
-    # transform: "literal"
     action: (input) ->
       if input
         @string Transforms.literal(input)
@@ -16,200 +14,184 @@ Commands.createDisabled
     tags: ["text", "recommended"]
     spaceBefore: true
   "cram":
-    # kind: "text"
     grammarType: "textCapture"
     description: "camelCaseText"
     tags: ["text", "recommended"]
-    # transform: "camel"
     aliases: ["crammed", "crams", "tram", "kram"]
     spaceBefore: true
-    # fallbackService: "vc case cram"
     action: (input) ->
       if input
         @string Transforms.camel(input)
       else
         @transformSelectedText("camel")
-  # "decram":
-  #   kind: "text"
-  #   grammarType: "textCapture"
-  #   description: "space camelCaseText"
-  #   tags: ["text", "combo"]
-  #   transform: "camel"
-  #   prefix: " "
   "dockram":
-    kind: "text"
     grammarType: "textCapture"
     description: "space camelCaseText"
     tags: ["text", "combo"]
-    transform: "camel"
-    prefix: "."
+    action: (input) ->
+      if input
+        @string "." + Transforms.camel(input)
   "snake":
-    # kind: "text"
     grammarType: "textCapture"
     description: "snake_case_text"
     tags: ["text", "recommended"]
     spaceBefore: true
-    # transform: "snake"
-    # fallbackService: "vc case snake"
     action: (input) ->
       if input
         @string Transforms.snake(input)
       else
         @transformSelectedText("snake")
   "coalsnik":
-    kind: "text"
     grammarType: "textCapture"
     description: ":snake_case_with_a_colon_at_the_front"
     tags: ["text", "combo"]
-    transform: "snake"
-    prefix: ":"
+    action: (input) ->
+      if input
+        @string ":" + Transforms.snake(input)
   "lowcram":
-    kind: "text"
     grammarType: "textCapture"
     description: "@camelCaseWithAtSign"
     tags: ["text", "combo"]
-    transform: "camel"
-    prefix: "@"
+    action: (input) ->
+      if input
+        @string "@" + Transforms.camel(input)
   "dollcram":
-    kind: "text"
     grammarType: "textCapture"
     description: "$camelCaseWithDollarSign"
     tags: ["text"]
-    transform: "camel"
-    prefix: "$"
-  # "deznik":
-  #   kind: "text"
-  #   grammarType: "textCapture"
-  #   description: "space snake_case_text"
-  #   tags: ["text", "combo"]
-  #   transform: "snake"
-  #   prefix: " "
+    action: (input) ->
+      if input
+        @string "$" + Transforms.camel(input)
   "spine":
-    kind: "text"
     grammarType: "textCapture"
     description: "spinal-case-text"
     aliases: ["spying"]
     tags: ["text", "recommended"]
-    transform: "spine"
-    fallbackService: "vc case spine"
-  "despin":
-    kind: "text"
-    grammarType: "textCapture"
-    description: "space spinal-case-text"
-    tags: ["text"]
-    transform: "spine"
-    prefix: " "
+    spaceBefore: true
+    action: (input) ->
+      if input
+        @string Transforms.spine(input)
+      else
+        @transformSelectedText("spine")
   "criffed":
-    # kind: "text"
     description: "StudCaseText"
     tags: ["text", "recommended"]
     aliases: ["chaffed", "crisped"]
     grammarType: "textCapture"
     spaceBefore: true
-    # transform: "stud"
-    # fallbackService: "vc case criffed"
     action: (input) ->
       if input
         @string Transforms.stud(input)
       else
         @transformSelectedText("stud")
-  # "decriffed":
-  #   kind: "text"
-  #   description: "space StudCaseText"
-  #   tags: ["text", "combo"]
-  #   aliases: ["chaffed"]
-  #   grammarType: "textCapture"
-  #   transform: "stud"
-  #   prefix: " "
   "dockriffed":
-    kind: "text"
     description: "space StudCaseText"
     tags: ["text", "combo"]
-    aliases: ["chaffed"]
     grammarType: "textCapture"
-    transform: "stud"
-    prefix: "."
+    action: (input) ->
+      if input
+        @string "." + Transforms.stud(input)
   "dollkriffed":
-    kind: "text"
     description: "space StudCaseText"
     tags: ["text", "combo"]
-    aliases: ["chaffed"]
     grammarType: "textCapture"
-    transform: "stud"
-    prefix: "$"
+    action: (input) ->
+      if input
+        @string "$" + Transforms.stud(input)
   "smash":
-    kind: "text"
     grammarType: "textCapture"
     description: "lowercasewithnospaces"
     tags: ["text", "recommended"]
-    transform: "lowerSlam"
-    fallbackService: "vc case smash"
+    action: (input) ->
+      if input
+        @string Transforms.smash(input)
+      else
+        @transformSelectedText("smash")
   "yellsmash":
-    kind: "text"
     grammarType: "textCapture"
     description: "UPPERCASEWITHNOSPACES"
     tags: ["text"]
-    transform: "upperSlam"
-    fallbackService: "vc case yellsmash"
+    action: (input) ->
+      if input
+        @string Transforms.upperSlam(input)
+      else
+        @transformSelectedText("upperSlam")
   "yeller":
-    kind: "text"
     grammarType: "textCapture"
     description: "UPPER CASE WITH SPACES"
     tags: ["text", "recommended"]
-    transform: "upperCase"
-    fallbackService: "vc case yeller"
+    action: (input) ->
+      if input
+        @string Transforms.upperCase(input)
+      else
+        @transformSelectedText("upperCase")
   "yellsnik":
-    kind: "text"
     grammarType: "textCapture"
     description: "UPPER_CASE_SNAKE"
     tags: ["text"]
-    transform: "upperSnake"
-    fallbackService: "vc case yellsnik"
+    action: (input) ->
+      if input
+        @string Transforms.upperSnake(input)
+      else
+        @transformSelectedText("upperSnake")
   "yellspin":
-    kind: "text"
     grammarType: "textCapture"
     description: "UPPER-CASE-SPINE"
     tags: ["text"]
-    transform: "upperSpine"
-    fallbackService: "vc case yellspin"
+    action: (input) ->
+      if input
+        @string Transforms.upperSpine(input)
+      else
+        @transformSelectedText("upperSpine")
   "pathway":
-    kind: "text"
     grammarType: "textCapture"
     description: "separated/by/slashes"
     tags: ["text"]
-    transform: "pathway"
+    action: (input) ->
+      if input
+        @string Transforms.slashes(input)
+      else
+        @transformSelectedText("slashes")
   "dotsway":
-    kind: "text"
     grammarType: "textCapture"
     description: "separated.by.dots"
     tags: ["text"]
-    transform: "dotsWay"
+    action: (input) ->
+      if input
+        @string Transforms.dots(input)
+      else
+        @transformSelectedText("dots")
   "tridal":
-    kind: "text"
     grammarType: "textCapture"
     description: "Title Words With Spaces"
     tags: ["text", "recommended"]
-    transform: "titleSentance"
-    fallbackService: "vc case tridal"
+    action: (input) ->
+      if input
+        @string Transforms.titleSentance(input)
+      else
+        @transformSelectedText("titleSentance")
   "senchen":
-    kind: "text"
     grammarType: "textCapture"
     description: "Sentence case with spaces"
     tags: ["text", "recommended"]
-    transform: "titleFirstSentance"
-    fallbackService: "vc case senchen"
+    action: (input) ->
+      if input
+        @string Transforms.titleFirstSentance(input)
+      else
+        @transformSelectedText("titleFirstSentance")
   "trench":
-    kind: "text"
     grammarType: "textCapture"
     description: "space then Sentence case with spaces"
     tags: ["text", "recommended"]
-    transform: "titleFirstSentance"
-    fallbackService: "vc case senchen"
-    prefix: " "
+    action: (input) ->
+      if input
+        @string " " + Transforms.titleFirstSentance(input)
   "datsun":
-    kind: "text"
     grammarType: "textCapture"
     description: "Sentence case with spaces"
     tags: ["text", "recommended"]
-    transform: "titleFirstSentance"
-    prefix: ". "
+    action: (input) ->
+      if input
+        @string ". " + Transforms.titleFirstSentance(input)
+      else
+        @string ". "
