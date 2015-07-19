@@ -69,6 +69,20 @@ class Platforms.base.actions
     @_capturedText = ""
     @_capturingText = true
     @_captureTextCallback = callback
+
+  normalizeTextArray: (textArray) ->
+    results = []
+    _.each textArray, (item) ->
+      switch item
+        when "'s"
+          if results.length > 0
+            results[results.length - 1] += "'s"
+          # doesn't seem like it should be possible for the first item in a text array to be "'s", so don't add it
+          # else
+          #   results.push "'s"
+        else
+          results.push item
+    results
     
   fuzzyMatch: (list, term) ->
       if list[term]?

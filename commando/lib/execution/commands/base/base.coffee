@@ -102,6 +102,11 @@ class Commands.Base
   constructor: (@namespace, @input) ->
     @info = Commands.mapping[@namespace]
     @kind = @info.kind or "action"
+    @normalizeInput()
+  normalizeInput: ->
+    switch @info.grammarType
+      when "textCapture"
+        @input = Actions.normalizeTextArray @input
   transform: ->
     Transforms[@info.transform]
   generate: ->

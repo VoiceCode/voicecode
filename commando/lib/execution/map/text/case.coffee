@@ -7,7 +7,7 @@ Commands.createDisabled
     isSpoken: false
     action: (input) ->
       if input
-        @string Transforms.literal(input)
+        @string Transforms.literal(@normalizeTextArray(input))
   "clap":
     grammarType: "none"
     description: "capitalize the next individual word"
