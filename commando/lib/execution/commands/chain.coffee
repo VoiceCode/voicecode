@@ -18,7 +18,7 @@ class Commands.Chain
       result.push item
     result.join('')
   parse: ->
-    Parser.parse @phrase
+    @normalizeStructure Parser.parse(@phrase)
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
@@ -68,6 +68,42 @@ class Commands.Chain
         command.generate()
       )
       combined
+
+  normalizeStructure: (commands) ->
+    results = []
+    _.each commands, (current) =>
+      command = Commands.mapping[current.command]
+      previous = _.last(results)
+      if command.triggerScopes?.length
+        if Actions.currentApplication() in command.triggerScopes
+          results.push current
+        else
+          if previous
+            if previous.command is "vc-literal" or Commands.mapping[previous.command].grammarType is "textCapture"
+              @mergeTextualCommands(previous, current)
+            else
+              results.push {command: "vc-literal", arguments: [current.command]}
+          else
+            results.push {command: "vc-literal", arguments: [current.command]}
+      else if current.command is "vc-literal" and previous?.command is "vc-literal"
+        @mergeLiteralCommands(previous, current)
+      else
+        results.push current
+    results
+
+  mergeTextualCommands: (previous, current) ->
+    previous.arguments ?= []
+    previous.arguments.push current.command
+    if Object.prototype.toString.call(current.arguments) is '[object Array]'
+      #concat arrays
+      previous.arguments = previous.arguments.concat(current.arguments)
+    else
+      # if any arg, push it
+      previous.arguments.push current.arguments
+
+  mergeLiteralCommands: (previous, current) ->
+    previous.arguments = previous.arguments.concat(current.arguments)
+
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD
     #{content}

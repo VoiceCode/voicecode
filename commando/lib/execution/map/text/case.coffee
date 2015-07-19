@@ -104,9 +104,9 @@ Commands.createDisabled
     tags: ["text", "recommended"]
     action: (input) ->
       if input
-        @string Transforms.smash(input)
+        @string Transforms.lowerSlam(input)
       else
-        @transformSelectedText("smash")
+        @transformSelectedText("lowerSlam")
   "yellsmash":
     grammarType: "textCapture"
     description: "UPPERCASEWITHNOSPACES"

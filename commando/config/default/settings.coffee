@@ -90,6 +90,7 @@ _.extend Settings,
     character: "char"
     column: "col"
     command: "cmd"
+    concatenate: "concat"
     configuration: "config"
     configure: "config"
     constant: "const"

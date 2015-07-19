@@ -369,6 +369,7 @@ class Platforms.osx.actions extends Platforms.base.actions
       result
 
   transformSelectedText: (transform) ->
+    console.log "transform selected text"
     switch @currentApplication()
       when "Atom"
         @runAtomCommand "transformSelectedText", transform

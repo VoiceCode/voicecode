@@ -82,8 +82,11 @@ class Platforms.base.actions
           #   results.push "'s"
         else
           results.push item
-    results
-    
+    if results.length
+      results
+    else
+      null
+      
   fuzzyMatch: (list, term) ->
       if list[term]?
         list[term]
