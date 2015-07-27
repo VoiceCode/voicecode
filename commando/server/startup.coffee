@@ -33,4 +33,4 @@ Meteor.startup ->
   @ParseGenerator = {}
   Commands.reloadGrammar()
   @synchronizer = new Synchronizer()
-  synchronizer.synchronize(true)
+  synchronizer.synchronize()

@@ -8,6 +8,10 @@ class @Grammar
     @buildCommandList Commands.Utility.sortedCommandKeys("numberCapture")
   numberCaptureCommandsContinuous: ->
     @buildCommandList Commands.Utility.sortedCommandKeys("numberCapture", true)
+  numberRangeCommands: ->
+    @buildCommandList Commands.Utility.sortedCommandKeys("numberRange")
+  numberRangeCommandsContinuous: ->
+    @buildCommandList Commands.Utility.sortedCommandKeys("numberRange", true)
   individualCommands: ->
     @buildCommandList Commands.Utility.sortedCommandKeys("individual")
   individualCommandsContinuous: ->
@@ -22,6 +26,10 @@ class @Grammar
     @buildCommandList Commands.Utility.sortedCommandKeys("oneArgument")
   oneArgumentCommandsContinuous: ->
     @buildCommandList Commands.Utility.sortedCommandKeys("oneArgument", true)
+  customCommands: ->
+    @buildCommandList Commands.Utility.sortedCommandKeys("custom")
+  # customCommandsContinuous: ->
+  #   @buildCommandList Commands.Utility.sortedCommandKeys("custom", true)
   repeaterCommands: ->
     @buildCommandList Commands.Utility.sortedCommandKeys("repeater")
   buildCommandList: (keys) ->
@@ -102,9 +110,29 @@ class @Grammar
     //  = "cx-sublimetext" ss first:(commandSublime) rest:(commandContinuousSublime)* {return [first].concat(rest);}
 
     command
-      = textCaptureCommand / singleSearchCommand / numberCaptureCommand / individualCommand / oneArgumentCommand / modifierCommand / literalCommand
+      = customCommand /
+        textCaptureCommand /
+        singleSearchCommand /
+        numberCaptureCommand /
+        numberRangeCommand /
+        individualCommand /
+        oneArgumentCommand /
+        modifierCommand /
+        literalCommand
+
     commandContinuous
-      = textCaptureCommandContinuous / singleSearchCommandContinuous / numberCaptureCommandContinuous / individualCommandContinuous / oneArgumentCommandContinuous / modifierCommand / literalCommand
+      = customCommand /
+        textCaptureCommandContinuous /
+        singleSearchCommandContinuous /
+        numberCaptureCommandContinuous /
+        numberRangeCommandContinuous /
+        individualCommandContinuous /
+        oneArgumentCommandContinuous /
+        modifierCommand /
+        literalCommand
+
+    customIdentifier
+      = identifier:(#{@customCommands()}) ss {return identifier;}
 
     textCaptureCommand
       = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}
@@ -118,6 +146,10 @@ class @Grammar
 
 
     #{@aliases()}
+
+    #{@customCommandsContent()}
+
+    #{@customLists()}
 
     overrideCommand
      = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger)
@@ -160,10 +192,20 @@ class @Grammar
     numberCaptureCommandContinuous
       = left:numberCaptureIdentifierContinuous right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
 
+    numberRangeCommand
+      = left:numberRangeIdentifier right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
+    numberRangeCommandContinuous
+      = left:numberRangeIdentifierContinuous right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
+
     numberCaptureIdentifier
       = identifier:(#{@numberCaptureCommands()}) ss {return identifier;}
     numberCaptureIdentifierContinuous
       = identifier:(#{@numberCaptureCommandsContinuous()}) ss {return identifier;}
+
+    numberRangeIdentifier
+      = identifier:(#{@numberRangeCommands()}) ss {return identifier;}
+    numberRangeIdentifierContinuous
+      = identifier:(#{@numberRangeCommandsContinuous()}) ss {return identifier;}
 
     oneArgumentCommand
       = left:oneArgumentIdentifier right:(spokenInteger / singleTextArgument)? {return {command: left, arguments: right};}
@@ -221,12 +263,22 @@ class @Grammar
     ss = " "+
 
     // identifier = id:(textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
-    identifier = id:(textCaptureIdentifierContinuous / numberCaptureIdentifierContinuous / individualIdentifierContinuous / oneArgumentIdentifierContinuous / singleSearchIdentifierContinuous / overrideIdentifier) s {return id;}
+    identifier = id:(
+      customIdentifier / 
+      textCaptureIdentifierContinuous / 
+      numberCaptureIdentifierContinuous / 
+      numberRangeIdentifierContinuous / 
+      individualIdentifierContinuous / 
+      oneArgumentIdentifierContinuous / 
+      singleSearchIdentifierContinuous / 
+      overrideIdentifier
+    ) s {return id;}
 
     word = !identifier text:([a-z]i / '.' / "'" / '-' / '&' / '`')+ ss {return text.join('')}
 
     symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
 
+    numberRange = first:(spokenInteger) "." ss last:(spokenInteger)? {return {first: parseInt(first), last: parseInt(last)};}
 
     integer "integer"
       = digits:[0-9]+ s {return makeInteger(digits);}
@@ -301,3 +353,50 @@ class @Grammar
     modifierPrefix = #{@modifierPrefixes()}
     modifierSuffix = #{@modifierSuffixes()}
     """
+  customCommandsContent: ->
+    cc = _.map Commands.Utility.sortedCommandKeys("custom"), (name) =>
+      "(" + @buildCustomCommand(name) + ")"
+    .join(" / ")
+
+    # ccc = _.map Commands.Utility.sortedCommandKeys("custom", true), (name) =>
+    #   "(" + @buildCustomCommand(name) + ")"
+    # .join(" / ")
+
+    """
+    customCommand = #{cc}
+    """
+  buildCustomCommand: (name) ->
+    command = new Commands.Base(name, null)
+    token = if command.info.aliases?.length
+      name.split(" ").join('_')
+    else
+      '"' + name + '"'
+    first = [token, "ss"]
+    second = []
+    for item in command.info.customGrammar
+      if item.list?
+        if item.optional
+          first.push "_#{item.list}:(_#{item.list})?"
+        else
+          first.push "_#{item.list}:(_#{item.list})"
+        second.push "#{item.list}: _#{item.list}"
+      else if item.text?
+        if item.optional
+          first.push "('#{item.text}')?"
+        else
+          first.push "('#{item.text}')?"
+        first.push "ss"
+
+    returnObject = second.join(", ")
+    first.join(" ") + " " + "{return {command: '#{name}', arguments: {#{returnObject}}};}"
+
+  customLists: ->
+    _.map(Commands.Utility.getUsedOptionLists(), @buildCustomList).join("\n")
+
+  buildCustomList: (items, name) ->
+    sorted = _.sortBy(items, (e) -> e).reverse()
+    itemString = _.map sorted, (item) ->
+      "\"#{item}\""
+    .join " / "
+    "_#{name} = value:(#{itemString}) ss {return Settings.#{name}[value];}"
+

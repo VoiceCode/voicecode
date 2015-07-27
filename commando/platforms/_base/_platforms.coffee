@@ -88,13 +88,17 @@ class Platforms.base.actions
       null
       
   fuzzyMatch: (list, term) ->
-      if list[term]?
-        list[term]
-      else
-        results = {}
-        _.each list, (item, key) ->
-          totalDistance = _s.levenshtein(key, term)
-          results[key] = totalDistance
-        best = _.min _.keys(results), (k) ->
-          results[k]
-        list[best]
+    if list[term]?
+      list[term]
+    else
+      results = {}
+      _.each list, (item, key) ->
+        totalDistance = _s.levenshtein(key, term)
+        results[key] = totalDistance
+      best = _.min _.keys(results), (k) ->
+        results[k]
+      list[best]
+
+  # for specific applications/contexts
+  sublime: ->
+    new Contexts.Sublime()

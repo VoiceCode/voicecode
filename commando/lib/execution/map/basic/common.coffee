@@ -181,6 +181,17 @@ Commands.createDisabled
       @key "T", "command"
   "randall":
     description: "press escape"
-    tags: ["escape", "recommended"]
+    tags: ["key", "recommended"]
     action: ->
       @key "Escape"
+  "prome":
+    description: "press the home key"
+    tags: ["recommended", "key"]
+    action: ->
+      @key "Home"
+  "prend":
+    description: "press the home key"
+    tags: ["recommended", "key"]
+    action: ->
+      @key "End"
+

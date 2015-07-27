@@ -12,10 +12,12 @@ Commands.aggregateUndoByDeletingCount = 0
 Commands.previousUndoByDeletingCount = 0
 Commands.primaryGrammarTypes = [
   "numberCapture"
+  "numberRange"
   "textCapture"
   "individual"
   "singleSearch"
   "oneArgument"
+  "custom"
 ]
 Commands.keys =
   oneArgument: []
@@ -26,8 +28,12 @@ Commands.keys =
   individualContinuous: []
   numberCapture: []
   numberCaptureContinuous: []
+  numberRange: []
+  numberRangeContinuous: []
   textCapture: []
   textCaptureContinuous: []
+  custom: []
+  customContinuous: []
   repeater: []
   findable: []
 
@@ -97,16 +103,26 @@ Commands.loadConditionalModules = (enabledCommands) ->
     if value.repeater?
       Commands.keys.repeater.push key
 
+    if type is "custom"
+      try
+        Commands.mapping[key].customGrammar = customGrammarParser.parse(value.rule)
+      catch e
+        console.log "error parsing custom grammar for command: #{key}"
+        console.log e
+
 
 class Commands.Base
   constructor: (@namespace, @input) ->
     @info = Commands.mapping[@namespace]
     @kind = @info.kind or "action"
+    @grammarType = @info.grammarType or "individual"
     @normalizeInput()
   normalizeInput: ->
     switch @info.grammarType
       when "textCapture"
         @input = Actions.normalizeTextArray @input
+      when "numberRange"
+        @input = @normalizeNumberRange(@input)
   transform: ->
     Transforms[@info.transform]
   generate: ->
@@ -205,10 +221,52 @@ class Commands.Base
     # """
     # curl http://commando:5000/parse --data-urlencode space="#{space}" --data-urlencode phrase="\\${varText}"
     # """
+    variables = []
+    if @grammarType is "custom"
+      for item in @info.customGrammar
+        if item.list?
+          v = item.list.charAt(0).toUpperCase() + item.list.slice(1).toLowerCase()
+          variables.push "${var#{v}}"
+        else if item.text?
+          variables.push item.text
+    variables.push "${varText}"
     """
-    echo -e "#{space} ${varText}" | nc -U /tmp/voicecode.sock
+    echo -e "#{space} #{variables.join(' ')}" | nc -U /tmp/voicecode.sock
     """
-  generateDragonCommandName: () ->
-    _.compact([@getTriggerPhrase(), "/!Text!/"]).join(' ')
+  generateDragonCommandName: ->
+    if @grammarType is "custom"
+      @generateCustomDragonCommandName()
+    else
+      _.compact([@getTriggerPhrase(), "/!Text!/"]).join(' ')
+  generateCustomDragonCommandName: ->
+    results = [@getTriggerPhrase()]
+    for item in @info.customGrammar
+      if item.list?
+        if item.optional
+          results.push "(//#{item.list}//)"
+        else
+          results.push "((#{item.list}))"
+      else if item.text?
+        if item.optional
+          results.push "(//#{item.text}//)"
+        else
+          results.push item.text
+    results.push "/!Text!/"
+    results.join ' '
+
+
   digest: ->
     CryptoJS.MD5(@generateDragonBody()).toString()
+  
+  listNames: ->
+    _.collect @info.customGrammar, (item) ->
+      item.list if item.list?
+
+  normalizeNumberRange: (input) ->
+    if typeof input is "object"
+      input
+    else
+      {first: parseInt(input)}
+
+
+

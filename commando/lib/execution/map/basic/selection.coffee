@@ -91,10 +91,10 @@ Commands.createDisabled
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
-          script = "subl"
-          _(input or 1).times =>
-            script += " --command 'select_next_word'"
-          @exec script
+          s = new Contexts.Sublime()
+          _(input or 1).times ->
+            s.selectNextWord()
+          s.execute()
         when "Atom"
           @runAtomCommand "selectNextWord", input or 1
         else
@@ -109,10 +109,10 @@ Commands.createDisabled
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
-          script = "subl"
-          _(input or 1).times =>
-            script += " --command 'select_previous_word'"
-          @exec script
+          s = new Contexts.Sublime()
+          _(input or 1).times ->
+            s.selectPreviousWord()
+          s.execute()
         when "Atom"
           @runAtomCommand "selectPreviousWord", input or 1
         else

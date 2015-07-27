@@ -29,7 +29,7 @@ tens = [
   'fifty'
   'sixty'
   'seventy'
-  'eightty'
+  'eighty'
   'ninety'
 ]
 scales = [

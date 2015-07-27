@@ -5,7 +5,7 @@ extendArray = (original, extension) ->
 
 Settings.extend = (key, map) ->
   # check if we are extending an array
-  if Object.prototype.toString.call(map) is '[object Array]'
+  if Object::toString.call(map) is '[object Array]'
     Settings[key] ?= []
     Settings[key] = extendArray Settings[key], map
   # check if we are extending an object
@@ -16,13 +16,25 @@ Settings.extend = (key, map) ->
 Settings.addContext = (determiningFunction) ->
   Settings.contextChain.unshift determiningFunction
 
+Settings.getSpokenOptionsForList = (listName) ->
+  list = Settings[listName]
+  if list?
+    if Object.prototype.toString.call(list) is '[object Array]'
+      _.filter list, (item) ->
+        item[0] != "_"
+    else if typeof list is "object" 
+      _.filter _.keys(list), (item) ->
+        item[0] != "_"
+  else
+    []
+
 w = (commaSeparatedString) ->
   commaSeparatedString.split(', ')
 
 _.extend Settings,
   maximumRepetitionCount: 100
   websites:
-    "amazon console": "https://console.aws.amazon.com"
+    "amazon": "http://www.amazon.com"
     "google docs": "http://docs.google.com"
     amazon: "http://www.amazon.com"
     craigslist: "http://craigslist.com"
@@ -34,27 +46,25 @@ _.extend Settings,
   applications:
     "app store": "App Store"
     activity: "Activity Monitor"
-    adam: "Atom"
     atom: "Atom"
+    _adam: "Atom" # an alias - t's not what we want to train dragon to hear, but if it hears it, still trigger this item.
     automate: "Automator"
-    billy: "Adobe Illustrator"
     calendar: "Calendar"
     chrome: "Google Chrome"
-    drag: "Dragon Dictate"
-    find: "Path Finder"
+    dragon: "Dragon Dictate"
+    finder: "Finder"
     logic: "Logic Pro X"
     mail: "Mail"
     message: "Messages"
     page: "Pages"
     parallels: "Parallels Desktop"
-    pass: "1Password"
+    password: "1Password"
     preview: "Preview"
     quicktime: "QuickTime Player"
     robo: "Robomongo"
     safari: "Safari"
     shop: "Adobe Photoshop CC 2014"
     skype: "Skype"
-    store: "App Store"
     sublime: "Sublime Text"
     system: "System Preferences"
     term: "iTerm"
@@ -82,7 +92,7 @@ _.extend Settings,
     author: "auth"
     binary: "bin"
     button: "btn"
-    c: "char"
+    _c: "char"
     calculate: "calc"
     call: "col"
     car: "char"
@@ -382,6 +392,7 @@ _.extend Settings,
   windowPositions:
     # units <= 1 are proportions
     # units > 1 are absolute
+    # you can use fractions as well (1/3)
     max:
       x: 0
       y: 0
@@ -393,11 +404,6 @@ _.extend Settings,
       width: 0.5
       height: 1
     right:
-      x: 0.5
-      y: 0
-      width: 0.5
-      height: 1
-    rate:
       x: 0.5
       y: 0
       width: 0.5
@@ -442,6 +448,17 @@ _.extend Settings,
       y: "auto" # center
       width: 1024
       height: 768
+  digits:
+    zero: 0
+    one: 1
+    two: 2
+    three: 3
+    four: 4
+    five: 5
+    six: 6
+    seven: 7
+    eight: 8
+    nine: 9
   applicationsThatCanNotHandleBlankSelections: [
     "AppCode"
     "Atom"
@@ -508,3 +525,40 @@ _.extend Settings,
     smile: ":)"
     winkle: ";)"
   notificationProvider: "OSX"
+  dateFormats:
+    yammer: "YYYYMMDD"
+    timestamp: "X"
+    time: "LT"
+    today: "LL"
+    date: "l"
+
+# tens = 
+#   ten: 10
+#   eleven: 11
+#   twelve: 12
+#   thirteen: 13
+#   fourteen: 14
+#   fifteen: 15
+#   sixteen: 16
+#   seventeen: 17
+#   eighteen: 18
+#   nineteen: 19
+#   twenty: 20
+#   thirty: 30
+#   fourty: 40
+#   fifty: 50
+#   sixty: 60
+#   seventy: 70
+#   eighty: 80
+#   ninety: 90
+
+# hundreds = 
+#   hundred:  
+# _.extend Settings,
+#   digits: digits
+
+# _.extend Settings,
+#   integerFirst: digits
+
+# _.extend Settings.integerFirst
+#   integerFirst:

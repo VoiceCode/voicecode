@@ -35,7 +35,7 @@ Commands.Utility =
     _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), tag
     )
-  enabledCommandNames:  ->
+  enabledCommandNames: ->
     _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].enabled is true
     )
@@ -51,11 +51,23 @@ Commands.Utility =
       command = Commands.mapping[key]
       (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
 
+  customCommandNames: ->
+    Commands.keys.custom.concat(Commands.keys.customContinuous)
 
   scopedModules: (module) ->
     _.filter(_.keys(Commands.mapping), (key) ->
       Commands.mapping[key].module is module
     )
+
+  getUsedOptionLists: ->
+    lists = {}
+    
+    for name in Commands.Utility.customCommandNames()
+      command = new Commands.Base(name, null)
+      for listName in command.listNames()
+        unless listName in lists
+          lists[listName] = Settings.getSpokenOptionsForList(listName)
+    lists
 
   documentationReport: ->
     tags = Commands.Utility.allTags()

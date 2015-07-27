@@ -15,7 +15,7 @@ Meteor.methods
       @unblock()
       enabledCommandsManager.enable(name)
       Commands.reloadGrammar()
-      synchronizer.updateAllCommands(true)
+      synchronizer.synchronize()
       modifiers.checkVocabulary()
   disableCommand: (name) ->
     Commands.mapping[name].enabled = false
@@ -25,5 +25,5 @@ Meteor.methods
       @unblock()
       enabledCommandsManager.disable(name)
       Commands.reloadGrammar()
-      synchronizer.updateAllCommands(true)
+      synchronizer.synchronize()
       modifiers.checkVocabulary()

@@ -8,7 +8,7 @@ Commands.createDisabled
       switch @currentApplication()
         when "Sublime Text"
           if input
-            @exec "subl --command 'goto_line {\"line\": #{input}}'"
+            @sublime().goToLine(input).execute()
           else
             @key "G", ['control']
         when "Atom"
@@ -63,10 +63,6 @@ Commands.createDisabled
       @do "spring", input
       if input?
         @do "shackle"
-      # @exec """
-      # subl --command 'goto_line {"line": #{input}}' \
-      # --command 'expand_selection {"to": "line"}'
-      # """
 
   "bracken":
     description: "expand selection to quotes, parens, braces, or brackets"
@@ -96,17 +92,9 @@ Commands.createDisabled
           temp = last
           last = first
           first = temp
-        last += 1
         switch @currentApplication()
           when "Sublime Text"
-            script = """
-            subl --command 'goto_line {"line": #{first}}' \
-            --command 'set_mark' \
-            --command 'goto_line {"line": #{last}}' \
-            --command 'select_to_mark' \
-            --command 'clear_bookmarks {"name": "mark"}'
-            """
-            @exec script
+            @sublime().selectRange(first, last).execute()
           when "Atom"
             @runAtomCommand "selectLineRange",
               from: first
@@ -121,13 +109,12 @@ Commands.createDisabled
       if input?
         switch @currentApplication()
           when "Sublime Text"
-            script = """
-            subl --command 'set_mark' \
-            --command 'goto_line {"line": #{input}}' \
-            --command 'select_to_mark' \
-            --command 'clear_bookmarks {"name": "mark"}'
-            """
-            @exec script
+            @sublime()
+              .setMark()
+              .goToLine(input)
+              .selectToMark()
+              .clearMark()
+              .execute()
           when "Atom"
             @runAtomCommand "extendSelectionToLine", input
 
@@ -141,3 +128,26 @@ Commands.createDisabled
         switch @currentApplication()
           when "Atom"
             @runAtomCommand "insertContentFromLine", input
+
+  "trundle":
+    grammarType: "numberRange"
+    tags: ["editing", "atom", "sublime"]
+    description: "toggle comments on the line or range"
+    action: ({first, last} = {}) ->
+      switch @currentApplication()
+        when "Sublime Text"
+          if last?
+            @sublime().selectRange(first, last).execute()
+          else if first?
+            @sublime().goToLine(first).execute()
+          @key '/', 'command'
+        when "Atom"
+          if range.last?
+            @runAtomCommand "selectLineRange",
+              from: first
+              to: last
+          else if first?
+            @runAtomCommand "goToLine", first
+          @delay 50
+          @key '/', 'command'
+

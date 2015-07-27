@@ -60,7 +60,11 @@ Template.CommandSummaryRow.helpers
   description: ->
     Commands.mapping[@].description
   grammarType: ->
-    Commands.mapping[@].grammarType or "individual"
+    type = Commands.mapping[@].grammarType or "individual"
+    if type is "custom"
+      Commands.mapping[@].rule
+    else
+      type
   modifierText: ->
     Commands.mapping[@].modifiers.join('+')
   tags: ->

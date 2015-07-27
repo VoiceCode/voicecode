@@ -22,14 +22,23 @@ Commands.createDisabled
       @setVolume(input)
 
   "windy":
-    grammarType: "textCapture"
-    description: "set the size of the current active window to one of the preset sizes"
+    grammarType: "custom"
+    rule: '(digits)? (windowPositions)?'
+    description: "set the size/position of the frontmost window to one of the preset sizes/positions"
     aliases: ["wendy"]
     tags: ["system", "window", "recommended"]
-    action: (input) ->
-      if input?.length
-        preset = @fuzzyMatch Settings.windowPositions, input.join(' ')
-        screen = @getScreenInfo().currentFrame
+    # rule: "screen:(one / two / to)? position:(textArgument)? {return {command: 'windy', arguments: {screen: screen, position: position}};}"
+    # rule: "windy (//screen//) (//position//) /!Text!/"
+    action: ({digits, windowPositions}) ->
+      console.log arguments
+      if digits? or windowPositions?
+        preset = windowPositions or Settings.windowPositions['middle']
+        screenInfo = @getScreenInfo()
+        screen = if digits?
+          screenInfo.screens[digits - 1] or screenInfo.currentFrame
+        else
+          screenInfo.currentFrame
+
         # console.log screen
         newWidth = if preset.width <= 1
           screen.size.width * preset.width
@@ -56,7 +65,7 @@ Commands.createDisabled
           preset.y
 
         newOriginX = screen.origin.x + offsetX
-        newOriginY = screen.origin.y + offsetY
+        newOriginY = screen.origin.y + offsetY + 27
 
         script = """
         tell application "System Events" to tell (process 1 whose frontmost is true)

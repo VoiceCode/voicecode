@@ -2,15 +2,18 @@ fs = Meteor.npmRequire('fs')
 
 class @DragonDictateSynchronizer
   constructor: ->
-    sqlite3 = Meteor.npmRequire("sqlite3").verbose()
+    @sqlite3 = Meteor.npmRequire("sqlite3").verbose()
     @bundles = {global: "global"}
     @applicationNames = {}
     @lastId = (new Date()).getTime()
     @applicationVersions = {}
-    file = @databaseFile()
+    @connectMain()
+    @connectDynamic()
+  connectMain: ->
+    file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
     if exists
-      @database = new sqlite3.Database file, sqlite3.OPEN_READWRITE, (error) =>
+      @database = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (error) =>
         if error
           console.log "Error: Could not connect to Dragon Dictate command database"
           @error = true
@@ -18,15 +21,28 @@ class @DragonDictateSynchronizer
       @get = Meteor.wrapAsync(@database.get.bind(@database))
       @run = Meteor.wrapAsync(@database.run.bind(@database))
     else
-      console.log "error: Dragon Dictate commands database was not found at: #{file}"
+      console.log "error: Dragon Dictate commands database was not found at: #{file}"    
+  connectDynamic: ->
+    file = @databaseFile("ddictatedynamic")
+    exists = fs.existsSync(file)
+    if exists
+      @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (error) =>
+        if error
+          console.log "Error: Could not connect to Dragon Dictate dynamic command database"
+          @error = true
+      @dynamicAll = Meteor.wrapAsync(@dynamicDatabase.all.bind(@dynamicDatabase))
+      @dynamicGet = Meteor.wrapAsync(@dynamicDatabase.get.bind(@dynamicDatabase))
+      @dynamicRun = Meteor.wrapAsync(@dynamicDatabase.run.bind(@dynamicDatabase))
+    else
+      console.log "error: Dragon Dictate dynamic commands database was not found at: #{file}"    
   home: ->
     process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
   whoami: ->
     # Execute("whoami")?.trim()
     path = process.env.HOME?.split('/')
     path[path.length - 1]
-  databaseFile: ->
-    file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.ddictatecommands"].join("/")
+  databaseFile: (extension) ->
+    file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
     console.log file
     file
   getBundleId: (name) ->
@@ -81,18 +97,81 @@ class @DragonDictateSynchronizer
       bundle
   digest: (triggerPhrase, bundleId) ->
     CryptoJS.MD5([triggerPhrase, bundleId].join('')).toString()
-  getAllCommands: ->
-    @all "SELECT * FROM ZCOMMAND"
-  getAllTriggers: ->
-    @all "SELECT * FROM ZTRIGGER"
-  getAllActions: ->
-    @all "SELECT * FROM ZACTION"
   getJoinedCommands: ->
     @all """SELECT * FROM ZCOMMAND AS C
     LEFT OUTER JOIN ZACTION AS A ON A.Z_PK=C.Z_PK
     LEFT OUTER JOIN ZTRIGGER AS T ON T.Z_PK=C.Z_PK
     """
-  synchronize: (perform=false) ->
+  synchronize: ->
+    @synchronizeStatic()
+    @synchronizeDynamic()
+
+  synchronizeDynamic: ->
+    if @error
+      console.log "error: dragon dynamic database not connected"
+      return false
+    lists = Commands.Utility.getUsedOptionLists()
+
+    # remove unneeded lists
+    @dynamicRun "DELETE FROM ZGENERALTERM WHERE ZNAME NOT IN ($listNames)",
+      $listNames: _.keys(lists)
+
+
+    existingLists = {}
+    for record in @dynamicAll("SELECT * FROM ZGENERALTERM")
+      existingLists[record.ZNAME] = record
+
+    for name, items of lists
+      if existingLists[name]?
+        # it exists
+        @synchronizeListItems
+          name: name
+          listId: existingLists[name].Z_PK
+          items: lists[name]
+      else
+        # needs creating
+        @createList name, lists[name]
+
+
+    # remove unneeded list items
+    listIds = _.map @dynamicAll("SELECT Z_PK FROM ZGENERALTERM"), (item) -> item.Z_PK
+    @dynamicRun "DELETE FROM ZSPECIFICTERM WHERE ZGENERALTERM NOT IN ($listIds)",
+      $listIds: listIds
+
+  createList: (name, items) ->
+    @dynamicRun "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, '#', $name, $spokenLanguage, 'Alt')",
+      $name: name
+      $spokenLanguage: Settings.localeSettings[Settings.locale].dragonTriggerSpokenLanguage
+
+    # get the new id
+    result = @dynamicGet "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
+    id = result?.Z_PK
+
+    for item in items
+      @createListItem item, id
+
+
+  createListItem: (name, listId) ->
+    @dynamicRun "INSERT INTO ZSPECIFICTERM (Z_ENT, Z_OPT, ZNUMERICVALUE, ZGENERALTERM, ZNAME) VALUES (2, 1, 0, $listId, $name)",
+      $name: name
+      $listId: listId
+
+  synchronizeListItems: ({name, listId, items}) ->
+    existing = {}
+    for record in @dynamicAll "SELECT * FROM ZSPECIFICTERM WHERE ZGENERALTERM = #{listId}"
+      existing[record.ZNAME] = record
+
+    for item in items
+      if existing[item]
+        delete existing[item]
+      else
+        @createListItem item, listId
+
+    # leftovers
+    for name, item of existing
+      @dynamicRun "DELETE FROM ZSPECIFICTERM WHERE Z_PK = #{item.Z_PK};"
+  
+  synchronizeStatic: () ->
     if @error
       console.log "error: dragon database not connected"
       return false
@@ -118,13 +197,14 @@ class @DragonDictateSynchronizer
         if bundle?.length
           value = results[bundle]?[dragonName]
           if value?
-            if value.ZTEXT?.trim() is body
+            if value.ZTEXT?.trim() is body.trim()
               # everything is fine, command is good
             else
               # command body needs updating
               needsUpdating.push
                 id: value.Z_PK
                 body: body
+                bodyWas: value.ZTEXT
                 bundle: bundle
           else if command.needsDragonCommand()
             # command is missing
@@ -153,16 +233,14 @@ class @DragonDictateSynchronizer
 
     console.log final
 
-    if perform
-      console.log "synchronizing commands"
-      for item in needsCreating
-        @createCommand item.bundle, item.triggerPhrase, item.body
-      for item in needsUpdating
-        @updateAction item.id, item.body
-      for item in needsDeleting
-        @deleteCommand item.id
+    console.log "synchronizing commands"
+    for item in needsCreating
+      @createCommand item.bundle, item.triggerPhrase, item.body
+    for item in needsUpdating
+      @updateAction item.id, item.body
+    for item in needsDeleting
+      @deleteCommand item.id
 
-    final
   getNextRecordId: ->
     result = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
     (result?.Z_PK or 0) + 1
@@ -208,7 +286,7 @@ class @DragonDictateSynchronizer
 
 class @NatLinkSynchronizer
   constructor: ->
-  synchronize: (perform=false) ->
+  synchronize: ->
     console.log "updating commands"
 
 class @Synchronizer
@@ -217,6 +295,6 @@ class @Synchronizer
       @synchronizer = new DragonDictateSynchronizer()
     else if platform is "windows"
       @synchronizer = new NatLinkSynchronizer()
-  synchronize: (perform=false) ->
-    @synchronizer.synchronize(perform)
+  synchronize: ->
+    @synchronizer.synchronize()
 
