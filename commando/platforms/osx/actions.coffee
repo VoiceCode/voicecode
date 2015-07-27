@@ -878,6 +878,6 @@ class Platforms.osx.actions extends Platforms.base.actions
         else
           @key 'Left', 'shift'
       @key 'Delete'
-      
+
   notify: (text) ->
     Notify(text)

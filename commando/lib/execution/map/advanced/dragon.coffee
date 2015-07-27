@@ -19,7 +19,7 @@ Commands.createDisabled
       delay 2
       tell application "#{dictateName}" to activate
       """, false
-      
+
 Commands.createWithDefaults
   kind: "none"
   tags: ["dragon"]

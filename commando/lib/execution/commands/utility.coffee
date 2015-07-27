@@ -61,7 +61,7 @@ Commands.Utility =
 
   getUsedOptionLists: ->
     lists = {}
-    
+
     for name in Commands.Utility.customCommandNames()
       command = new Commands.Base(name, null)
       for listName in command.listNames()

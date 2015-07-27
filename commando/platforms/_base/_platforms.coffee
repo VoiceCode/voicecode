@@ -20,7 +20,7 @@ class Platforms.base.actions
     amount = Commands.previousUndoByDeletingCount or 0
     _.times(amount) =>
       @key "Delete"
-  
+
   # run another command
   do: (name, input) ->
     command = new Commands.Base(name, input)
@@ -86,7 +86,7 @@ class Platforms.base.actions
       results
     else
       null
-      
+
   fuzzyMatch: (list, term) ->
     if list[term]?
       list[term]

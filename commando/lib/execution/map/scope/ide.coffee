@@ -142,7 +142,7 @@ Commands.createDisabled
             @sublime().goToLine(first).execute()
           @key '/', 'command'
         when "Atom"
-          if range.last?
+          if last?
             @runAtomCommand "selectLineRange",
               from: first
               to: last
@@ -150,4 +150,3 @@ Commands.createDisabled
             @runAtomCommand "goToLine", first
           @delay 50
           @key '/', 'command'
-

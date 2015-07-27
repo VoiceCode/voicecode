@@ -21,7 +21,7 @@ class @DragonDictateSynchronizer
       @get = Meteor.wrapAsync(@database.get.bind(@database))
       @run = Meteor.wrapAsync(@database.run.bind(@database))
     else
-      console.log "error: Dragon Dictate commands database was not found at: #{file}"    
+      console.log "error: Dragon Dictate commands database was not found at: #{file}"
   connectDynamic: ->
     file = @databaseFile("ddictatedynamic")
     exists = fs.existsSync(file)
@@ -34,7 +34,7 @@ class @DragonDictateSynchronizer
       @dynamicGet = Meteor.wrapAsync(@dynamicDatabase.get.bind(@dynamicDatabase))
       @dynamicRun = Meteor.wrapAsync(@dynamicDatabase.run.bind(@dynamicDatabase))
     else
-      console.log "error: Dragon Dictate dynamic commands database was not found at: #{file}"    
+      console.log "error: Dragon Dictate dynamic commands database was not found at: #{file}"
   home: ->
     process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
   whoami: ->
@@ -170,7 +170,7 @@ class @DragonDictateSynchronizer
     # leftovers
     for name, item of existing
       @dynamicRun "DELETE FROM ZSPECIFICTERM WHERE Z_PK = #{item.Z_PK};"
-  
+
   synchronizeStatic: () ->
     if @error
       console.log "error: dragon database not connected"
@@ -297,4 +297,3 @@ class @Synchronizer
       @synchronizer = new NatLinkSynchronizer()
   synchronize: ->
     @synchronizer.synchronize()
-

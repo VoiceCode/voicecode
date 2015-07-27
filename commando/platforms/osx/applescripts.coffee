@@ -615,4 +615,3 @@ Platforms.osx.applescript =
     Down: 125
     Up: 126
     Tilde: 192
-

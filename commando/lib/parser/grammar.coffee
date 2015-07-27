@@ -264,13 +264,13 @@ class @Grammar
 
     // identifier = id:(textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
     identifier = id:(
-      customIdentifier / 
-      textCaptureIdentifierContinuous / 
-      numberCaptureIdentifierContinuous / 
-      numberRangeIdentifierContinuous / 
-      individualIdentifierContinuous / 
-      oneArgumentIdentifierContinuous / 
-      singleSearchIdentifierContinuous / 
+      customIdentifier /
+      textCaptureIdentifierContinuous /
+      numberCaptureIdentifierContinuous /
+      numberRangeIdentifierContinuous /
+      individualIdentifierContinuous /
+      oneArgumentIdentifierContinuous /
+      singleSearchIdentifierContinuous /
       overrideIdentifier
     ) s {return id;}
 
@@ -399,4 +399,3 @@ class @Grammar
       "\"#{item}\""
     .join " / "
     "_#{name} = value:(#{itemString}) ss {return Settings.#{name}[value];}"
-

@@ -257,7 +257,7 @@ class Commands.Base
 
   digest: ->
     CryptoJS.MD5(@generateDragonBody()).toString()
-  
+
   listNames: ->
     _.collect @info.customGrammar, (item) ->
       item.list if item.list?
@@ -267,6 +267,3 @@ class Commands.Base
       input
     else
       {first: parseInt(input)}
-
-
-

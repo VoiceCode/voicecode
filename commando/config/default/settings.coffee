@@ -22,7 +22,7 @@ Settings.getSpokenOptionsForList = (listName) ->
     if Object.prototype.toString.call(list) is '[object Array]'
       _.filter list, (item) ->
         item[0] != "_"
-    else if typeof list is "object" 
+    else if typeof list is "object"
       _.filter _.keys(list), (item) ->
         item[0] != "_"
   else
@@ -532,7 +532,7 @@ _.extend Settings,
     today: "LL"
     date: "l"
 
-# tens = 
+# tens =
 #   ten: 10
 #   eleven: 11
 #   twelve: 12
@@ -552,8 +552,8 @@ _.extend Settings,
 #   eighty: 80
 #   ninety: 90
 
-# hundreds = 
-#   hundred:  
+# hundreds =
+#   hundred:
 # _.extend Settings,
 #   digits: digits
 
