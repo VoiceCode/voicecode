@@ -34,3 +34,5 @@ Commands.createWithDefaults
     description: "consume command text from dragon"
   "go to sleep":
     description: "consume command text from dragon"
+  "press mouse": {}
+  "release mouse": {}
