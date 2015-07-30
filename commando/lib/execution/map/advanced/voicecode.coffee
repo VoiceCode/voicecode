@@ -56,3 +56,21 @@ Commands.createDisabled
       if count? and count > 0
         for i in [1..count]
           @key 'Left', 'shift'
+  "strict on":
+    grammarType: "textCapture"
+    description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
+    tags: ["voicecode", "recommended"]
+    action: (input) ->
+      mode = if input?
+        @fuzzyMatchKey Settings.strictModes, input.join(' ')      
+      else
+        "default"
+      @enableStrictMode mode
+  "strict off":
+    grammarType: "textCapture"
+    description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
+    tags: ["voicecode", "recommended"]
+    action: (input) ->
+      @disableStrictMode()
+
+

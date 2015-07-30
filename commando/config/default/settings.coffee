@@ -29,7 +29,7 @@ Settings.getSpokenOptionsForList = (listName) ->
     []
 
 w = (commaSeparatedString) ->
-  commaSeparatedString.split(', ')
+  commaSeparatedString.split(/, |\n/)
 
 _.extend Settings,
   maximumRepetitionCount: 100
@@ -531,6 +531,22 @@ _.extend Settings,
     time: "LT"
     today: "LL"
     date: "l"
+  strictModes:
+    default: w """
+      strict off
+      swick
+      chiff
+      chipper
+      duke
+      spark
+      stoosh
+      dookoosh
+      doopark
+      webseek
+      webs
+      fox
+      """
+    all: ["strict off"] # nothing is allowed except disabling strict mode
 
 # tens =
 #   ten: 10

@@ -99,6 +99,30 @@ class Platforms.base.actions
         results[k]
       list[best]
 
+  fuzzyMatchKey: (list, term) ->
+    if list[term]?
+      term
+    else
+      results = {}
+      _.each list, (item, key) ->
+        totalDistance = _s.levenshtein(key, term)
+        results[key] = totalDistance
+      best = _.min _.keys(results), (k) ->
+        results[k]
+      best
+
+  enableStrictMode: (mode) ->
+    @strictMode = mode
+
+  disableStrictMode: ->
+    @strictMode = null
+
+  commandPermitted: (command) ->
+    if @strictMode?
+      command in Settings.strictModes[@strictMode]
+    else
+      true
+
   # for specific applications/contexts
   sublime: ->
     new Contexts.Sublime()

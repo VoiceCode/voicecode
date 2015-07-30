@@ -88,7 +88,8 @@ class Commands.Chain
       else if current.command is "vc-literal" and previous?.command is "vc-literal"
         @mergeLiteralCommands(previous, current)
       else
-        results.push current
+        if Actions.commandPermitted current.command
+          results.push current
     results
 
   mergeTextualCommands: (previous, current) ->
