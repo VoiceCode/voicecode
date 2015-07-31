@@ -271,7 +271,8 @@ class @Grammar
       individualIdentifierContinuous /
       oneArgumentIdentifierContinuous /
       singleSearchIdentifierContinuous /
-      overrideIdentifier
+      overrideIdentifier /
+      modifierPrefix
     ) s {return id;}
 
     word = !identifier text:([a-z]i / '.' / "'" / '-' / '&' / '`')+ ss {return text.join('')}
