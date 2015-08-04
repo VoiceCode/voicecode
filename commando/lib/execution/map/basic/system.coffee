@@ -1,11 +1,19 @@
 Commands.createDisabled
   "swash":
     grammarType: "oneArgument"
-    description: "opens drop-down menu by name"
+    description: "opens drop-down menu by name. A few special arguments are also allowed: [bluetooth, wi-fi, clock, battery]"
     tags: ["application", "system", "recommended"]
     action: (input) ->
-      menuItem = Settings.menuItemAliases[input] or input
-      @openMenuBarItem menuItem
+      specialItems = ["bluetooth", "wi-fi", "clock", "battery"]
+      if input in specialItems
+        @applescript """
+        tell application "System Events" to tell process "SystemUIServer"
+          click (first menu bar item whose value of attribute "AXDescription" contains "#{input}") of menu bar 1
+        end tell
+        """, false
+      else
+        menuItem = Settings.menuItemAliases[input] or input
+        @openMenuBarItem menuItem
 
   "blerch":
     description: "search the menubar items (opens help menu)"
