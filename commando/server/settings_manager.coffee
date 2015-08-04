@@ -36,11 +36,13 @@ class @EnabledCommandsManager extends SettingsManager
     for key, value of Commands.mapping
       @settings[key] = !!Enables.findOne(name: key)?.enabled
     @save()
-  enable: (name) ->
-    @settings[name] = true
+  enable: (names) ->
+    for name in names
+      @settings[name] = true
     @save()
-  disable: (name) ->
-    @settings[name] = false
+  disable: (names) ->
+    for name in names
+      @settings[name] = false
     @save()
 
 Meteor.methods

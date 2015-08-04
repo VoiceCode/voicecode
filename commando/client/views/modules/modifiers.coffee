@@ -21,8 +21,14 @@ Template.enabledModifier.helpers
       "checked"
 
 Template.enabledModifier.events
-  "change input": (e, t) ->
-    if e.target.checked
-      Meteor.call "enableCommand", @name
+  "click .modifierLabel": (e, t) ->
+    e.stopPropagation()
+    e.preventDefault()
+    name = @name
+    command = Commands.mapping[name]
+    if command.enabled
+      Meteor.call "disableCommands", [name]
+      t.$("input[type='checkbox']").prop('checked', false)
     else
-      Meteor.call "disableCommand", @name
+      Meteor.call "enableCommands", [name]
+      t.$("input[type='checkbox']").prop('checked', true)

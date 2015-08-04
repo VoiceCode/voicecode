@@ -7,23 +7,27 @@ Meteor.methods
       else
         s.performReconciliation()
 
-  enableCommand: (name) ->
-    Commands.mapping[name].enabled = true
+  enableCommands: (names) ->
+    console.log enabling: names
+    for name in names
+      Commands.mapping[name].enabled = true
     if @isSimulation
 
     else
       @unblock()
-      enabledCommandsManager.enable(name)
+      enabledCommandsManager.enable(names)
       Commands.reloadGrammar()
       synchronizer.synchronize()
       modifiers.checkVocabulary()
-  disableCommand: (name) ->
-    Commands.mapping[name].enabled = false
+  disableCommands: (names) ->
+    console.log disabling: names
+    for name in names
+      Commands.mapping[name].enabled = false
     if @isSimulation
-      Session.set "commandsAreDirty", true
+
     else
       @unblock()
-      enabledCommandsManager.disable(name)
+      enabledCommandsManager.disable(names)
       Commands.reloadGrammar()
       synchronizer.synchronize()
       modifiers.checkVocabulary()

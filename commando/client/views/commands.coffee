@@ -25,15 +25,27 @@ Template.commandsGeneric.helpers
 
 Template.commandsGeneric.events
   'click #toggleAll': (e, t) ->
-    checks = $("input[type='checkbox']")
+    tag = Session.get("commandTag.current") or "all"
+    toggle = Session.get("enabledDisabledToggle")
+    commands = Commands.Utility.scopedCommandsWithToggle(tag, toggle)
     checked = $("input[type='checkbox']:checked").length
     unchecked = $("input[type='checkbox']").length - checked
+    toChange = []
     if checked > unchecked
-      _.each $("input[type='checkbox']:checked"), (e) ->
-        $(e).trigger("click")
+      # disable all
+      for item in commands
+        if Commands.mapping[item].enabled
+          toChange.push item
+      Meteor.call "disableCommands", toChange
+      $("input[type='checkbox']").prop('checked', false)
     else
-      _.each $("input[type='checkbox']:not(:checked)"), (e) ->
-        $(e).trigger("click")
+      # enable all
+      for item in commands
+        unless Commands.mapping[item].enabled
+          toChange.push item
+      Meteor.call "enableCommands", toChange
+      $("input[type='checkbox']").prop('checked', true)
+
 
 Template.Commands.created = ->
   unless Session.get("commandTag.current")?
@@ -75,12 +87,18 @@ Template.CommandSummaryRow.helpers
     displayActions.result
 
 Template.CommandSummaryRow.events
-  "change input": (e, t) ->
-    if e.target.checked
-      Meteor.call "enableCommand", @toString()
+  "click .modifierLabel": (e, t) ->
+    e.stopPropagation()
+    e.preventDefault()
+    name = @toString()
+    command = Commands.mapping[name]
+    if command.enabled
+      Meteor.call "disableCommands", [name]
+      t.$("input[type='checkbox']").prop('checked', false)
     else
-      Meteor.call "disableCommand", @toString()
-
+      Meteor.call "enableCommands", [name]
+      t.$("input[type='checkbox']").prop('checked', true)
+      
 Template.CommandAction.helpers
   text: ->
     switch @kind
