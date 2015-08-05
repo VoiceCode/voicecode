@@ -524,7 +524,7 @@ _.extend Settings,
     sheep: ":}"
     smile: ":)"
     winkle: ";)"
-  notificationProvider: "OSX"
+  notificationProvider: "applescript"
   dateFormats:
     yammer: "YYYYMMDD"
     timestamp: "X"

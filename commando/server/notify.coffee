@@ -28,6 +28,8 @@
 		end tell
 	end if
 	    """
+	  else if Settings.notificationProvider is "log"
+	  	console.log message
 	  else
 	    Applescript """
 	    display notification "#{message}" with title "VoiceCode"
