@@ -1,6 +1,6 @@
 Meteor.methods
   parseGeneratorString: ->
-    ParseGenerator.string
+    ParseGenerator?.string
 
   execute: (phrase) ->
     chain = new Commands.Chain(phrase)

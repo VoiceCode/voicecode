@@ -4,17 +4,14 @@
 # but you can also edit it by hand.
 
 meteor-platform
-insecure
 coffeescript
 mizzao:bootstrap-3
 iron:router
-sacha:spin
 aldeed:collection2
 dburles:collection-helpers
 natestrauser:font-awesome
 percolatestudio:fastclick
 broth:inspector
-mrt:flash-messages
 mrt:moment
 mrt:timestamp
 zimme:iron-router-active
@@ -22,9 +19,7 @@ stylus
 hellogerard:reststop2
 copleykj:jquery-autosize
 waitingkuo:jade
-aldeed:autoform
 mizzao:timesync
-aslagle:reactive-table
 underscore
 wizonesolutions:underscore-string
 meteorhacks:npm
@@ -33,3 +28,5 @@ http
 jparker:crypto-md5
 stratogee:relative-time
 froatsnook:sleep
+arboleya:electrify
+anti:methods

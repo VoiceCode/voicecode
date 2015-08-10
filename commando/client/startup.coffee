@@ -15,6 +15,7 @@
 @enabledCommands = {}
 
 Meteor.startup ->
+  Meteor.ClientCall.setClientId("client")
   @displayActions = new Platforms.base.displayActions()
   Session.set("loading", true)
   @Grammar = new Grammar()
@@ -29,3 +30,7 @@ Meteor.startup ->
       @enabledCommands = result
       Commands.loadConditionalModules(enabledCommands)
       Session.set("loading", false)
+
+
+# Meteor.ClientCall.apply "client", "logMessage", ["hello"], (error, result) ->
+  
