@@ -31,7 +31,15 @@ Commands.createDisabled
       This allows you to click then move the mouse, and have it still perform the click where the mouse used to be. Only works well with a regular mouse or trackpad (not SmartNav)"
     tags: ["mouse", "dwelling"]
     action: ->
-      @clickLocation(mouseTracker.previousLocation())
+      current = @getMousePosition()
+      previous = @previousMouseLocation(1)
+
+      # if mouse stopped moving already, look backwards 2 spots, else it's still moving, so only look back 1 spot
+      if current.x is previous.x and current.y is previous.y
+        previous = @previousMouseLocation(2)
+
+      @clickAtPosition previous
+      
   "triplick":
     description: "left click"
     tags: ["mouse", "recommended"]
