@@ -2,11 +2,21 @@ class Platforms.osx.actions extends Platforms.base.actions
   setCurrentApplication: (application) ->
     super
     if @inBrowser()
-      @currentBrowserUrl(reset: true)
-      console.log @currentBrowserUrl()
+      @monitorBrowserUrl(true)
+    else
+      @monitorBrowserUrl(false)      
       
   inBrowser: ->
     @_currentApplication in ["Safari", "Google Chrome"]
+
+  monitorBrowserUrl: (monitor=true) ->
+    if monitor
+      @_monitorBrowserUrlInterval ?= Meteor.setInterval =>
+        @currentBrowserUrl(reset: true)
+      , 1600
+    else
+      Meteor.clearInterval @_monitorBrowserUrlInterval
+      delete @_monitorBrowserUrlInterval
 
   key: (key, modifiers) ->
     key = key.toString()
@@ -410,16 +420,25 @@ class Platforms.osx.actions extends Platforms.base.actions
       console.log result
       result
 
-  _getCurrentBrowserUrl: ->
+  _getCurrentBrowserUrl: (cb) ->
     switch @currentApplication()
       when "Google Chrome"
-        @applescript 'tell application "Google Chrome" to get URL of active tab of first window'
+        @exec """osascript <<EOD
+        tell application "Google Chrome" to get URL of active tab of first window
+        EOD
+        """, cb
       when "Safari"
-        @applescript 'tell application "Safari" to return URL of front document as string'
+        @exec """osascript <<EOD
+        tell application "Safari" to return URL of front document as string
+        EOD
+        """, cb
 
   currentBrowserUrl: ({reset} = {reset: false}) ->
     if reset or !@_currentBrowserUrl?
-      @_getCurrentBrowserUrl()
+      # refresh in bg
+      @_getCurrentBrowserUrl (url) =>
+        @_currentBrowserUrl = url
+      @_currentBrowserUrl
     else
       @_currentBrowserUrl
 
