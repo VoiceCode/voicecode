@@ -483,7 +483,7 @@ _.extend Settings,
     "default": 50
   mouseDwellTracking: false
   debugMouseDwellTracking: false
-  mouseTrackerFrequency: 120
+  mouseTrackerFrequency: 120 #ms
   locale: "en"
   localeSettings:
     en:
