@@ -487,9 +487,9 @@ _.extend Settings,
     "Sublime Text": 0
     "Xcode": 100
     "default": 50
-  mouseDwellTracking: false
-  debugMouseDwellTracking: false
-  mouseTrackerFrequency: 100 #ms
+  mouseTracking: false
+  debugMouseTracking: false
+  mouseTrackingFrequency: 100 #ms
   locale: "en"
   localeSettings:
     en:

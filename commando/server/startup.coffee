@@ -35,5 +35,5 @@ Meteor.startup ->
   @synchronizer = new Synchronizer()
   synchronizer.synchronize()
 
-  if Settings.mouseDwellTracking
+  if Settings.mouseTracking
     @mouseTracker = new MouseTracker().start()

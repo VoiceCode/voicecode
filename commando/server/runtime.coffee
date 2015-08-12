@@ -269,8 +269,6 @@ if process.platform is "darwin"
   #   console.log "dataaaaaa"
   #   console.log data
 
-  # initialize mouse tracking
-
 else if process.platform is "win32"
   @Actions = new Platforms.windows.actions()
 

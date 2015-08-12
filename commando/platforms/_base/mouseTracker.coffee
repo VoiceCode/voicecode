@@ -1,6 +1,6 @@
 class @MouseTracker
   constructor: () ->
-    @frequency = Settings.mouseTrackerFrequency or 100
+    @frequency = Settings.mouseTrackingFrequency or 100
     @dwellings = []
     @lastFixedPoint = {x: 0, y: 0}
     @potential = false
@@ -29,7 +29,7 @@ class @MouseTracker
           y: y
           time: Date.now()
         Actions.onDwell(@dwellings[0])
-        if Settings.debugMouseDwellTracking
+        if Settings.debugMouseTracking
           console.log "Dwelling: ", @dwellings[0]
         # only keep a few spots
         @dwellings.splice(10)
