@@ -2,6 +2,7 @@ Commands.createDisabled
   "chibble":
     description: "selects the entire line of text cursor hovers over"
     tags: ["mouse", "combo", "recommended"]
+    mouseLatency: true
     action: ->
       @click()
       @key "Left", 'command'
@@ -10,6 +11,7 @@ Commands.createDisabled
     grammarType: "oneArgument"
     description: "mouse double click, then copy"
     tags: ["mouse", "combo", "recommended"]
+    mouseLatency: true
     action: (input) ->
       @do "duke"
       @do "stoosh", input
@@ -17,6 +19,7 @@ Commands.createDisabled
     grammarType: "oneArgument"
     description: "mouse double click, then paste"
     tags: ["mouse", "combo"]
+    mouseLatency: true
     action: (input) ->
       @do "duke"
       @do "spark", input
@@ -24,6 +27,7 @@ Commands.createDisabled
     grammarType: "oneArgument"
     description: "mouse single click, then paste"
     tags: ["mouse", "combo", "recommended"]
+    mouseLatency: true
     action: (input) ->
       @do "chiff"
       @do "spark", input
@@ -45,6 +49,7 @@ Commands.createDisabled
     grammarType: "oneArgument"
     description: "select entire line, then copy"
     tags: ["selection", "copy-paste", "combo"]
+    mouseLatency: true
     action: (input) ->
       @do "chibble"
       @do "stoosh", input
@@ -52,18 +57,21 @@ Commands.createDisabled
     grammarType: "oneArgument"
     description: "select entire line, then paste"
     tags: ["selection", "copy-paste", "combo"]
+    mouseLatency: true
     action: (input) ->
       @do "chibble"
       @do "spark", input
   "chiffacoon":
     description: "click, then insert new line below"
     tags: ["mouse", "combo"]
+    mouseLatency: true
     action: ->
       @do "chiff"
       @do "shockoon"
   "chiffkoosh":
     description: "click, then insert a space"
     tags: ["mouse", "combo", "space"]
+    mouseLatency: true
     action: ->
       @do "chiff"
       @do "skoosh"
@@ -71,18 +79,21 @@ Commands.createDisabled
     aliases: ["sapi"]
     description: "click, then delete entire line"
     tags: ["mouse", "combo"]
+    mouseLatency: true
     action: ->
       @do "chiff"
       @do "snipline"
   "sapper":
     description: "click, then delete line to the right"
     tags: ["mouse", "combo"]
+    mouseLatency: true
     action: ->
       @do "chiff"
       @do "snipper"
   "sapple":
     description: "click, then delete line to the left"
     tags: ["mouse", "combo"]
+    mouseLatency: true
     action: ->
       @do "chiff"
       @do "snipple"

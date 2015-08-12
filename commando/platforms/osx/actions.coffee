@@ -1,4 +1,13 @@
 class Platforms.osx.actions extends Platforms.base.actions
+  setCurrentApplication: (application) ->
+    super
+    if @inBrowser()
+      @currentBrowserUrl(reset: true)
+      console.log @currentBrowserUrl()
+      
+  inBrowser: ->
+    @_currentApplication in ["Safari", "Google Chrome"]
+
   key: (key, modifiers) ->
     key = key.toString()
 
@@ -118,18 +127,32 @@ class Platforms.osx.actions extends Platforms.base.actions
     @mouseUp(position)
     @delay(@clickDelayRequired())
 
+  clickLocation: (pos) ->
+    current = @getMousePosition()
+
+    position = if pos?
+      $.CGPointMake(pos.x, pos.y)
+    else
+      @getMousePosition()
+
+    @mouseDown(position)
+    @mouseUp(position)
+    @delay(@clickDelayRequired())
+
+    # move the mouse back
+    event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, current, 0
+    $.CGEventPost($.kCGSessionEventTap, event)
+
+
   doubleClick: ->
     @notUndoable()
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
-    # Meteor.sleep(30)
     $.CGEventPost($.kCGSessionEventTap, up)
-    # Meteor.sleep(30)
     $.CGEventSetIntegerValueField(down, $.kCGMouseEventClickState, 2)
     $.CGEventPost($.kCGSessionEventTap, down)
-    # Meteor.sleep(30)
     $.CGEventSetIntegerValueField(up, $.kCGMouseEventClickState, 2)
     $.CGEventPost($.kCGSessionEventTap, up)
     @delay(@clickDelayRequired())
@@ -289,7 +312,8 @@ class Platforms.osx.actions extends Platforms.base.actions
       command: name
       options: options
 
-    command = """echo "#{JSON.stringify(info).replace(/"/g, '\\"')}" | nc -U /tmp/voicecode-atom.sock"""
+    escaped = JSON.stringify(info).replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+    command = """echo "#{escaped}" | nc -U /tmp/voicecode-atom.sock"""
     console.log command
     @exec command
 
@@ -367,6 +391,19 @@ class Platforms.osx.actions extends Platforms.base.actions
       @_currentApplication = result
       console.log result
       result
+
+  _getCurrentBrowserUrl: ->
+    switch @currentApplication()
+      when "Google Chrome"
+        @applescript 'tell application "Google Chrome" to get URL of active tab of first window'
+      when "Safari"
+        @applescript 'tell application "Safari" to return URL of front document as string'
+
+  currentBrowserUrl: ({reset} = {reset: false}) ->
+    if reset or !@_currentBrowserUrl?
+      @_getCurrentBrowserUrl()
+    else
+      @_currentBrowserUrl
 
   transformSelectedText: (transform) ->
     console.log "transform selected text"

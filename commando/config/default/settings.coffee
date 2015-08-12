@@ -263,7 +263,7 @@ _.extend Settings,
     wink: 1
     soup: 2
     trace: 3
-    quail: 4
+    quarr: 4
     fypes: 5
   passwords:
     example: "password"
@@ -481,6 +481,9 @@ _.extend Settings,
     "Sublime Text": 0
     "Xcode": 100
     "default": 50
+  mouseDwellTracking: false
+  debugMouseDwellTracking: false
+  mouseTrackerFrequency: 120
   locale: "en"
   localeSettings:
     en:

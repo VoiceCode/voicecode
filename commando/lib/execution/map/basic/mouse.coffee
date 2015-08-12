@@ -2,6 +2,7 @@ Commands.createDisabled
   "duke":
     description: "double click"
     tags: ["mouse", "recommended"]
+    mouseLatency: true
     action: ->
       @doubleClick()
   "chipper":
@@ -12,8 +13,15 @@ Commands.createDisabled
   "chiff":
     description: "left click"
     tags: ["mouse", "recommended"]
+    mouseLatency: true
     action: ->
       @click()
+  "chaffin":
+    description: "Latency compensated left click. 'mouseDwellTracking' needs to be enabled for this to work.
+      This allows you to click then move the mouse, and have it still perform the click where the mouse used to be. Only works well with a regular mouse or trackpad (not SmartNav)"
+    tags: ["mouse", "dwelling"]
+    action: ->
+      @clickLocation(mouseTracker.previousLocation())
   "triplick":
     description: "left click"
     tags: ["mouse", "recommended"]
@@ -23,6 +31,7 @@ Commands.createDisabled
     description: "shift+click"
     tags: ["mouse", "recommended"]
     aliases: ["chicks"]
+    mouseLatency: true
     action: ->
       @shiftClick()
   "chom lick":
@@ -47,3 +56,18 @@ Commands.createDisabled
     tags: ["mouse"]
     action: ->
       @mouseUp()
+  "dwelling on":
+    description: "turn on 'dwell clicking' - whenever the mouse stops moving it will do a left click. 'mouseDwellTracking' needs to be enabled for this to work"
+    tags: ["mouse", "dwelling"]
+    action: ->
+      @enableDwellClicking()
+  "dwelling off":
+    description: "turn off 'dwell clicking'"
+    tags: ["mouse", "dwelling"]
+    action: ->
+      @disableDwellClicking()
+  "griffin":
+    description: "makes it so the mouse will click next time it pauses (dwells) - this makes it faster to click sometimes because it eliminates the latency. You would use it when you already know you are going to click but the mouse is still moving toward its destination"
+    tags: ["mouse", "dwelling"]
+    action: ->
+      @dwellClickOnce()

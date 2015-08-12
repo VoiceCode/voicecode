@@ -51,6 +51,20 @@ class Platforms.base.actions
       result = item.call(@)
       return result if result?
 
+  enableDwellClicking: ->
+    @_dwellClickingEnabled = true
+
+  disableDwellClicking: ->
+    @_dwellClickingEnabled = false
+
+  dwellClickOnce: ->
+    @_dwellClickOnce = true
+
+  onDwell: (dwelling) ->
+    if @_dwellClickingEnabled or @_dwellClickOnce
+      @click()
+      @_dwellClickOnce = false
+
   setGlobalMode: (mode) ->
     Commands.mode = mode
 

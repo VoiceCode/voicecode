@@ -169,7 +169,7 @@ Commands.createDisabledWithDefaults
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["pash"]
     spaceBefore: true
-    findable: "'"
+    findable: "''"
     action: ->
       @string "''"
       @key "Left"
@@ -183,7 +183,7 @@ Commands.createDisabledWithDefaults
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["coiffed"]
     description: "inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text"
-    findable: "\""
+    findable: '""'
     spaceBefore: true
     action: ->
       if @canDetermineSelections() and @isTextSelected()

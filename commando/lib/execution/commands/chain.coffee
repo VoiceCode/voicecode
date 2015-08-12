@@ -18,7 +18,10 @@ class Commands.Chain
       result.push item
     result.join('')
   parse: ->
-    @normalizeStructure Parser.parse(@phrase)
+    parsed = Parser.parse(@phrase)
+    commands = @normalizeStructure parsed
+    @applyMouseLatency commands
+    commands
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
@@ -104,6 +107,16 @@ class Commands.Chain
 
   mergeLiteralCommands: (previous, current) ->
     previous.arguments = previous.arguments.concat(current.arguments)
+
+  applyMouseLatency: (commands) ->
+    latencyIndex = 0
+    for current in commands by -1
+      command = Commands.mapping[current.command]
+      if command.mouseLatency
+        current.mouseLatencyIndex = latencyIndex
+        latencyIndex += 1
+    commands
+
 
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD

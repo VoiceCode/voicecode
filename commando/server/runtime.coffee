@@ -40,6 +40,8 @@ if process.platform is "darwin"
         console.log "re-enabling main command socket"
       , Settings.dragonIncompatibleApplicationDelay or 5000
 
+  AppDelegate.addMethod 'windowChanged:', 'v@:@', (self, _cmd, notification) ->
+    console.log notification('object')
 
   # AppDelegate.addMethod 'applicationDidFinishLaunching:', 'v@:@', (self, _cmd, notification) ->
   #   console.log('got applicationDidFinishLauching')
@@ -62,6 +64,7 @@ if process.platform is "darwin"
   app('setDelegate', delegate)
 
   n('addObserver', delegate, 'selector', 'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
+  n('addObserver', delegate, 'selector', 'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
   # app('activateIgnoringOtherApps', true)
   # shared('run')
   # $.NSRunLoop('mainRunLoop')('run')
@@ -265,6 +268,8 @@ if process.platform is "darwin"
   # client.on "data", (data) ->
   #   console.log "dataaaaaa"
   #   console.log data
+
+  # initialize mouse tracking
 
 else if process.platform is "win32"
   @Actions = new Platforms.windows.actions()

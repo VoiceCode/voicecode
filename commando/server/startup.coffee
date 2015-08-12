@@ -34,3 +34,6 @@ Meteor.startup ->
   Commands.reloadGrammar()
   @synchronizer = new Synchronizer()
   synchronizer.synchronize()
+
+  if Settings.mouseDwellTracking
+    @mouseTracker = new MouseTracker().start()
