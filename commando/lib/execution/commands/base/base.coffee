@@ -112,7 +112,7 @@ Commands.loadConditionalModules = (enabledCommands) ->
 
 
 class Commands.Base
-  constructor: (@namespace, @input) ->
+  constructor: (@namespace, @input, @context={}) ->
     @info = Commands.mapping[@namespace]
     @kind = @info.kind or "action"
     @grammarType = @info.grammarType or "individual"
@@ -130,15 +130,8 @@ class Commands.Base
       when "action"
         action = @info.action
         input = @input
-        -> action.call(@, input)
-      when "historic"
-        action = @info.action
-        input = @input
-        context =
-          lastFullCommand: Commands.lastFullCommand
-          lastIndividualCommand: Commands.lastIndividualCommand
-          repetitionIndex: Commands.repetitionIndex
-        -> action.call(@, context, input)
+        context = @generateContext()
+        -> action.call(@, input, context)
     # if @info.override?
     #   override = @info.override
     #   input = @input
@@ -190,6 +183,17 @@ class Commands.Base
     ->
       for segment in segments
         segment?.call(@)
+
+  generateContext: ->
+    context = {}
+    _.extend context, @context
+    if @info.historic
+      _.extend context,
+        lastFullCommand: Commands.lastFullCommand
+        lastIndividualCommand: Commands.lastIndividualCommand
+        repetitionIndex: Commands.repetitionIndex
+    console.log generated: context
+    context
 
   getTriggerPhrase: () ->
     if @info.triggerPhrase is undefined

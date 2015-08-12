@@ -22,8 +22,8 @@ class Platforms.base.actions
       @key "Delete"
 
   # run another command
-  do: (name, input) ->
-    command = new Commands.Base(name, input)
+  do: (name, input, context={}) ->
+    command = new Commands.Base(name, input, context)
     command.generate().call(@)
 
   runCommand: (name, input) ->

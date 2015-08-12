@@ -29,7 +29,7 @@ class Commands.Chain
     console.log "parsed: #{JSON.stringify results}"
     if results?
       combined = _.map(results, (result) ->
-        command = new Commands.Base(result.command, result.arguments)
+        command = new Commands.Base(result.command, result.arguments, result.context)
         individual = command.generate()
         if command.info.ignoreHistory
           Commands.repetitionIndex = 0
@@ -113,7 +113,8 @@ class Commands.Chain
     for current in commands by -1
       command = Commands.mapping[current.command]
       if command.mouseLatency
-        current.mouseLatencyIndex = latencyIndex
+        current.context ?= {}
+        current.context.mouseLatencyIndex = latencyIndex
         latencyIndex += 1
     commands
 

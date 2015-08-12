@@ -3,19 +3,28 @@ Commands.createDisabled
     description: "double click"
     tags: ["mouse", "recommended"]
     mouseLatency: true
-    action: ->
-      @doubleClick()
+    action: (input, context) ->
+      if context.mouseLatencyIndex
+        @doubleClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
+      else
+        @doubleClick()
   "chipper":
     description: "right click"
     tags: ["mouse", "recommended"]
-    action: ->
-      @rightClick()
+    action: (input, context) ->
+      if context.mouseLatencyIndex
+        @rightClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
+      else
+        @rightClick()
   "chiff":
     description: "left click"
     tags: ["mouse", "recommended"]
     mouseLatency: true
-    action: ->
-      @click()
+    action: (input, context) ->
+      if context.mouseLatencyIndex
+        @clickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
+      else
+        @click()
   "chaffin":
     description: "Latency compensated left click. 'mouseDwellTracking' needs to be enabled for this to work.
       This allows you to click then move the mouse, and have it still perform the click where the mouse used to be. Only works well with a regular mouse or trackpad (not SmartNav)"
@@ -32,14 +41,20 @@ Commands.createDisabled
     tags: ["mouse", "recommended"]
     aliases: ["chicks"]
     mouseLatency: true
-    action: ->
-      @shiftClick()
+    action: (input, context) ->
+      if context.mouseLatencyIndex
+        @shiftClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
+      else
+        @shiftClick()
   "chom lick":
     description: "command+click"
     tags: ["mouse"]
     vocabulary: true
-    action: ->
-      @commandClick()
+    action: (input, context) ->
+      if context.mouseLatencyIndex
+        @commandClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
+      else
+        @commandClick()
   "crop lick":
     description: "option+click"
     tags: ["mouse"]

@@ -118,35 +118,23 @@ class Platforms.osx.actions extends Platforms.base.actions
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, up)
 
-  click: ->
+  previousMouseLocation: (index) ->
+    mouseTracker.previousLocation(index or 0)
+
+  click: (position) ->
     @notUndoable()
-    # position = $.NSEvent('mouseLocation')
-    position = @getMousePosition()
-    # console.log position
+    position ?= @getMousePosition()
     @mouseDown(position)
     @mouseUp(position)
     @delay(@clickDelayRequired())
 
-  clickLocation: (pos) ->
-    current = @getMousePosition()
+  clickAtPosition: (pos) ->
+    @moveMouseAndReturn pos, (position) =>
+      @click(position)
 
-    position = if pos?
-      $.CGPointMake(pos.x, pos.y)
-    else
-      @getMousePosition()
-
-    @mouseDown(position)
-    @mouseUp(position)
-    @delay(@clickDelayRequired())
-
-    # move the mouse back
-    event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, current, 0
-    $.CGEventPost($.kCGSessionEventTap, event)
-
-
-  doubleClick: ->
+  doubleClick: (position) ->
     @notUndoable()
-    position = @getMousePosition()
+    position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
@@ -156,6 +144,23 @@ class Platforms.osx.actions extends Platforms.base.actions
     $.CGEventSetIntegerValueField(up, $.kCGMouseEventClickState, 2)
     $.CGEventPost($.kCGSessionEventTap, up)
     @delay(@clickDelayRequired())
+
+  doubleClickAtPosition: (pos) ->
+    @moveMouseAndReturn pos, (position) =>
+      @doubleClick(position)
+
+  moveMouseAndReturn: (pos, action) ->
+    current = @getMousePosition()
+    position = if pos?
+      $.CGPointMake(pos.x, pos.y)
+    else
+      @getMousePosition()
+
+    action(position)
+
+    # move the mouse back
+    event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, current, 0
+    $.CGEventPost($.kCGSessionEventTap, event)
 
   tripleClick: ->
     @notUndoable()
@@ -179,18 +184,22 @@ class Platforms.osx.actions extends Platforms.base.actions
     $.CGEventPost($.kCGSessionEventTap, up)
     @delay(@clickDelayRequired())
 
-  rightClick: ->
+  rightClick: (position) ->
     @notUndoable()
-    position = @getMousePosition()
+    position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseDown, position, $.kCGMouseButtonRight)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseUp, position, $.kCGMouseButtonRight)
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
     @delay(@clickDelayRequired())
 
-  shiftClick: ->
+  rightClickAtPosition: (pos) ->
+    @moveMouseAndReturn pos, (position) =>
+      @rightClick(position)
+
+  shiftClick: (position) ->
     @notUndoable()
-    position = @getMousePosition()
+    position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
@@ -204,9 +213,14 @@ class Platforms.osx.actions extends Platforms.base.actions
     @keyUp "Shift"
     @delay(@clickDelayRequired())
 
-  commandClick: ->
+  shiftClickAtPosition: (pos) ->
+    @moveMouseAndReturn pos, (position) =>
+      @shiftClick(position)
+
+
+  commandClick: (position) ->
     @notUndoable()
-    position = @getMousePosition()
+    position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
@@ -219,6 +233,10 @@ class Platforms.osx.actions extends Platforms.base.actions
     $.CGEventPost($.kCGSessionEventTap, up)
     @keyUp "Command"
     @delay(@clickDelayRequired())
+
+  commandClickAtPosition: (pos) ->
+    @moveMouseAndReturn pos, (position) =>
+      @commandClick(position)
 
   optionClick: ->
     @notUndoable()

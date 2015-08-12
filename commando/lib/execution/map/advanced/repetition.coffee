@@ -1,24 +1,24 @@
 Commands.createDisabled
   "creek":
-    kind: "historic"
     grammarType: "numberCapture"
     description: "repeat last complete spoken phrase [n] times (default 1)"
     tags: ["voicecode", "repetition", "recommended"]
     repeatable: true
-    action: (context, input) ->
+    historic: true
+    action: (input, context) ->
       previous = context.lastFullCommand
       if previous
         for i in [1..(input or 1)]
           _.each previous, (command) =>
             command.call(@)
   "repple":
-    kind: "historic"
     grammarType: "numberCapture"
     repeater: "variable"
     description: "Repeats an individual command component. Right after any command say [repple X] to repeat it X times"
     tags: ["voicecode", "repetition", "recommended"]
     ignoreHistory: true
-    action: (context, input) ->
+    historic: true
+    action: (input, context) ->
       times = parseInt(input)
       if times?
         times = if context.repetitionIndex is 0
@@ -36,13 +36,13 @@ class @Repetition
   build: ->
     _.each @words, (value, key) ->
       Commands.createDisabled key,
-        kind: "historic"
         repeater: value
         repeatable: true
         description: "repeat last individual command times [#{value}]"
         ignoreHistory: true
+        historic: true
         tags: ["voicecode", "repetition", "recommended"]
-        action: (context, input) ->
+        action: (input, context) ->
           times = if context.repetitionIndex is 0
             value
           else
