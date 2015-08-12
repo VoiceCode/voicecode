@@ -11,6 +11,7 @@ Commands.createDisabled
   "chipper":
     description: "right click"
     tags: ["mouse", "recommended"]
+    mouseLatency: true
     action: (input, context) ->
       if context.mouseLatencyIndex
         @rightClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
@@ -50,6 +51,7 @@ Commands.createDisabled
     description: "command+click"
     tags: ["mouse"]
     vocabulary: true
+    mouseLatency: true
     action: (input, context) ->
       if context.mouseLatencyIndex
         @commandClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)

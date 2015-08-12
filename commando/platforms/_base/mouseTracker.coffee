@@ -1,6 +1,6 @@
 class @MouseTracker
   constructor: () ->
-    @frequency = Settings.mouseTrackerFrequency or 120
+    @frequency = Settings.mouseTrackerFrequency or 100
     @dwellings = []
     @lastFixedPoint = {x: 0, y: 0}
     @potential = false

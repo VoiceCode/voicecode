@@ -298,7 +298,7 @@ _.extend Settings,
     quinn: "codeSnippets"
   commonSequences:
     brax: w 'coif, posh'
-    chiff: w 'olly, junk, jolt, shock, junk, spunk, swipe, dot, shockey'
+    chiff: w 'olly, junk, jolt, shock, junk, spunk, swipe, dot, shockey, shicks, chiff'
     chris: w 'swipe, spunk, snipper, criffed, cram, snake'
     coalgap: w 'cram, criffed, snake, coif, posh'
     coif: w 'spark'
@@ -306,7 +306,13 @@ _.extend Settings,
     crimp: w 'junk, skoosh, swipe, criffed, cram, snake'
     doom: w 'shabble, shabber, shroom, switchy, switcho, shockoon, snipline'
     dot: w 'spark, cram, criffed, snake, smash'
-    duke: w 'snipper, snipple, ricksy, junk, cram, criffed, snatch'
+    duke: w 'snipper, snipple, ricksy, junk, cram, criffed, snatch, shicks'
+    dookoosh: w 'doopark, dookoosh'
+    doopark: w 'doopark'
+    chibble: w 'shicks'
+    chibloosh: w 'chiblark, chibloosh, doopark'
+    chiblark: w 'chiblark, chibloosh'
+    "chom lick": w 'chom lick'
     jeep: w 'shabble, shabber, shreep, switchy, switcho'
     jeep: w 'shock, shockey, snipline'
     junk: w 'spunk, spark'
@@ -483,7 +489,7 @@ _.extend Settings,
     "default": 50
   mouseDwellTracking: false
   debugMouseDwellTracking: false
-  mouseTrackerFrequency: 120 #ms
+  mouseTrackerFrequency: 100 #ms
   locale: "en"
   localeSettings:
     en:
