@@ -478,10 +478,14 @@ _.extend Settings,
     "Sublime Text"
     "Terminal"
     "WebStorm"
+    "DrRacket"
+    "Firefox"
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"
+    "Parallels Access"
     "iOS Simulator"
+    "Anki"
   ]
   clickDelayRequired:
     "Sublime Text": 0
