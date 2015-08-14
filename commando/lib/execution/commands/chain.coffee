@@ -77,8 +77,8 @@ class Commands.Chain
     _.each commands, (current) =>
       command = Commands.mapping[current.command]
       previous = _.last(results)
-      if command.triggerScopes?.length
-        if Actions.currentApplication() in command.triggerScopes
+      if @needsCustomScope(command)
+        if @customScopeActive(command)
           results.push current
         else
           if previous
@@ -94,6 +94,23 @@ class Commands.Chain
         if Actions.commandPermitted current.command
           results.push current
     results
+
+  needsCustomScope: (command) ->
+    command.triggerScopes?.length or command.when?
+
+  customScopeActive: (command) ->
+    active = true
+    if command.triggerScopes?.length
+      active = Actions.currentApplication() in command.triggerScopes
+    if active
+      if command.when?
+        result = command.when.call(Actions)
+        console.log result: result
+        result
+      else
+        active
+    else
+      active
 
   mergeTextualCommands: (previous, current) ->
     previous.arguments ?= []

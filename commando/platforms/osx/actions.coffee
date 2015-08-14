@@ -59,9 +59,6 @@ class Platforms.osx.actions extends Platforms.base.actions
       @_keyUp code, @_normalizeModifiers(modifiers)
 
   _keyDown: (key, modifiers) ->
-    # console.log
-    #   keydown: key
-    #   modifiers: modifiers
     e = $.CGEventCreateKeyboardEvent(null, key, true)
     if modifiers?.length
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
@@ -70,9 +67,6 @@ class Platforms.osx.actions extends Platforms.base.actions
     $.CGEventPost($.kCGSessionEventTap, e)
 
   _keyUp: (key, modifiers) ->
-    # console.log
-    #   keyup: key
-    #   modifiers: modifiers
     e = $.CGEventCreateKeyboardEvent(null, key, false)
     if modifiers
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
@@ -409,12 +403,10 @@ class Platforms.osx.actions extends Platforms.base.actions
 
   currentApplication: ->
     if @_currentApplication
-      console.log @_currentApplication
       @_currentApplication
     else
       w = $.NSWorkspace('sharedWorkspace')
       app = w('frontmostApplication')
-      # app = w('menuBarOwningApplication')
       result = app('localizedName').toString()
       @_currentApplication = result
       console.log result
@@ -423,12 +415,12 @@ class Platforms.osx.actions extends Platforms.base.actions
   _getCurrentBrowserUrl: (cb) ->
     switch @currentApplication()
       when "Google Chrome"
-        @exec """osascript <<EOD
+        Execute """osascript <<EOD
         tell application "Google Chrome" to get URL of active tab of first window
         EOD
         """, cb
       when "Safari"
-        @exec """osascript <<EOD
+        Execute """osascript <<EOD
         tell application "Safari" to return URL of front document as string
         EOD
         """, cb
@@ -436,14 +428,21 @@ class Platforms.osx.actions extends Platforms.base.actions
   currentBrowserUrl: ({reset} = {reset: false}) ->
     if reset or !@_currentBrowserUrl?
       # refresh in bg
-      @_getCurrentBrowserUrl (url) =>
+      @_getCurrentBrowserUrl (code, url) =>
+        console.log url: url
         @_currentBrowserUrl = url
       @_currentBrowserUrl
     else
       @_currentBrowserUrl
 
+  urlContains: (url) ->
+    console.log current: @_currentBrowserUrl, actual: url
+    @_currentBrowserUrl?.indexOf(url) != -1
+
+  urlIs: (url) ->
+    @_currentBrowserUrl is url
+
   transformSelectedText: (transform) ->
-    console.log "transform selected text"
     switch @currentApplication()
       when "Atom"
         @runAtomCommand "transformSelectedText", transform
@@ -538,9 +537,6 @@ class Platforms.osx.actions extends Platforms.base.actions
     @waitForClipboard()
     result = @getClipboard()
     @setClipboard(old)
-    # console.log
-    #   oldClipboard: old
-    #   newClipboard: result
     result
 
   waitForClipboard: ->
@@ -555,9 +551,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     @key "C", ["command"]
     @delay 100
     clipboard = @getClipboard()
-    console.log clipboard
     numberOfLines = clipboard.split("\r").length
-    console.log numberOfLines
     _(number).times => @key "Up"
     _(numberOfLines + (number * 2) - 1).times => @key "Down", ['shift']
 
@@ -889,8 +883,6 @@ class Platforms.osx.actions extends Platforms.base.actions
 
     @key horizontalBackward
 
-    console.log results: results
-
     if results[distance]?
       span = results[distance][1] - results[distance][0]
       _(results[distance][0]).times =>
@@ -906,7 +898,6 @@ class Platforms.osx.actions extends Platforms.base.actions
     else
       ""
     match = clipboard.match(/\r/g)
-    console.log match
     numberOfLines = (match?.length or 0) + 1
     if clipboard.charAt(clipboard.length - 1).match(/\r/)
       numberOfLines -= 1
@@ -925,7 +916,6 @@ class Platforms.osx.actions extends Platforms.base.actions
     else
       @key 'Left', 'command shift'
     content = @getSelectedText()
-    console.log content: content
     components = SelectionTransformer.uncamelize(content).split(" ")
     if direction is "left"
       components = components.reverse()
@@ -939,7 +929,6 @@ class Platforms.osx.actions extends Platforms.base.actions
           foundContent = true
 
     chosenComponents = components.splice(0, distance + spacePadding)
-    console.log chosen: chosenComponents
     characters = chosenComponents.join('').length + spacePadding
     if direction is "right"
       @key 'Left'

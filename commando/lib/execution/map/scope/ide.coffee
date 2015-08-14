@@ -66,14 +66,15 @@ Commands.createDisabled
 
   "bracken":
     description: "expand selection to quotes, parens, braces, or brackets"
-    tags: ["sublime"]
+    tags: ["sublime", "atom"]
     triggerScopes: ["Atom", "Sublime Text"]
     action: (input) ->
       switch @currentApplication()
         when "Sublime Text"
           @key "S", 'control command option'
         when "Atom"
-          @runAtomCommand "trigger", "expand-selection:expand"
+          # @runAtomCommand "trigger", "expand-selection-to-quotes:toggle"
+          @key "'", 'control'
 
   "selrang":
     grammarType: "numberCapture"
