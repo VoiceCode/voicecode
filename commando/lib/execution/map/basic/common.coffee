@@ -97,32 +97,6 @@ Commands.createDisabled
     tags: ["selection", "recommended"]
     action: ->
       @key "A", "command"
-  "sparky":
-    description: "paste the alternate clipboard"
-    tags: ["copy-paste"]
-    action: ->
-      @key "V", "command shift"
-  "allspark":
-    description: "select all then paste the clipboard"
-    tags: ["copy-paste", "selection", "recommended"]
-    action: ->
-      @key "A", "command"
-      @key "V", "command"
-  "spark":
-    grammarType: "oneArgument"
-    description: "paste the clipboard (or named item from stoosh command)"
-    aliases: ["sparked"]
-    tags: ["copy-paste", "recommended"]
-    spaceBefore: true
-    action: (input) ->
-      if input?
-        previous = @retrieveClipboardWithName(input)
-        if previous?.length
-          @setClipboard(previous)
-          @delay 50
-          @key "V", "command"
-      else
-        @key "V", "command"
   "sage":
     description: "file > save"
     tags: ["application", "recommended"]
@@ -134,34 +108,6 @@ Commands.createDisabled
     action: ->
       @key "S", "command"
       @key "Tab", "command"
-  "stooshwick":
-    description: "copy whatever is selected then switch applications"
-    tags: ["copy-paste", "application", "system", "combo", "recommended"]
-    action: ->
-      @key "C", "command"
-      @key "Tab", "command"
-      @delay 250
-  "stoosh":
-    grammarType: "oneArgument"
-    description: "copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via `spark [name]`)"
-    tags: ["copy-paste", "recommended"]
-    action: (input) ->
-      @key "C", "command"
-      if input?
-        @waitForClipboard()
-        @storeCurrentClipboardWithName(input)
-  "allstoosh":
-    description: "select all then copy whatever is selected"
-    tags: ["copy-paste", "selection", "recommended"]
-    action: ->
-      @key "A", "command"
-      @key "C", "command"
-  "snatch":
-    description: "cut whatever is selected"
-    tags: ["copy-paste", "recommended"]
-    aliases: ["snatched"]
-    action: ->
-      @key "X", "command"
   "totch":
     description: "close a window or tab"
     tags: ["application", "window", "recommended"]

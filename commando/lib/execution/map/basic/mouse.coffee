@@ -95,4 +95,4 @@ Commands.createDisabled
     description: "makes it so the mouse will click next time it pauses (dwells) - this makes it faster to click sometimes because it eliminates the latency. You would use it when you already know you are going to click but the mouse is still moving toward its destination"
     tags: ["mouse", "dwelling"]
     action: ->
-      @dwellClickOnce()
+      @dwellClickOnce()    

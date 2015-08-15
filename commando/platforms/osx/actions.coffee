@@ -385,9 +385,12 @@ class Platforms.osx.actions extends Platforms.base.actions
 
   openApplication: (name) ->
     @notUndoable()
-    string = $.NSString('stringWithUTF8String', name)
-    w = $.NSWorkspace('sharedWorkspace')
-    w('launchApplication', string)
+    if name in Settings.applicationsThatNeedLaunchingWithApplescript
+      @applescript "tell application \"#{name}\" to activate"
+    else
+      string = $.NSString('stringWithUTF8String', name)
+      w = $.NSWorkspace('sharedWorkspace')
+      w('launchApplication', string)
 
   openBrowser: ->
     @notUndoable()

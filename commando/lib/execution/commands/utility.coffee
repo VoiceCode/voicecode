@@ -59,14 +59,14 @@ Commands.Utility =
       Commands.mapping[key].module is module
     )
 
-  getUsedOptionLists: ->
+  getUsedOptionLists: ({filtered}={filtered: true}) ->
     lists = {}
 
     for name in Commands.Utility.customCommandNames()
       command = new Commands.Base(name, null)
       for listName in command.listNames()
         unless listName in lists
-          lists[listName] = Settings.getSpokenOptionsForList(listName)
+          lists[listName] = Settings.getSpokenOptionsForList(listName, filtered)
     lists
 
   documentationReport: ->

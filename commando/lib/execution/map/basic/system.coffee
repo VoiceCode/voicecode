@@ -35,10 +35,7 @@ Commands.createDisabled
     description: "set the size/position of the frontmost window to one of the preset sizes/positions"
     aliases: ["wendy"]
     tags: ["system", "window", "recommended"]
-    # rule: "screen:(one / two / to)? position:(textArgument)? {return {command: 'windy', arguments: {screen: screen, position: position}};}"
-    # rule: "windy (//screen//) (//position//) /!Text!/"
     action: ({digits, windowPositions}) ->
-      console.log arguments
       if digits? or windowPositions?
         preset = windowPositions or Settings.windowPositions['middle']
         screenInfo = @getScreenInfo()

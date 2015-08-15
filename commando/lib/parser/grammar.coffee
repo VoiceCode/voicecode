@@ -392,11 +392,11 @@ class @Grammar
     first.join(" ") + " " + "{return {command: '#{name}', arguments: {#{returnObject}}};}"
 
   customLists: ->
-    _.map(Commands.Utility.getUsedOptionLists(), @buildCustomList).join("\n")
+    _.map(Commands.Utility.getUsedOptionLists(filtered: false), @buildCustomList).join("\n")
 
   buildCustomList: (items, name) ->
     sorted = _.sortBy(items, (e) -> e).reverse()
     itemString = _.map sorted, (item) ->
       "\"#{item}\""
     .join " / "
-    "_#{name} = value:(#{itemString}) ss {return Settings.#{name}[value];}"
+    "_#{name} = value:(#{itemString}) ss {return Settings.value('#{name}', value);}"

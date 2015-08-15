@@ -2,7 +2,7 @@ Commands.createDisabled
   "shrink":
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
-    tags: ["text"]
+    tags: ["text", "snippet"]
     action: (input) ->
       if input?.length
         result = @fuzzyMatch Settings.abbreviations, input.join(' ')
@@ -10,7 +10,7 @@ Commands.createDisabled
   "quinn":
     grammarType: "textCapture"
     description: "inserts an IDE code snippet"
-    tags: ["text"]
+    tags: ["text", "snippet"]
     action: (input) ->
       if input?.length
         snippet = @fuzzyMatch Settings.codeSnippets, input.join(" ")
@@ -21,7 +21,7 @@ Commands.createDisabled
   "trassword":
     grammarType: "textCapture"
     description: "inserts a password from the predefined passwords list"
-    tags: ["text", "utility"]
+    tags: ["text", "snippet"]
     action: (input) ->
       if input?.length
         result = @fuzzyMatch Settings.passwords, input.join(' ')
@@ -29,7 +29,7 @@ Commands.createDisabled
   "treemail":
     grammarType: "textCapture"
     description: "inserts an email from the predefined emails list"
-    tags: ["text", "utility"]
+    tags: ["text", "snippet"]
     action: (input) ->
       if input?.length
         result = @fuzzyMatch Settings.emails, input.join(' ')
@@ -37,7 +37,7 @@ Commands.createDisabled
   "trusername":
     grammarType: "textCapture"
     description: "inserts a username from the predefined usernames list"
-    tags: ["text", "utility"]
+    tags: ["text", "snippet"]
     action: (input) ->
       if input?.length
         result = @fuzzyMatch Settings.usernames, input.join(' ')

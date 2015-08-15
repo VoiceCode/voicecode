@@ -11,17 +11,9 @@ class @Vocabulary
       @alternate = {}
       @repeatable = []
       @spaceBefore = []
-      @loadCommands()
       @loadCommandVocabulary()
       @loadVocabulary()
       @checkVocabulary()
-  loadCommands: ->
-    _.each @commandNames, (name) ->
-      Commands.create name,
-        description: "Enters the word: #{name}"
-        grammarType: "none"
-        tags: ['word']
-  commandNames: -> []
   loadCommandVocabulary: ->
     for key, value of Commands.mapping
       if value.vocabulary is true

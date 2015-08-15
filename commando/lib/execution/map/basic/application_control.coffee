@@ -11,6 +11,12 @@ Commands.createDisabled
     action: ->
       @key " ", 'option'
       @delay 100
+  "spotty":
+    description: "open spotlight"
+    tags: ["application", "system", "launching"]
+    action: ->
+      @key " ", 'command'
+      @delay 100
   "foxwitch":
     description: "open application switcher"
     tags: ["application", "system", "launching", "tab", "recommended"]
@@ -31,8 +37,10 @@ Commands.createDisabled
   "fox":
     description: "open application"
     tags: ["application", "system", "launching", "recommended"]
-    grammarType: "textCapture"
-    action: (name) ->
-      if name?.length
-        application = @fuzzyMatch Settings.applications, name
-        @openApplication application
+    grammarType: "custom"
+    rule: '(applications)'
+    action: ({applications}) ->
+      if applications?
+        @openApplication applications
+      else
+        @do "launcher"

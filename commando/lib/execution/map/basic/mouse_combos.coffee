@@ -10,7 +10,7 @@ Commands.createDisabled
   "dookoosh":
     grammarType: "oneArgument"
     description: "mouse double click, then copy"
-    tags: ["mouse", "combo", "recommended"]
+    tags: ["mouse", "combo", "recommended", "clipboard"]
     mouseLatency: true
     action: (input, context) ->
       @do "duke", input, context
@@ -18,7 +18,7 @@ Commands.createDisabled
   "doopark":
     grammarType: "oneArgument"
     description: "mouse double click, then paste"
-    tags: ["mouse", "combo"]
+    tags: ["mouse", "combo", "clipboard"]
     mouseLatency: true
     action: (input, context) ->
       @do "duke", input, context
@@ -26,7 +26,7 @@ Commands.createDisabled
   "chiffpark":
     grammarType: "oneArgument"
     description: "mouse single click, then paste"
-    tags: ["mouse", "combo", "recommended"]
+    tags: ["mouse", "combo", "recommended", "clipboard"]
     mouseLatency: true
     action: (input, context) ->
       @do "chiff", input, context
@@ -34,21 +34,21 @@ Commands.createDisabled
   "shackloosh":
     grammarType: "oneArgument"
     description: "select entire line, then copy"
-    tags: ["selection", "copy-paste", "combo"]
+    tags: ["selection", "combo", "clipboard"]
     action: (input) ->
       @do "shackle"
       @do "stoosh", input
   "shacklark":
     grammarType: "oneArgument"
     description: "select entire line, then paste"
-    tags: ["selection", "copy-paste", "combo"]
+    tags: ["selection", "combo", "clipboard"]
     action: (input) ->
       @do "shackle"
       @do "spark", input
   "chibloosh":
     grammarType: "oneArgument"
     description: "select entire line, then copy"
-    tags: ["selection", "copy-paste", "combo"]
+    tags: ["selection", "combo", "clipboard"]
     mouseLatency: true
     action: (input, context) ->
       @do "chibble", input, context
@@ -56,7 +56,7 @@ Commands.createDisabled
   "chiblark":
     grammarType: "oneArgument"
     description: "select entire line, then paste"
-    tags: ["selection", "copy-paste", "combo"]
+    tags: ["selection", "combo", "clipboard"]
     mouseLatency: true
     action: (input, context) ->
       @do "chibble", input, context

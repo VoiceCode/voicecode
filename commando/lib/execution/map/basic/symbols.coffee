@@ -111,11 +111,6 @@ Commands.createDisabledWithDefaults
     action: ->
       @string "{}"
       @key "Left"
-  # "dekirk":
-  #   findable: "{}"
-  #   action: ->
-  #     @string " {}"
-  #     @key "Left"
   "kirblock":
     action: ->
       @string "{}"
@@ -131,16 +126,6 @@ Commands.createDisabledWithDefaults
       else
         @string "  "
         @key "Left"
-  # "deprex":
-  #   findable: "()"
-  #   action: ->
-  #     @string " ()"
-  #     @key "Left"
-  # "debrax":
-  #   findable: "[]"
-  #   action: ->
-  #     @string " []"
-  #     @key "Left"
   "minquall":
     findable: " -= "
     action: ->
@@ -173,12 +158,6 @@ Commands.createDisabledWithDefaults
     action: ->
       @string "''"
       @key "Left"
-  # "deeposh":
-  #   tags: ["symbol", "quotes", "recommended"]
-  #   findable: "'"
-  #   action: ->
-  #     @string " ''"
-  #     @key "Left"
   "coif":
     tags: ["symbol", "quotes", "recommended"]
     aliases: ["coiffed"]
@@ -192,12 +171,6 @@ Commands.createDisabledWithDefaults
       else
         @string '""'
         @key "Left"
-  # "decoif":
-  #   tags: ["symbol", "quotes", "recommended"]
-  #   findable: "\""
-  #   action: ->
-  #     @string ' ""'
-  #     @key "Left"
   "shrocket":
     findable: " => "
     action: ->
@@ -246,10 +219,6 @@ Commands.createDisabledWithDefaults
     spaceBefore: true
     action: ->
       @string "@"
-  # "deloco":
-  #   findable: " @"
-  #   action: ->
-  #     @string " @"
   "amper":
     findable: "&"
     action: ->
@@ -408,7 +377,6 @@ Commands.createDisabledWithDefaults
       @string "`"
   "caret":
     findable: "^"
-    # aliases: ["^"]
     action: ->
       @string "^"
   "pixel":

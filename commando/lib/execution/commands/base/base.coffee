@@ -192,7 +192,6 @@ class Commands.Base
         lastFullCommand: Commands.lastFullCommand
         lastIndividualCommand: Commands.lastIndividualCommand
         repetitionIndex: Commands.repetitionIndex
-    console.log generated: context
     context
 
   getTriggerPhrase: () ->

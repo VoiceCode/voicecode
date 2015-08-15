@@ -16,17 +16,28 @@ Settings.extend = (key, map) ->
 Settings.addContext = (determiningFunction) ->
   Settings.contextChain.unshift determiningFunction
 
-Settings.getSpokenOptionsForList = (listName) ->
+Settings.getSpokenOptionsForList = (listName, filtered=true) ->
   list = Settings[listName]
   if list?
     if Object.prototype.toString.call(list) is '[object Array]'
-      _.filter list, (item) ->
-        item[0] != "_"
+      if filtered
+        _.filter list, (item) ->
+          item[0] != "_"
+      else
+        _.map list, (item) ->
+          item.replace("_", '')
     else if typeof list is "object"
-      _.filter _.keys(list), (item) ->
-        item[0] != "_"
+      if filtered
+        _.filter _.keys(list), (item) ->
+          item[0] != "_"
+      else
+        _.map _.keys(list), (item) ->
+          item.replace("_", '')
   else
     []
+
+Settings.value = (listName, value) ->
+  Settings[listName][value] or Settings[listName]["_#{value}"]
 
 w = (commaSeparatedString) ->
   commaSeparatedString.split(/, |\n/)
@@ -47,7 +58,7 @@ _.extend Settings,
     "app store": "App Store"
     activity: "Activity Monitor"
     atom: "Atom"
-    _adam: "Atom" # an alias - t's not what we want to train dragon to hear, but if it hears it, still trigger this item.
+    _adam: "Atom" # an alias - it's not what we want to train dragon to hear, but if it hears it, still trigger this item.
     automate: "Automator"
     calendar: "Calendar"
     chrome: "Google Chrome"
@@ -486,6 +497,9 @@ _.extend Settings,
     "Parallels Access"
     "iOS Simulator"
     "Anki"
+  ]
+  applicationsThatNeedLaunchingWithApplescript: [
+    "Atom"
   ]
   clickDelayRequired:
     "Sublime Text": 0
