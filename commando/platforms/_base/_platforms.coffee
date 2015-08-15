@@ -1,15 +1,16 @@
 @Platforms =
-	base: {}
-	osx: {}
-	windows: {}
-	linux: {}
-	android: {}
-	ios: {}
+  base: {}
+  osx: {}
+  windows: {}
+  linux: {}
+  android: {}
+  ios: {}
 
 # base actions shared by each platform
 class Platforms.base.actions
   constructor: () ->
     @storage = {}
+    @_storedClipboard ?= {}
   stop: () ->
     @extensionsStopped = true
   setUndoByDeleting: (amount) ->
@@ -71,19 +72,13 @@ class Platforms.base.actions
   getGlobalMode: ->
     Commands.mode
 
-  retrieveClipboardWithName: (name) ->
-    @_storedClipboard ?= {}
-    @_storedClipboard[name]
+  storeItem: (namespace, itemName, item) ->
+    @_storage[namespace] ?= {}
+    @_storage[namespace][itemName] = item
 
-  storeCurrentClipboardWithName: (name) ->
-    @_storedClipboard ?= {}
-    @_storedClipboard[name] = @getClipboard()
-
-  startTextCapture: (callback) ->
-    @_capturedText = ""
-    @_capturingText = true
-    @_captureTextCallback = callback
-
+  getStoredItem: (namespace, itemName) ->
+    @_storage[namespace]?[itemName]
+    
   normalizeTextArray: (textArray) ->
     results = []
     _.each textArray, (item) ->

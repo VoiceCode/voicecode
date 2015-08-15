@@ -4,8 +4,8 @@ class Platforms.osx.actions extends Platforms.base.actions
     if @inBrowser()
       @monitorBrowserUrl(true)
     else
-      @monitorBrowserUrl(false)      
-      
+      @monitorBrowserUrl(false)
+
   inBrowser: ->
     @_currentApplication in ["Safari", "Google Chrome"]
 
@@ -319,6 +319,7 @@ class Platforms.osx.actions extends Platforms.base.actions
 
   applescript: (content, shouldReturn=true) ->
     @notUndoable()
+    console.log applescript: content
     script = $.NSAppleScript('alloc')('initWithSource', $(content))
     results = script('executeAndReturnError', null)
     if shouldReturn

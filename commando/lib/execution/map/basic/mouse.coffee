@@ -39,7 +39,7 @@ Commands.createDisabled
         previous = @previousMouseLocation(2)
 
       @clickAtPosition previous
-      
+
   "triplick":
     description: "left click"
     tags: ["mouse", "recommended"]
@@ -95,4 +95,17 @@ Commands.createDisabled
     description: "makes it so the mouse will click next time it pauses (dwells) - this makes it faster to click sometimes because it eliminates the latency. You would use it when you already know you are going to click but the mouse is still moving toward its destination"
     tags: ["mouse", "dwelling"]
     action: ->
-      @dwellClickOnce()    
+      @dwellClickOnce()
+  "store mouse position":
+    description: "store current mouse position to the clipboard, so that you can paste it elsewhere. If an argument is spoken, it stores to the named clipboard"
+    tags: ["clipboard", "mouse", "snippet"]
+    grammarType: "textCapture"
+    continuous: false
+    action: (input) ->
+      position = @getMousePosition()
+      flattened = JSON.stringify
+        x: position.x
+        y: position.y
+      @setClipboard flattened
+      if input?.length
+        @storeItem "clipboard", input.join(' '), flattened

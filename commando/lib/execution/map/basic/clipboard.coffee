@@ -7,7 +7,7 @@ Commands.createDisabled
     spaceBefore: true
     action: (input) ->
       if input?
-        previous = @retrieveClipboardWithName(input)
+        previous = @getStoredItem("clipboard", input)
         if previous?.length
           @setClipboard(previous)
           @delay 50
@@ -47,7 +47,7 @@ Commands.createDisabled
       @key "C", "command"
       if input?
         @waitForClipboard()
-        @storeCurrentClipboardWithName(input)
+        @storeItem("clipboard", input, @getClipboard())
   "allstoosh":
     description: "select all then copy whatever is selected"
     tags: ["clipboard", "selection", "recommended"]

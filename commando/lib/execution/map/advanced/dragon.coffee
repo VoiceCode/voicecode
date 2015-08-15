@@ -12,6 +12,7 @@ Commands.createDisabled
   "restart dragon":
     description: "restarts Dragon Dictate"
     tags: ["dragon", "recommended"]
+    continuous: false
     action: (input) ->
       dictateName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
       @applescript """
@@ -19,6 +20,24 @@ Commands.createDisabled
       delay 2
       tell application "#{dictateName}" to activate
       """, false
+
+  "show dragon vocab":
+    description: "switch to Dragon Dictate, and open vocabulary window"
+    tags: ["dragon", "recommended"]
+    continuous: false
+    action: (input) ->
+      @openApplication "Dragon Dictate"
+      @delay 300
+      @openMenuBarPath ["Tools", "Vocabulary Editor…"]
+
+  "show dragon commands":
+    description: "switch to Dragon Dictate, and open commands window"
+    tags: ["dragon", "recommended"]
+    continuous: false
+    action: (input) ->
+      @openApplication "Dragon Dictate"
+      @delay 300
+      @openMenuBarPath ["Tools", "Commands…"]
 
 Commands.createWithDefaults
   kind: "none"
