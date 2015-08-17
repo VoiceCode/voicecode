@@ -103,9 +103,7 @@ Commands.createDisabled
     continuous: false
     action: (input) ->
       position = @getMousePosition()
-      flattened = JSON.stringify
-        x: position.x
-        y: position.y
+      flattened = "x: #{position.x}, y: #{position.y}"
       @setClipboard flattened
       if input?.length
         @storeItem "clipboard", input.join(' '), flattened

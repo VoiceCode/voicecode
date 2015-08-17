@@ -50,6 +50,7 @@ mizzao:timesync@0.3.3
 mobile-status-bar@1.0.3
 mongo@1.1.0
 mongo-livedata@1.0.8
+mousetrap:mousetrap@1.4.6_1
 mrt:moment@2.8.1
 mrt:timestamp@0.1.1
 natestrauser:font-awesome@4.3.0

@@ -52,6 +52,15 @@ Template.Commands.created = ->
     Session.set "commandTag.current", "all"
     Session.set "commands.inScope", _.keys(Commands.mapping)
 
+  Mousetrap.bind "e n a b l e d", ->
+    Session.set "enabledDisabledToggle", "enabled"
+  Mousetrap.bind "d i s a b l e d", ->
+    Session.set "enabledDisabledToggle", "disabled"
+  Mousetrap.bind ["a l l", "command+a"], (e) ->
+    e.preventDefault()
+    Session.set "enabledDisabledToggle", "all"
+    false
+
 Template.CommandSummaryRow.helpers
   isAction: ->
     (Commands.mapping[@].kind or "action") is "action"

@@ -133,6 +133,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     @delay(@clickDelayRequired())
 
   clickAtPosition: (pos) ->
+    console.log "clicking at", pos
     @moveMouseAndReturn pos, (position) =>
       @click(position)
 

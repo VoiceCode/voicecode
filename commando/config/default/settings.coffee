@@ -64,18 +64,21 @@ _.extend Settings,
     chrome: "Google Chrome"
     dragon: "Dragon Dictate"
     finder: "Finder"
+    firefox: "Firefox"
+    illustrator: "Adobe Illustrator"
     logic: "Logic Pro X"
     mail: "Mail"
     message: "Messages"
-    page: "Pages"
+    pages: "Pages"
     parallels: "Parallels Desktop"
     password: "1Password"
     preview: "Preview"
     quicktime: "QuickTime Player"
-    robo: "Robomongo"
     safari: "Safari"
-    shop: "Adobe Photoshop CC 2014"
+    photoshop: "Adobe Photoshop"
+    simulator: "iOS Simulator"
     skype: "Skype"
+    smartnav: "SmartNav"
     sublime: "Sublime Text"
     system: "System Preferences"
     term: "iTerm"
@@ -83,7 +86,6 @@ _.extend Settings,
     tune: "iTunes"
     web: "Google Chrome"
     xcode: "Xcode"
-    simulator: "iOS Simulator"
   abbreviations:
     "inc.": "inc"
     administrator: "admin"
@@ -123,6 +125,8 @@ _.extend Settings,
     document: "doc"
     environment: "env"
     execute: "exec"
+    extension: "ext"
+    extend: "ext"
     favorite: "fav"
     function: "func"
     image: "img"
@@ -574,6 +578,12 @@ _.extend Settings,
       fox
       """
     all: ["strict off"] # nothing is allowed except disabling strict mode
+  homonyms: [
+    
+    w "there, their, they're"
+    w "are, our, hour"
+    w "ad, add"
+  ]
 
 # tens =
 #   ten: 10

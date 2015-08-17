@@ -13,3 +13,21 @@ Commands.createDisabled
     action: (input) ->
       if input
         @string Transforms.pluckThree(input)
+  "cyclom":
+    grammarType: "oneArgument"
+    tags: ["text"]
+    description: "if text is selected, will rotate through homonyms. If argument is spoken, will print next homonym of argument"
+    action: (input) ->
+      if input
+        other = Homonyms.next input
+        if other?
+          @string other
+      else
+        if @isTextSelected()
+          contents = @getSelectedText()?.toLowerCase()
+          if contents?.length
+            transformed = Homonyms.next contents
+            if transformed?
+              @string transformed
+              for i in [1..transformed.length]
+                @key 'Left', 'shift'

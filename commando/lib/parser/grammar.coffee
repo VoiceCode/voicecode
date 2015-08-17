@@ -152,7 +152,7 @@ class @Grammar
     #{@customLists()}
 
     overrideCommand
-     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger)
+     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger / )
      {
       if (isNaN(keeperRight)) {
         return keeperRight;
@@ -272,6 +272,7 @@ class @Grammar
       oneArgumentIdentifierContinuous /
       singleSearchIdentifierContinuous /
       overrideIdentifier /
+      modifierIdentifier /
       modifierPrefix
     ) s {return id;}
 
@@ -348,8 +349,11 @@ class @Grammar
       phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
       {return phonemes.join('');}
 
+    modifierIdentifier
+      = prefix:modifierPrefix ss suffix:modifierSuffix {return prefix + " " + suffix;}
+
     modifierCommand
-      = prefix:modifierPrefix ss suffix:modifierSuffix ss {return {command: prefix + " " + suffix};}
+      = identifier:modifierIdentifier ss {return {command: identifier};}
 
     modifierPrefix = #{@modifierPrefixes()}
     modifierSuffix = #{@modifierSuffixes()}

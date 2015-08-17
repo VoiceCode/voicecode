@@ -45,6 +45,7 @@ class Platforms.base.actions
         m.charAt(0).toUpperCase() + m.slice(1)
 
   setCurrentApplication: (application) ->
+    console.log currentApplication: application
     @_currentApplication = application
 
   context: ->
