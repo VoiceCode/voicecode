@@ -502,6 +502,9 @@ _.extend Settings,
     "iOS Simulator"
     "Anki"
   ]
+  modifierKeyDelay: 2 # ms
+  keyDelay: 8 # ms delay between each key when called individually, like Return, UpArrow, etc.
+  characterDelay: 4 # ms delay between each letter when typing a string of characters
   applicationsThatNeedLaunchingWithApplescript: [
     "Atom"
   ]
@@ -579,7 +582,7 @@ _.extend Settings,
       """
     all: ["strict off"] # nothing is allowed except disabling strict mode
   homonyms: [
-    
+
     w "there, their, they're"
     w "are, our, hour"
     w "ad, add"

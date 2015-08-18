@@ -25,13 +25,13 @@ class Platforms.osx.actions extends Platforms.base.actions
     code = Platforms.osx.keyCodes[key]
     if code?
       @_pressKey(code, @_normalizeModifiers(modifiers))
-      Meteor.sleep(10)
+      @delay Settings.keyDelay or 8
     else
       code = Platforms.osx.keyCodesShift[key]
       if code?
         mods = _.unique((modifiers or []).concat("shift"))
         @_pressKey code, @_normalizeModifiers(mods)
-        Meteor.sleep(10)
+        @delay Settings.keyDelay or 8
 
   string: (string) ->
     string = string.toString()
@@ -41,7 +41,7 @@ class Platforms.osx.actions extends Platforms.base.actions
       else
         @setUndoByDeleting string.length
         for item in string.split('')
-          Meteor.sleep(4)
+          @delay Settings.characterDelay or 4
           code = Platforms.osx.keyCodesRegular[item]
           if code?
             @_pressKey code
@@ -99,6 +99,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     if modifiers? and @needsExplicitModifierPresses()
       for m in modifiers
         @_keyDown Platforms.osx.keyCodes[m], [m]
+        @delay Settings.modifierKeyDelay or 2
 
     @_keyDown key, modifiers
     @_keyUp key #, modifiers
@@ -106,6 +107,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     if modifiers? and @needsExplicitModifierPresses()
       for m in modifiers
         @_keyUp Platforms.osx.keyCodes[m] #, [m]
+        @delay Settings.modifierKeyDelay or 2
 
   getMousePosition: ->
     $.CGEventGetLocation($.CGEventCreate(null))
