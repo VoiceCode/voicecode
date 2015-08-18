@@ -103,10 +103,14 @@ Template.CommandSummaryRow.events
     command = Commands.mapping[name]
     if command.enabled
       Meteor.call "disableCommands", [name]
-      t.$("input[type='checkbox']").prop('checked', false)
+      Meteor.setTimeout ->
+        t.$("input[type='checkbox']").prop('checked', false)
+      , 20
     else
       Meteor.call "enableCommands", [name]
-      t.$("input[type='checkbox']").prop('checked', true)
+      Meteor.setTimeout ->
+        t.$("input[type='checkbox']").prop('checked', true)
+      , 20
       
 Template.CommandAction.helpers
   text: ->
