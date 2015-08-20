@@ -45,7 +45,7 @@
   slashes: (textArray) ->
     textArray.join('/')
   titleSentance: (textArray) ->
-    _.map(textArray, (item, index) ->
+    _.map(_.compact(textArray), (item, index) ->
       item.charAt(0).toUpperCase() + item.slice(1)
     ).join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".")
   titleFirstSentance: (textArray) ->

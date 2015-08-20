@@ -85,7 +85,7 @@ class @Grammar
         trassword: function(arguments) {
           return Actions.fuzzyMatch(Settings.passwords, arguments.join(' '));
         },
-        clap: function(word) {
+        champ: function(word) {
           return Transforms.titleSentance([word]);
         }
       }
@@ -237,16 +237,17 @@ class @Grammar
       = "shrink" / "treemail" / "trusername" / "trassword"
 
     nestableSingleTextIdentifier
-      = "clap"
+      = item:("champs" / "champ" / "chap")
+      {return "champ";}
 
     nestableTextCommand = nestableFreeTextCommand / nestableSingleTextCommand
 
     nestableFreeTextCommand
       = identifier:nestableFreeTextIdentifier ss arguments:(word)+
-      {return grammarTransform(identifier, arguments);}
+      {return grammarTransform(identifier, (arguments));}
 
     nestableSingleTextCommand
-      = identifier:nestableSingleTextIdentifier ss arguments:(word)
+      = identifier:nestableSingleTextIdentifier ss arguments:(word)?
       {return grammarTransform(identifier, arguments);}
 
     // translations
@@ -271,6 +272,7 @@ class @Grammar
       individualIdentifierContinuous /
       oneArgumentIdentifierContinuous /
       singleSearchIdentifierContinuous /
+      nestableSingleTextIdentifier /
       overrideIdentifier /
       modifierIdentifier /
       modifierPrefix

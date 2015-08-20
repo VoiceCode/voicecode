@@ -8,9 +8,9 @@ Commands.createDisabled
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
-  "clap":
+  "champ":
     grammarType: "none"
-    description: "capitalize the next individual word"
+    description: "capitalize the next individual word, and preserves spacing (this command is hardcoded right now - it will be configurable after the next grammar update introduces auto-spacing rules)"
     tags: ["text", "recommended"]
     spaceBefore: true
   "cram":
