@@ -785,6 +785,8 @@ w = (commaSeparatedString) ->
     w "mho, mow"
     w "mhos, mows"
     w "might, mite"
+    w "mike, mic"
+    w "., point, dot"
     w "millenary, millinery"
     w "mince, mints"
     w "mind, mined"

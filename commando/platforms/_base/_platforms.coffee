@@ -10,7 +10,6 @@
 class Platforms.base.actions
   constructor: () ->
     @storage = {}
-    @_storedClipboard ?= {}
   stop: () ->
     @extensionsStopped = true
   setUndoByDeleting: (amount) ->
@@ -74,11 +73,11 @@ class Platforms.base.actions
     Commands.mode
 
   storeItem: (namespace, itemName, item) ->
-    @_storage[namespace] ?= {}
-    @_storage[namespace][itemName] = item
+    @storage[namespace] ?= {}
+    @storage[namespace][itemName] = item
 
   getStoredItem: (namespace, itemName) ->
-    @_storage[namespace]?[itemName]
+    @storage[namespace]?[itemName]
     
   normalizeTextArray: (textArray) ->
     results = []

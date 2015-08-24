@@ -44,6 +44,7 @@ w = (commaSeparatedString) ->
 
 _.extend Settings,
   maximumRepetitionCount: 100
+  defaultBrowser: "Safari"
   websites:
     "amazon": "http://www.amazon.com"
     "google docs": "http://docs.google.com"
