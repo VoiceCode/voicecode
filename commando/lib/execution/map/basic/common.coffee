@@ -1,6 +1,6 @@
 Commands.createDisabled
   "shock":
-    aliases: ["shocked", "shox", "chalk"]
+    aliases: ["shocked", "shox", "chalk", "schock"]
     description: "press the return key"
     tags: ["return", "recommended"]
     repeatable: true
