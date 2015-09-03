@@ -16,33 +16,45 @@ git =
     action: ->
       @string "git commit -a -m ''"
       @key "Left"
-  "jet add":
-    description: "git add"
-    action: ->
-      @string "git add "
-  "jet diff":
-    description: "git diff"
-    action: ->
-      @string "git diff "
+
+  "jet add": {}
+  "jet bisect": {}
+  "jet branch": {}
+  "jet check out":
+    git_command: "git checkout"
+  "jet clone": {}
+  "jet cherry pick":
+    git_command: "git cherry-pick"
+  "jet diff": {}
+  "jet fetch": {}
   "jet in it":
-    description: "git init"
-    action: ->
-      @string "git init "
-  "jet push":
-    description: "git push"
-    action: ->
-      @string "git push "
-  "jet rebase":
-    description: "git rebase"
-    action: ->
-      @string "git rebase "
-  "jet pull":
-    description: "git pull"
-    action: ->
-      @string "git pull "
+    git_command: "git init"
+  "jet log": {}
+  "jet merge": {}
+  "jet move":
+    git_command: "git mv"
+  "jet pull": {}
+  "jet push": {}
+  "jet rebase": {}
+  "jet reset": {}
+  "jet remove":
+    git_command: "git rm"
+  "jet show": {}
+  "jet tag": {}
 
 _.each git, (value, key) ->
   options = _.extend value,
     grammarType: "individual"
     tags: ["domain-specific", "git"]
+
+  if not options.git_command?
+    options.git_command = key.replace("jet", "git")
+
+  if not options.description?
+    options.description = options.git_command
+
+  if not options.action?
+    options.action = ->
+      @string (options.git_command + " ")
+    
   Commands.createDisabled key, options
