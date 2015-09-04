@@ -7,7 +7,6 @@ class @Vocabulary
     else
       instance = @
       @standard = []
-      @listWords = []
       @alternate = {}
       @repeatable = []
       @spaceBefore = []
