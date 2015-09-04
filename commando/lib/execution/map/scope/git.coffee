@@ -21,24 +21,24 @@ git =
   "jet bisect": {}
   "jet branch": {}
   "jet check out":
-    git_command: "git checkout"
+    output: "git checkout"
   "jet clone": {}
   "jet cherry pick":
-    git_command: "git cherry-pick"
+    output: "git cherry-pick"
   "jet diff": {}
   "jet fetch": {}
   "jet in it":
-    git_command: "git init"
+    output: "git init"
   "jet log": {}
   "jet merge": {}
   "jet move":
-    git_command: "git mv"
+    output: "git mv"
   "jet pull": {}
   "jet push": {}
   "jet rebase": {}
   "jet reset": {}
   "jet remove":
-    git_command: "git rm"
+    output: "git rm"
   "jet show": {}
   "jet tag": {}
 
@@ -46,15 +46,16 @@ _.each git, (value, key) ->
   options = _.extend value,
     grammarType: "individual"
     tags: ["domain-specific", "git"]
+    vocabulary: true
 
-  if not options.git_command?
-    options.git_command = key.replace("jet", "git")
+  unless options.output?
+    options.output = key.replace("jet", "git")
 
-  if not options.description?
-    options.description = options.git_command
+  unless options.description?
+    options.description = options.output
 
-  if not options.action?
+  unless options.action?
     options.action = ->
-      @string (options.git_command + " ")
-    
+      @string (options.output + " ")
+  
   Commands.createDisabled key, options
