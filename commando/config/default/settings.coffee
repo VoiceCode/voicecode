@@ -245,35 +245,35 @@ _.extend Settings,
     prick: "command control shift"
     flan: "command option control"
   modifierSuffixes:
-    "1": "one"
-    "2": "two"
-    "3": "three"
-    "4": "four"
-    "5": "five"
-    "6": "six"
-    "7": "seven"
-    "8": "eight"
-    "9": "nine"
-    "0": "zero"
-    Return: "return"
-    "/": "slash"
-    ".": "period"
-    ",": "comma"
-    ";": "sunk"
-    Delete: "junk"
-    ForwardDelete: "spunk"
-    " ": "skoosh"
-    Escape: "cape"
-    Tab: "tarp"
-    "=": "equal"
-    "-": "minus"
-    Up: "up"
-    Down: "down"
-    Left: "left"
-    Right: "right"
-    "]": "race"
-    "[": "lets"
-    "\\": "pike"
+    '1': 'one'
+    '2': 'two'
+    '3': 'three'
+    '4': 'four'
+    '5': 'five'
+    '6': 'six'
+    '7': 'seven'
+    '8': 'eight'
+    '9': 'nine'
+    '0': 'zero'
+    'return': 'return'
+    '/': 'slash'
+    '.': 'period'
+    ',': 'comma'
+    ';': 'sunk'
+    'delete': 'junk'
+    'forwarddelete': 'spunk'
+    'space': 'skoosh'
+    'escape': 'cape'
+    'tab': 'tarp'
+    '=': 'equal'
+    '-': 'minus'
+    'up': 'up'
+    'down': 'down'
+    'left': 'left'
+    'right': 'right'
+    ']': 'race'
+    '[': 'lets'
+    '\\': 'pike'
   repetitionWords:
     # you can add more repetition commands like this
     wink: 1
@@ -297,6 +297,7 @@ _.extend Settings,
     "adam": "atom"
   vocabulary: [
     "trello"
+    "auto space"
   ]
   vocabularyAlternate:
     # "spoken": "result"
@@ -348,6 +349,7 @@ _.extend Settings,
     spunk: w 'junk'
     swipe: w 'coif, posh, cram, criffed, spark, false, true'
     talky: w 'spark'
+    trough: w 'junk, crimp'
     tragic:  w 'cram, criffed, tridal, senchen, snake, yeller, smash, yellsmash'
     wordneck: w 'junk'
     wordpreev: w 'junk'

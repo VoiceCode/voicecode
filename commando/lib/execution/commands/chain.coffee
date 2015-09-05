@@ -21,6 +21,7 @@ class Commands.Chain
     parsed = Parser.parse(@phrase)
     commands = @normalizeStructure parsed
     @applyMouseLatency commands
+    commands = @applyAutoSpacing commands
     commands
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
@@ -121,6 +122,7 @@ class Commands.Chain
     else
       # if any arg, push it
       previous.arguments.push current.arguments
+    previous.arguments = _.compact(previous.arguments)
 
   mergeLiteralCommands: (previous, current) ->
     previous.arguments = previous.arguments.concat(current.arguments)
@@ -135,6 +137,45 @@ class Commands.Chain
         latencyIndex += 1
     commands
 
+  applyAutoSpacing: (commands) ->
+    results = []
+    for current, index in commands
+      previous = commands[index - 1]
+      connector = @determineCommandConnector(previous, current)
+      if connector?
+        results.push
+          command: connector
+      results.push current
+    # apply the last element
+    connector = @determineCommandConnector(_.last(commands), null)
+    if connector?
+      results.push
+        command: connector
+    results
+
+  determineCommandConnector: (_previous, _current) ->
+    left = 'undefined'
+    right = 'undefined'
+    if _previous?
+      previous = Commands.mapping[_previous.command]
+      if previous.autoSpacing?
+        left = previous.autoSpacing.split(' ')[1]
+    if _current?
+      current = Commands.mapping[_current.command]
+      if current.autoSpacing?
+        right = current.autoSpacing.split(' ')[0]
+    combined = [left, right].join ' '
+    if combined.indexOf('never') != -1
+      null
+    if combined.indexOf('always') != -1
+      'skoosh'
+    else
+      switch combined
+        when 'normal normal'
+          'skoosh'
+        when 'soft normal', 'normal soft'
+          'skoosh'
+      
 
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD

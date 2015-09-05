@@ -2,7 +2,7 @@ git =
   'jet':
     description: 'git'
     action: ->
-      @string 'git '
+      @string 'git'
   'jet status':
     description: 'git status'
     action: ->
@@ -13,6 +13,7 @@ git =
 
   'jet commit':
     description: "git commit -a -m ''"
+    autoSpacing: 'normal none'
     action: ->
       @string "git commit -a -m ''"
       @left()
@@ -43,19 +44,16 @@ git =
   'jet tag': {}
 
 _.each git, (value, key) ->
-  options = _.extend value,
-    grammarType: 'individual'
+  output = key.replace('jet', 'git')
+
+  defaults =
     tags: ['domain-specific', 'git']
     vocabulary: true
-
-  unless options.output?
-    options.output = key.replace('jet', 'git')
-
-  unless options.description?
-    options.description = options.output
-
-  unless options.action?
-    options.action = ->
-      @string (options.output + ' ')
+    autoSpacing: 'normal always'
+    output: output
+    description: output
+    action: ->
+      @string output
   
-  Commands.createDisabled key, options
+  # the defaults are overridden if any option is specified
+  Commands.createDisabled key, _.extend(defaults, value)

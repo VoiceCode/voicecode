@@ -213,7 +213,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
-    mask = @_modifierMask(["Shift"])
+    mask = @_modifierMask(["shift"])
     $.CGEventSetFlags(down, mask)
     $.CGEventSetFlags(up, mask)
 
@@ -544,7 +544,7 @@ class Platforms.osx.actions extends Platforms.base.actions
   switchApplication: ->
     @key 'tab', 'command' ; @
   space: ->
-    @key 'space' ; @
+    @string ' ' ; @
   enter: ->
     @key 'return' ; @
   up: (times) ->

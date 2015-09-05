@@ -187,6 +187,7 @@ class Commands.Base
   generateContext: ->
     context = {}
     _.extend context, @context
+    context.subcommandIndex = Commands.subcommandIndex
     if @info.historic
       _.extend context,
         lastFullCommand: Commands.lastFullCommand

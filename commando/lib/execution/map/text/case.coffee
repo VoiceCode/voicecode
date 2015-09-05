@@ -5,6 +5,7 @@ Commands.createDisabled
     tags: ['text', 'recommended']
     needsDragonCommand: false
     isSpoken: false
+    autoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
@@ -19,6 +20,7 @@ Commands.createDisabled
     tags: ['text', 'recommended']
     aliases: ['crammed', 'crams', 'tram', 'kram']
     spaceBefore: true
+    autoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.camel(input)
@@ -36,6 +38,7 @@ Commands.createDisabled
     description: 'snake_case_text'
     tags: ['text', 'recommended']
     spaceBefore: true
+    autoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.snake(input)
@@ -55,6 +58,8 @@ Commands.createDisabled
     action: (input) ->
       if input
         @string '@' + Transforms.camel(input)
+      else
+        @string '@'
   'dollcram':
     grammarType: 'textCapture'
     description: '$camelCaseWithDollarSign'
@@ -62,6 +67,8 @@ Commands.createDisabled
     action: (input) ->
       if input
         @string '$' + Transforms.camel(input)
+      else
+        @string '$'
   'spine':
     grammarType: 'textCapture'
     description: 'spinal-case-text'
