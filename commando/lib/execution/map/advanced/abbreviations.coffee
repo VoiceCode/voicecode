@@ -16,7 +16,7 @@ Commands.createDisabled
         snippet = @fuzzyMatch Settings.codeSnippets, input.join(" ")
         @string snippet
         @delay 200
-        completion = Settings.codeSnippetCompletions[@currentApplication()] or "Tab"
+        completion = Settings.codeSnippetCompletions[@currentApplication()] or "tab"
         @key completion
   "trassword":
     grammarType: "textCapture"

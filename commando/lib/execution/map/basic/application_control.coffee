@@ -1,46 +1,46 @@
 Commands.createDisabled
-  "swick":
-    description: "Switch to most recent application"
-    tags: ["application", "tab", "recommended"]
+  'swick':
+    description: 'Switch to most recent application'
+    tags: ['application', 'tab', 'recommended']
     action: ->
-      @key "Tab", 'command'
+      @switchApplication()
       @delay(250)
-  "launcher":
-    description: "open application launcher"
-    tags: ["application", "system", "launching", "alfred"]
+  'launcher':
+    description: 'open application launcher'
+    tags: ['application', 'system', 'launching', 'alfred']
     action: ->
-      @key " ", 'option'
+      @key 'space', 'option'
       @delay 100
-  "spotty":
-    description: "open spotlight"
-    tags: ["application", "system", "launching"]
+  'spotty':
+    description: 'open spotlight'
+    tags: ['application', 'system', 'launching']
     action: ->
-      @key " ", 'command'
+      @key ' ', 'command'
       @delay 100
-  "foxwitch":
-    description: "open application switcher"
-    tags: ["application", "system", "launching", "tab", "recommended"]
+  'foxwitch':
+    description: 'open application switcher'
+    tags: ['application', 'system', 'launching', 'tab', 'recommended']
     action: ->
-      @keyDown "Command", "command"
-      @keyDown "Tab", "command"
-      @keyUp "Tab", "command"
+      @keyDown 'command', 'command'
+      @keyDown 'tab', 'command'
+      @keyUp 'tab', 'command'
       @delay 10000
-      @keyUp "Tab", "command"
-      @keyUp "Command"
-  "webseek":
-    description: "open a new browser tab (from anywhere)"
-    tags: ["system", "launching", "recommended"]
+      @keyUp 'tab', 'command'
+      @keyUp 'command'
+  'webseek':
+    description: 'open a new browser tab (from anywhere)'
+    tags: ['system', 'launching', 'recommended']
     action: ->
       @openBrowser()
-      @key "T", 'command'
+      @newTab()
       @delay 200
-  "fox":
-    description: "open application"
-    tags: ["application", "system", "launching", "recommended"]
-    grammarType: "custom"
+  'fox':
+    description: 'open application'
+    tags: ['application', 'system', 'launching', 'recommended']
+    grammarType: 'custom'
     rule: '(applications)'
     action: ({applications}) ->
       if applications?
         @openApplication applications
       else
-        @do "launcher"
+        @do 'launcher'

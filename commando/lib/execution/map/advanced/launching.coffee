@@ -11,7 +11,7 @@ Commands.createDisabledWithDefaults
       else
         @openBrowser()
         @delay(50)
-        @key "T", 'command'
+        @newTab()
   "dears":
     description: "opens a directory in the finder"
     action: (input) ->

@@ -8,7 +8,7 @@ Commands.createDisabled
     action: (input, context) ->
       previous = context.lastFullCommand
       if previous
-        for i in [1..(input or 1)]
+        @repeat input or 1, =>
           _.each previous, (command) =>
             command.call(@)
   "repple":
@@ -26,7 +26,7 @@ Commands.createDisabled
         else
           (times or 1) - 1
         if times > 0 and times < (Settings.maximumRepetitionCount or 100)
-          for i in [1..times]
+          @repeat times, =>
             context.lastIndividualCommand.call(@)
 
 class @Repetition
@@ -48,5 +48,5 @@ class @Repetition
           else
             value - 1
           if times > 0
-            for i in [1..times]
+            @repeat times, =>
               context.lastIndividualCommand.call(@)

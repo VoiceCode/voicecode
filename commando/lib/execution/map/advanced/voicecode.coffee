@@ -46,8 +46,8 @@ Commands.createDisabled
       count = Commands.previousUndoByDeletingCount
       if count? and count > 0
         for i in [1..count]
-          @key 'Left', 'shift'
-        @key "Delete"
+          @key 'left', 'shift'
+        @key "delete"
   "tragic":
     description: "tries to select the previously inserted text if possible"
     tags: ["system", "voicecode", "recommended"]
@@ -55,7 +55,7 @@ Commands.createDisabled
       count = Commands.previousUndoByDeletingCount
       if count? and count > 0
         for i in [1..count]
-          @key 'Left', 'shift'
+          @key 'left', 'shift'
   "strict on":
     grammarType: "textCapture"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"

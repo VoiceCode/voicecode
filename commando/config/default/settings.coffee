@@ -192,9 +192,9 @@ _.extend Settings,
     "each pair": "eap"
     "each with index": "eawi"
     "find all": "fina"
-  # this can be changed. Tab, Return, Escape, etc
+  # this can be changed. tab, return, escape, etc
   codeSnippetCompletions:
-    "Sublime Text": "Tab"
+    "Sublime Text": "tab"
   directories:
     home: "~"
     applications: "/Applications"

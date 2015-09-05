@@ -1,86 +1,86 @@
 Commands.createDisabled
-  "spring":
-    grammarType: "numberCapture"
-    description: "go to line number."
-    tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
+  'spring':
+    grammarType: 'numberCapture'
+    description: 'go to line number.'
+    tags: ['sublime', 'xcode']
+    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     action: (input) ->
       switch @currentApplication()
-        when "Sublime Text"
+        when 'Sublime Text'
           if input
             @sublime().goToLine(input).execute()
           else
-            @key "G", ['control']
-        when "Atom"
+            @key 'g', 'control'
+        when 'Atom'
           if input
-            @runAtomCommand "goToLine", input
+            @runAtomCommand 'goToLine', input
           else
-            @key "G", ['control']
-        when "Xcode"
-          @key "L", ['command']
+            @key 'g', 'control'
+        when 'Xcode'
+          @key 'l', 'command'
           if input?
             @delay 200
             @string input
             @delay 100
-            @key "Return"
+            @enter()
 
-  "sprinkler":
-    grammarType: "numberCapture"
-    description: "go to line number then position cursor at end of line."
-    tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
+  'sprinkler':
+    grammarType: 'numberCapture'
+    description: 'go to line number then position cursor at end of line.'
+    tags: ['sublime', 'xcode']
+    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     action: (input) ->
-      @do "spring", input
+      @do 'spring', input
       if input?
-        @do "ricky"
+        @do 'ricky'
 
-  "sprinkle":
-    grammarType: "numberCapture"
-    description: "go to line number then position cursor at beginning of line."
-    tags: ["xcode"]
-    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
+  'sprinkle':
+    grammarType: 'numberCapture'
+    description: 'go to line number then position cursor at beginning of line.'
+    tags: ['xcode']
+    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     action: (input) ->
-      @do "spring", input
+      @do 'spring', input
       if input?
-        @do "lefty"
+        @do 'lefty'
 
-  "sprinkoon":
-    grammarType: "numberCapture"
-    description: "go to line number then insert a new line below."
-    tags: ["sublime", "xcode"]
-    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
+  'sprinkoon':
+    grammarType: 'numberCapture'
+    description: 'go to line number then insert a new line below.'
+    tags: ['sublime', 'xcode']
+    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     action: (input) ->
-      @do "spring", input
+      @do 'spring', input
       if input?
-        @do "shockoon"
+        @do 'shockoon'
 
-  "spackle":
-    grammarType: "numberCapture"
-    description: "go to line number then select entire line."
-    tags: ["sublime"]
-    triggerScopes: ["Sublime Text", "Xcode", "Atom"]
+  'spackle':
+    grammarType: 'numberCapture'
+    description: 'go to line number then select entire line.'
+    tags: ['sublime']
+    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     action: (input) ->
-      @do "spring", input
+      @do 'spring', input
       if input?
-        @do "shackle"
+        @do 'shackle'
 
-  "bracken":
-    description: "expand selection to quotes, parens, braces, or brackets"
-    tags: ["sublime", "atom"]
-    triggerScopes: ["Atom", "Sublime Text"]
+  'bracken':
+    description: 'expand selection to quotes, parens, braces, or brackets'
+    tags: ['sublime', 'atom']
+    triggerScopes: ['Atom', 'Sublime Text']
     action: (input) ->
       switch @currentApplication()
-        when "Sublime Text"
-          @key "S", 'control command option'
-        when "Atom"
-          # @runAtomCommand "trigger", "expand-selection-to-quotes:toggle"
+        when 'Sublime Text'
+          @key 's', 'control command option'
+        when 'Atom'
+          # @runAtomCommand 'trigger', 'expand-selection-to-quotes:toggle'
           @key "'", 'control'
 
-  "selrang":
-    grammarType: "numberCapture"
-    description: "selects text in a line range: selrang ten twenty."
-    tags: ["atom", "sublime"]
-    triggerScopes: ["Atom", "Sublime Text"]
+  'selrang':
+    grammarType: 'numberCapture'
+    description: 'selects text in a line range: selrang ten twenty.'
+    tags: ['atom', 'sublime']
+    triggerScopes: ['Atom', 'Sublime Text']
     action: (input) ->
       if input?
         number = input.toString()
@@ -94,60 +94,60 @@ Commands.createDisabled
           last = first
           first = temp
         switch @currentApplication()
-          when "Sublime Text"
+          when 'Sublime Text'
             @sublime().selectRange(first, last).execute()
-          when "Atom"
-            @runAtomCommand "selectLineRange",
+          when 'Atom'
+            @runAtomCommand 'selectLineRange',
               from: first
               to: last
 
-  "seltil":
-    grammarType: "numberCapture"
-    description: "selects text from current position through ('til) spoken line number: seltil five five."
-    tags: ["atom", "sublime"]
-    triggerScopes: ["Atom", "Sublime Text"]
+  'seltil':
+    grammarType: 'numberCapture'
+    description: 'selects text from current position through spoken line number: seltil five five.'
+    tags: ['atom', 'sublime']
+    triggerScopes: ['Atom', 'Sublime Text']
     action: (input) ->
       if input?
         switch @currentApplication()
-          when "Sublime Text"
+          when 'Sublime Text'
             @sublime()
               .setMark()
               .goToLine(input)
               .selectToMark()
               .clearMark()
               .execute()
-          when "Atom"
-            @runAtomCommand "extendSelectionToLine", input
+          when 'Atom'
+            @runAtomCommand 'extendSelectionToLine', input
 
-  "clonesert":
-    grammarType: "numberCapture"
-    description: "Insert the text from another line at the current cursor position"
-    tags: ["atom"]
-    triggerScopes: ["Atom"]
+  'clonesert':
+    grammarType: 'numberCapture'
+    description: 'Insert the text from another line at the current cursor position'
+    tags: ['atom']
+    triggerScopes: ['Atom']
     action: (input) ->
       if input?
         switch @currentApplication()
-          when "Atom"
-            @runAtomCommand "insertContentFromLine", input
+          when 'Atom'
+            @runAtomCommand 'insertContentFromLine', input
 
-  "trundle":
-    grammarType: "numberRange"
-    tags: ["editing", "atom", "sublime"]
-    description: "toggle comments on the line or range"
+  'trundle':
+    grammarType: 'numberRange'
+    tags: ['editing', 'atom', 'sublime']
+    description: 'toggle comments on the line or range'
     action: ({first, last} = {}) ->
       switch @currentApplication()
-        when "Sublime Text"
+        when 'Sublime Text'
           if last?
             @sublime().selectRange(first, last).execute()
           else if first?
             @sublime().goToLine(first).execute()
           @key '/', 'command'
-        when "Atom"
+        when 'Atom'
           if last?
-            @runAtomCommand "selectLineRange",
+            @runAtomCommand 'selectLineRange',
               from: first
               to: last
           else if first?
-            @runAtomCommand "goToLine", first
+            @runAtomCommand 'goToLine', first
           @delay 50
           @key '/', 'command'

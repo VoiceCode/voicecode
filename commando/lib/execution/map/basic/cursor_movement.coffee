@@ -1,152 +1,151 @@
 Commands.createDisabled
-  "doomway":
-    description: "move the cursor to the bottom of the page"
-    tags: ["cursor", "recommended"]
+  'doomway':
+    description: 'move the cursor to the bottom of the page'
+    tags: ['cursor', 'recommended']
     action: ->
-      @key "Down", 'command'
-  "doom":
-    description: "press the down arrow"
-    tags: ["cursor", "recommended"]
+      @key 'down', 'command'
+  'doom':
+    description: 'press the down arrow'
+    tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key "Down"
-  "jeepway":
-    description: "move the cursor to the top of the page"
-    tags: ["cursor", "recommended"]
+      @down()
+  'jeepway':
+    description: 'move the cursor to the top of the page'
+    tags: ['cursor', 'recommended']
     action: ->
-      @key "Up", 'command'
-  "jeep":
-    description: "Press the up arrow"
-    tags: ["cursor", "recommended"]
+      @key 'up', 'command'
+  'jeep':
+    description: 'Press the up arrow'
+    tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key "Up"
-  "crimp":
-    description: "press the left arrow"
-    aliases: ["crimped"]
-    tags: ["cursor", "recommended"]
+      @up()
+  'crimp':
+    description: 'press the left arrow'
+    aliases: ['crimped']
+    tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key "Left"
-  "chris":
-    description: "press the right arrow"
-    tags: ["cursor", "recommended"]
-    aliases: ["krist", "crist"]
+      @left()
+  'chris':
+    description: 'press the right arrow'
+    tags: ['cursor', 'recommended']
+    aliases: ['krist', 'crist']
     repeatable: true
     action: ->
-      @key "Right"
-  "shunkrim":
-    description: "move the cursor by word to the left"
-    tags: ["cursor", "recommended"]
+      @right()
+  'shunkrim':
+    description: 'move the cursor by word to the left'
+    tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key "Left", 'option'
-  "wonkrim":
-    description: "move the cursor by partial word to the left"
-    tags: ["cursor"]
+      @key 'left', 'option'
+  'wonkrim':
+    description: 'move the cursor by partial word to the left'
+    tags: ['cursor']
     repeatable: true
     action: ->
-      @key "Left", 'control'
-  "wonkrish":
-    description: "move the cursor by partial word to the right"
-    tags: ["cursor"]
+      @key 'left', 'control'
+  'wonkrish':
+    description: 'move the cursor by partial word to the right'
+    tags: ['cursor']
     repeatable: true
     action: ->
-      @key "Right", 'control'
-  "shunkrish":
-    description: "move the cursor by word to the right"
-    tags: ["cursor", "recommended"]
+      @key 'right', 'control'
+  'shunkrish':
+    description: 'move the cursor by word to the right'
+    tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key "Right", 'option'
-  "ricky":
-    description: "moves the cursor all the way to the right"
-    tags: ["cursor", "recommended"]
+      @key 'right', 'option'
+  'ricky':
+    description: 'moves the cursor all the way to the right'
+    tags: ['cursor', 'recommended']
     action: ->
-      @key "Right", 'command'
-  "derek":
-    description: "moves the cursor on the way to the right than inserts a space"
-    tags: ["cursor", "space", "right", "combo", "recommended"]
-    aliases: ["derrick"]
+      @key 'right', 'command'
+  'derek':
+    description: 'moves the cursor on the way to the right than inserts a space'
+    tags: ['cursor', 'space', 'right', 'combo', 'recommended']
+    aliases: ['derrick']
     action: ->
-      @key "Right", 'command'
-      @key " "
-  "nudgle":
-    description: "remove a space before the adjacent word on the left"
-    tags: ["cursor", "space", "deleting", "left", "combo", "recommended"]
+      @key 'right', 'command'
+      @space()
+  'nudgle':
+    description: 'remove a space before the adjacent word on the left'
+    tags: ['cursor', 'space', 'deleting', 'left', 'combo', 'recommended']
     repeatable: true
     action: ->
-      @key "Left", 'option'
-      @key "Delete"
-  "ricksy":
-    description: "selects all text to the right"
-    tags: ["selection", "right", "recommended"]
+      @key 'left', 'option'
+      @key 'delete'
+  'ricksy':
+    description: 'selects all text to the right'
+    tags: ['selection', 'right', 'recommended']
     action: ->
-      @key "Right", 'command shift'
-  "lefty":
-    description: "move the cursor all the way to the left"
-    tags: ["cursor", "left", "recommended"]
+      @key 'right', 'command shift'
+  'lefty':
+    description: 'move the cursor all the way to the left'
+    tags: ['cursor', 'left', 'recommended']
     action: ->
-      @key "Left", 'command'
-  "lecksy":
-    description: "selects all text to the left"
-    tags: ["selection", "left", "recommended"]
+      @key 'left', 'command'
+  'lecksy':
+    description: 'selects all text to the left'
+    tags: ['selection', 'left', 'recommended']
     action: ->
-      @key "Left", 'command shift'
-  "shackle":
-    description: "selects the entire line"
-    tags: ["selection", "recommended"]
-    aliases: ["sheqel", "shikel", "shekel"]
+      @key 'left', 'command shift'
+  'shackle':
+    description: 'selects the entire line'
+    tags: ['selection', 'recommended']
+    aliases: ['sheqel', 'shikel', 'shekel']
     action: ->
-      @key "Left", 'command'
-      @key "Right", 'command shift'
-  "snipline":
-    description: "will delete the entire line(s)"
-    tags: ["deleting", "recommended"]
-    aliases: ["snipeline"]
+      @key 'left', 'command'
+      @key 'right', 'command shift'
+  'snipline':
+    description: 'will delete the entire line(s)'
+    tags: ['deleting', 'recommended']
+    aliases: ['snipeline']
     action: ->
       switch @currentApplication()
-        when "Sublime Text"
-          @key "K", 'control shift'
-        when "Atom"
-          @key "K", 'control shift'
+        when 'Sublime Text'
+          @key 'k', 'control shift'
+        when 'Atom'
+          @key 'k', 'control shift'
         else
-          @key "Delete"
-          @key "Right", 'command'
-          @key "Delete", 'command'
-  "snipper":
-    description: "will delete everything to the right"
-    tags: ["deleting", "right", "recommended"]
-    aliases: ["sniper"]
+          @key 'delete'
+          @key 'right', 'command'
+          @key 'delete', 'command'
+  'snipper':
+    description: 'will delete everything to the right'
+    tags: ['deleting', 'right', 'recommended']
+    aliases: ['sniper']
     action: ->
-      if @currentApplication is "Sublime Text"
-        @key "K", ['control']
+      if @currentApplication is 'Sublime Text'
+        @key 'k', ['control']
       else
-        @key "Right", 'command shift'
-        @key "Delete"
-  "snipple":
-    tags: ["deleting", "left", "recommended"]
-    description: "will delete everything to the left"
+        @key 'right', 'command shift'
+        @key 'delete'
+  'snipple':
+    tags: ['deleting', 'left', 'recommended']
+    description: 'will delete everything to the left'
     action: ->
-      @key "Delete", 'command'
-  "jolt":
-    description: "will duplicate the current line"
-    tags: ["text-manipulation", "recommended"]
-    aliases: ["joel"]
+      @key 'delete', 'command'
+  'jolt':
+    description: 'will duplicate the current line'
+    tags: ['text-manipulation', 'recommended']
+    aliases: ['joel']
     action: ->
       switch @currentApplication()
-        when "Sublime Text", "Atom"
-          @key "D", 'command shift'
+        when 'Sublime Text', 'Atom'
+          @key 'd', 'command shift'
         else
-          @key "Left", 'command'
-          @key "Right", 'command shift'
-          @key "C", 'command'
-          @key "Right"
-          @key "Return"
-          @key "V", 'command'
-  "swan":
+          @do 'shackle'
+          @copy()
+          @right()
+          @enter()
+          @paste()
+  'swan':
     description: "Enters 'Ace Jump' / 'Easy Motion' mode"
-    tags: ["cursor"]
+    tags: ['cursor']
     action: ->
-      if @currentApplication is "Sublime Text"
-        @key ";", 'command'
+      if @currentApplication is 'Sublime Text'
+        @key ';', 'command'

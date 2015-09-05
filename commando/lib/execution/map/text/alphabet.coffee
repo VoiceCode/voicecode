@@ -17,7 +17,7 @@ class @Alphabet
     _.each Settings.letters, (value, key) ->
       Commands.create value,
         description: "Enters the single letter: #{key}"
-        grammarType: "none"
+        grammarType: 'none'
         tags: ['alphabet']
 
       # uppers
@@ -25,13 +25,13 @@ class @Alphabet
       prefix = Settings.uppercaseLetterPrefix
       Commands.create "#{prefix} #{value}",
         description: "Enters the capital letter: #{upper}"
-        grammarType: "none"
+        grammarType: 'none'
 
       # with suffix
       suffix = Settings.singleLetterSuffix
       Commands.create "#{value} #{suffix}",
         description: "Enters the letter: #{value} (with better recognition because of suffix: '#{suffix}')"
-        grammarType: "none"
+        grammarType: 'none'
 
       # nested
       _.each Settings.letters, (valueIn, keyIn) ->
@@ -71,22 +71,22 @@ class @Alphabet
     """
     fs = Meteor.npmRequire('fs')
     path = Meteor.npmRequire('path')
-    file = path.resolve(projectRoot, "user", "alphabet.xml")
+    file = path.resolve(projectRoot, 'user', 'alphabet.xml')
     fs.writeFileSync file, content, 'utf8'
   createVocabComboContent: ->
     _.map Settings.letters, (value, key) =>
       _.map Settings.letters, (valueIn, keyIn) =>
         @buildLetter [value, valueIn].join(' ')
-      .join("\n")
-    .join("\n")
+      .join('\n')
+    .join('\n')
   createVocabSingleContent: ->
     _.map Settings.letters, (value, key) =>
       @buildLetter [value, Settings.singleLetterSuffix].join(' ')
-    .join("\n")
+    .join('\n')
   createVocabUpperContent: ->
     _.map Settings.letters, (value, key) =>
       @buildLetter [Settings.uppercaseLetterPrefix, value].join(' ')
-    .join("\n")
+    .join('\n')
   buildLetter: (item) ->
     """
     <dict>

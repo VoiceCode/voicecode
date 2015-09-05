@@ -19,7 +19,7 @@ class Platforms.base.actions
   undoByDeleting: ->
     amount = Commands.previousUndoByDeletingCount or 0
     _.times(amount) =>
-      @key "Delete"
+      @key "delete"
 
   # run another command
   do: (name, input, context={}) ->
@@ -33,6 +33,9 @@ class Platforms.base.actions
   delay: (ms) ->
     Meteor.sleep(ms)
 
+  repeat: (times, callback) ->
+    _(times).times callback
+
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
       mods = if typeof modifiers is "string"
@@ -40,8 +43,12 @@ class Platforms.base.actions
       else
         modifiers
       # titleize mods
-      _.map mods, (m) ->
-        m.charAt(0).toUpperCase() + m.slice(1)
+      _.map mods, (m) =>
+        actual = m.toLowerCase()
+        if actual is "super"
+          @resolveSuperModifier()
+        else
+          actual
 
   setCurrentApplication: (application) ->
     console.log currentApplication: application

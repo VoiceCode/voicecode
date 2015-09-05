@@ -1,37 +1,37 @@
 Commands.createDisabled
-  "trough":
-    description: "delete a word at a time (press option-delete)"
-    tags: ["deleting", "recommended"]
+  'trough':
+    description: 'delete a word at a time (press option-delete)'
+    tags: ['deleting', 'recommended']
     repeatable: true
     action: ->
-      @key "Delete", 'option'
-  "steffi":
-    description: "delete a partial word at a time"
-    tags: ["deleting"]
+      @key 'delete', 'option'
+  'steffi':
+    description: 'delete a partial word at a time'
+    tags: ['deleting']
     repeatable: true
-    aliases: ["steffy"]
+    aliases: ['steffy']
     action: ->
       current = @currentApplication()
-      if current is "Sublime Text"
-        @key "Delete", ["control"]
-      else if current is "iTerm" and @mode is "vim"
-        @key "Delete", 'option'
-      else if current is "Emacs" or (current is "iTerm" and @mode is "emacs")
-        @key "Delete", 'option'
+      if current is 'Sublime Text'
+        @key 'delete', 'control'
+      else if current is 'iTerm' and @mode is 'vim'
+        @key 'delete', 'option'
+      else if current is 'Emacs' or (current is 'iTerm' and @mode is 'emacs')
+        @key 'delete', 'option'
       else
-        @deletePartialWord("left")
-  "stippy":
-    description: "forward delete a partial word at a time"
-    tags: ["deleting"]
+        @deletePartialWord('left')
+  'stippy':
+    description: 'forward delete a partial word at a time'
+    tags: ['deleting']
     repeatable: true
     action: ->
-      if @currentApplication() is "Sublime Text"
-        @key "ForwardDelete", 'control'
+      if @currentApplication() is 'Sublime Text'
+        @key 'forwarddelete', 'control'
       else
-        @deletePartialWord("right")
-  "kite":
-    description: "forward delete a word at a time"
-    tags: ["deleting", "recommended"]
+        @deletePartialWord('right')
+  'kite':
+    description: 'forward delete a word at a time'
+    tags: ['deleting', 'recommended']
     repeatable: true
     action: ->
-      @key "ForwardDelete", 'option'
+      @key 'forwarddelete', 'option'

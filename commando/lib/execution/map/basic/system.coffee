@@ -1,10 +1,10 @@
 Commands.createDisabled
-  "swash":
-    grammarType: "oneArgument"
-    description: "opens drop-down menu by name. A few special arguments are also allowed: [bluetooth, wi-fi, clock, battery]"
-    tags: ["application", "system", "recommended"]
+  'swash':
+    grammarType: 'oneArgument'
+    description: 'opens drop-down menu by name. A few special arguments are also allowed: [bluetooth, wi-fi, clock, battery]'
+    tags: ['application', 'system', 'recommended']
     action: (input) ->
-      specialItems = ["bluetooth", "wi-fi", "clock", "battery"]
+      specialItems = ['bluetooth', 'wi-fi', 'clock', 'battery']
       if input in specialItems
         @applescript """
         tell application "System Events" to tell process "SystemUIServer"
@@ -21,26 +21,26 @@ Commands.createDisabled
         menuItem = Settings.menuItemAliases[input] or input
         @openMenuBarItem menuItem
 
-  "blerch":
-    description: "search the menubar items (opens help menu)"
-    tags: ["application", "system", "recommended"]
+  'blerch':
+    description: 'search the menubar items (opens help menu)'
+    tags: ['application', 'system', 'recommended']
     action: ->
-      @openMenuBarItem "help"
+      @openMenuBarItem 'help'
 
-  "volume":
-    grammarType: "numberCapture"
-    description: "adjust the system volume [0-100]"
-    tags: ["system", "recommended"]
+  'volume':
+    grammarType: 'numberCapture'
+    description: 'adjust the system volume [0-100]'
+    tags: ['system', 'recommended']
     continuous: false
     action: (input) ->
       @setVolume(input)
 
-  "windy":
-    grammarType: "custom"
+  'windy':
+    grammarType: 'custom'
     rule: '(digits)? (windowPositions)?'
-    description: "set the size/position of the frontmost window to one of the preset sizes/positions"
-    aliases: ["wendy"]
-    tags: ["system", "window", "recommended"]
+    description: 'set the size/position of the frontmost window to one of the preset sizes/positions'
+    aliases: ['wendy']
+    tags: ['system', 'window', 'recommended']
     action: ({digits, windowPositions}) ->
       if digits? or windowPositions?
         preset = windowPositions or Settings.windowPositions['middle']
@@ -61,14 +61,14 @@ Commands.createDisabled
         else
           preset.height
 
-        offsetX = if preset.x is "auto"
+        offsetX = if preset.x is 'auto'
           (screen.size.width - newWidth) / 2
         else if preset.x <= 1
           screen.size.width * preset.x
         else
           preset.x
 
-        offsetY = if preset.y is "auto"
+        offsetY = if preset.y is 'auto'
           (screen.size.height - newHeight) / 2
         else if preset.y <= 1
           screen.size.height * preset.y

@@ -1,167 +1,167 @@
 Commands.createDisabledWithDefaults
-  tags: ["symbol", "recommended"]
+  tags: ['symbol', 'recommended']
 ,
-  "dot":
-    findable: "."
-    aliases: ["."]
+  'dot':
+    findable: '.'
+    aliases: ['.']
     spaceBefore: true
     action: ->
-      @string "."
-  "star":
-    aliases: ["*"]
-    findable: "*"
+      @string '.'
+  'star':
+    aliases: ['*']
+    findable: '*'
     spaceBefore: true
     action: ->
-      @string "*"
-  "slash":
-    aliases: ["/"]
-    findable: "/"
+      @string '*'
+  'slash':
+    aliases: ['/']
+    findable: '/'
     spaceBefore: true
     action: ->
-      @string "/"
-  "quackish":
-    # aliases: ["\\"]
-    findable: "\\"
+      @string '/'
+  'quackish':
+    # aliases: ['\\']
+    findable: '\\'
     action: ->
-      @string "\\"
-  "comma":
-    aliases: [","]
-    findable: ","
+      @string '\\'
+  'comma':
+    aliases: [',']
+    findable: ','
     action: ->
-      @string ","
-  "tilde":
-    aliases: ["~"]
-    findable: "~"
+      @string ','
+  'tilde':
+    aliases: ['~']
+    findable: '~'
     spaceBefore: true
     action: ->
-      @string "~"
-  "colon":
-    aliases: [":"]
-    findable: ":"
+      @string '~'
+  'colon':
+    aliases: [':']
+    findable: ':'
     spaceBefore: true
     action: ->
-      @string ":"
-  "equeft":
-    findable: " = "
+      @string ':'
+  'equeft':
+    findable: ' = '
     action: ->
-      @string " = "
-  "smaqual":
-    findable: "="
+      @string ' = '
+  'smaqual':
+    findable: '='
     action: ->
-      @string "="
-  "qualcoif":
-    tags: ["symbol", "quotes", "recommended"]
+      @string '='
+  'qualcoif':
+    tags: ['symbol', 'quotes', 'recommended']
     findable: '="'
     action: ->
       @string '=""'
-      @key "Left"
-  "qualposh":
+      @left()
+  'qualposh':
     findable: "='"
-    tags: ["symbol", "quotes", "recommended"]
+    tags: ['symbol', 'quotes', 'recommended']
     action: ->
       @string "=''"
-      @key "Left"
-  "prexcoif":
-    description: "inserts parentheses then double quotes leaving cursor inside them. If text is selected, will wrap the selected text"
-    tags: ["symbol", "quotes", "recommended"]
+      @left()
+  'prexcoif':
+    description: 'inserts parentheses then double quotes leaving cursor inside them. If text is selected, will wrap the selected text'
+    tags: ['symbol', 'quotes', 'recommended']
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
         @string('("' + t + '")')
       else
         @string '("")'
-        @key "Left"
-        @key "Left"
-  "prex":
-    description: "inserts parentheses leaving cursor inside them. If text is selected, will wrap the selected text"
-    findable: "()"
+        @left()
+        @left()
+  'prex':
+    description: 'inserts parentheses leaving cursor inside them. If text is selected, will wrap the selected text'
+    findable: '()'
     spaceBefore: true
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
         @string("(#{t})")
       else
-        @string "()"
-        @key "Left"
-  "prekris":
+        @string '()'
+        @left()
+  'prekris':
     action: ->
-      @string "()"
-  "brax":
-    description: "inserts brackets leaving cursor inside them. If text is selected, will wrap the selected text"
-    findable: "[]"
+      @string '()'
+  'brax':
+    description: 'inserts brackets leaving cursor inside them. If text is selected, will wrap the selected text'
+    findable: '[]'
     spaceBefore: true
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
         @string("[#{t}]")
       else
-        @string "[]"
-        @key "Left"
-  "kirksorp":
-    findable: "{"
+        @string '[]'
+        @left()
+  'kirksorp':
+    findable: '{'
     action: ->
-      @string "{"
-  "kirkos":
-    findable: "}"
+      @string '{'
+  'kirkos':
+    findable: '}'
     action: ->
-      @string "}"
-  "kirk":
-    findable: "{}"
+      @string '}'
+  'kirk':
+    findable: '{}'
     spaceBefore: true
     action: ->
-      @string "{}"
-      @key "Left"
-  "kirblock":
+      @string '{}'
+      @left()
+  'kirblock':
     action: ->
-      @string "{}"
-      @key "Left"
-      @key "Return"
-  "prank":
-    description: "inserts 2 spaces leaving cursor in the middle. If text is selected, will wrap the selected text in spaces"
-    findable: "  "
+      @string '{}'
+      @left()
+      @enter()
+  'prank':
+    description: 'inserts 2 spaces leaving cursor in the middle. If text is selected, will wrap the selected text in spaces'
+    findable: '  '
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
         @string(" #{t} ")
       else
-        @string "  "
-        @key "Left"
-  "minquall":
-    findable: " -= "
+        @string '  '
+        @left()
+  'minquall':
+    findable: ' -= '
     action: ->
-      @string " -= "
-  "pluqual":
-    findable: " += "
+      @string ' -= '
+  'pluqual':
+    findable: ' += '
     action: ->
-      @string " += "
-  "banquall":
-    findable: " != "
+      @string ' += '
+  'banquall':
+    findable: ' != '
     action: ->
-      @string " != "
-  "longqual":
-    findable: " == "
+      @string ' != '
+  'longqual':
+    findable: ' == '
     action: ->
-      @string " == "
-  "lessqual":
-    findable: " <= "
+      @string ' == '
+  'lessqual':
+    findable: ' <= '
     action: ->
-      @string " <= "
-  "grayqual":
-    findable: " >= "
+      @string ' <= '
+  'grayqual':
+    findable: ' >= '
     action: ->
-      @string " >= "
-  "posh":
-    tags: ["symbol", "quotes", "recommended"]
-    aliases: ["pash"]
+      @string ' >= '
+  'posh':
+    tags: ['symbol', 'quotes', 'recommended']
+    aliases: ['pash']
     spaceBefore: true
     findable: "''"
     action: ->
       @string "''"
-      @key "Left"
-  "coif":
-    tags: ["symbol", "quotes", "recommended"]
-    aliases: ["coiffed"]
-    description: "inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text"
+      @left()
+  'coif':
+    tags: ['symbol', 'quotes', 'recommended']
+    aliases: ['coiffed']
+    description: 'inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text'
     findable: '""'
     spaceBefore: true
     action: ->
@@ -170,226 +170,226 @@ Commands.createDisabledWithDefaults
         @string("\"#{t}\"")
       else
         @string '""'
-        @key "Left"
-  "shrocket":
-    findable: " => "
+        @left()
+  'shrocket':
+    findable: ' => '
     action: ->
-      @string " => "
-  "swipe":
-    aliases: ["swiped", "swipes"]
-    findable: ", "
+      @string ' => '
+  'swipe':
+    aliases: ['swiped', 'swipes']
+    findable: ', '
     action: ->
-      @string ", "
-  "coalgap":
-    findable: ": "
+      @string ', '
+  'coalgap':
+    findable: ': '
     action: ->
-      @string ": "
-  "coalshock":
-    findable: ":\r"
+      @string ': '
+  'coalshock':
+    findable: ':\r'
     action: ->
-      @key ":"
-      @key "Return"
-  "divy":
-    findable: " / "
+      @key ':'
+      @enter()
+  'divy':
+    findable: ' / '
     action: ->
-      @string " / "
-  "sinker":
-    findable: ";"
+      @string ' / '
+  'sinker':
+    findable: ';'
     action: ->
-      @key "Right", 'command'
+      @key 'right', 'command'
       @key ';'
-  "sunkshock":
-    aliases: ["sinkshock"] #TODO remove later
+  'sunkshock':
+    aliases: ['sinkshock'] #TODO remove later
     action: ->
-      @key ";"
-      @key 'Return'
-  "sunk":
-    aliases: ["stunk"]
-    findable: ";"
+      @key ';'
+      @key 'return'
+  'sunk':
+    aliases: ['stunk']
+    findable: ';'
     action: ->
-      @key ";"
-  "clamor":
-    aliases: ["clamber", "clamour"]
-    findable: "!"
+      @key ';'
+  'clamor':
+    aliases: ['clamber', 'clamour']
+    findable: '!'
     action: ->
-      @key "!"
-  "loco":
-    aliases: ["@"]
-    findable: "@"
+      @key '!'
+  'loco':
+    aliases: ['@']
+    findable: '@'
     spaceBefore: true
     action: ->
-      @string "@"
-  "amper":
-    findable: "&"
+      @string '@'
+  'amper':
+    findable: '&'
     action: ->
-      @string "&"
-  "damper":
-    findable: " & "
+      @string '&'
+  'damper':
+    findable: ' & '
     action: ->
-      @string " & "
-  "pounder":
-    findable: "#"
+      @string ' & '
+  'pounder':
+    findable: '#'
     repeatable: true
     spaceBefore: true
     action: ->
-      @string "#"
-  "questo":
-    findable: "?"
+      @string '#'
+  'questo':
+    findable: '?'
     action: ->
-      @string "?"
-  "bartrap":
-    findable: "||"
+      @string '?'
+  'bartrap':
+    findable: '||'
     action: ->
-      @string "||"
-      @key "Left"
-  "goalpost":
-    findable: " || "
+      @string '||'
+      @left()
+  'goalpost':
+    findable: ' || '
     action: ->
-      @string " || "
-  "orquals":
-    findable: " ||= "
+      @string ' || '
+  'orquals':
+    findable: ' ||= '
     action: ->
-      @string " ||= "
-  "spike":
-    findable: "|"
+      @string ' ||= '
+  'spike':
+    findable: '|'
     action: ->
-      @string "|"
-  "angler":
-    description: "inserts angle brackets leaving cursor inside them. If text is selected, will wrap the selected text"
-    findable: "<>"
+      @string '|'
+  'angler':
+    description: 'inserts angle brackets leaving cursor inside them. If text is selected, will wrap the selected text'
+    findable: '<>'
     action: ->
       if @canDetermineSelections() and @isTextSelected()
         t = @getSelectedText()
         @string("<#{t}>")
       else
-        @string "<>"
-        @key "Left"
-  "plus":
-    findable: "+"
+        @string '<>'
+        @left()
+  'plus':
+    findable: '+'
     spaceBefore: true
     action: ->
-      @string "+"
-  "deplush":
-    findable: " + "
+      @string '+'
+  'deplush':
+    findable: ' + '
     action: ->
-      @string " + "
-  "minus":
-    tags: ["symbol", "minus", "recommended"]
+      @string ' + '
+  'minus':
+    tags: ['symbol', 'minus', 'recommended']
     repeatable: true
-    findable: "-"
+    findable: '-'
     spaceBefore: true
     action: ->
-      @string "-"
-  "deminus":
-    tags: ["symbol", "minus", "recommended"]
-    findable: " - "
+      @string '-'
+  'deminus':
+    tags: ['symbol', 'minus', 'recommended']
+    findable: ' - '
     action: ->
-      @string " - "
-  "lambo":
-    aliases: ["limbo"]
-    findable: "->"
+      @string ' - '
+  'lambo':
+    aliases: ['limbo']
+    findable: '->'
     spaceBefore: true
     action: ->
-      @string "->"
-  "quatches":
-    tags: ["symbol", "quotes", "recommended"]
+      @string '->'
+  'quatches':
+    tags: ['symbol', 'quotes', 'recommended']
     findable: '"'
     action: ->
       @string '"'
-  "quatchet":
-    tags: ["symbol", "quotes", "recommended"]
+  'quatchet':
+    tags: ['symbol', 'quotes', 'recommended']
     findable: "'"
     action: ->
       @string "'"
-  "percy":
-    findable: "%"
+  'percy':
+    findable: '%'
     spaceBefore: true
     action: ->
-      @string "%"
-  "depercy":
-    findable: " % "
+      @string '%'
+  'depercy':
+    findable: ' % '
     action: ->
-      @string " % "
-  "dolly":
-    aliases: ["dalai", "dawley", "donnelly", "donley", "dali", "dollies"]
-    findable: "$"
+      @string ' % '
+  'dolly':
+    aliases: ['dalai', 'dawley', 'donnelly', 'donley', 'dali', 'dollies']
+    findable: '$'
     spaceBefore: true
     action: ->
-      @string "$"
-  "clangle":
-    findable: "<"
+      @string '$'
+  'clangle':
+    findable: '<'
     action: ->
-      @string "<"
-  "declangle":
-    findable: " < "
+      @string '<'
+  'declangle':
+    findable: ' < '
     action: ->
-      @string " < "
-  "langlang":
-    pronunciation: "lang glang"
-    findable: "<<"
+      @string ' < '
+  'langlang':
+    pronunciation: 'lang glang'
+    findable: '<<'
     action: ->
-      @string "<<"
-  "wrangle":
-    findable: ">"
+      @string '<<'
+  'wrangle':
+    findable: '>'
     action: ->
-      @string ">"
-  "derangle":
-    findable: " > "
+      @string '>'
+  'derangle':
+    findable: ' > '
     action: ->
-      @string " > "
-  "rangrang":
-    pronunciation: "rang grang"
-    findable: ">>"
+      @string ' > '
+  'rangrang':
+    pronunciation: 'rang grang'
+    findable: '>>'
     action: ->
-      @string ">>"
-  "precorp":
-    findable: "("
+      @string '>>'
+  'precorp':
+    findable: '('
     action: ->
-      @string "("
-  "prekose":
-    findable: ")"
+      @string '('
+  'prekose':
+    findable: ')'
     action: ->
-      @string ")"
-  "brackorp":
-    findable: "["
+      @string ')'
+  'brackorp':
+    findable: '['
     action: ->
-      @string "["
-  "brackose":
-    findable: "]"
+      @string '['
+  'brackose':
+    findable: ']'
     action: ->
-      @string "]"
-  "crunder":
-    findable: "_"
+      @string ']'
+  'crunder':
+    findable: '_'
     action: ->
-      @string "_"
-  "coaltwice":
-    findable: "::"
+      @string '_'
+  'coaltwice':
+    findable: '::'
     action: ->
-      @string "::"
-  "mintwice":
-    tags: ["symbol", "minus", "recommended"]
-    findable: "--"
+      @string '::'
+  'mintwice':
+    tags: ['symbol', 'minus', 'recommended']
+    findable: '--'
     action: ->
-      @string "--"
-  "tinker":
-    findable: "`"
+      @string '--'
+  'tinker':
+    findable: '`'
     action: ->
-      @string "`"
-  "caret":
-    findable: "^"
+      @string '`'
+  'caret':
+    findable: '^'
     action: ->
-      @string "^"
-  "pixel":
-    tags: ["symbol"]
-    findable: "px"
+      @string '^'
+  'pixel':
+    tags: ['symbol']
+    findable: 'px'
     action: ->
-      @string "px "
-  "quesquall":
-    tags: ["symbol"]
-    findable: " ?= "
+      @string 'px '
+  'quesquall':
+    tags: ['symbol']
+    findable: ' ?= '
     action: ->
-      @string " ?= "
-  "ellipsis":
-    findable: "..."
+      @string ' ?= '
+  'ellipsis':
+    findable: '...'
     action: ->
-      @string "..."
+      @string '...'

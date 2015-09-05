@@ -1,13 +1,13 @@
 Commands.createDisabled
-  "mousy":
-    grammarType: "numberCapture"
-    description: "moves the mouse by grid coordinates \
-      [1-9] => grid on current monitor; \
-      10 => center of monitor 1; \
-      20 => center of monitor 2; \
-      [11-19] => grid on monitor 1; \
-      [21-29] => grid on monitor 2"
-    tags: ["smartnav", "mouse"]
+  'mousy':
+    grammarType: 'numberCapture'
+    description: """moves the mouse by grid coordinates
+      [1-9] => grid on current monitor;
+      10 => center of monitor 1;
+      20 => center of monitor 2;
+      [11-19] => grid on monitor 1;
+      [21-29] => grid on monitor 2"""
+    tags: ['smartnav', 'mouse']
     action: (input) ->
       quadrants = [
         [0.5, 0.5]

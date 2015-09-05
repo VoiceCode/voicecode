@@ -1,4 +1,6 @@
 class Platforms.linux.actions extends Platforms.base.actions
+  resolveSuperModifier: ->
+    "control"
   key: (key, modifiers) ->
     key = key.toString()
     @notUndoable()

@@ -1,9 +1,3 @@
-# _.extend Commands.mapping,
-#   "number":
-#     kind: "number"
-#     grammarType: "none"
-#     description: "not spoken. used indirectly by other commands"
-
 numbers =
   one: 1
   two: 2
@@ -39,8 +33,8 @@ numbers =
 
 _.each numbers, (value, key) ->
   Commands.createDisabled key,
-    grammarType: "none"
-    description: "Enters the number: #{value}"
-    # namespace: "#{value}"
-    tags: ["number", "recommended"]
-    module: "number"
+    grammarType: 'none'
+    description: 'Enters the number: #{value}'
+    # namespace: '#{value}'
+    tags: ['number', 'recommended']
+    module: 'number'

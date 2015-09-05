@@ -1,36 +1,38 @@
 Commands.createDisabled
-  "switchy":
-    description: "move current line (or multiline selection) up"
-    tags: ["text-manipulation"]
+  'switchy':
+    description: 'move current line (or multiline selection) up'
+    tags: ['text-manipulation']
     action: (input) ->
       switch @currentApplication()
-        when "Sublime Text"
-          @key "Up", 'control command'
-        when "Atom"
-          @key "Up", 'control command'
-        when "Xcode"
-          @key "[", 'command option'
+        when 'Sublime Text'
+          @key 'up', 'control command'
+        when 'Atom'
+          @key 'up', 'control command'
+        when 'Xcode'
+          @key '[', 'command option'
         else
-          height = @do("folly").height or 1
-          @key "X", 'command'
-          @key "Up"
-          @key "V", 'command'
-          _(height).times => @key "Up", 'shift'
+          height = @do('folly').height or 1
+          @cut()
+          @up()
+          @paste()
+          @repeat height, => 
+            @key 'up', 'shift'
 
-  "switcho":
-    description: "move current line (or multiline selection) down"
-    tags: ["text-manipulation"]
+  'switcho':
+    description: 'move current line (or multiline selection) down'
+    tags: ['text-manipulation']
     action: (input) ->
       switch @currentApplication()
-        when "Sublime Text"
-          @key "Down", 'control command'
-        when "Atom"
-          @key "Down", 'control command'
-        when "Xcode"
-          @key "]", 'command option'
+        when 'Sublime Text'
+          @key 'down', 'control command'
+        when 'Atom'
+          @key 'down', 'control command'
+        when 'Xcode'
+          @key ']', 'command option'
         else
-          height = @do("folly").height or 1
-          @key "X", 'command'
-          @key "Down"
-          @key "V", 'command'
-          _(height).times => @key "Up", 'shift'
+          height = @do('folly').height or 1
+          @cut()
+          @down()
+          @paste()
+          @repeat height, =>
+            @key 'up', 'shift'

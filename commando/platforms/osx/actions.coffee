@@ -18,8 +18,11 @@ class Platforms.osx.actions extends Platforms.base.actions
       Meteor.clearInterval @_monitorBrowserUrlInterval
       delete @_monitorBrowserUrlInterval
 
+  resolveSuperModifier: ->
+    "command"
+
   key: (key, modifiers) ->
-    key = key.toString()
+    key = key.toString().toLowerCase()
 
     @notUndoable()
     code = Platforms.osx.keyCodes[key]
@@ -48,26 +51,26 @@ class Platforms.osx.actions extends Platforms.base.actions
           else
             code = Platforms.osx.keyCodesShift[item]
             if code?
-              @_pressKey code, ["Shift"]
+              @_pressKey code, ["shift"]
   keyDown: (key, modifiers) ->
-    code = Platforms.osx.keyCodes[key]
+    code = Platforms.osx.keyCodes[key.toLowerCase()]
     if code?
       @_keyDown code, @_normalizeModifiers(modifiers)
   keyUp: (key, modifiers) ->
-    code = Platforms.osx.keyCodes[key]
+    code = Platforms.osx.keyCodes[key.toLowerCase()]
     if code?
       @_keyUp code, @_normalizeModifiers(modifiers)
 
-  _keyDown: (key, modifiers) ->
-    e = $.CGEventCreateKeyboardEvent(null, key, true)
+  _keyDown: (keyCode, modifiers) ->
+    e = $.CGEventCreateKeyboardEvent(null, keyCode, true)
     if modifiers?.length
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
     else
       $.CGEventSetFlags(e, 0)
     $.CGEventPost($.kCGSessionEventTap, e)
 
-  _keyUp: (key, modifiers) ->
-    e = $.CGEventCreateKeyboardEvent(null, key, false)
+  _keyUp: (keyCode, modifiers) ->
+    e = $.CGEventCreateKeyboardEvent(null, keyCode, false)
     if modifiers
       $.CGEventSetFlags(e, @_modifierMask(modifiers))
     else
@@ -78,13 +81,13 @@ class Platforms.osx.actions extends Platforms.base.actions
     mask = 0
     for m in modifiers
       bits = switch m
-        when "Shift"
+        when "shift"
           $.kCGEventFlagMaskShift
-        when "Command"
+        when "command"
           $.kCGEventFlagMaskCommand
-        when "Option"
+        when "option"
           $.kCGEventFlagMaskAlternate
-        when "Control"
+        when "control"
           $.kCGEventFlagMaskControl
       mask = mask | bits
     mask
@@ -214,10 +217,10 @@ class Platforms.osx.actions extends Platforms.base.actions
     $.CGEventSetFlags(down, mask)
     $.CGEventSetFlags(up, mask)
 
-    @keyDown "Shift"
+    @keyDown "shift"
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
-    @keyUp "Shift"
+    @keyUp "shift"
     @delay(@clickDelayRequired())
 
   shiftClickAtPosition: (pos) ->
@@ -231,14 +234,14 @@ class Platforms.osx.actions extends Platforms.base.actions
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
-    mask = @_modifierMask(["Command"])
+    mask = @_modifierMask(["command"])
     $.CGEventSetFlags(down, mask)
     $.CGEventSetFlags(up, mask)
 
-    @keyDown "Command"
+    @keyDown "command"
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
-    @keyUp "Command"
+    @keyUp "command"
     @delay(@clickDelayRequired())
 
   commandClickAtPosition: (pos) ->
@@ -251,14 +254,14 @@ class Platforms.osx.actions extends Platforms.base.actions
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
 
-    mask = @_modifierMask(["Option"])
+    mask = @_modifierMask(["option"])
     $.CGEventSetFlags(down, mask)
     $.CGEventSetFlags(up, mask)
 
-    @keyDown "Option"
+    @keyDown "option"
     $.CGEventPost($.kCGSessionEventTap, down)
     $.CGEventPost($.kCGSessionEventTap, up)
-    @keyUp "Option"
+    @keyUp "option"
     @delay(@clickDelayRequired())
 
   getScreenInfo: ->
@@ -521,6 +524,51 @@ class Platforms.osx.actions extends Platforms.base.actions
   #   }
   #   if (focussedElement != NULL) CFRelease(focussedElement);
   #   CFRelease(systemWideElement);
+
+  copy: ->
+    @key 'c', 'super' ; @
+  cut: ->
+    @key 'x', 'super' ; @
+  paste: ->
+    @key 'v', 'super' ; @
+  undo: ->
+    @key 'z', 'super' ; @
+  redo: ->
+    @key 'z', 'super shift' ; @
+  newTab: ->
+    @key 't', 'super' ; @
+  selectAll: ->
+    @key 'a', 'super' ; @
+  save: ->
+    @key 's', 'super' ; @
+  switchApplication: ->
+    @key 'tab', 'command' ; @
+  space: ->
+    @key 'space' ; @
+  enter: ->
+    @key 'return' ; @
+  up: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'up'
+    @
+  down: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'down'
+    @
+  left: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'left'
+    @
+  right: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'right'
+    @
+
+
   getClipboard: ->
     # @applescript("return the clipboard as text")
     p = $.NSPasteboard('generalPasteboard')
@@ -540,7 +588,7 @@ class Platforms.osx.actions extends Platforms.base.actions
 
   getSelectedText: ->
     old = @getClipboard()
-    @key "C", ['command']
+    @copy()
     @waitForClipboard()
     result = @getClipboard()
     @setClipboard(old)
@@ -555,32 +603,32 @@ class Platforms.osx.actions extends Platforms.base.actions
 
   verticalSelectionExpansion: (number) ->
     @notUndoable()
-    @key "C", ["command"]
+    @copy()
     @delay 100
     clipboard = @getClipboard()
     numberOfLines = clipboard.split("\r").length
-    _(number).times => @key "Up"
-    _(numberOfLines + (number * 2) - 1).times => @key "Down", ['shift']
+    @up number
+    @repeat numberOfLines + (number * 2) - 1, => 
+      @key 'down', 'shift'
 
   symmetricSelectionExpansion: (number) ->
     @notUndoable()
-    @key "C", ["command"]
+    @copy()
     @delay 100
     clipboard = @getClipboard()
     length = clipboard?.length or 0
-    @key "Left"
-    _(number).times =>
-      @key "Left"
-    _(number * 2 + length).times =>
-      @key "Right", ["shift"]
+    @left()
+    @left number
+    @repeat number * 2 + length, =>
+      @key 'right', 'shift'
 
   selectCurrentOccurrence: (input) ->
     @notUndoable()
     if input?.length
       first = input[0]
       last = input[1]
-      @key "Left", ['command']
-      @key "Right", ['command', 'shift']
+      @key 'left', 'command'
+      @key 'right', 'command shift'
       clipboard = @getSelectedText().toLowerCase()
       if last?.length and clipboard.indexOf(last) >= 0 and clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
@@ -588,32 +636,30 @@ class Platforms.osx.actions extends Platforms.base.actions
         distanceLeft = firstResults[0]?.length or 0
         lastResults = clipboard.split(last)
         distanceRight = lastResults[lastResults.length - 1]?.length or 0
-        @key "Left"
-        _(distanceLeft).times =>
-          @key "Right"
+        @left()
+        @right distanceLeft
 
         width = totalLength - distanceLeft - distanceRight
-        _(width).times =>
-          @key "Right", ['shift']
+        @repeat width, =>
+          @key 'right', 'shift'
       else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
-        @key "Left"
-        _(distanceLeft).times =>
-          @key "Right"
+        @left()
+        @right distanceLeft
 
         width = first.length
-        _(width).times =>
-          @key "Right", ['shift']
+        @repeat width, =>
+          @key 'right', 'shift'
   selectPreviousOccurrence: (input) ->
     @notUndoable()
     if input?.length
       first = input[0]
       last = input[1]
-      @key "Left"
-      @key "Right"
-      _(20).times => @key "Up", ['shift']
+      @left()
+      @right()
+      @repeat 20, => @key 'up', 'shift'
       clipboard = @getSelectedText().toLowerCase()
       if last?.length and clipboard.indexOf(last) >= 0 and clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
@@ -621,34 +667,31 @@ class Platforms.osx.actions extends Platforms.base.actions
         distanceLeft = firstResults[0]?.length or 0
         lastResults = clipboard.split(last)
         distanceRight = lastResults[lastResults.length - 1]?.length or 0
-        @key "Right"
-        _(distanceRight).times =>
-          @key "Left"
+        @right()
+        @left(distanceRight)
 
         width = distanceLeft - first.length - distanceRight
-        _(width).times =>
-          @key "Left", ['shift']
+        @repeat width, => 
+          @key 'left', 'shift'
       else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
         firstResults = clipboard.split(first)
         distanceRight = firstResults[firstResults.length - 1]?.length or 0
-        @key "Right"
-        _(distanceRight).times =>
-          @key "Left"
-
+        @right()
+        @left(distanceRight)
         width = first.length
         _(width).times =>
-          @key "Left", ['shift']
+          @key 'left', 'shift'
       else
-        @key "Right"
+        @right()
   selectNextOccurrence: (input) ->
     @notUndoable()
     if input?.length
       first = input[0]
       last = input[1]
-      @key "Right"
-      @key "Left"
-      _(20).times => @key "Down", ['shift']
+      @right()
+      @left()
+      _(20).times => @key 'down', 'shift'
       clipboard = @getSelectedText().toLowerCase()
       if last?.length and clipboard.indexOf(last) >= 0 and clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length
@@ -656,61 +699,61 @@ class Platforms.osx.actions extends Platforms.base.actions
         distanceLeft = firstResults[0]?.length or 0
         lastResults = clipboard.split(last)
         distanceRight = lastResults[lastResults.length - 1]?.length or 0
-        @key "Left"
-        _(distanceLeft).times =>
-          @key "Right"
+        @left()
+        @right(distanceLeft)
 
         width = totalLength - distanceLeft - distanceRight
         _(width).times =>
-          @key "Right", ['shift']
+          @key 'right', 'shift'
       else if clipboard.indexOf(first) >= 0
         firstResults = clipboard.split(first)
         distanceLeft = firstResults[0]?.length or 0
-        @key "Left"
-        _(distanceLeft).times =>
-          @key "Right"
+        @left()
+        @right(distanceLeft)
 
         width = first.length
         _(width).times =>
-          @key "Right", ['shift']
+          @key 'right', 'shift'
       else
-        @key "Left"
+        @left()
 
   selectNextOccurrenceWithDistance: (phrase, distance) ->
     @notUndoable()
     if phrase?.length
       distance = (distance or 1)
-      @key "Left"
-      @key "Right"
-      _(20).times => @key "Down", ['shift']
+      @left()
+      @right()
+      _(20).times => @key 'down', 'shift'
       selected = @getSelectedText().toLowerCase()
       if selected.indexOf(phrase) >= 0
         results = selected.split(phrase)
         distanceLeft = results.splice(0, distance).join(phrase).length
-        @key "Left"
-        _(distanceLeft).times =>
-          @key "Right"
+        @left()
+        @right(distanceLeft)
         width = phrase.length
         _(width).times =>
-          @key "Right", ['shift']
+          @key 'right', 'shift'
+      else
+        @left()
 
   selectPreviousOccurrenceWithDistance: (phrase, distance) ->
     @notUndoable()
     if phrase?.length
       distance = (distance or 1)
-      @key "Right"
-      @key "Left"
-      _(20).times => @key "Up", ['shift']
+      @right()
+      @left()
+      _(20).times => @key 'up', 'shift'
       selected = @getSelectedText().toLowerCase()
       if selected.indexOf(phrase) >= 0
         results = selected.split(phrase).reverse()
         distanceLeft = results.splice(0, distance).join(phrase).length
-        @key "Right"
-        _(distanceLeft).times =>
-          @key "Left"
+        @right()
+        @left(distanceLeft)
         width = phrase.length
         _(width).times =>
-          @key "Left", ['shift']
+          @key 'left', 'shift'
+      else
+        @right()
 
   extendSelectionToFollowingOccurrenceWithDistance: (phrase, distance) ->
     @notUndoable()
@@ -718,21 +761,21 @@ class Platforms.osx.actions extends Platforms.base.actions
       if @canDetermineSelections() and @isTextSelected()
         existing = @getSelectedText()
       distance = (distance or 1)
-      _(20).times => @key "Down", ['shift']
+      _(20).times => @key 'down', 'shift'
       selected = @getSelectedText().toLowerCase()
-      @key "Left"
+      @left()
       if existing? and selected.indexOf(existing) is 0
         selected = selected.slice(existing.length)
         _(existing.length).times =>
-          @key "Right", ['shift']
+          @key 'right', 'shift'
       if selected.indexOf(phrase) >= 0
         results = selected.split(phrase)
         distanceLeft = results.splice(0, distance).join(phrase).length
         _(distanceLeft).times =>
-          @key "Right", ['shift']
+          @key 'right', 'shift'
         width = phrase.length
         _(width).times =>
-          @key "Right", ['shift']
+          @key 'right', 'shift'
 
   extendSelectionToPreviousOccurrenceWithDistance: (phrase, distance) ->
     @notUndoable()
@@ -740,21 +783,21 @@ class Platforms.osx.actions extends Platforms.base.actions
       if @canDetermineSelections() and @isTextSelected()
         existing = @getSelectedText()
       distance = (distance or 1)
-      _(20).times => @key "Up", ['shift']
+      _(20).times => @key 'up', 'shift'
       selected = @getSelectedText().toLowerCase()
-      @key "Right"
+      @right()
       if existing? and selected.indexOf(existing) is (selected.length - existing.length)
         selected = selected.slice(0, selected.length - existing.length)
         _(existing.length).times =>
-          @key "Left", ['shift']
+          @key 'left', 'shift'
       if selected.indexOf(phrase) >= 0
         results = selected.split(phrase).reverse()
         distanceLeft = results.splice(0, distance).join(phrase).length
         _(distanceLeft).times =>
-          @key "Left", ['shift']
+          @key 'left', 'shift'
         width = phrase.length
         _(width).times =>
-          @key "Left", ['shift']
+          @key 'left', 'shift'
 
 
   ###
@@ -772,22 +815,22 @@ class Platforms.osx.actions extends Platforms.base.actions
     splitterExpression = params.splitterExpression
 
     if direction > 0
-      horizontalForward = "Right"
-      horizontalBackward = "Left"
-      verticalForward = "Down"
+      horizontalForward = 'right'
+      horizontalBackward = 'left'
+      verticalForward = 'down'
     else
-      horizontalForward = "Left"
-      horizontalBackward = "Right"
-      verticalForward = "Up"
+      horizontalForward = 'left'
+      horizontalBackward = 'right'
+      verticalForward = 'up'
 
     @notUndoable()
 
     if @canDetermineSelections() and @isTextSelected()
       @key horizontalForward
 
-    @key verticalForward, ['shift']
-    @key verticalForward, ['shift']
-    @key horizontalForward, ['shift', 'command']
+    @key verticalForward, 'shift'
+    @key verticalForward, 'shift'
+    @key horizontalForward, 'shift command'
 
     selection = if direction > 0
       @getSelectedText()
@@ -823,7 +866,7 @@ class Platforms.osx.actions extends Platforms.base.actions
       _(results[distance][0]).times =>
         @key horizontalForward
       _(span).times =>
-        @key horizontalForward, ['shift']
+        @key horizontalForward, 'shift'
 
 
   selectSurroundedOccurrence: (params) ->
@@ -834,24 +877,24 @@ class Platforms.osx.actions extends Platforms.base.actions
     direction = params.direction or 1
 
     if direction > 0
-      horizontalForward = "Right"
-      horizontalBackward = "Left"
-      verticalForward = "Down"
+      horizontalForward = 'right'
+      horizontalBackward = 'left'
+      verticalForward = 'down'
     else
-      horizontalForward = "Left"
-      horizontalBackward = "Right"
-      verticalForward = "Up"
+      horizontalForward = 'left'
+      horizontalBackward = 'right'
+      verticalForward = 'up'
 
     @notUndoable()
 
     if @canDetermineSelections() and @isTextSelected()
       @key horizontalForward
 
-    @key verticalForward, ['shift']
-    @key verticalForward, ['shift']
-    @key verticalForward, ['shift']
-    @key verticalForward, ['shift']
-    @key horizontalForward, ['shift', 'command']
+    @key verticalForward, 'shift'
+    @key verticalForward, 'shift'
+    @key verticalForward, 'shift'
+    @key verticalForward, 'shift'
+    @key horizontalForward, 'shift command'
 
     selection = if direction > 0
       @getSelectedText()
@@ -895,7 +938,7 @@ class Platforms.osx.actions extends Platforms.base.actions
       _(results[distance][0]).times =>
         @key horizontalForward
       _(span).times =>
-        @key horizontalForward, ['shift']
+        @key horizontalForward, 'shift'
 
 
   selectBlock: ->
@@ -908,8 +951,8 @@ class Platforms.osx.actions extends Platforms.base.actions
     numberOfLines = (match?.length or 0) + 1
     if clipboard.charAt(clipboard.length - 1).match(/\r/)
       numberOfLines -= 1
-    @key "Left", ['command']
-    _(numberOfLines).times => @key "Down", ['shift']
+    @key 'left', 'command'
+    _(numberOfLines).times => @key 'down', 'shift'
 
     # return some info in case someone wants to do something with it
     {
@@ -919,9 +962,9 @@ class Platforms.osx.actions extends Platforms.base.actions
   deletePartialWord: (direction) ->
     distance = 1
     if direction is "right"
-      @key 'Right', 'command shift'
+      @key 'right', 'command shift'
     else
-      @key 'Left', 'command shift'
+      @key 'left', 'command shift'
     content = @getSelectedText()
     components = SelectionTransformer.uncamelize(content).split(" ")
     if direction is "left"
@@ -938,16 +981,16 @@ class Platforms.osx.actions extends Platforms.base.actions
     chosenComponents = components.splice(0, distance + spacePadding)
     characters = chosenComponents.join('').length + spacePadding
     if direction is "right"
-      @key 'Left'
+      @left()
     else
-      @key 'Right'
+      @right()
     if characters > 0
       for index in [1..characters]
         if direction is "right"
-          @key 'Right', 'shift'
+          @key 'right', 'shift'
         else
-          @key 'Left', 'shift'
-      @key 'Delete'
+          @key 'left', 'shift'
+      @key 'delete'
 
   notify: (text) ->
     Notify(text)

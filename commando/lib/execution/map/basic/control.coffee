@@ -12,14 +12,14 @@ Commands.createDisabled
     aliases: ["skoo", "sku"]
     repeatable: true
     action: ->
-      @key " "
+      @space()
   "sky koosh":
     description: "press shift+space (useful for scrolling up, or other random purposes in certain applications)"
     vocabulary: true
     tags: ["space"]
     repeatable: true
     action: ->
-      @key 'Space', 'shift'
+      @key 'space', 'shift'
   "shockoon":
     description: "Inserts a new line below the current line"
     tags: ["return", "combo", "recommended"]
@@ -27,10 +27,10 @@ Commands.createDisabled
     action: ->
       console.log "running base command"
       if @currentApplication() is "sublime"
-        @key "Return", "command"
+        @key "return", "command"
       else
-        @key "Right", "command"
-        @key "Return"
+        @key "right", "command"
+        @enter()
   "shockey":
     description: "Inserts a new line above the current line"
     aliases: ["chalky", "shocking", "shocky"]
@@ -38,8 +38,8 @@ Commands.createDisabled
     repeatable: true
     action: ->
       if @currentApplication() is "sublime"
-        @key "Return", "command shift"
+        @key "return", "command shift"
       else
-        @key "Left", "command"
-        @key "Return"
-        @key "Up"
+        @key "last", "command"
+        @enter()
+        @up()

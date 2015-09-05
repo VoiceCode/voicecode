@@ -1,53 +1,53 @@
 Commands.createDisabled
-  "page up":
-    description: "press PageUp key [N] times"
-    grammarType: "numberCapture"
-    tags: ["scroll", "up", "recommended"]
+  'page up':
+    description: 'press PageUp key [N] times'
+    grammarType: 'numberCapture'
+    tags: ['scroll', 'up', 'recommended']
     continuous: false
     action: (input) ->
-      _(input or 1).times =>
-        @key "PageUp"
+      @repeat input or 1, =>
+        @key 'pageup'
         @delay 200
-  "page down":
-    description: "press PageDown key [N] times"
-    grammarType: "numberCapture"
-    tags: ["scroll", "down", "recommended"]
+  'page down':
+    description: 'press PageDown key [N] times'
+    grammarType: 'numberCapture'
+    tags: ['scroll', 'down', 'recommended']
     continuous: false
     action: (input) ->
-      _(input or 1).times =>
-        @key "PageDown"
+      @repeat input or 1, =>
+        @key 'pagedown'
         @delay 200
-  "scrodge":
-    description: "scroll down"
-    grammarType: "numberCapture"
-    tags: ["scroll", "down", "recommended"]
+  'scrodge':
+    description: 'scroll down'
+    grammarType: 'numberCapture'
+    tags: ['scroll', 'down', 'recommended']
     action: (input) ->
       @scrollDown(input or 10)
-  "scroop":
-    description: "scroll up"
-    grammarType: "numberCapture"
-    tags: ["scroll", "up", "recommended"]
+  'scroop':
+    description: 'scroll up'
+    grammarType: 'numberCapture'
+    tags: ['scroll', 'up', 'recommended']
     action: (input) ->
       @scrollUp(input or 10)
-  "scrodgeway":
-    description: "scroll way down"
-    tags: ["scroll", "down", "recommended"]
+  'scrodgeway':
+    description: 'scroll way down'
+    tags: ['scroll', 'down', 'recommended']
     action: (input) ->
       @scrollDown(999)
-  "scroopway":
-    description: "scroll way up"
-    tags: ["scroll", "up", "recommended"]
+  'scroopway':
+    description: 'scroll way up'
+    tags: ['scroll', 'up', 'recommended']
     action: (input) ->
       @scrollUp(999)
-  "sweeper":
-    description: "scroll right"
-    grammarType: "numberCapture"
-    tags: ["scroll", "right"]
+  'sweeper':
+    description: 'scroll right'
+    grammarType: 'numberCapture'
+    tags: ['scroll', 'right']
     action: (input) ->
       @scrollRight(input or 1)
-  "sweeple":
-    description: "scroll left"
-    grammarType: "numberCapture"
-    tags: ["scroll", "left"]
+  'sweeple':
+    description: 'scroll left'
+    grammarType: 'numberCapture'
+    tags: ['scroll', 'left']
     action: (input) ->
       @scrollLeft(input or 1)

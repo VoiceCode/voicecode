@@ -22,5 +22,4 @@ Commands.createDisabled
       @string tag
 
       # move the cursor back between the angle brackets by counting the length of the last section
-      _("</#{tagName}>".length).times =>
-        @key "Left"
+      @left "</#{tagName}>".length
