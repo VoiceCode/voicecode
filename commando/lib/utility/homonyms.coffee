@@ -1018,6 +1018,7 @@ w = (commaSeparatedString) ->
     w "sea, see, cee"
     w "seal, seel"
     w "seam, seem"
+    w "sean, shawn"
     w "seamed, seemed"
     w "seamen, semen"
     w "seams, seems"
