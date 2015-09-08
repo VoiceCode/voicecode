@@ -9,7 +9,7 @@ Commands.createDisabledWithDefaults
   'projector':
     description: 'switch projects in Atom'
     action: (input) ->
-      @runAtomCommand 'trigger', 'project-manager:toggle'
+      @runAtomCommand 'trigger', 'project-manager:list-projects'
   'jumpy':
     description: 'open jump-to-symbol dialogue'
     action: (input) ->
