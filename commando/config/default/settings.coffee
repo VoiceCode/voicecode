@@ -43,6 +43,7 @@ w = (commaSeparatedString) ->
   commaSeparatedString.split(/, |\n/)
 
 _.extend Settings,
+  dragonVersion: 5
   maximumRepetitionCount: 100
   defaultBrowser: "Safari"
   websites:
@@ -63,7 +64,6 @@ _.extend Settings,
     automate: "Automator"
     calendar: "Calendar"
     chrome: "Google Chrome"
-    dragon: "Dragon Dictate"
     finder: "Finder"
     firefox: "Firefox"
     illustrator: "Adobe Illustrator"
@@ -521,14 +521,14 @@ _.extend Settings,
   locale: "en"
   localeSettings:
     en:
-      dragonApplicationName: "Dragon Dictate"
-      dragonCommandsWindowName: "Commands"
-      dragonSaveButtonName: "Save"
+      dragonCommandsWindowName: "Commands" # Still needed?
+      dragonSaveButtonName: "Save" # Still needed?
       dragonGlobalName: "Global"
       dragonOsLanguage: "en_GB"
       dragonCommandSpokenLanguage: "en_US"
       dragonTriggerSpokenLanguage: "en_US"
     de:
+      # dragonApplicationName: "Dragon Dictate"
       dragonOsLanguage: "de_DE"
       dragonCommandSpokenLanguage: "en_US"
       dragonTriggerSpokenLanguage: "en_US"

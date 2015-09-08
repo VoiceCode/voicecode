@@ -3,7 +3,7 @@ Commands.createDisabled
     description: "put dragon into sleep mode"
     tags: ["dragon"]
     action: (input) ->
-      dictateName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
+      dictateName = Settings.dragonApplicationName
       @applescript """
       tell application "#{dictateName}"
         set microphone to sleep
@@ -14,7 +14,7 @@ Commands.createDisabled
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
-      dictateName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
+      dictateName = Settings.dragonApplicationName
       @applescript """
       tell application "#{dictateName}" to quit
       delay 2
@@ -26,7 +26,10 @@ Commands.createDisabled
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
-      @openApplication "Dragon Dictate"
+      if Settings.dragonVersion is 5
+        console.error "Command not implemented for dragon version 5"
+        return
+      @openApplication Settings.dragonApplicationName
       @delay 300
       @openMenuBarPath ["Tools", "Vocabulary Editor…"]
 
@@ -35,7 +38,10 @@ Commands.createDisabled
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
-      @openApplication "Dragon Dictate"
+      if Settings.dragonVersion is 5
+        console.error "Command not implemented for dragon version 5"
+        return
+      @openApplication Settings.dragonApplicationName
       @delay 300
       @openMenuBarPath ["Tools", "Commands…"]
 

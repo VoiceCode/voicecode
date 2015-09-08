@@ -43,7 +43,7 @@ class @DragonDictateSynchronizer
     path[path.length - 1]
   databaseFile: (extension) ->
     file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    console.log file
+    # console.log file
     file
   getBundleId: (name) ->
     if @bundles[name]
@@ -61,7 +61,7 @@ class @DragonDictateSynchronizer
         @applicationNames[bundle] = name
         bundle
       else
-        console.log "could not get bundle identifier for: #{name}"
+        # console.log "could not get bundle identifier for: #{name}"
         null
   getApplicationVersion: (bundle) ->
     name = @applicationNames[bundle]
@@ -176,6 +176,10 @@ class @DragonDictateSynchronizer
       console.log "error: dragon database not connected"
       return false
     results = {}
+    needsCreating = []
+    needsUpdating = []
+    needsDeleting = []
+
     existing = @getJoinedCommands()
     for item in existing
       trigger = item.ZSTRING?.trim()
@@ -184,18 +188,22 @@ class @DragonDictateSynchronizer
         bundle = (item.ZAPPBUNDLE or "global").trim()
         results[bundle] ||= {}
         results[bundle][trigger] = item
-
-    needsCreating = []
-    needsUpdating = []
-    needsDeleting = []
+      else # Cleaning up after v4 => v5 update
+        # Searching by voice code instead of the text variable
+        # to prevent deletion of user commands (you never know...)
+        if trigger and trigger.indexOf("voicecode") and Settings.dragonVersion is 5
+          needsDeleting.push
+            id: item.Z_PK
+            trigger: trigger
+            bundle: bundle
 
     for name in Commands.Utility.enabledCommandNames()
       command = new Commands.Base(name, null)
       for cmdType in ["Standalone", "Chained"]
         dragonName = command["generate#{cmdType}DragonCommandName"]().trim()
         # prevent creation of an empty trigger (vc-catch-all)
-        if dragonName is ""
-          continue
+        continue if dragonName is ""
+
         body = command["generate#{cmdType}DragonBody"]().trim()
         for scope in command.getTriggerScopes()
           bundle = @getBundleId(scope)
@@ -232,9 +240,9 @@ class @DragonDictateSynchronizer
           bundle: bundle
 
     final =
-      needsCreating: needsCreating
-      needsUpdating: needsUpdating
-      needsDeleting: needsDeleting
+      needsCreating: needsCreating.length
+      needsUpdating: needsUpdating.length
+      needsDeleting: needsDeleting.length
 
     console.log final
 
