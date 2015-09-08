@@ -19,8 +19,9 @@ Commands.createDisabledWithDefaults
     spaceBefore: true
     action: ->
       @string '/'
-  'quackish':
+  'shalls':
     # aliases: ['\\']
+    description: "backslash. hint: 'shalls' is 'slash' backward."
     findable: '\\'
     action: ->
       @string '\\'
