@@ -43,7 +43,7 @@ class @DragonDictateSynchronizer
     path[path.length - 1]
   databaseFile: (extension) ->
     file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    console.log file
+    # console.log file
     file
   getBundleId: (name) ->
     if @bundles[name]
@@ -61,7 +61,7 @@ class @DragonDictateSynchronizer
         @applicationNames[bundle] = name
         bundle
       else
-        console.log "could not get bundle identifier for: #{name}"
+        # console.log "could not get bundle identifier for: #{name}"
         null
   getApplicationVersion: (bundle) ->
     name = @applicationNames[bundle]
@@ -176,47 +176,66 @@ class @DragonDictateSynchronizer
       console.log "error: dragon database not connected"
       return false
     results = {}
-    existing = @getJoinedCommands()
-    for item in existing
-      trigger = item.ZSTRING?.trim()
-      if trigger and trigger.indexOf("/!Text!/") >= 0
-        bundle = (item.ZAPPBUNDLE or "global").trim()
-        results[bundle] ||= {}
-        results[bundle][trigger] = item
-
     needsCreating = []
     needsUpdating = []
     needsDeleting = []
 
+    existing = @getJoinedCommands()
+    for item in existing
+      trigger = item.ZSTRING?.trim()
+      lookupField = item.ZTEXT.trim()
+      if Settings.dragonVersion is 5
+        lookupField = item.ZDESC.trim()
+
+      if trigger and lookupField.indexOf("voicecode") >= 0
+        bundle = (item.ZAPPBUNDLE or "global").trim()
+        results[bundle] ||= {}
+        results[bundle][trigger] = item
+      else # Cleaning up after v4 => v5 update
+        # Searching by voice code instead of the text variable
+        # to prevent deletion of user commands (you never know...)
+        if trigger and trigger.indexOf("voicecode") and Settings.dragonVersion is 5
+          needsDeleting.push
+            id: item.Z_PK
+            trigger: trigger
+            bundle: bundle
+
     for name in Commands.Utility.enabledCommandNames()
       command = new Commands.Base(name, null)
-      dragonName = command.generateDragonCommandName()
-      body = command.generateDragonBody().trim()
-      for scope in command.getTriggerScopes()
-        bundle = @getBundleId(scope)
-        if bundle?.length
-          value = results[bundle]?[dragonName]
-          if value?
-            if value.ZTEXT?.trim() is body.trim()
-              # everything is fine, command is good
-            else
-              # command body needs updating
-              needsUpdating.push
-                id: value.Z_PK
-                body: body
-                bodyWas: value.ZTEXT
-                bundle: bundle
-          else if command.needsDragonCommand()
-            # command is missing
-            needsCreating.push
-              bundle: bundle
-              triggerPhrase: dragonName
-              body: body
-          else
-            # command doesn't need to exist in dragon
+      commandTypeList = ["Chained"]
+      if Settings.dragonVersion is 5
+        commandTypeList = ["Standalone", "Chained"]
+      for cmdType in commandTypeList
+        dragonName = command["generate#{cmdType}DragonCommandName"]().trim()
+        # prevent creation of an empty trigger (vc-catch-all)
+        continue if dragonName is ""
 
-          if results[bundle]?[dragonName]?
-            delete results[bundle][dragonName]
+        body = command["generate#{cmdType}DragonBody"]().trim()
+        for scope in command.getTriggerScopes()
+          bundle = @getBundleId(scope)
+          if bundle?.length
+            value = results[bundle]?[dragonName]
+            if value?
+              if value.ZTEXT?.trim() is body.trim()
+                # everything is fine, command is good
+              else
+                # command body needs updating
+                needsUpdating.push
+                  id: value.Z_PK
+                  body: body
+                  bodyWas: value.ZTEXT
+                  bundle: bundle
+            else if command.needsDragonCommand()
+              # command is missing
+              needsCreating.push
+                bundle: bundle
+                triggerPhrase: dragonName
+                body: body
+            else
+              # command doesn't need to exist in dragon
+
+            if results[bundle]?[dragonName]?
+              delete results[bundle][dragonName]
 
     # leftovers
     for bundle, items of results
@@ -227,9 +246,9 @@ class @DragonDictateSynchronizer
           bundle: bundle
 
     final =
-      needsCreating: needsCreating
-      needsUpdating: needsUpdating
-      needsDeleting: needsDeleting
+      needsCreating: needsCreating.length
+      needsUpdating: needsUpdating.length
+      needsDeleting: needsDeleting.length
 
     console.log final
 
@@ -263,7 +282,7 @@ class @DragonDictateSynchronizer
     id = @getNextRecordId()
     username = @getUsername()
     @run "BEGIN TRANSACTION;"
-    @run "INSERT INTO ZTRIGGER (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZDESC, ZSPOKENLANGUAGE, ZSTRING) VALUES (4, 1, 1, #{id}, #{id}, 'command description', '#{locale.dragonTriggerSpokenLanguage}', $triggerPhrase);", {$triggerPhrase: triggerPhrase}
+    @run "INSERT INTO ZTRIGGER (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZDESC, ZSPOKENLANGUAGE, ZSTRING) VALUES (4, 1, 1, #{id}, #{id}, 'voicecode', '#{locale.dragonTriggerSpokenLanguage}', $triggerPhrase);", {$triggerPhrase: triggerPhrase}
     @run "INSERT INTO ZACTION (Z_ENT, Z_OPT, ZISUSER, ZCOMMAND, ZCURRENTCOMMAND, ZOSLANGUAGE, ZTEXT) VALUES (1, 1, 1, #{id}, #{id}, '#{locale.dragonOsLanguage}', $body);", {$body: body}
     @run "INSERT INTO ZCOMMAND (Z_ENT, Z_OPT, ZACTIVE, ZAPPVERSION, ZCOMMANDID, ZDISPLAY, ZENGINEID, ZISCOMMAND,
     ZISCORRECTION, ZISDICTATION, ZISSLEEP, ZISSPELLING, ZVERSION, ZCURRENTACTION, ZCURRENTTRIGGER, ZLOCATION,

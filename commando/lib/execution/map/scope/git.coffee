@@ -44,7 +44,7 @@ git =
   'jet tag': {}
 
 _.each git, (value, key) ->
-  output = key.replace('jet', 'git')
+  output = value.output or key.replace('jet', 'git')
 
   defaults =
     tags: ['domain-specific', 'git']
