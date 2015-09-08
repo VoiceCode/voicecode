@@ -55,6 +55,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: '@camelCaseWithAtSign'
     tags: ['text', 'combo']
+    spaceBefore: true
     action: (input) ->
       if input
         @string '@' + Transforms.camel(input)
@@ -64,6 +65,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: '$camelCaseWithDollarSign'
     tags: ['text']
+    spaceBefore: true
     action: (input) ->
       if input
         @string '$' + Transforms.camel(input)
@@ -109,6 +111,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'lowercasewithnospaces'
     tags: ['text', 'recommended']
+    spaceBefore: true
     action: (input) ->
       if input
         @string Transforms.lowerSlam(input)
@@ -118,6 +121,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'UPPERCASEWITHNOSPACES'
     tags: ['text']
+    spaceBefore: true
     action: (input) ->
       if input
         @string Transforms.upperSlam(input)
@@ -127,6 +131,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'UPPER CASE WITH SPACES'
     tags: ['text', 'recommended']
+    spaceBefore: true
     action: (input) ->
       if input
         @string Transforms.upperCase(input)
@@ -136,6 +141,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'UPPER_CASE_SNAKE'
     tags: ['text']
+    spaceBefore: true
     action: (input) ->
       if input
         @string Transforms.upperSnake(input)
@@ -172,6 +178,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'Title Words With Spaces'
     tags: ['text', 'recommended']
+    spaceBefore: true
     action: (input) ->
       if input
         @string Transforms.titleSentance(input)
@@ -181,6 +188,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']
+    spaceBefore: true
     action: (input) ->
       if input
         @string Transforms.titleFirstSentance(input)
