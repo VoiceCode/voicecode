@@ -183,8 +183,11 @@ class @DragonDictateSynchronizer
     existing = @getJoinedCommands()
     for item in existing
       trigger = item.ZSTRING?.trim()
-      description = item.ZDESC.trim()
-      if trigger and description.indexOf("voicecode") >= 0
+      lookupField = item.ZTEXT.trim()
+      if Settings.dragonVersion is 5
+        lookupField = item.ZDESC.trim()
+
+      if trigger and lookupField.indexOf("voicecode") >= 0
         bundle = (item.ZAPPBUNDLE or "global").trim()
         results[bundle] ||= {}
         results[bundle][trigger] = item
@@ -199,7 +202,10 @@ class @DragonDictateSynchronizer
 
     for name in Commands.Utility.enabledCommandNames()
       command = new Commands.Base(name, null)
-      for cmdType in ["Standalone", "Chained"]
+      commandTypeList = ["Chained"]
+      if Settings.dragonVersion is 5
+        commandTypeList = ["Standalone", "Chained"]
+      for cmdType in commandTypeList
         dragonName = command["generate#{cmdType}DragonCommandName"]().trim()
         # prevent creation of an empty trigger (vc-catch-all)
         continue if dragonName is ""

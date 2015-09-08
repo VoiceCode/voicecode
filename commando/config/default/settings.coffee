@@ -43,7 +43,7 @@ w = (commaSeparatedString) ->
   commaSeparatedString.split(/, |\n/)
 
 _.extend Settings,
-  dragonVersion: 5
+  dragonVersion: 4
   maximumRepetitionCount: 100
   defaultBrowser: "Safari"
   websites:
