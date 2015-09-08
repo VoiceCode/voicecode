@@ -40,6 +40,6 @@ Commands.createDisabled
       if @currentApplication() is "sublime"
         @key "return", "command shift"
       else
-        @key "last", "command"
+        @key "left", "command"
         @enter()
         @up()

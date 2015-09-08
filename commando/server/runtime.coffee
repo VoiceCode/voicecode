@@ -274,3 +274,11 @@ else if process.platform is "win32"
 
 else if process.platform is "linux"
   @Actions = new Platforms.linux.actions()
+
+# Determine Dragon application name
+switch Settings.dragonVersion
+  when 5
+    Settings.dragonApplicationName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon"
+  else
+    Settings.dragonApplicationName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
+Settings.applications.dragon = Settings.dragonApplicationName
