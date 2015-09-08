@@ -53,5 +53,16 @@ Commands.createWithDefaults
     description: "consume command text from dragon"
   "go to sleep":
     description: "consume command text from dragon"
+  "show commands":
+    description: "consume command text from dragon"
+  "show commands window":
+    description: "consume command text from dragon"
+  "hide commands window":
+    description: "consume command text from dragon"
+  "hide status window":
+    description: "consume command text from dragon"
+  "command mode":
+    description: "consume command text from dragon"
+
   "press mouse": {}
   "release mouse": {}
