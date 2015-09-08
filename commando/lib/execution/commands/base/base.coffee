@@ -220,7 +220,14 @@ class Commands.Base
     -- #{digest}
     #{script}
     """
-  generateDragonBody: ->
+
+  generateStandaloneDragonBody: ->
+    space = @info.namespace or @namespace
+    """
+    echo -e "#{space}" | nc -U /tmp/voicecode.sock
+    """
+
+  generateChainedDragonBody: ->
     space = @info.namespace or @namespace
     # """
     # curl http://commando:5000/parse --data-urlencode space="#{space}" --data-urlencode phrase="\\${varText}"
@@ -237,12 +244,19 @@ class Commands.Base
     """
     echo -e "#{space} #{variables.join(' ')}" | nc -U /tmp/voicecode.sock
     """
-  generateDragonCommandName: ->
+  generateStandaloneDragonCommandName: ->
+    if @grammarType is "custom"
+      @generateCustomDragonCommandName(false)
+    else
+      @getTriggerPhrase()
+
+
+  generateChainedDragonCommandName: ->
     if @grammarType is "custom"
       @generateCustomDragonCommandName()
     else
       _.compact([@getTriggerPhrase(), "/!Text!/"]).join(' ')
-  generateCustomDragonCommandName: ->
+  generateCustomDragonCommandName: (appendVariable = true)->
     results = [@getTriggerPhrase()]
     for item in @info.customGrammar
       if item.list?
@@ -255,7 +269,7 @@ class Commands.Base
           results.push "(//#{item.text}//)"
         else
           results.push item.text
-    results.push "/!Text!/"
+    results.push "/!Text!/" if appendVariable
     results.join ' '
 
 
