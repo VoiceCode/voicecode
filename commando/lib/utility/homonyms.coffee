@@ -734,6 +734,7 @@ w = (commaSeparatedString) ->
     w "lever, livre"
     w "levers, livres"
     w "liar, lyre"
+    w "light, lite"
     w "liars, lyres"
     w "lichen, liken"
     w "lichens, likens"
