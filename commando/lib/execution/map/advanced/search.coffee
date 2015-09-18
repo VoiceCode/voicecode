@@ -95,3 +95,35 @@ Commands.createDisabledWithDefaults
               expression: term
               distance: input.distance
               direction: 1
+  "nexok":
+    kind : "action"
+    grammarType : "individual"
+    description : "Select next occurrence of select text"
+    action : (input) ->
+      switch @currentApplication()
+        when "Atom"
+          @runAtomCommand "selectNextOccurrence",
+            value: null
+            distance: 1
+        else
+          if @canDetermineSelections() and @isTextSelected()
+            term = @getSelectedText()
+          else
+            return
+          @selectNextOccurrenceWithDistance term, 1
+  "privok":
+    kind : "action"
+    grammarType : "individual"
+    description : "Select previous occurrence of selected text"
+    action : (input) ->
+      switch @currentApplication()
+        when "Atom"
+          @runAtomCommand "selectPreviousOccurrence",
+            value: null
+            distance: 1
+        else
+          if @canDetermineSelections() and @isTextSelected()
+            term = @getSelectedText()
+          else
+            return
+          @selectPreviousOccurrenceWithDistance term, 1
