@@ -10,10 +10,16 @@ Commands.createDisabled
       if input
         @string Transforms.literal(@normalizeTextArray(input))
   'champ':
-    grammarType: 'none'
-    description: 'capitalize the next individual word, and preserves spacing (this command is hardcoded right now - it will be configurable after the next grammar update introduces auto-spacing rules)'
+    grammarType: 'textCapture'
+    description: 'capitalize next individual word'
     tags: ['text', 'recommended']
     spaceBefore: true
+    autoSpacing: 'normal normal'
+    action: (input) ->
+      if input
+        @string Transforms.titleFirstSentance(input)
+      else
+        @transformSelectedText('titleFirstSentance')
   'cram':
     grammarType: 'textCapture'
     description: 'camelCaseText'
@@ -88,6 +94,7 @@ Commands.createDisabled
     aliases: ['chaffed', 'crisped']
     grammarType: 'textCapture'
     spaceBefore: true
+    autoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.stud(input)

@@ -237,7 +237,7 @@ class @Grammar
       = "shrink" / "treemail" / "trusername" / "trassword"
 
     nestableSingleTextIdentifier
-      = item:("champs" / "champ" / "chap")
+      = item:("vc-todo")
       {return "champ";}
 
     nestableTextCommand = nestableFreeTextCommand / nestableSingleTextCommand
