@@ -183,9 +183,7 @@ class @DragonDictateSynchronizer
     existing = @getJoinedCommands()
     for item in existing
       trigger = item.ZSTRING?.trim()
-      lookupField = item.ZTEXT.trim()
-      if Settings.dragonVersion is 5
-        lookupField = item.ZDESC.trim()
+      lookupField = item.ZDESC.trim()
 
       if trigger and lookupField.indexOf("voicecode") >= 0
         bundle = (item.ZAPPBUNDLE or "global").trim()

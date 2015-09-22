@@ -35,6 +35,8 @@ git =
   'jet move':
     output: 'git mv'
   'jet pull': {}
+  'jet pull rebase':
+    output: 'git pull --rebase'
   'jet push': {}
   'jet rebase': {}
   'jet reset': {}
