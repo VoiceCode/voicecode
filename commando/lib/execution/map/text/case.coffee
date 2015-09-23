@@ -38,6 +38,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'space camelCaseText'
     tags: ['text', 'combo']
+    multiPhraseAutoSpacing: 'never normal'
     action: (input) ->
       if input
         @string '.' + Transforms.camel(input)
@@ -47,6 +48,7 @@ Commands.createDisabled
     tags: ['text', 'recommended']
     spaceBefore: true
     autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.snake(input)
@@ -141,6 +143,8 @@ Commands.createDisabled
     description: 'UPPER CASE WITH SPACES'
     tags: ['text', 'recommended']
     spaceBefore: true
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.upperCase(input)
@@ -198,6 +202,7 @@ Commands.createDisabled
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']
     spaceBefore: true
+    multiPhraseAutoSpacing: 'never normal'
     action: (input) ->
       if input
         @string Transforms.titleFirstSentance(input)
@@ -207,6 +212,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'space then Sentence case with spaces'
     tags: ['text', 'recommended']
+    multiPhraseAutoSpacing: 'never normal'
     action: (input) ->
       if input
         @string ' ' + Transforms.titleFirstSentance(input)
@@ -214,6 +220,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']
+    multiPhraseAutoSpacing: 'never normal'
     action: (input) ->
       if input
         @string '. ' + Transforms.titleFirstSentance(input)

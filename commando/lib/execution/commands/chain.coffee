@@ -182,7 +182,7 @@ class Commands.Chain
       else
         c.autoSpacing
       if spacing?
-        right = spacing.split(' ')[1]
+        right = spacing.split(' ')[0]
     combined = [left, right].join ' '
     if combined.indexOf('never') != -1
       null
