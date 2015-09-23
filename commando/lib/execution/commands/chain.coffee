@@ -28,6 +28,7 @@ class Commands.Chain
     Commands.repetitionIndex = 0
     results = @parse()
     console.log "parsed: #{JSON.stringify results}"
+    Commands.lastCommandOfPreviousPhrase = _.last(results)
     if results?
       combined = _.map(results, (result) ->
         command = new Commands.Base(result.command, result.arguments, result.context)
@@ -140,8 +141,18 @@ class Commands.Chain
   applyAutoSpacing: (commands) ->
     results = []
     for current, index in commands
-      previous = commands[index - 1]
-      connector = @determineCommandConnector(previous, current)
+      if index is 0
+        previous = Commands.lastCommandOfPreviousPhrase
+        connector = @determineCommandConnector
+          previous: previous
+          current: current
+          multiPhrase: true
+      else
+        previous = commands[index - 1]
+        connector = @determineCommandConnector
+          previous: previous
+          current: current
+          multiPhrase: false
       if connector?
         results.push
           command: connector
@@ -153,17 +164,25 @@ class Commands.Chain
         command: connector
     results
 
-  determineCommandConnector: (_previous, _current) ->
+  determineCommandConnector: ({previous, current, multiPhrase}) ->
     left = 'undefined'
     right = 'undefined'
-    if _previous?
-      previous = Commands.mapping[_previous.command]
-      if previous.autoSpacing?
-        left = previous.autoSpacing.split(' ')[1]
-    if _current?
-      current = Commands.mapping[_current.command]
-      if current.autoSpacing?
-        right = current.autoSpacing.split(' ')[0]
+    if previous?
+      p = Commands.mapping[previous.command]
+      spacing = if multiPhrase
+        p.multiPhraseAutoSpacing
+      else
+        p.autoSpacing
+      if spacing?
+        left = spacing.split(' ')[1]
+    if current?
+      c = Commands.mapping[current.command]
+      spacing = if multiPhrase
+        c.multiPhraseAutoSpacing
+      else
+        c.autoSpacing
+      if spacing?
+        right = spacing.split(' ')[1]
     combined = [left, right].join ' '
     if combined.indexOf('never') != -1
       null

@@ -6,6 +6,7 @@ Commands.createDisabled
     needsDragonCommand: false
     isSpoken: false
     autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
@@ -15,6 +16,7 @@ Commands.createDisabled
     tags: ['text', 'recommended']
     spaceBefore: true
     autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.titleFirstSentance(input)
