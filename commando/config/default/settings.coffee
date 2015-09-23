@@ -505,6 +505,10 @@ _.extend Settings,
     "iOS Simulator"
     "Anki"
   ]
+  applicationsThatWillNotAllowArrowKeyTextSelection: [
+    "Terminal"
+    "iTerm"
+  ]
   modifierKeyDelay: 2 # ms
   keyDelay: 8 # ms delay between each key when called individually, like Return, UpArrow, etc.
   characterDelay: 4 # ms delay between each letter when typing a string of characters

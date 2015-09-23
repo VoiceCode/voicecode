@@ -95,6 +95,9 @@ class Platforms.osx.actions extends Platforms.base.actions
   needsExplicitModifierPresses: ->
     _.contains Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication()
 
+  contextAllowsArrowKeyTextSelection: ->
+    not _.contains(Settings.applicationsThatWillNotAllowArrowKeyTextSelection, @currentApplication())
+
   clickDelayRequired: ->
     Settings.clickDelayRequired[@currentApplication()] or Settings.clickDelayRequired["default"] or 0
 

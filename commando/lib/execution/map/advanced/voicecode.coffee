@@ -45,9 +45,13 @@ Commands.createDisabled
     action: () ->
       count = Commands.previousUndoByDeletingCount
       if count? and count > 0
-        for i in [1..count]
-          @key 'left', 'shift'
-        @key "delete"
+        if @contextAllowsArrowKeyTextSelection()
+          @repeat count, =>
+            @key 'left', 'shift'
+          @key "delete"
+        else
+          @repeat count, =>
+            @key 'delete'
   "tragic":
     description: "tries to select the previously inserted text if possible"
     tags: ["system", "voicecode", "recommended"]
