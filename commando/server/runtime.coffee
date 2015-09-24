@@ -67,7 +67,7 @@ if process.platform is "darwin"
   n('addObserver', delegate, 'selector', 'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
 
   mouseHandler = (self, event) ->
-    console.log "mousedown", event
+    # console.log "mousedown", event
     if Commands.monitoringMouseToCancelSpacing
       console.log "canceling auto spacing"
       Commands.lastCommandOfPreviousPhrase = null
