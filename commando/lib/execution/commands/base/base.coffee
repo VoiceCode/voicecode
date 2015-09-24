@@ -36,6 +36,7 @@ Commands.keys =
   customContinuous: []
   repeater: []
   findable: []
+Commands.delayedEditFunctions = []
 
 Commands.create = (name, options) ->
   if typeof name is "string"
@@ -63,27 +64,50 @@ Commands.createDisabledWithDefaults = (defaults, options) ->
     command = _.extend {}, defaults, value
     Commands.mapping[key] = command
 
+# queues all the command edits until sometime in the future, where they are all called at once
+Commands.edit = (name, callback) ->
+  Commands.delayedEditFunctions.push
+    name: name
+    callback: callback
+
+Commands.get = (name) ->
+  Commands.mapping[name]
+
+Commands.performCommandEdits = ->
+  _.each Commands.delayedEditFunctions, (item) ->
+    command = Commands.get item.name
+    if command?
+      item.callback(command)
+    else
+      console.log "Error editing command: '#{item.name}' was not found"
+
 Commands.override = (name, action) ->
   console.log "ERROR: Commands.override is deprecated. Use Commands.extend"
 #   Commands.mapping[name].override = action
 
 Commands.extend = (name, extension) ->
-  Commands.mapping[name].extensions ?= []
-  Commands.mapping[name].extensions.push extension
+  Commands.edit name, (command) ->
+    command.extensions ?= []
+    command.extensions.push extension
+
 Commands.before = (name, extension) ->
-  Commands.mapping[name].before ?= []
-  Commands.mapping[name].before.push extension
+  Commands.edit name, (command) ->
+    command.before ?= []
+    command.before.push extension
 Commands.after = (name, extension) ->
-  Commands.mapping[name].after ?= []
-  Commands.mapping[name].after.push extension
+  Commands.edit name, (command) ->
+    command.after ?= []
+    command.after.push extension
 
-Commands.addAliases = (key, aliases) ->
-  Commands.mapping[key].aliases ?= []
-  Commands.mapping[key].aliases = Commands.mapping[key].aliases.concat aliases
+Commands.addAliases = (name, aliases) ->
+  Commands.edit name, (command) ->
+    command.aliases ?= []
+    command.aliases = command.aliases.concat aliases
 
-Commands.changeName = (old, newName) ->
-  Commands.mapping[newName] = Commands.mapping[old]
-  delete Commands.mapping[old]
+Commands.changeName = (name, newName) ->
+  Commands.edit name, (command) ->
+    Commands.mapping[newName] = command
+    delete Commands.mapping[name]
 
 Commands.loadConditionalModules = (enabledCommands) ->
   for key, value of Commands.mapping

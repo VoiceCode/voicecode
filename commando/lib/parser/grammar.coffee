@@ -231,7 +231,7 @@ class @Grammar
       = identifier:(#{@individualCommandsContinuous()}) ss {return identifier;}
 
     literalCommand
-      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / phonemeString / word / symbol)+ {return {command: "vc-literal", arguments: text};}
+      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {command: "vc-literal", arguments: text};}
 
     nestableFreeTextIdentifier
       = "shrink" / "treemail" / "trusername" / "trassword"
@@ -350,6 +350,9 @@ class @Grammar
     phonemeString =
       phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
       {return phonemes.join('');}
+    labeledPhonemeString =
+      phonemes:(phonemeString)
+      {return {text: phonemes, source: 'phonemes'};}
 
     modifierIdentifier
       = prefix:modifierPrefix ss suffix:modifierSuffix {return prefix + " " + suffix;}

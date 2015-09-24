@@ -28,6 +28,7 @@ Meteor.startup ->
   @modifiers = new Modifiers()
   @enabledCommandsManager = new EnabledCommandsManager()
   @vocabulary = new Vocabulary()
+  Commands.performCommandEdits()
   Commands.loadConditionalModules(enabledCommandsManager.settings)
   modifiers.checkVocabulary()
   @ParseGenerator = {}

@@ -6,7 +6,11 @@ Commands.createDisabled
     needsDragonCommand: false
     isSpoken: false
     autoSpacing: 'normal normal'
-    multiPhraseAutoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: (input) ->
+      if input?.length
+        if typeof input[0] is 'object' and input[0].source is 'phonemes'
+          return 'never normal'
+      'normal normal'
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))

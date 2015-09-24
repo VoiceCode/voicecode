@@ -168,19 +168,11 @@ class Commands.Chain
     left = 'undefined'
     right = 'undefined'
     if previous?
-      p = Commands.mapping[previous.command]
-      spacing = if multiPhrase
-        p.multiPhraseAutoSpacing
-      else
-        p.autoSpacing
+      spacing = @getAutoSpacingFromCommand previous, multiPhrase
       if spacing?
         left = spacing.split(' ')[1]
     if current?
-      c = Commands.mapping[current.command]
-      spacing = if multiPhrase
-        c.multiPhraseAutoSpacing
-      else
-        c.autoSpacing
+      spacing = @getAutoSpacingFromCommand current, multiPhrase
       if spacing?
         right = spacing.split(' ')[0]
     combined = [left, right].join ' '
@@ -195,6 +187,17 @@ class Commands.Chain
         when 'soft normal', 'normal soft'
           'skoosh'
       
+  getAutoSpacingFromCommand: (command, multiPhrase) ->
+    info = Commands.mapping[command.command]
+    spacing = if multiPhrase
+      info.multiPhraseAutoSpacing
+    else
+      info.autoSpacing
+    if spacing?
+      if typeof spacing is 'function'
+        spacing.call(Actions, command.arguments, command.context)
+      else
+        spacing
 
   makeAppleScriptCommand: (content) ->
     """osascript <<EOD
