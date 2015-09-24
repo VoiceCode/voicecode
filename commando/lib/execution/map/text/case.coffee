@@ -102,7 +102,10 @@ Commands.createDisabled
     aliases: ['chaffed', 'crisped']
     grammarType: 'textCapture'
     spaceBefore: true
-    autoSpacing: 'normal normal'
+    autoSpacing: (input) ->
+      if input then 'normal normal'
+    multiPhraseAutoSpacing: (input) ->
+      if input then 'normal normal'
     action: (input) ->
       if input
         @string Transforms.stud(input)
