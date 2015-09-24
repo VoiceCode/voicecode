@@ -37,6 +37,7 @@ Commands.keys =
   repeater: []
   findable: []
 Commands.delayedEditFunctions = []
+Commands.monitoringMouseToCancelSpacing = true
 
 Commands.create = (name, options) ->
   if typeof name is "string"

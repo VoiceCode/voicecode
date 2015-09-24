@@ -28,8 +28,9 @@ class Commands.Chain
     Commands.repetitionIndex = 0
     results = @parse()
     console.log "parsed: #{JSON.stringify results}"
-    Commands.lastCommandOfPreviousPhrase = _.last(results)
     if results?
+      Commands.lastCommandOfPreviousPhrase = _.last(results)
+      Commands.monitoringMouseToCancelSpacing = false
       combined = _.map(results, (result) ->
         command = new Commands.Base(result.command, result.arguments, result.context)
         individual = command.generate()
@@ -61,6 +62,10 @@ class Commands.Chain
           createdAt: new Date()
           interpretation: results
           spoken: @phrase
+
+      Meteor.setTimeout ->
+        Commands.monitoringMouseToCancelSpacing = true
+      , 150
 
       {interpretation: results, generated: combined}
 

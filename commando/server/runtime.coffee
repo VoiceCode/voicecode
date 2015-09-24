@@ -65,6 +65,17 @@ if process.platform is "darwin"
 
   n('addObserver', delegate, 'selector', 'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
   n('addObserver', delegate, 'selector', 'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
+
+  mouseHandler = (self, event) ->
+    console.log "mousedown", event
+    if Commands.monitoringMouseToCancelSpacing
+      console.log "canceling auto spacing"
+      Commands.lastCommandOfPreviousPhrase = null
+  
+  mouseHandlerPointer = $(mouseHandler, ['v', ['@', '@']])
+
+  $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', mouseHandlerPointer
+
   # app('activateIgnoringOtherApps', true)
   # shared('run')
   # $.NSRunLoop('mainRunLoop')('run')
@@ -126,7 +137,7 @@ if process.platform is "darwin"
       app 'sendEvent', ev
     # app 'updateWindows'
     if true
-      Meteor.setTimeout tock, 300
+      Meteor.setTimeout tock, 100
     # return
 
   app 'finishLaunching'
