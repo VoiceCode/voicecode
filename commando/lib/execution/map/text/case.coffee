@@ -227,7 +227,16 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']
-    multiPhraseAutoSpacing: 'never normal'
+    autoSpacing: (input) ->
+      if input
+        'never normal'
+      else
+        'never never'
+    multiPhraseAutoSpacing: (input) ->
+      if input
+        'never normal'
+      else
+        'never never'
     action: (input) ->
       if input
         @string '. ' + Transforms.titleFirstSentance(input)

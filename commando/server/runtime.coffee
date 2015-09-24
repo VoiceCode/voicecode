@@ -31,6 +31,9 @@ if process.platform is "darwin"
   AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notification) ->
     current = notification('object')('frontmostApplication')('localizedName').toString()
     Actions.setCurrentApplication current
+    if Commands.monitoringMouseToCancelSpacing
+      console.log "canceling auto spacing"
+      Commands.lastCommandOfPreviousPhrase = null
     if current in Settings.dragonIncompatibleApplications
       console.log "disabling main command socket for compatibility with: #{current}"
       listeningOnMainSocket = false
