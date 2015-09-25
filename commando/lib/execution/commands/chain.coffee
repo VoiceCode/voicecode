@@ -163,7 +163,11 @@ class Commands.Chain
           command: connector
       results.push current
     # apply the last element
-    connector = @determineCommandConnector(_.last(commands), null)
+    connector = @determineCommandConnector
+      previous: _.last(commands)
+      current: null
+      multiPhrase: false
+
     if connector?
       results.push
         command: connector
@@ -183,7 +187,7 @@ class Commands.Chain
     combined = [left, right].join ' '
     if combined.indexOf('never') != -1
       null
-    if combined.indexOf('always') != -1
+    else if combined.indexOf('always') != -1
       'skoosh'
     else
       switch combined
