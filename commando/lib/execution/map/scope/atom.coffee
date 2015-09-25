@@ -23,4 +23,4 @@ Commands.createDisabled
   tradam:
     description: 'open Atom. (this is needed because the regular "fox Atom" always opens a new window)'
     tags: ['atom']
-    action: -> @applescript "tell application 'Atom' to activate"
+    action: -> @openApplication "Atom"
