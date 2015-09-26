@@ -91,7 +91,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'insert a shell command from the predefined shell commands list'
     tags: ['text', 'shell']
-    aliases: ['shall', 'chell']
+    misspellings: ['shall', 'chell']
     continuous: false
     action: (input) ->
       if input?.length

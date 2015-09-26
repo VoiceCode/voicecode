@@ -3,41 +3,41 @@ Commands.createDisabledWithDefaults
 ,
   'dot':
     findable: '.'
-    aliases: ['.']
+    misspellings: ['.']
     spaceBefore: true
     action: ->
       @string '.'
   'star':
-    aliases: ['*']
+    misspellings: ['*']
     findable: '*'
     spaceBefore: true
     action: ->
       @string '*'
   'slash':
-    aliases: ['/']
+    misspellings: ['/']
     findable: '/'
     spaceBefore: true
     action: ->
       @string '/'
   'shalls':
-    # aliases: ['\\']
+    # misspellings: ['\\']
     description: "backslash. hint: 'shalls' is 'slash' backward."
     findable: '\\'
     action: ->
       @string '\\'
   'comma':
-    aliases: [',']
+    misspellings: [',']
     findable: ','
     action: ->
       @string ','
   'tilde':
-    aliases: ['~']
+    misspellings: ['~']
     findable: '~'
     spaceBefore: true
     action: ->
       @string '~'
   'colon':
-    aliases: [':']
+    misspellings: [':']
     findable: ':'
     spaceBefore: true
     action: ->
@@ -153,7 +153,7 @@ Commands.createDisabledWithDefaults
       @string ' >= '
   'posh':
     tags: ['symbol', 'quotes', 'recommended']
-    aliases: ['pash']
+    misspellings: ['pash']
     spaceBefore: true
     findable: "''"
     action: ->
@@ -161,7 +161,7 @@ Commands.createDisabledWithDefaults
       @left()
   'coif':
     tags: ['symbol', 'quotes', 'recommended']
-    aliases: ['coiffed']
+    misspellings: ['coiffed']
     description: 'inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text'
     findable: '""'
     spaceBefore: true
@@ -177,7 +177,7 @@ Commands.createDisabledWithDefaults
     action: ->
       @string ' => '
   'swipe':
-    aliases: ['swiped', 'swipes']
+    misspellings: ['swiped', 'swipes']
     findable: ', '
     action: ->
       @string ', '
@@ -200,22 +200,22 @@ Commands.createDisabledWithDefaults
       @key 'right', 'command'
       @key ';'
   'sunkshock':
-    aliases: ['sinkshock'] #TODO remove later
+    misspellings: ['sinkshock'] #TODO remove later
     action: ->
       @key ';'
       @key 'return'
   'sunk':
-    aliases: ['stunk']
+    misspellings: ['stunk']
     findable: ';'
     action: ->
       @key ';'
   'clamor':
-    aliases: ['clamber', 'clamour']
+    misspellings: ['clamber', 'clamour']
     findable: '!'
     action: ->
       @key '!'
   'loco':
-    aliases: ['@']
+    misspellings: ['@']
     findable: '@'
     spaceBefore: true
     action: ->
@@ -287,7 +287,7 @@ Commands.createDisabledWithDefaults
     action: ->
       @string ' - '
   'lambo':
-    aliases: ['limbo']
+    misspellings: ['limbo']
     findable: '->'
     spaceBefore: true
     action: ->
@@ -312,7 +312,7 @@ Commands.createDisabledWithDefaults
     action: ->
       @string ' % '
   'dolly':
-    aliases: ['dalai', 'dawley', 'donnelly', 'donley', 'dali', 'dollies']
+    misspellings: ['dalai', 'dawley', 'donnelly', 'donley', 'dali', 'dollies']
     findable: '$'
     spaceBefore: true
     action: ->

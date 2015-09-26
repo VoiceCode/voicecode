@@ -37,7 +37,7 @@ class @Grammar
     for name in keys
       command = Commands.mapping[name]
       if command.enabled
-        if command.aliases?.length
+        if command.misspellings?.length
           if name is "."
             results.push "dot"
           else
@@ -45,19 +45,19 @@ class @Grammar
         else
           results.push "\"#{name}\""
     results.join(' / ')
-  aliases: ->
+  misspellings: ->
     results = []
     for name, command of Commands.mapping
-      if command.aliases?.length
-        alternates = _.map command.aliases, (alt) ->
+      if command.misspellings?.length
+        alternates = _.map command.misspellings, (alt) ->
           "'#{alt}'"
         alternates.push "'#{name}'"
         normalName = if name is "."
           "dot"
         else
           name.split(" ").join('_')
-        aliases = _.sortBy(alternates, (e) -> e).reverse()
-        aliasLine = "#{normalName} = (#{aliases.join(" / ")}) {return '#{name}';}"
+        misspellings = _.sortBy(alternates, (e) -> e).reverse()
+        aliasLine = "#{normalName} = (#{misspellings.join(" / ")}) {return '#{name}';}"
         results.push aliasLine
     results.join("\n")
   translationIdentifiers: ->
@@ -145,7 +145,7 @@ class @Grammar
       = identifier:(#{@textCaptureCommandsContinuous()}) ss {return identifier;}
 
 
-    #{@aliases()}
+    #{@misspellings()}
 
     #{@customCommandsContent()}
 
@@ -377,7 +377,7 @@ class @Grammar
     """
   buildCustomCommand: (name) ->
     command = new Commands.Base(name, null)
-    token = if command.info.aliases?.length
+    token = if command.info.misspellings?.length
       name.split(" ").join('_')
     else
       '"' + name + '"'

@@ -2,7 +2,7 @@ Commands.createDisabled
   'spark':
     grammarType: 'oneArgument'
     description: 'paste the clipboard (or named item from {stoosh} command)'
-    aliases: ['sparked']
+    misspellings: ['sparked']
     tags: ['clipboard', 'recommended']
     spaceBefore: true
     action: (input) ->
@@ -57,6 +57,6 @@ Commands.createDisabled
   'snatch':
     description: 'cut whatever is selected'
     tags: ['clipboard', 'recommended']
-    aliases: ['snatched']
+    misspellings: ['snatched']
     action: ->
       @cut()

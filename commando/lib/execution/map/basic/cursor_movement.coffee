@@ -23,7 +23,7 @@ Commands.createDisabled
       @up()
   'crimp':
     description: 'press the left arrow'
-    aliases: ['crimped']
+    misspellings: ['crimped']
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
@@ -31,7 +31,7 @@ Commands.createDisabled
   'chris':
     description: 'press the right arrow'
     tags: ['cursor', 'recommended']
-    aliases: ['krist', 'crist']
+    misspellings: ['krist', 'crist']
     repeatable: true
     action: ->
       @right()
@@ -67,7 +67,7 @@ Commands.createDisabled
   'derek':
     description: 'moves the cursor on the way to the right than inserts a space'
     tags: ['cursor', 'space', 'right', 'combo', 'recommended']
-    aliases: ['derrick']
+    misspellings: ['derrick']
     action: ->
       @key 'right', 'command'
       @space()
@@ -96,14 +96,14 @@ Commands.createDisabled
   'shackle':
     description: 'selects the entire line'
     tags: ['selection', 'recommended']
-    aliases: ['sheqel', 'shikel', 'shekel']
+    misspellings: ['sheqel', 'shikel', 'shekel']
     action: ->
       @key 'left', 'command'
       @key 'right', 'command shift'
   'snipline':
     description: 'will delete the entire line(s)'
     tags: ['deleting', 'recommended']
-    aliases: ['snipeline']
+    misspellings: ['snipeline']
     action: ->
       switch @currentApplication()
         when 'Sublime Text'
@@ -117,7 +117,7 @@ Commands.createDisabled
   'snipper':
     description: 'will delete everything to the right'
     tags: ['deleting', 'right', 'recommended']
-    aliases: ['sniper']
+    misspellings: ['sniper']
     action: ->
       if @currentApplication is 'Sublime Text'
         @key 'k', ['control']
@@ -132,7 +132,7 @@ Commands.createDisabled
   'jolt':
     description: 'will duplicate the current line'
     tags: ['text-manipulation', 'recommended']
-    aliases: ['joel']
+    misspellings: ['joel']
     action: ->
       switch @currentApplication()
         when 'Sublime Text', 'Atom'

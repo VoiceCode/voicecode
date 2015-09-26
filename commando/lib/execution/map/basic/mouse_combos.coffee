@@ -76,7 +76,7 @@ Commands.createDisabled
       @do 'chiff', input, context
       @do 'skoosh'
   'sappy':
-    aliases: ['sapi']
+    misspellings: ['sapi']
     description: 'click, then delete entire line'
     tags: ['mouse', 'combo']
     mouseLatency: true

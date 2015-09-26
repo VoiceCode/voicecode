@@ -4,7 +4,7 @@ Commands.createDisabledWithDefaults
 ,
   "trail":
     description: "search backward for the next thing you say, then select it"
-    aliases: ["trailed"]
+    misspellings: ["trailed"]
     action: (input) ->
       term = input?.value or @storage.previousSearchTerm
       if term?.length
@@ -18,7 +18,7 @@ Commands.createDisabledWithDefaults
             @selectPreviousOccurrenceWithDistance term, input.distance
   "crew":
     description: "search forward for the next thing you say, then select it"
-    aliases: ["crews", "cruise"]
+    misspellings: ["crews", "cruise"]
     action: (input) ->
       term = input?.value or @storage.previousSearchTerm
       if term?.length

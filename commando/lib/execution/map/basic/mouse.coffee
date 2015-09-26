@@ -48,7 +48,7 @@ Commands.createDisabled
   'shicks':
     description: 'shift+click'
     tags: ['mouse', 'recommended']
-    aliases: ['chicks']
+    misspellings: ['chicks']
     mouseLatency: true
     action: (input, context) ->
       if context.mouseLatencyIndex

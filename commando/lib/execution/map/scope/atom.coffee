@@ -5,6 +5,7 @@ Commands.createDisabledWithDefaults
   'connector':
     description: 'connect voicecode to atom'
     action: (input) ->
+      # can't use runAtomCommand here because it isn't connected yet :)
       @openMenuBarPath(['Packages', 'VoiceCode', 'Connect'])
   'projector':
     description: 'switch projects in Atom'

@@ -1,6 +1,6 @@
 Commands.createDisabled
   'shock':
-    aliases: ['shocked', 'shox', 'chalk', 'schock']
+    misspellings: ['shocked', 'shox', 'chalk', 'schock']
     description: 'press the return key'
     tags: ['return', 'recommended']
     repeatable: true
@@ -8,7 +8,7 @@ Commands.createDisabled
       @enter()
   'junk':
     description: 'press the delete key'
-    aliases: ['junks', 'junked']
+    misspellings: ['junks', 'junked']
     tags: ['deleting', 'recommended']
     repeatable: true
     action: (input) ->
@@ -75,7 +75,7 @@ Commands.createDisabled
       @key '[', 'command'
   'shabber':
     description: 'indent to the right'
-    aliases: ['shammar']
+    misspellings: ['shammar']
     tags: [']', 'recommended']
     repeatable: true
     action: (input) ->
@@ -122,7 +122,7 @@ Commands.createDisabled
   'talky':
     description: 'open a new tab'
     tags: ['application', 'window', 'recommended']
-    aliases: ['talkie']
+    misspellings: ['talkie']
     action: ->
       @newTab()
   'randall':

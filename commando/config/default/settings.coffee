@@ -140,6 +140,8 @@ _.extend Settings,
     large: "lg"
     length: "len"
     library: "lib"
+    location: "loc"
+    locate: "loc"
     medium: "md"
     minimum: "min"
     navigate: "nav"
@@ -298,6 +300,7 @@ _.extend Settings,
   vocabulary: [
     "trello"
     "auto space"
+    "add misspellings"
   ]
   vocabularyAlternate:
     # "spoken": "result"
@@ -314,6 +317,7 @@ _.extend Settings,
     webs: "websites"
     quinn: "codeSnippets"
   commonSequences:
+    # common sequences are added as vocabulary terms to provide maximum recognition accuracy
     brax: w 'coif, posh'
     chiff: w 'olly, junk, jolt, shock, junk, spunk, swipe, dot, shockey, shicks, chiff'
     chris: w 'swipe, spunk, snipper, criffed, cram, snake'
@@ -521,7 +525,7 @@ _.extend Settings,
     "default": 50
   mouseTracking: false
   debugMouseTracking: false
-  mouseTrackingFrequency: 100 #ms
+  mouseTrackingFrequency: 100 #ms (I don't recommend changing this)
   locale: "en"
   localeSettings:
     en:
@@ -559,7 +563,7 @@ _.extend Settings,
   ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000
-  emotions:
+  emoticons:
     chagrin: ":P"
     frown: ":("
     sheep: ":}"
@@ -588,12 +592,6 @@ _.extend Settings,
       fox
       """
     all: ["strict off"] # nothing is allowed except disabling strict mode
-  homonyms: [
-
-    w "there, their, they're"
-    w "are, our, hour"
-    w "ad, add"
-  ]
 
 # tens =
 #   ten: 10

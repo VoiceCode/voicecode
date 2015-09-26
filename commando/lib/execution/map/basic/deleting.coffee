@@ -9,7 +9,7 @@ Commands.createDisabled
     description: 'delete a partial word at a time'
     tags: ['deleting']
     repeatable: true
-    aliases: ['steffy']
+    misspellings: ['steffy']
     action: ->
       current = @currentApplication()
       if current is 'Sublime Text'

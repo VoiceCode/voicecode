@@ -30,7 +30,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'camelCaseText'
     tags: ['text', 'recommended']
-    aliases: ['crammed', 'crams', 'tram', 'kram']
+    misspellings: ['crammed', 'crams', 'tram', 'kram']
     spaceBefore: true
     autoSpacing: 'normal normal'
     action: (input) ->
@@ -88,7 +88,7 @@ Commands.createDisabled
   'spine':
     grammarType: 'textCapture'
     description: 'spinal-case-text'
-    aliases: ['spying']
+    misspellings: ['spying']
     tags: ['text', 'recommended']
     spaceBefore: true
     action: (input) ->
@@ -99,7 +99,7 @@ Commands.createDisabled
   'criffed':
     description: 'StudCaseText'
     tags: ['text', 'recommended']
-    aliases: ['chaffed', 'crisped']
+    misspellings: ['chaffed', 'crisped']
     grammarType: 'textCapture'
     spaceBefore: true
     autoSpacing: (input) ->

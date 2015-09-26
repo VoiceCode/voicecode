@@ -100,10 +100,13 @@ Commands.after = (name, extension) ->
     command.after ?= []
     command.after.push extension
 
-Commands.addAliases = (name, aliases) ->
+Commands.addMisspellings = (name, misspellings) ->
   Commands.edit name, (command) ->
-    command.aliases ?= []
-    command.aliases = command.aliases.concat aliases
+    command.misspellings ?= []
+    command.misspellings = command.misspellings.concat misspellings
+
+Commands.addAliases = (name, aliases) ->
+  console.log "Error adding aliases to '#{name}'. 'addAliases' has been renamed to 'addMisspellings'"
 
 Commands.changeName = (name, newName) ->
   Commands.edit name, (command) ->

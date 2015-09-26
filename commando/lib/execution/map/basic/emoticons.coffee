@@ -3,6 +3,8 @@ Commands.createDisabled
     description: 'old-school emoticons'
     tags: ['text']
     grammarType: 'textCapture'
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (name) ->
       if name?.length
         emoticon = @fuzzyMatch Settings.emoticons, name

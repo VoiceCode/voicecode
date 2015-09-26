@@ -1,10 +1,14 @@
 git =
   'jet':
     description: 'git'
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: ->
       @string 'git'
   'jet status':
     description: 'git status'
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: ->
       @string 'git status'
       switch @currentApplication()

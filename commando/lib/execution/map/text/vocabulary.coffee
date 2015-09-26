@@ -37,7 +37,7 @@ class @Vocabulary
     for prefix, listName of Settings.vocabularyListGenerators
       list = Settings[listName]
       for itemName, itemResult of list
-        # filter out aliases
+        # filter out misspellings
         unless itemName[0] is "_"
           @standard.push [prefix, itemName].join(' ')
 

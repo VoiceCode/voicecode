@@ -39,7 +39,7 @@ Commands.createDisabled
     grammarType: 'custom'
     rule: '(digits)? (windowPositions)?'
     description: 'set the size/position of the frontmost window to one of the preset sizes/positions'
-    aliases: ['wendy']
+    misspellings: ['wendy']
     tags: ['system', 'window', 'recommended']
     action: ({digits, windowPositions}) ->
       if digits? or windowPositions?

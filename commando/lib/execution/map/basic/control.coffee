@@ -1,7 +1,7 @@
 Commands.createDisabled
   "shin":
     description: "does nothing, but enters into voice code"
-    aliases: ["chin"]
+    misspellings: ["chin"]
     tags: ["text", "recommended"]
     action: ->
       null
@@ -9,7 +9,7 @@ Commands.createDisabled
     description: "insert a space"
     findable: " "
     tags: ["space", "recommended"]
-    aliases: ["skoo", "sku"]
+    misspellings: ["skoo", "sku"]
     repeatable: true
     action: ->
       @space()
@@ -33,7 +33,7 @@ Commands.createDisabled
         @enter()
   "shockey":
     description: "Inserts a new line above the current line"
-    aliases: ["chalky", "shocking", "shocky"]
+    misspellings: ["chalky", "shocking", "shocky"]
     tags: ["return", "combo", "recommended"]
     repeatable: true
     action: ->
