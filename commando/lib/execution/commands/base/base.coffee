@@ -106,7 +106,8 @@ Commands.addMisspellings = (name, misspellings) ->
     command.misspellings = command.misspellings.concat misspellings
 
 Commands.addAliases = (name, aliases) ->
-  console.log "Error adding aliases to '#{name}'. 'addAliases' has been renamed to 'addMisspellings'"
+  console.log "Error adding aliases to '#{name}'. 'addAliases' has been renamed to 'addMisspellings'. Don't worry, it is still being added, but in the next release 'addAliases' will mean something different."
+  Commands.addMisspellings(name, aliases)
 
 Commands.changeName = (name, newName) ->
   Commands.edit name, (command) ->
