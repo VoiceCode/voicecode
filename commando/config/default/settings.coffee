@@ -171,6 +171,18 @@ _.extend Settings,
     utility: "util"
     value: "val"
     variable: "var"
+    # months
+    january: "jan"
+    february: "feb"
+    march: "mar"
+    april: "apr"
+    june: "jun"
+    july: "jul"
+    august: "aug"
+    september: "sept"
+    october: "oct"
+    november: "nov"
+    december: "dec"
     # multi word abbreviations
     "stripe test card": "4242424242424242"
   codeSnippets:
