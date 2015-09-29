@@ -1,4 +1,4 @@
-class Platforms.base.displayActions
+class Platforms.base.displayActions extends Platforms.base.actions
   constructor: () ->
     @storage = {}
   reset: () ->

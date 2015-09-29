@@ -145,3 +145,49 @@ class Platforms.base.actions
   # for specific applications/contexts
   sublime: ->
     new Contexts.Sublime()
+
+  # short utility methods
+
+  copy: ->
+    @key 'c', 'super' ; @
+  cut: ->
+    @key 'x', 'super' ; @
+  paste: ->
+    @key 'v', 'super' ; @
+  undo: ->
+    @key 'z', 'super' ; @
+  redo: ->
+    @key 'z', 'super shift' ; @
+  newTab: ->
+    @key 't', 'super' ; @
+  selectAll: ->
+    @key 'a', 'super' ; @
+  save: ->
+    @key 's', 'super' ; @
+  switchApplication: ->
+    @key 'tab', 'command' ; @
+  space: ->
+    @string ' ' ; @
+  enter: ->
+    @key 'return' ; @
+  up: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'up'
+    @
+  down: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'down'
+    @
+  left: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'left'
+    @
+  right: (times) ->
+    times ?= 1
+    @repeat times, =>
+      @key 'right'
+    @
+

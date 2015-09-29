@@ -17,6 +17,7 @@
 Meteor.startup ->
   Meteor.ClientCall.setClientId("client")
   @displayActions = new Platforms.base.displayActions()
+  @Actions = new Platforms.base.actions()
   Session.set("loading", true)
   @Grammar = new Grammar()
   @alphabet = new Alphabet()

@@ -11,7 +11,8 @@ Template.Interpreter.events
     try
       result = chain.execute()
       interpretation = _.map result.interpretation, (item) ->
-        "#{item.command}(#{item.arguments?.join(', ') or ''})"
+        args = JSON.stringify item.arguments 
+        "#{item.command}(#{args})"
       Session.set "interpretation", interpretation.join("\n")
 
 

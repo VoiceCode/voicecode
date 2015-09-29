@@ -3,6 +3,8 @@ Commands.createDisabled
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
     tags: ["text", "snippet"]
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input?.length
         result = @fuzzyMatch Settings.abbreviations, input.join(' ')
