@@ -81,6 +81,7 @@ Commands.performCommandEdits = ->
       item.callback(command)
     else
       console.log "Error editing command: '#{item.name}' was not found"
+  Commands.delayedEditFunctions = []
 
 Commands.override = (name, action) ->
   console.log "ERROR: Commands.override is deprecated. Use Commands.extend"
