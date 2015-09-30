@@ -332,7 +332,7 @@ _.extend Settings,
     # common sequences are added as vocabulary terms to provide maximum recognition accuracy
     brax: w 'coif, posh'
     chiff: w 'olly, junk, jolt, shock, junk, spunk, swipe, dot, shockey, shicks, chiff'
-    chris: w 'swipe, spunk, snipper, criffed, cram, snake'
+    chris: w 'swipe, spunk, snipper, criffed, cram, snake, skoosh'
     coalgap: w 'cram, criffed, snake, coif, posh, false, true'
     coif: w 'spark'
     comma: w 'shock'
@@ -572,6 +572,7 @@ _.extend Settings,
     "PyCharm"
     "RubyMine"
     "WebStorm"
+    "Mail"
   ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000

@@ -3,4 +3,5 @@ config/my_user_settings.coffee
 user/my_commands.coffee
 user/*.json
 user/*.xml
+vocabularyTraining.txt
 snippets

@@ -209,6 +209,7 @@ Commands.createDisabled
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']
     spaceBefore: true
+    autoSpacing: 'never normal'
     multiPhraseAutoSpacing: 'never normal'
     action: (input) ->
       if input

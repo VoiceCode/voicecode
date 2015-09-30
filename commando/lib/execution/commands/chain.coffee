@@ -11,6 +11,8 @@ class Commands.Chain
         item = "I"
       else if c is "…"
         item = "ellipsis"
+      else if c is "ï"
+        item = "i"
       else if c is "–"
         item = "dash"
       else if c is ","

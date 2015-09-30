@@ -50,6 +50,7 @@ Commands.createWithDefaults
   tags: ["dragon"]
   needsDragonCommand: false
   continuous: false
+  isSpoken: false
 ,
   "wakeup":
     description: "wake dragon up if it is sleeping"

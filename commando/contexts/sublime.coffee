@@ -29,6 +29,7 @@ class Contexts.Sublime extends Contexts.Base
   action: ->
     Actions.exec @buildCommand()
   buildCommand: ->
+    # creates commands like: subl --command 'goto_line {"line": 54}'
     results = ["subl"]
     for command in @commands
       options = if command.options?

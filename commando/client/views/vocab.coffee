@@ -10,7 +10,7 @@ Template.Vocab.helpers
     unless Session.get("loading")
       commands = []
       _.each Commands.mapping, (value, key) ->
-        if value.enabled and value.grammarType? and (value.isSpoken isnt false)
+        if value.enabled and (value.isSpoken isnt false)
           spoken = value.triggerPhrase or key
           commands.push spoken
       _.sample(commands, commands.length).join(" ")
