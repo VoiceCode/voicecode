@@ -584,6 +584,7 @@ w = (commaSeparatedString) ->
     w "gaud, god"
     w "gauds, gods"
     w "gays, gaze"
+    w "gene, jean"
     w "genes, jeans"
     w "gibe, jibe"
     w "gilt, guilt"
