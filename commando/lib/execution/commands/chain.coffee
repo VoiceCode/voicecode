@@ -23,7 +23,8 @@ class Commands.Chain
     parsed = Parser.parse(@phrase)
     commands = @normalizeStructure parsed
     @applyMouseLatency commands
-    commands = @applyAutoSpacing commands
+    if Settings.autoSpacingEnabled.call(Actions)
+      commands = @applyAutoSpacing commands
     commands
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0

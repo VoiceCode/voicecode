@@ -45,6 +45,9 @@ w = (commaSeparatedString) ->
 _.extend Settings,
   dragonVersion: 4
   maximumRepetitionCount: 100
+  # determine if auto spacing should be enabled (called within the default actions context, so you can check @currentApplication or any other context)
+  autoSpacingEnabled: ->
+    true
   defaultBrowser: "Safari"
   websites:
     "amazon": "http://www.amazon.com"
