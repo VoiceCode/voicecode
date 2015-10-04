@@ -25,7 +25,7 @@ Commands.createDisabled
     description: "Train Dragon vocabulary from selection"
     tags: ["dragon", "recommended"]
     continuous: false
-    action : (input) ->
+    action: (input) ->
       @applescript """
       try
         tell application "Dragon"
@@ -40,25 +40,27 @@ Commands.createDisabled
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
-      if Settings.dragonVersion is 5
-        console.error "Command not implemented for dragon version 5"
-        return
-      @openApplication Settings.dragonApplicationName
-      @delay 300
-      @openMenuBarPath ["Tools", "Vocabulary Editor…"]
+      @applescript """
+      try
+        tell application "Dragon"
+          «event DctaEVob»
+        end tell
+      end try
+      """, false
 
   "show dragon commands":
     description: "switch to Dragon Dictate, and open commands window"
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
-      if Settings.dragonVersion is 5
-        console.error "Command not implemented for dragon version 5"
-        return
-      @openApplication Settings.dragonApplicationName
-      @delay 300
-      @openMenuBarPath ["Tools", "Commands…"]
-
+      @applescript """
+      try
+        tell application "Dragon"
+          «event DctaManC»
+        end tell
+      end try
+      """
+      
 Commands.createWithDefaults
   kind: "none"
   tags: ["ignored"]
