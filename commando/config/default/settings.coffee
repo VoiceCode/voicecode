@@ -517,6 +517,7 @@ _.extend Settings,
     "WebStorm"
     "DrRacket"
     "Firefox"
+    "Citrix Viewer"
   ]
   applicationsThatNeedExplicitModifierPresses: [
     "Parallels Desktop"

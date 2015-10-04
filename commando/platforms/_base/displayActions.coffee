@@ -54,6 +54,8 @@ class Platforms.base.displayActions extends Platforms.base.actions
     @result += "revealFinderDirectory(#{directory or ''})"
   setVolume: (volume) ->
     @result += "setVolume(#{volume or ''})"
+  getCurrentVolume: ->
+    50
   clickServiceItem: (item) ->
     @result += "clickServiceItem(#{item or ''})"
   getClipboard: ->

@@ -442,7 +442,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     if reset or !@_currentBrowserUrl?
       # refresh in bg
       @_getCurrentBrowserUrl (code, url) =>
-        console.log url: url
+        # console.log url: url
         @_currentBrowserUrl = url
       @_currentBrowserUrl
     else
@@ -478,6 +478,15 @@ class Platforms.osx.actions extends Platforms.base.actions
       @applescript """
       set volume output volume #{volume}
       """
+
+  getCurrentVolume: ->
+    volume = @applescript """
+    output volume of (get volume settings)
+    """
+    if volume?.length
+      parseInt volume
+    else
+      undefined
 
   clickServiceItem: (item) ->
     @notUndoable()
@@ -565,9 +574,17 @@ class Platforms.osx.actions extends Platforms.base.actions
     @copy()
     @delay 100
     clipboard = @getClipboard()
-    numberOfLines = clipboard.split("\r").length
+    numberOfLines = clipboard.split("\n").length
+    console.log bloxy:
+      numberOfLines: numberOfLines
+      clipboard: clipboard
     @up number
-    @repeat numberOfLines + (number * 2) - 1, => 
+    @key 'left', 'command'
+    downtimes = numberOfLines + (number * 2)
+    if clipboard.charAt(clipboard.length - 1) is "\n"
+      downtimes -= 1
+
+    @repeat downtimes, => 
       @key 'down', 'shift'
 
   symmetricSelectionExpansion: (number) ->

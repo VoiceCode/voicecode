@@ -27,21 +27,38 @@ if process.platform is "darwin"
   AppDelegate = $.NSObject.extend('AppDelegate')
 
   listeningOnMainSocket = true
+  currentApplicationIsIncompatible = false
 
   AppDelegate.addMethod 'applicationChanged:', 'v@:@', (self, _cmd, notification) ->
+
     current = notification('object')('frontmostApplication')('localizedName').toString()
     Actions.setCurrentApplication current
+
     if Commands.monitoringMouseToCancelSpacing
       console.log "canceling auto spacing"
       Commands.lastCommandOfPreviousPhrase = null
+
     if current in Settings.dragonIncompatibleApplications
       console.log "disabling main command socket for compatibility with: #{current}"
       listeningOnMainSocket = false
-    else if listeningOnMainSocket is false
-      Meteor.setTimeout ->
-        listeningOnMainSocket = true
-        console.log "re-enabling main command socket"
-      , Settings.dragonIncompatibleApplicationDelay or 5000
+      currentApplicationIsIncompatible = true
+    else       
+      if currentApplicationIsIncompatible is true
+        Meteor.setTimeout ->
+          listeningOnMainSocket = true
+          currentApplicationIsIncompatible = false
+          console.log "re-enabling main command socket"
+        , Settings.dragonIncompatibleApplicationDelay or 5000
+      else
+        # just a regular application switch. We disable the main socket because right after an application switch
+        # dragon sometimes does weird things and the growl notification comes before the primary command - 
+        # causing double execution
+        listeningOnMainSocket = false
+        Meteor.setTimeout ->
+          listeningOnMainSocket = true
+          currentApplicationIsIncompatible = false
+        ,  4000
+
 
   AppDelegate.addMethod 'windowChanged:', 'v@:@', (self, _cmd, notification) ->
     console.log notification('object')

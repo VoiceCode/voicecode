@@ -21,6 +21,20 @@ Commands.createDisabled
       tell application "#{dictateName}" to activate
       """, false
 
+  "dragtrain":
+    description: "Train Dragon vocabulary from selection"
+    tags: ["dragon", "recommended"]
+    continuous: false
+    action : (input) ->
+      @applescript """
+      try
+        tell application "Dragon"
+          --train vocabulary from selection
+          «event DctaVTrn» given «class trno»:«constant CSRpTsSe»
+        end tell
+      end try
+      """, false
+
   "show dragon vocab":
     description: "switch to Dragon Dictate, and open vocabulary window"
     tags: ["dragon", "recommended"]
@@ -47,29 +61,21 @@ Commands.createDisabled
 
 Commands.createWithDefaults
   kind: "none"
-  tags: ["dragon"]
+  tags: ["ignored"]
   needsDragonCommand: false
   continuous: false
   isSpoken: false
 ,
-  "wakeup":
-    description: "wake dragon up if it is sleeping"
-  "processing document":
-    description: "consume initialization text from dragon"
-  "microphone off":
-    description: "consume command text from dragon"
-  "go to sleep":
-    description: "consume command text from dragon"
-  "show commands":
-    description: "consume command text from dragon"
-  "show commands window":
-    description: "consume command text from dragon"
-  "hide commands window":
-    description: "consume command text from dragon"
-  "hide status window":
-    description: "consume command text from dragon"
-  "command mode":
-    description: "consume command text from dragon"
-
+  # consume command text from dragon growl notifications
+  "wakeup": {}
+  "processing document": {}
+  "processing selection": {}
+  "microphone off": {}
+  "go to sleep": {}
+  "show commands": {}
+  "show commands window": {}
+  "hide commands window": {}
+  "hide status window": {}
+  "command mode": {}
   "press mouse": {}
   "release mouse": {}

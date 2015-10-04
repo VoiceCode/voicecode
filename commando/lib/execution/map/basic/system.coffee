@@ -4,7 +4,7 @@ Commands.createDisabled
     description: 'opens drop-down menu by name. A few special arguments are also allowed: [bluetooth, wi-fi, clock, battery]'
     tags: ['application', 'system', 'recommended']
     action: (input) ->
-      specialItems = ['bluetooth', 'wi-fi', 'clock', 'battery']
+      specialItems = ['bluetooth', 'wi-fi', 'clock', 'battery', 'user']
       if input in specialItems
         @applescript """
         tell application "System Events" to tell process "SystemUIServer"
@@ -34,6 +34,25 @@ Commands.createDisabled
     continuous: false
     action: (input) ->
       @setVolume(input)
+
+  'volume plus':
+    grammarType: 'numberCapture'
+    description: 'increase the system volume by [0-100] (default 10)'
+    tags: ['system', 'recommended']
+    continuous: false
+    action: (input) ->
+      currentVolume = @getCurrentVolume() or 0
+      @setVolume currentVolume + (input or 10)
+
+  'volume minus':
+    grammarType: 'numberCapture'
+    description: 'decrease the system volume by [0-100] (default 10)'
+    tags: ['system', 'recommended']
+    continuous: false
+    action: (input) ->
+      currentVolume = @getCurrentVolume() or 0
+      @setVolume currentVolume - (input or 10)
+
 
   'windy':
     grammarType: 'custom'
