@@ -22,7 +22,7 @@ class Platforms.base.actions
       @key "delete"
 
   # run another command
-  do: (name, input, context={}) ->
+  do: (name, input=null, context={}) ->
     command = new Commands.Base(name, input, context)
     command.generate().call(@)
 

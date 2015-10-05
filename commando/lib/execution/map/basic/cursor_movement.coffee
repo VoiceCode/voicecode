@@ -106,6 +106,7 @@ Commands.createDisabled
     tags: ['deleting', 'recommended']
     misspellings: ['snipeline']
     action: ({first, last} = {}) ->
+      console.log "snipline", arguments
       switch @currentApplication()
         when 'Sublime Text'
           if last?

@@ -314,4 +314,7 @@ class Commands.Base
     if typeof input is "object"
       input
     else
-      {first: parseInt(input)}
+      if input?
+        {first: parseInt(input)}
+      else
+        {first: null, last: null}
