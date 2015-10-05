@@ -101,14 +101,26 @@ Commands.createDisabled
       @key 'left', 'command'
       @key 'right', 'command shift'
   'snipline':
-    description: 'will delete the entire line(s)'
+    description: 'with no arguments will delete the entire line(s). With a single argument will move to that line and delete it. With a number range will delete the range of lines'
+    grammarType: 'numberRange'
     tags: ['deleting', 'recommended']
     misspellings: ['snipeline']
-    action: ->
+    action: ({first, last} = {}) ->
       switch @currentApplication()
         when 'Sublime Text'
+          if last?
+            @sublime().selectRange(first, last).execute()
+          else if first?
+            @sublime().goToLine(first).execute()
           @key 'k', 'control shift'
         when 'Atom'
+          if last?
+            @runAtomCommand 'selectLineRange',
+              from: first
+              to: last
+          else if first?
+            @runAtomCommand 'goToLine', first
+          @delay 40
           @key 'k', 'control shift'
         else
           @key 'delete'
