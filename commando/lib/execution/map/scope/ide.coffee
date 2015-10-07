@@ -65,7 +65,7 @@ Commands.createDisabled
         @do 'shackle'
 
   'bracken':
-    description: 'expand selection to quotes, parens, braces, or brackets'
+    description: 'expand selection to quotes, parens, braces, or brackets. (Sublime requires "bracket highlighter" package)'
     tags: ['sublime', 'atom']
     triggerScopes: ['Atom', 'Sublime Text']
     action: (input) ->

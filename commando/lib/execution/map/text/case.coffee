@@ -199,6 +199,8 @@ Commands.createDisabled
     description: 'Title Words With Spaces'
     tags: ['text', 'recommended']
     spaceBefore: true
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input
         @string Transforms.titleSentance(input)

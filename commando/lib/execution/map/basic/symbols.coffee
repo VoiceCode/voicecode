@@ -236,6 +236,7 @@ Commands.createDisabledWithDefaults
       @string '#'
   'questo':
     findable: '?'
+    misspellings: ["?"]
     action: ->
       @string '?'
   'bartrap':
