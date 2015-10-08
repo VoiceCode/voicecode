@@ -414,6 +414,14 @@ class Platforms.osx.actions extends Platforms.base.actions
     w = $.NSWorkspace('sharedWorkspace')
     w('openURL', u)
 
+  microphoneOff: ->
+    dictateName = Settings.dragonApplicationName
+    @applescript """
+    tell application "#{dictateName}"
+      set listening to false
+    end tell
+    """, false
+
   currentApplication: ->
     if @_currentApplication
       @_currentApplication

@@ -216,6 +216,7 @@ _.extend Settings,
   # this can be changed. tab, return, escape, etc
   codeSnippetCompletions:
     "Sublime Text": "tab"
+  phoneNumbers: {}
   directories:
     home: "~"
     applications: "/Applications"

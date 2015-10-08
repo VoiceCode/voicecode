@@ -61,6 +61,12 @@ Commands.createDisabled
       end try
       """
       
+  "over and out":
+    description: "turn the microphone off. This command is nice because it is 'chainable' in a phrase"
+    tags: ["dragon", "recommended"]
+    action: ->
+      @microphoneOff()
+
 Commands.createWithDefaults
   kind: "none"
   tags: ["ignored"]
