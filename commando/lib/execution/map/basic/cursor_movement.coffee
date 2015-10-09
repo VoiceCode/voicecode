@@ -75,6 +75,7 @@ Commands.createDisabled
     description: 'remove a space before the adjacent word on the left'
     tags: ['cursor', 'space', 'deleting', 'left', 'combo', 'recommended']
     repeatable: true
+    misspellings: ['nigel']
     action: ->
       @key 'left', 'option'
       @key 'delete'

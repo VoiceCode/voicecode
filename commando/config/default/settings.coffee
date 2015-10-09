@@ -317,6 +317,8 @@ _.extend Settings,
     "maine": "main"
     "o'clock": ":00"
     "adam": "atom"
+    "consol": "console"
+    "consul": "console"
   vocabulary: [
     "trello"
     "auto space"
@@ -327,6 +329,7 @@ _.extend Settings,
     # "+get hub": "github"
     "get hub": "github"
     "I term": "iTerm"
+    "HTTPS": "https"
   vocabularyListGenerators:
     fox: "applications"
     shrink: "abbreviations"

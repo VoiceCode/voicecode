@@ -218,7 +218,7 @@ class @Grammar
       = identifier:(#{@oneArgumentCommandsContinuous()}) ss {return identifier;}
 
     singleTextArgument
-      = (phonemeString / word / exactInteger / symbol)
+      = (translation / phonemeString / word / exactInteger / symbol)
 
     individualCommand
       = identifier:individualIdentifier {return {command: identifier};}

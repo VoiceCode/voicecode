@@ -57,7 +57,7 @@ if process.platform is "darwin"
         Meteor.setTimeout ->
           listeningOnMainSocket = true
           currentApplicationIsIncompatible = false
-        ,  6000
+        ,  8000
 
 
   AppDelegate.addMethod 'windowChanged:', 'v@:@', (self, _cmd, notification) ->

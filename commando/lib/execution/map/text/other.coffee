@@ -17,6 +17,8 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     tags: ['text']
     description: 'if text is selected, will rotate through homonyms. If argument is spoken, will print next homonym of argument'
+    autoSpacing: 'normal normal'
+    multiPhraseAutoSpacing: 'normal normal'
     action: (input) ->
       if input
         other = Homonyms.next input
