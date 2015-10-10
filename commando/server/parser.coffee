@@ -28,6 +28,7 @@ loadGrammar = ->
     if @Parser.success == false
       console.log Parser
       console.log "please check your license key"
+      @Parser = undefined
       throw "invalid license key"
 
     Notify "voicecode is running!"

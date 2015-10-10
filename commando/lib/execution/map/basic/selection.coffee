@@ -48,7 +48,7 @@ Commands.createDisabled
   'folly':
     description: 'expand selection to block'
     tags: ['text-manipulation']
-    misspellings: ['foley']
+    misspellings: ['foley', 'fawley']
     action: ->
       if @currentApplication() is 'Sublime Text'
         @key 'l', ['command']

@@ -8,6 +8,8 @@ Commands.createDisabled
         number = @fuzzyMatch Settings.phoneNumbers, input.join(' ')
         if number?
           @openURL "tel://#{number}?audio=yes"
+
+          # click the call button
           @applescript """
           tell application "System Events"
               repeat while not (button "Call" of window 1 of application process "FaceTime" exists)
@@ -17,6 +19,7 @@ Commands.createDisabled
           end tell
           """
           @microphoneOff()
+
   'please facetime':
     description: 'place a facetime call to the given person (uses Settings.phoneNumbers)'
     tags: ['messaging', 'phone']
@@ -26,6 +29,8 @@ Commands.createDisabled
         number = @fuzzyMatch Settings.phoneNumbers, input.join(' ')
         if number?
           @exec "open facetime://#{number}"
+
+          # click the call button
           @applescript """
           tell application "System Events"
               repeat while not (button "Call" of window 1 of application process "FaceTime" exists)

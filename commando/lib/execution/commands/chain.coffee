@@ -20,12 +20,19 @@ class Commands.Chain
       result.push item
     result.join('')
   parse: ->
-    parsed = Parser.parse(@phrase)
-    commands = @normalizeStructure parsed
-    @applyMouseLatency commands
-    if Settings.autoSpacingEnabled.call(Actions)
-      commands = @applyAutoSpacing commands
-    commands
+    if typeof Parser is 'undefined'
+      console.log "ERROR: the parser is not initialized - probably a problem with the license code, email, or internet connection"
+    else
+      # try
+      parsed = Parser.parse(@phrase)
+      commands = @normalizeStructure parsed
+      @applyMouseLatency commands
+      if Settings.autoSpacingEnabled.call(Actions)
+        commands = @applyAutoSpacing commands
+      commands
+      # catch e
+      #   console.log e
+      #   null
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
