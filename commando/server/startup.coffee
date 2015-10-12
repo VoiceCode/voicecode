@@ -14,6 +14,10 @@ Meteor.startup ->
   unless Settings.slaveMode
     @synchronizer = new Synchronizer()
     synchronizer.synchronize()
-
+  if Settings.slaveMode
+    _.each Commands.mapping, (command, name) ->
+      Commands.mapping[name].enabled = true
+    enabledCommandsManager.enable(_.keys Commands.mapping)
+    Commands.reloadGrammar()
   if Settings.mouseTracking
     @mouseTracker = new MouseTracker().start()

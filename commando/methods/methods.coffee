@@ -17,8 +17,9 @@ Meteor.methods
       @unblock()
       enabledCommandsManager.enable(names)
       Commands.reloadGrammar()
-      synchronizer.synchronize()
-      modifiers.checkVocabulary()
+      unless Settings.slaveMode
+        synchronizer.synchronize()
+        modifiers.checkVocabulary()
   disableCommands: (names) ->
     console.log disabling: names
     for name in names
@@ -29,5 +30,6 @@ Meteor.methods
       @unblock()
       enabledCommandsManager.disable(names)
       Commands.reloadGrammar()
-      synchronizer.synchronize()
-      modifiers.checkVocabulary()
+      unless Settings.slaveMode
+        synchronizer.synchronize()
+        modifiers.checkVocabulary()
