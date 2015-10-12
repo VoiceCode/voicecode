@@ -10,8 +10,8 @@ Meteor.startup ->
   Commands.loadConditionalModules(enabledCommandsManager.settings)
   modifiers.checkVocabulary() unless Settings.slaveMode
   @ParseGenerator = {}
-  Commands.reloadGrammar()
   unless Settings.slaveMode
+    Commands.reloadGrammar()
     @synchronizer = new Synchronizer()
     synchronizer.synchronize()
   if Settings.slaveMode
