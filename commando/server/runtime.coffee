@@ -1,4 +1,25 @@
-if process.platform is "darwin"
+detectPlatform = ->
+  switch process.platform
+    when "darwin"
+      "darwin"
+    when "win32"
+      "windows"
+    when "linux"
+      "linux"
+
+detectProjectRoot = ->
+  switch platform
+    when "darwin"
+      process.env.PWD
+    when "windows"
+      process.cwd().split("\\.meteor")[0]
+    when "linux"
+      process.env.PWD
+
+@platform = detectPlatform()
+@projectRoot = detectProjectRoot()
+
+if platform is "darwin"
   @$ = Meteor.npmRequire('nodobjc')
   # uvcf = Meteor.npmRequire('uvcf')
   $.framework 'Foundation'
@@ -42,7 +63,7 @@ if process.platform is "darwin"
       console.log "disabling main command socket for compatibility with: #{current}"
       listeningOnMainSocket = false
       currentApplicationIsIncompatible = true
-    else       
+    else
       if currentApplicationIsIncompatible is true
         Meteor.setTimeout ->
           listeningOnMainSocket = true
@@ -51,7 +72,7 @@ if process.platform is "darwin"
         , Settings.dragonIncompatibleApplicationDelay or 5000
       else
         # just a regular application switch. We disable the main socket because right after an application switch
-        # dragon sometimes does weird things and the growl notification comes before the primary command - 
+        # dragon sometimes does weird things and the growl notification comes before the primary command -
         # causing double execution
         listeningOnMainSocket = false
         Meteor.setTimeout ->
@@ -91,7 +112,7 @@ if process.platform is "darwin"
     if Commands.monitoringMouseToCancelSpacing
       console.log "canceling auto spacing"
       Commands.lastCommandOfPreviousPhrase = null
-  
+
   mouseHandlerPointer = $(mouseHandler, ['v', ['@', '@']])
 
   $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', mouseHandlerPointer
@@ -214,82 +235,90 @@ if process.platform is "darwin"
   #   console.log
 
 
-  net = Meteor.npmRequire("net")
-  fs = Meteor.npmRequire("fs")
-  socketPath = "/tmp/voicecode.sock"
-  socketPath2 = "/tmp/voicecode2.sock"
+  unless Settings.slaveMode
+    @net = Meteor.npmRequire("net")
+    @slaveController = new SlaveController
+    slaveController.connect()
+    fs = Meteor.npmRequire("fs")
+    socketPath = "/tmp/voicecode.sock"
+    socketPath2 = "/tmp/voicecode2.sock"
 
-  serverHandler = Meteor.bindEnvironment (localSerialConnection) ->
-    localSerialConnection.on 'data', commandHandler
+    serverHandler = Meteor.bindEnvironment (localSerialConnection) ->
+      localSerialConnection.on 'data', commandHandler
 
-  serverHandler2 = Meteor.bindEnvironment (localSerialConnection) ->
-    localSerialConnection.on 'data', commandHandler2
+    serverHandler2 = Meteor.bindEnvironment (localSerialConnection) ->
+      localSerialConnection.on 'data', commandHandler2
 
-  previousPhrase = null
-  previousPhraseGrowl = null
-  previousPhraseTime = Date.now()
-  previousPhraseGrowlTime = Date.now()
-  threshold = 400
-  threshold2 = 400
+    previousPhrase = null
+    previousPhraseGrowl = null
+    previousPhraseTime = Date.now()
+    previousPhraseGrowlTime = Date.now()
+    threshold = 400
+    threshold2 = 400
 
 
-  normalizePhraseComparison = (phrase) ->
-    phrase.toLowerCase().replace(/[\W]+/g, "")
+    normalizePhraseComparison = (phrase) ->
+      phrase.toLowerCase().replace(/[\W]+/g, "")
 
-  commandHandler = Meteor.bindEnvironment (data) ->
-    if listeningOnMainSocket
+    commandHandler = Meteor.bindEnvironment (data) ->
+      if listeningOnMainSocket
+        phrase = data.toString('utf8').replace("\n", "")
+        normal = normalizePhraseComparison(phrase)
+        # console.log
+        #   handler: 1
+        #   difference: (Date.now() - previousPhraseTime)
+        #   differenceGrowl: (Date.now() - previousPhraseGrowlTime)
+        #   phrase: phrase
+        #   previous: previousPhrase
+        #   previousGrowl: previousPhraseGrowl
+        #   normalized: normal
+        previousPhraseTime = Date.now()
+        if normal is previousPhraseGrowl # and normal isnt previousPhrase and (Date.now() - previousPhraseGrowlTime) < 700
+          # probably a duplicate
+          previousPhrase = normalizePhraseComparison(phrase)
+          previousPhraseGrowl = null
+        else
+          previousPhrase = normalizePhraseComparison(phrase)
+          previousPhraseGrowl = null
+          if slaveController.isActive()
+            return if slaveController.process phrase
+
+          chain = new Commands.Chain(phrase + " ")
+          results = chain.execute(true)
+
+    # comes from growl
+    commandHandler2 = Meteor.bindEnvironment (data) ->
       phrase = data.toString('utf8').replace("\n", "")
-      normal = normalizePhraseComparison(phrase)
       # console.log
-      #   handler: 1
-      #   difference: (Date.now() - previousPhraseTime)
+      #   handler: 2
       #   differenceGrowl: (Date.now() - previousPhraseGrowlTime)
+      #   difference: (Date.now() - previousPhraseTime)
       #   phrase: phrase
       #   previous: previousPhrase
       #   previousGrowl: previousPhraseGrowl
-      #   normalized: normal
-      previousPhraseTime = Date.now()
-      if normal is previousPhraseGrowl # and normal isnt previousPhrase and (Date.now() - previousPhraseGrowlTime) < 700
-        # probably a duplicate
-        previousPhrase = normalizePhraseComparison(phrase)
-        previousPhraseGrowl = null
-      else
-        previousPhrase = normalizePhraseComparison(phrase)
-        previousPhraseGrowl = null
+      #   normalized: normalizePhraseComparison(phrase)
+      normalized = normalizePhraseComparison(phrase)
+      previousPhraseGrowl = normalized
+      previousPhraseGrowlTime = Date.now()
+      if normalized != previousPhrase # and ((normalized != previousPhraseGrowl) or ((Date.now() - previousPhraseGrowlTime) > threshold2))
+        if slaveController.isActive()
+          return if slaveController.process phrase
         chain = new Commands.Chain(phrase + " ")
         results = chain.execute(true)
+      else
+        previousPhraseGrowl = null
 
-  # comes from growl
-  commandHandler2 = Meteor.bindEnvironment (data) ->
-    phrase = data.toString('utf8').replace("\n", "")
-    # console.log
-    #   handler: 2
-    #   differenceGrowl: (Date.now() - previousPhraseGrowlTime)
-    #   difference: (Date.now() - previousPhraseTime)
-    #   phrase: phrase
-    #   previous: previousPhrase
-    #   previousGrowl: previousPhraseGrowl
-    #   normalized: normalizePhraseComparison(phrase)
-    normalized = normalizePhraseComparison(phrase)
-    previousPhraseGrowl = normalized
-    previousPhraseGrowlTime = Date.now()
-    if normalized != previousPhrase # and ((normalized != previousPhraseGrowl) or ((Date.now() - previousPhraseGrowlTime) > threshold2))
-      chain = new Commands.Chain(phrase + " ")
-      results = chain.execute(true)
-    else
-      previousPhraseGrowl = null
+    fs.stat socketPath, (err) ->
+      if !err
+        fs.unlinkSync socketPath
+      unixServer = net.createServer serverHandler
+      unixServer.listen socketPath
 
-  fs.stat socketPath, (err) ->
-    if !err
-      fs.unlinkSync socketPath
-    unixServer = net.createServer serverHandler
-    unixServer.listen socketPath
-
-  fs.stat socketPath2, (err) ->
-    if !err
-      fs.unlinkSync socketPath2
-    unixServer2 = net.createServer serverHandler2
-    unixServer2.listen socketPath2
+    fs.stat socketPath2, (err) ->
+      if !err
+        fs.unlinkSync socketPath2
+      unixServer2 = net.createServer serverHandler2
+      unixServer2.listen socketPath2
 
   # client = net.createConnection("/tmp/voicecode")
 
@@ -300,10 +329,10 @@ if process.platform is "darwin"
   #   console.log "dataaaaaa"
   #   console.log data
 
-else if process.platform is "win32"
+else if platform is "win32"
   @Actions = new Platforms.windows.actions()
 
-else if process.platform is "linux"
+else if platform is "linux"
   @Actions = new Platforms.linux.actions()
 
 # Determine Dragon application name
@@ -313,3 +342,23 @@ switch Settings.dragonVersion
   else
     Settings.dragonApplicationName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
 Settings.applications.dragon = Settings.dragonApplicationName
+
+# Network interface for slave mode
+if Settings.slaveMode
+  @net ?= Meteor.npmRequire("net")
+  socketOnConnect = (socket) -> console.log 'Master connected!'
+  socketOnDisconnect = (socket) -> console.log 'Master disconnected...'
+  socketDataHandler = Meteor.bindEnvironment (data) ->
+    phrase = data.toString('utf8').replace("\n", "").replace("\r", "")
+    console.log "Master said: #{phrase}"
+    chain = new Commands.Chain(phrase + " ")
+    results = chain.execute(true)
+  socketServerHandler = Meteor.bindEnvironment (socket) ->
+    socketOnConnect()
+    socket.on 'data', socketDataHandler
+    socket.on 'end', socketOnDisconnect
+
+  socketServer = net.createServer socketServerHandler
+  port = Settings.slaveModePort
+  socketServer.listen port, ->
+    console.log "Awaiting connection from master on port #{port}"

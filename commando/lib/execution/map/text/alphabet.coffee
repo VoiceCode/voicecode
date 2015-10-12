@@ -8,7 +8,7 @@ class @Alphabet
       instance = @
       @roots = _.invert Settings.letters
       @loadCommands()
-      @checkVocabulary()
+      @checkVocabulary() unless Settings.slaveMode
   buildPhonemeString: (individuals) ->
     _.map individuals, (letter) ->
       @roots[letter]
