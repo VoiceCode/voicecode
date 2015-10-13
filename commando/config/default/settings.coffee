@@ -49,6 +49,7 @@ _.extend Settings,
   slaves: {
   # "name": ["host", "port"]
   }
+  userAssetsPath: '~/voicecode_user'
   maximumRepetitionCount: 100
   # determine if auto spacing should be enabled (called within the default actions context, so you can check @currentApplication or any other context)
   autoSpacingEnabled: ->

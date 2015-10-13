@@ -5,7 +5,7 @@ class UserAssetsController
     @fs = Meteor.npmRequire 'fs'
     @path = Meteor.npmRequire 'path'
     @coffeeScript = Meteor.npmRequire 'coffee-script'
-    @assetsPath = Settings.userAssetsPath.replace /~/, @getUserHome()
+    @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
     console.log @assetsPath
     instance = @
 
@@ -32,6 +32,11 @@ class UserAssetsController
     callback @coffeeScript.compile data
 
   init: ->
+    try
+      @fs.statSync @assetsPath
+    catch error
+      return if error.code is 'ENOENT'
+
     @startWatching @assetsPath
     @walk @assetsPath, '.+\.coffee$', (filePath) =>
       console.log "Loading user asset: #{filePath}"
@@ -41,7 +46,7 @@ class UserAssetsController
   startWatching: ->
     @watcher = @fs.watch @assetsPath, {persistent: true, recursive: false},
     Meteor.bindEnvironment @handleFileChange @assetsPath
-    
+
     @walk @assetsPath, null, (directoryPath) =>
       @fs.watch directoryPath, {persistent: true, recursive: false},
       Meteor.bindEnvironment @handleFileChange directoryPath
