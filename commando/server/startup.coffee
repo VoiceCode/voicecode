@@ -6,6 +6,8 @@ Meteor.startup ->
   @modifiers = new Modifiers()
   @enabledCommandsManager = new EnabledCommandsManager()
   @vocabulary = new Vocabulary() unless Settings.slaveMode
+  @userAssetsController = new UserAssetsController
+  userAssetsController.init()
   Commands.performCommandEdits()
   Commands.loadConditionalModules(enabledCommandsManager.settings)
   modifiers.checkVocabulary() unless Settings.slaveMode
