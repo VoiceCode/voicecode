@@ -23,10 +23,7 @@ class UserAssetsController
         @walk filePath, filenameMask, callback
 
   readFile: (filePath, callback) ->
-    @fs.readFile filePath, 'utf8', (err, data) ->
-      if err
-        return console.error err
-      callback data
+    callback (@fs.readFileSync filePath, {encoding: 'utf8'})
 
   compileCoffeeScript: (data, callback) ->
     callback @coffeeScript.compile data
@@ -39,9 +36,14 @@ class UserAssetsController
 
     @startWatching @assetsPath
     @walk @assetsPath, '.+\.coffee$', (filePath) =>
-      console.log "Loading user asset: #{filePath}"
       @readFile filePath, (data) =>
-        @compileCoffeeScript data, eval
+        @compileCoffeeScript data, (data)->
+          console.log "Loading user asset: #{filePath}"
+          try
+            eval data
+          catch error
+            console.error filePath
+            console.error error
 
   startWatching: ->
     @watcher = @fs.watch @assetsPath, {persistent: true, recursive: false},
@@ -52,15 +54,13 @@ class UserAssetsController
       Meteor.bindEnvironment @handleFileChange directoryPath
 
   handleFileChange: (directoryPath) ->
-    do (directoryPath) =>
-      _.bind (event, filePath) ->
-        return unless event is 'change'
-        console.log "User asset changed: #{directoryPath}#{filePath}"
-        @readFile directoryPath + filePath, Meteor.bindEnvironment (data) =>
-          @compileCoffeeScript data, eval
-          # What actions to perform here?
-          Commands.performCommandEdits()
-          Commands.reloadGrammar()
-      , @
+    (event, fileName) =>
+      return unless event is 'change'
+      console.log "User asset changed: #{directoryPath}/#{fileName}, reacting...."
+      @readFile "#{directoryPath}/#{fileName}", Meteor.bindEnvironment (data) =>
+        @compileCoffeeScript data, eval
+        # What actions to perform here?
+        Commands.performCommandEdits()
+        Commands.reloadGrammar()
 
 @UserAssetsController = UserAssetsController
