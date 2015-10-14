@@ -97,3 +97,22 @@ Commands.createDisabled
     action: (input, context) ->
       @do 'chiff', input, context
       @do 'snipple'
+  'grabsy':
+    description: 'will grab the text underneath the mouse, then insert it at the current cursor location. Only supports a few applications for now but will be expanded.'
+    tags: ['mouse', 'combo', 'clipboard']
+    action: () ->
+      switch @currentApplication()
+        when "iTerm"
+          @rightClick()
+          @rightClick()
+          @paste()
+        when "Sublime Text"
+          @doubleClick()
+          @delay 200
+          @copy()
+          @delay 50
+          @sublime()
+            .jumpBack()
+            .jumpBack()
+            .execute()
+          @paste()

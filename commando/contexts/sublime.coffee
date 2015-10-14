@@ -14,6 +14,7 @@ class Contexts.Sublime extends Contexts.Base
     selectNextWord: 'select_next_word'
     selectPreviousWord: 'select_previous_word'
     moveTo: 'move_to'
+    jumpBack: 'jump_back'
 
   constructor: (command, options) ->
     @commands = []

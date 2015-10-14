@@ -101,9 +101,11 @@ Commands.createDisabled
               from: first
               to: last
 
-  'seltil':
+  'seltill':
     grammarType: 'numberCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'
+    # TODO remove this misspelling after a few more releases because of command name change
+    misspellings: ['seltil']
     tags: ['atom', 'sublime']
     triggerScopes: ['Atom', 'Sublime Text']
     action: (input) ->

@@ -1,5 +1,5 @@
 Commands.createDisabled
-  "sleepy time":
+  "snore":
     description: "put dragon into sleep mode"
     tags: ["dragon"]
     action: (input) ->

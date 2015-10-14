@@ -111,7 +111,9 @@ class Platforms.osx.actions extends Platforms.base.actions
     @_keyUp key #, modifiers
 
     if modifiers? and @needsExplicitModifierPresses()
-      for m in modifiers
+      # get a copy of the modifiers so we can reverse it
+      mods = modifiers.slice().reverse()
+      for m in mods
         @_keyUp Platforms.osx.keyCodes[m] #, [m]
         @delay Settings.modifierKeyDelay or 2
 

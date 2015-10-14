@@ -40,7 +40,11 @@ Commands.createDisabled
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key 'left', 'option'
+      switch @currentApplication()
+        when "Parallels Desktop"
+          @key 'left', 'control'
+        else
+          @key 'left', 'option'
   'wonkrim':
     description: 'move the cursor by partial word to the left'
     tags: ['cursor']
@@ -58,12 +62,20 @@ Commands.createDisabled
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      @key 'right', 'option'
+      switch @currentApplication()
+        when "Parallels Desktop"
+          @key 'right', 'control'
+        else
+          @key 'right', 'option'
   'ricky':
     description: 'moves the cursor all the way to the right'
     tags: ['cursor', 'recommended']
     action: ->
-      @key 'right', 'command'
+      switch @currentApplication()
+        when "Parallels Desktop"
+          @key 'end'
+        else
+          @key 'right', 'command'
   'derek':
     description: 'moves the cursor on the way to the right than inserts a space'
     tags: ['cursor', 'space', 'right', 'combo', 'recommended']
@@ -83,17 +95,29 @@ Commands.createDisabled
     description: 'selects all text to the right'
     tags: ['selection', 'right', 'recommended']
     action: ->
-      @key 'right', 'command shift'
+      switch @currentApplication()
+        when "Parallels Desktop"
+          @key 'end', 'shift'
+        else
+          @key 'right', 'command shift'
   'lefty':
     description: 'move the cursor all the way to the left'
     tags: ['cursor', 'left', 'recommended']
     action: ->
-      @key 'left', 'command'
+      switch @currentApplication()
+        when "Parallels Desktop"
+          @key 'home'
+        else
+          @key 'left', 'command'
   'lecksy':
     description: 'selects all text to the left'
     tags: ['selection', 'left', 'recommended']
     action: ->
-      @key 'left', 'command shift'
+      switch @currentApplication()
+        when "Parallels Desktop"
+          @key 'home', 'shift'
+        else
+          @key 'left', 'command shift'
   'shackle':
     description: 'selects the entire line'
     tags: ['selection', 'recommended']

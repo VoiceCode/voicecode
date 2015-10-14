@@ -7,10 +7,18 @@ Commands.createDisabled
     isSpoken: false
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: (input) ->
+      left = 'normal'
+      right = 'normal'
       if input?.length
         if typeof input[0] is 'object' and input[0].source is 'phonemes'
-          return 'never normal'
-      'normal normal'
+          left = 'never'
+        else if typeof input[0] is 'string'
+          joined = input.join ' '
+          if input[0] is '.'
+            left = 'never'
+          if input[input.length - 1] is '-'
+            right = 'never'
+      [right, left].join ' '
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
@@ -32,7 +40,10 @@ Commands.createDisabled
     tags: ['text', 'recommended']
     misspellings: ['crammed', 'crams', 'tram', 'kram']
     spaceBefore: true
-    autoSpacing: 'normal normal'
+    autoSpacing: (input) ->
+      if input then 'normal normal'
+    multiPhraseAutoSpacing: (input) ->
+      if input then 'normal normal'
     action: (input) ->
       if input
         @string Transforms.camel(input)
@@ -51,8 +62,10 @@ Commands.createDisabled
     description: 'snake_case_text'
     tags: ['text', 'recommended']
     spaceBefore: true
-    autoSpacing: 'normal normal'
-    multiPhraseAutoSpacing: 'normal normal'
+    autoSpacing: (input) ->
+      if input then 'normal normal'
+    multiPhraseAutoSpacing: (input) ->
+      if input then 'normal normal'
     action: (input) ->
       if input
         @string Transforms.snake(input)
@@ -91,6 +104,10 @@ Commands.createDisabled
     misspellings: ['spying']
     tags: ['text', 'recommended']
     spaceBefore: true
+    autoSpacing: (input) ->
+      if input then 'normal normal'
+    multiPhraseAutoSpacing: (input) ->
+      if input then 'normal normal'
     action: (input) ->
       if input
         @string Transforms.spine(input)
