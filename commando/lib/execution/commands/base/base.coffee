@@ -156,28 +156,27 @@ class Commands.Base
   transform: ->
     Transforms[@info.transform]
   generate: ->
+    input = @input
+    context = @generateContext()
     funk = switch @kind
       when "action"
         action = @info.action
-        input = @input
-        context = @generateContext()
         -> action.call(@, input, context)
     # if @info.override?
     #   override = @info.override
     #   input = @input
     #   -> override.call(@, input, funk)
     core = if @info.extensions?
-      input = @input
       extensions = []
       extensions.push funk
       _.each @info.extensions, (e) ->
         extensions.push ->
-          e.call(@, input)
+          e.call(@, input, context)
       ->
         @extensionsStopped = false
         for callback in extensions.reverse()
           unless @extensionsStopped
-            callback.call(@)
+            callback.call(@, input, context)
     else
       funk
 
@@ -218,6 +217,7 @@ class Commands.Base
     context = {}
     _.extend context, @context
     context.subcommandIndex = Commands.subcommandIndex
+    context.chain = Commands.lastParsing
     if @info.historic
       _.extend context,
         lastFullCommand: Commands.lastFullCommand

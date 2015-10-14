@@ -36,11 +36,13 @@ class Commands.Chain
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
+    Commands.lastParsing = []
     results = @parse()
     console.log "parsed: #{JSON.stringify results}"
     if results?
       Commands.lastCommandOfPreviousPhrase = _.last(results)
       Commands.monitoringMouseToCancelSpacing = false
+      Commands.lastParsing = results
       combined = _.map(results, (result) ->
         command = new Commands.Base(result.command, result.arguments, result.context)
         individual = command.generate()
@@ -53,7 +55,7 @@ class Commands.Chain
         Commands.subcommandIndex += 1
         individual
       )
-
+      Commands.lastFullCommand = combined
       Commands.previousUndoByDeletingCount = Commands.aggregateUndoByDeletingCount
       Commands.aggregateUndoByDeletingCount = 0
       if shouldInvoke
@@ -67,7 +69,6 @@ class Commands.Chain
               Commands.aggregateUndoByDeletingCount = 0
 
       if Meteor.isServer
-        Commands.lastFullCommand = combined
         inserted = PreviousCommands.insert
           createdAt: new Date()
           interpretation: results
@@ -205,7 +206,7 @@ class Commands.Chain
           'skoosh'
         when 'soft normal', 'normal soft'
           'skoosh'
-      
+
   getAutoSpacingFromCommand: (command, multiPhrase) ->
     info = Commands.mapping[command.command]
     spacing = if multiPhrase
