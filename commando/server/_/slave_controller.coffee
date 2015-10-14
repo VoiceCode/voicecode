@@ -72,3 +72,15 @@ class @SlaveController
     @target = null
 
 @SlaveController = SlaveController
+
+unless Settings.slaveMode
+  invokeWith = 'createDisabled'
+  invokeWith = 'create' if not _.isEmpty Settings.slaves
+  Commands[invokeWith] "slaver",
+    grammarType: "textCapture"
+    kind: "action"
+    continuous: false
+    description: "Sets slave target if a parameter is given, otherwise returns to master"
+    tags: ['voicecode']
+    action: (input) ->
+      slaveController.setTarget input
