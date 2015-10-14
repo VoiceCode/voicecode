@@ -1,5 +1,6 @@
 Commands.createDisabled
   "snore":
+    grammarType: 'textCapture'
     description: "put dragon into sleep mode"
     tags: ["dragon"]
     action: (input) ->
