@@ -30,6 +30,7 @@ class @SlaveController
     slaveSocket.connect port, host
 
   process: (commandPhrase) ->
+    commandPhrase = commandPhrase.toLowerCase()
     if commandPhrase.replace(/\s+/g, '') is 'slaver'
       console.log 'Slave mode: off'
       Notify 'Slave mode: off'
@@ -71,13 +72,3 @@ class @SlaveController
     @target = null
 
 @SlaveController = SlaveController
-
-unless Settings.slaveMode
-  Commands.createDisabled "slaver",
-    grammarType: "textCapture"
-    kind: "action"
-    continuous: false
-    description: "Sets slave target if a parameter is given, otherwise returns to master"
-    tags: ['slave control', 'voicecode']
-    action: (input) ->
-      slaveController.setTarget input
