@@ -349,7 +349,7 @@ if Settings.slaveMode
   socketOnConnect = (socket) -> console.log 'Master connected!'
   socketOnDisconnect = (socket) -> console.log 'Master disconnected...'
   socketDataHandler = Meteor.bindEnvironment (data) ->
-    phrase = data.toString('utf8').replace("\n", "").replace("\r", "")
+    phrase = data.toString('utf8').replace("\n", "").replace("\r", "").toLowerCase()
     console.log "Master said: #{phrase}"
     chain = new Commands.Chain(phrase + " ")
     results = chain.execute(true)
