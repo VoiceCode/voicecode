@@ -251,3 +251,38 @@ Router.route 'api/usernames', ->
   @response.writeHead(200, {'Content-Type': 'text/plain'})
   @response.end(final)
 , {where: 'server'}
+
+
+Router.route 'api/passwords', ->
+  formatted = []
+  _.each Settings.passwords, (value, key) ->
+    formatted.push
+      value: value
+      trigger: key
+
+  results = if @request.body.query?.length
+    f = new Fuse formatted,
+      keys: ['value', 'trigger']
+    f.search(@request.body.query)
+  else
+    formatted
+
+  itemString = _.map results, (item) ->
+    """
+    <item arg="#{item.trigger}" valid="YES">
+      <title>#{item.trigger}</title>
+      <subtitle>#{item.value}</subtitle>
+      <icon>~/voicecode/assets/images/voicecode-alfred.png</icon>
+      <text type="copy">#{item.value}</text>
+    </item>
+    """
+  final = """
+  <?xml version="1.0"?>
+  <items>
+  #{itemString.join("\n")}
+  </items>
+  """
+  @response.writeHead(200, {'Content-Type': 'text/plain'})
+  @response.end(final)
+, {where: 'server'}
+
