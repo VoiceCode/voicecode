@@ -1,40 +1,27 @@
-detectPlatform = ->
-  switch process.platform
-    when "darwin"
-      "darwin"
-    when "win32"
-      "windows"
-    when "linux"
-      "linux"
-
-detectProjectRoot = ->
-  switch platform
-    when "darwin"
-      process.env.PWD
-    when "windows"
-      process.cwd().split("\\.meteor")[0]
-    when "linux"
-      process.env.PWD
-
-
 Meteor.startup ->
   console.log "Copyright (c) VoiceCode.io 2015 - all rights reserved"
-  @platform = detectPlatform()
-  @projectRoot = detectProjectRoot()
-
   @Grammar = new Grammar()
   @alphabet = new Alphabet()
   repetition = new Repetition()
   @modifiers = new Modifiers()
+  @userAssetsController = new UserAssetsController
+  userAssetsController.init()
   @enabledCommandsManager = new EnabledCommandsManager()
-  @vocabulary = new Vocabulary()
+  @vocabulary = new Vocabulary() unless Settings.slaveMode
   Commands.performCommandEdits()
   Commands.loadConditionalModules(enabledCommandsManager.settings)
-  modifiers.checkVocabulary()
+  modifiers.checkVocabulary() unless Settings.slaveMode
   @ParseGenerator = {}
-  Commands.reloadGrammar()
-  @synchronizer = new Synchronizer()
-  synchronizer.synchronize()
+  unless Settings.slaveMode
+    Commands.reloadGrammar()
+    @synchronizer = new Synchronizer()
+    synchronizer.synchronize()
+
+  if Settings.slaveMode
+    _.each Commands.mapping, (command, name) ->
+      Commands.mapping[name].enabled = true
+    enabledCommandsManager.enable(_.keys Commands.mapping)
+    Commands.reloadGrammar()
 
   if Settings.mouseTracking
     @mouseTracker = new MouseTracker().start()

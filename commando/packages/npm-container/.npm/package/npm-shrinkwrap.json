@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "coffee-script": {
+      "version": "1.10.0"
+    },
     "nodobjc": {
       "version": "2.0.0",
       "dependencies": {

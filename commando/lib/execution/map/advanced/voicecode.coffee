@@ -66,7 +66,7 @@ Commands.createDisabled
     tags: ["voicecode", "recommended"]
     action: (input) ->
       mode = if input?
-        @fuzzyMatchKey Settings.strictModes, input.join(' ')      
+        @fuzzyMatchKey Settings.strictModes, input.join(' ')
       else
         "default"
       @enableStrictMode mode
@@ -76,5 +76,3 @@ Commands.createDisabled
     tags: ["voicecode", "recommended"]
     action: (input) ->
       @disableStrictMode()
-
-
