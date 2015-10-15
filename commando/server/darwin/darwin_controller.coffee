@@ -19,7 +19,6 @@ class @DarwinController
     else
       @listen()
 
-    
   tock: ->
     event = undefined
     while event = @app('nextEventMatchingMask', $.NSAnyEventMask.toString(), 'untilDate', null, 'inMode', $('kCFRunLoopDefaultMode'), 'dequeue', 1)
@@ -33,8 +32,8 @@ class @DarwinController
     $.framework 'AppKit'
     # uvcf = Meteor.npmRequire('uvcf')
     # $.framework 'PFAssistive'
-    @net = Meteor.npmRequire("net")
-    @fs = Meteor.npmRequire("fs")
+    global.net = Meteor.npmRequire("net")
+    global.fs = Meteor.npmRequire("fs")
 
   initialize: ->
     @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
@@ -86,11 +85,11 @@ class @DarwinController
     @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
-    @fs.stat socketPath, Meteor.bindEnvironment (error) =>
+    fs.stat socketPath, Meteor.bindEnvironment (error) =>
       unless error
-        @fs.unlinkSync socketPath
-      unixServer = @net.createServer Meteor.bindEnvironment (connection) =>
-        connection.on 'data', Meteor.bindEnvironment(callback.bind(@))    
+        fs.unlinkSync socketPath
+      unixServer = net.createServer Meteor.bindEnvironment (connection) =>
+        connection.on 'data', Meteor.bindEnvironment(callback.bind(@))
       unixServer.listen socketPath
 
   normalizePhraseComparison: (phrase) ->
@@ -104,7 +103,7 @@ class @DarwinController
     if old != -1
       #ignore
       @historyGrowl.splice old, 1
-    else 
+    else
       if @listeningOnMainSocket
         @historyDragon.push normalized
         if @slaveController.isActive()
@@ -140,8 +139,8 @@ class @DarwinController
         Settings.dragonApplicationName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
     Settings.applications.dragon = Settings.dragonApplicationName
 
-  listenAsSlave: ->  
-    socketServer = @net.createServer Meteor.bindEnvironment (socket) =>
+  listenAsSlave: ->
+    socketServer = net.createServer Meteor.bindEnvironment (socket) =>
       console.log 'Master connected!'
       socket.on 'data', Meteor.bindEnvironment(@slaveDataHandler.bind(@))
       socket.on 'end', (socket) ->
@@ -155,4 +154,3 @@ class @DarwinController
     console.log "Master said: #{phrase}"
     chain = new Commands.Chain(phrase + " ")
     results = chain.execute(true)
-
