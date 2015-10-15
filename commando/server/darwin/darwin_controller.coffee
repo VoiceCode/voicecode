@@ -2,13 +2,13 @@ class @DarwinController
   instance = null
   constructor: ->
     return instance if instance?
+    instance = @
 
     @loadFrameworks()
     @initialize()
-
-    @listeningOnMainSocket = true
     @setDragonInfo()
 
+    @listeningOnMainSocket = true
     @historyGrowl = []
     @historyDragon = []
 
@@ -19,7 +19,6 @@ class @DarwinController
     else
       @listen()
 
-    instance = @
     
   tock: ->
     event = undefined
@@ -111,7 +110,6 @@ class @DarwinController
         if @slaveController.isActive()
           @slaveController.process phrase
         else
-          console.log "executed dragon"
           chain = new Commands.Chain(phrase + " ")
           results = chain.execute(true)
 
@@ -131,12 +129,10 @@ class @DarwinController
       if @slaveController.isActive()
         @slaveController.process phrase
       else
-        console.log "executed grawl"
         chain = new Commands.Chain(phrase + " ")
         results = chain.execute(true)
 
   setDragonInfo: ->
-    # Determine Dragon application name
     switch Settings.dragonVersion
       when 5
         Settings.dragonApplicationName = Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon"
