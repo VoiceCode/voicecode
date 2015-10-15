@@ -184,11 +184,10 @@ class Commands.Base
 
     # before actions
     if @info.before?
-      input = @input
       beforeList = []
       _.each @info.before, (e) ->
         beforeList.push ->
-          e.call(@, input)
+          e.call(@, input, context)
       segments.push ->
         for callback in beforeList.reverse()
           callback.call(@)
@@ -198,11 +197,10 @@ class Commands.Base
 
     # after actions
     if @info.after?
-      input = @input
       afterList = []
       _.each @info.after, (e) ->
         afterList.push ->
-          e.call(@, input)
+          e.call(@, input, context)
       segments.push ->
         for callback in afterList.reverse()
           callback.call(@)

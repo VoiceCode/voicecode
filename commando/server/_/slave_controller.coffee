@@ -12,7 +12,7 @@ class @SlaveController
     return if _.isEmpty Settings.slaves
     for name, uri of Settings.slaves
       [host, port] = uri
-      slaveSocket = @createSocket name, host, port
+      @createSocket name, host, port
 
   onConnect: (slaveSocket) ->
     console.log "Connected to: #{slaveSocket.name}"
@@ -35,10 +35,9 @@ class @SlaveController
       console.log 'Slave mode: off'
       Notify 'Slave mode: off'
       @clearTarget()
-      return false
-    console.log "Executing '#{commandPhrase}' on #{@target}"
-    @sendToSlave commandPhrase
-    return true
+    else
+      console.log "Executing '#{commandPhrase}' on #{@target}"
+      @sendToSlave commandPhrase
 
   sendToSlave: (commandPhrase, target = @target) ->
     @connectedSlaves[target].write commandPhrase
@@ -64,7 +63,7 @@ class @SlaveController
   setTarget: (name) ->
     return if _.isEmpty Settings.slaves
     return if _.isEmpty name
-    @target = Actions.fuzzyMatch _.object(_.keys(Settings.slaves), _.keys(Settings.slaves)), name
+    @target = Actions.fuzzyMatch Settings.slaves, name
     console.log "Slave mode on: #{@target}"
     Notify "Slave mode on: #{@target}"
 
@@ -74,8 +73,11 @@ class @SlaveController
 @SlaveController = SlaveController
 
 unless Settings.slaveMode
-  invokeWith = 'createDisabled'
-  invokeWith = 'create' if not _.isEmpty Settings.slaves
+  invokeWith = if _.isEmpty Settings.slaves
+    'createDisabled'
+  else
+    'create'
+
   Commands[invokeWith] "slaver",
     grammarType: "textCapture"
     kind: "action"

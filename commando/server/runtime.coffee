@@ -281,10 +281,10 @@ if platform is "darwin"
           previousPhrase = normalizePhraseComparison(phrase)
           previousPhraseGrowl = null
           if slaveController.isActive()
-            return if slaveController.process phrase
-
-          chain = new Commands.Chain(phrase + " ")
-          results = chain.execute(true)
+            slaveController.process phrase
+          else
+            chain = new Commands.Chain(phrase + " ")
+            results = chain.execute(true)
 
     # comes from growl
     commandHandler2 = Meteor.bindEnvironment (data) ->
@@ -302,9 +302,10 @@ if platform is "darwin"
       previousPhraseGrowlTime = Date.now()
       if normalized != previousPhrase # and ((normalized != previousPhraseGrowl) or ((Date.now() - previousPhraseGrowlTime) > threshold2))
         if slaveController.isActive()
-          return if slaveController.process phrase
-        chain = new Commands.Chain(phrase + " ")
-        results = chain.execute(true)
+          slaveController.process phrase
+        else
+          chain = new Commands.Chain(phrase + " ")
+          results = chain.execute(true)
       else
         previousPhraseGrowl = null
 

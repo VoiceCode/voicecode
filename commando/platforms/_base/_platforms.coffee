@@ -107,16 +107,29 @@ class Platforms.base.actions
       null
 
   fuzzyMatch: (list, term) ->
-    if list[term]?
-      list[term]
+    # array
+    if Object::toString.call(list) is '[object Array]'
+      if _.contains list, term
+        term
+      else
+        results = {}
+        for item in list
+          results[item] = _s.levenshtein(item, term)
+        best = _.min _.keys(results), (k) ->
+          results[k]
+        best
+    # object
     else
-      results = {}
-      _.each list, (item, key) ->
-        totalDistance = _s.levenshtein(key, term)
-        results[key] = totalDistance
-      best = _.min _.keys(results), (k) ->
-        results[k]
-      list[best]
+      if list[term]?
+        list[term]
+      else
+        results = {}
+        _.each list, (item, key) ->
+          totalDistance = _s.levenshtein(key, term)
+          results[key] = totalDistance
+        best = _.min _.keys(results), (k) ->
+          results[k]
+        list[best]
 
   fuzzyMatchKey: (list, term) ->
     if list[term]?
