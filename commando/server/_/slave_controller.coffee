@@ -63,7 +63,7 @@ class @SlaveController
   setTarget: (name) ->
     return if _.isEmpty Settings.slaves
     return if _.isEmpty name
-    @target = Actions.fuzzyMatch Settings.slaves, name
+    @target = Actions.fuzzyMatchKey Settings.slaves, name
     console.log "Slave mode on: #{@target}"
     Notify "Slave mode on: #{@target}"
 

@@ -78,8 +78,8 @@ class @DarwinController
       Commands.lastCommandOfPreviousPhrase = null
 
   listen: ->
-    @slaveController = new SlaveController()
-    @slaveController.connect()
+    global.slaveController = new SlaveController()
+    slaveController.connect()
 
     @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
     @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
@@ -106,8 +106,8 @@ class @DarwinController
     else
       if @listeningOnMainSocket
         @historyDragon.push normalized
-        if @slaveController.isActive()
-          @slaveController.process phrase
+        if slaveController.isActive()
+          slaveController.process phrase
         else
           chain = new Commands.Chain(phrase + " ")
           results = chain.execute(true)
@@ -125,8 +125,8 @@ class @DarwinController
       if @listeningOnMainSocket
         @historyGrowl.push normalized
 
-      if @slaveController.isActive()
-        @slaveController.process phrase
+      if slaveController.isActive()
+        slaveController.process phrase
       else
         chain = new Commands.Chain(phrase + " ")
         results = chain.execute(true)
