@@ -147,7 +147,7 @@ class @DarwinController
         console.log 'Master disconnected...'
 
     socketServer.listen Settings.slaveModePort, ->
-      console.log "Awaiting connection from master on port #{port}"
+      console.log "Awaiting connection from master on port #{Settings.slaveModePort}"
 
   slaveDataHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "").replace("\r", "").toLowerCase()
