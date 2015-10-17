@@ -1,6 +1,7 @@
 Commands.createDisabledWithDefaults
   grammarType: "singleSearch"
   tags: ["search", "voicecode", "selection"]
+  inputRequired: true
 ,
   "trail":
     description: "search backward for the next thing you say, then select it"
@@ -99,6 +100,7 @@ Commands.createDisabledWithDefaults
     kind : "action"
     grammarType : "individual"
     description : "Select next occurrence of select text"
+    inputRequired: false
     action : (input) ->
       switch @currentApplication()
         when "Atom"
@@ -115,6 +117,7 @@ Commands.createDisabledWithDefaults
     kind : "action"
     grammarType : "individual"
     description : "Select previous occurrence of selected text"
+    inputRequired: false
     action : (input) ->
       switch @currentApplication()
         when "Atom"

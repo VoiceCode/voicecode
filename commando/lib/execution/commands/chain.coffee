@@ -44,7 +44,7 @@ class Commands.Chain
       Commands.monitoringMouseToCancelSpacing = false
       Commands.lastParsing = results
       combined = _.map(results, (result) ->
-        command = new Commands.Base(result.command, result.arguments, result.context)
+        command = new Command(result.command, result.arguments, result.context)
         individual = command.generate()
         if command.info.ignoreHistory
           Commands.repetitionIndex = 0
@@ -85,7 +85,7 @@ class Commands.Chain
     results = @parse()
     if results?
       combined = _.map(results, (result) ->
-        command = new Commands.Base(result.command, result.arguments)
+        command = new Command(result.command, result.arguments)
         command.generate()
       )
       combined

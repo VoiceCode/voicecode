@@ -3,6 +3,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     tags: ['text']
     description: 'captures the first letter from each word and joins them'
+    inputRequired: true
     action: (input) ->
       if input
         @string Transforms.firstLetters(input)
@@ -10,6 +11,7 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     tags: ['text']
     description: 'captures the first 3 letters of the next word spoken'
+    inputRequired: true
     action: (input) ->
       if input
         @string Transforms.pluckThree(input)
@@ -19,6 +21,7 @@ Commands.createDisabled
     description: 'if text is selected, will rotate through homonyms. If argument is spoken, will print next homonym of argument'
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: 'normal normal'
+    inputRequired: false
     action: (input) ->
       if input
         other = Homonyms.next input

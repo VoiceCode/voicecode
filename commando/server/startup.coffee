@@ -12,7 +12,13 @@ Meteor.startup ->
   Commands.loadConditionalModules(enabledCommandsManager.settings)
   modifiers.checkVocabulary() unless Settings.slaveMode
   @ParseGenerator = {}
-  unless Settings.slaveMode
+
+  if Settings.dragonCommandsMode is 'new-school'
+    console.log 'loading dynamic grammar...'
+    @dynamicGrammar = new @DynamicGrammar
+    @dynamicGrammar.generate()
+
+  unless false
     Commands.reloadGrammar()
     @synchronizer = new Synchronizer()
     synchronizer.synchronize()

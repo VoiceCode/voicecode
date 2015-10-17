@@ -3,6 +3,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'formats spoken arguments in NSUpperCamelCase (automatically inserts the "NS" part)'
     tags: ['text', 'objective-c', 'domain-specific']
+    inputRequired: true
     action: (input) ->
       if input
         @string 'NS' + Transforms.stud(input)

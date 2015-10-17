@@ -63,7 +63,7 @@ Commands.Utility =
     lists = {}
 
     for name in Commands.Utility.customCommandNames()
-      command = new Commands.Base(name, null)
+      command = new Command(name, null)
       for listName in command.listNames()
         unless listName in lists
           lists[listName] = Settings.getSpokenOptionsForList(listName, filtered)

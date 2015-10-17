@@ -16,6 +16,7 @@ Commands.createDisabled
     grammarType: "textCapture"
     description: "execute predefined voice script"
     tags: ["voicecode"]
+    inputRequired: true
     action: (input) ->
       if input?.length
         workflow = @fuzzyMatch Settings.workflows, input.join(' ')
@@ -35,6 +36,7 @@ Commands.createDisabled
     description: "change voicecode command execution mode"
     tags: ["system", "voicecode"]
     continuous: false
+    inputRequired: true
     action: (input) ->
       if input?.length
         mode = @fuzzyMatch Settings.modes, input.join(' ')
@@ -64,6 +66,7 @@ Commands.createDisabled
     grammarType: "textCapture"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
+    inputRequired: true
     action: (input) ->
       mode = if input?
         @fuzzyMatchKey Settings.strictModes, input.join(' ')
@@ -71,7 +74,7 @@ Commands.createDisabled
         "default"
       @enableStrictMode mode
   "strict off":
-    grammarType: "textCapture"
+    grammarType: "individual"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
     action: (input) ->

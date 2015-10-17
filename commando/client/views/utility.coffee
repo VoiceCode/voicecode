@@ -1,11 +1,11 @@
 Template.Utility.helpers
   dragonBaseCommand: ->
     name = Session.get("ChooseCommand.current") or "command"
-    command = new Commands.Base(name, "")
+    command = new Command(name, "")
     command.generateDragonBody()
   dragonBaseCommandName: ->
     name = Session.get("ChooseCommand.current") or "command"
-    command = new Commands.Base(name, "")
+    command = new Command(name, "")
     command.generateDragonCommandName()
   commandNames: ->
     if Session.get("loading")

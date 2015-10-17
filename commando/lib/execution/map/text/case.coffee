@@ -1,4 +1,4 @@
-Commands.createDisabled
+Commands.createDisabledWithDefaults {inputRequired: false},
   'vc-literal':
     grammarType: 'none'
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
@@ -54,6 +54,7 @@ Commands.createDisabled
     description: 'space camelCaseText'
     tags: ['text', 'combo']
     multiPhraseAutoSpacing: 'never normal'
+    inputRequired: true
     action: (input) ->
       if input
         @string '.' + Transforms.camel(input)
@@ -139,6 +140,7 @@ Commands.createDisabled
     description: 'space StudCaseText'
     tags: ['text', 'combo']
     grammarType: 'textCapture'
+    inputRequired: true
     action: (input) ->
       if input
         @string '$' + Transforms.stud(input)
@@ -240,6 +242,7 @@ Commands.createDisabled
     description: 'space then Sentence case with spaces'
     tags: ['text', 'recommended']
     multiPhraseAutoSpacing: 'never normal'
+    inputRequired: true
     action: (input) ->
       if input
         @string ' ' + Transforms.titleFirstSentance(input)

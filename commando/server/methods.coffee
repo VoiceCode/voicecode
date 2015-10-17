@@ -7,7 +7,7 @@ Meteor.methods
     results = chain.execute(true)
 
   findDragonCommand: (name) ->
-    command = new Commands.Base(name, null)
+    command = new Command(name, null)
     dragonName = command.generateDragonCommandName()
     script = """
     tell application "Dragon Dictate"

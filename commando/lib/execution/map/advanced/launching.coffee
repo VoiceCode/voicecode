@@ -1,5 +1,6 @@
 Commands.createDisabledWithDefaults
   grammarType: "textCapture"
+  inputRequired: true
   tags: ["system", "launching"]
 ,
   "webs":

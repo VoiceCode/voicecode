@@ -56,6 +56,7 @@ Commands.createDisabled
     description: 'presses the down arrow [x] times then presses return (for choosing items from lists that don\'t have direct shortcuts)'
     tags: ['navigation']
     grammarType: 'numberCapture'
+    inputRequired: false
     action: (input) ->
       @down input or 1
       @enter()

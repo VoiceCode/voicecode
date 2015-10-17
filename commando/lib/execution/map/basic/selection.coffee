@@ -58,35 +58,41 @@ Commands.createDisabled
     description: 'expand selection symmetrically (horizontally)'
     grammarType: 'numberCapture'
     tags: ['text-manipulation']
+    inputRequired: false
     action: (input) ->
       @symmetricSelectionExpansion(input or 1)
   'bloxy':
     description: 'expand selection vertically, symmetrically'
     grammarType: 'numberCapture'
     tags: ['text-manipulation']
+    inputRequired: true
     action: (input) ->
       @verticalSelectionExpansion(input or 1)
   'kerleck':
     description: 'With argument: [word], Will select the text [word] on the current line. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] on the current line'
     grammarType: 'textCapture'
     tags: ['text-manipulation', 'cursor', 'selection']
+    inputRequired: true
     action: (input) ->
       @selectCurrentOccurrence(input)
   'jeepleck':
     description: 'With argument: [word], Will select the text [word] previous to the cursor. With arguments: [word1], [word2], Will select the text starting with the last occurrence of [word1] and ending with the last occurrence of [word2] previous to the cursor'
     grammarType: 'textCapture'
+    inputRequired: true
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
       @selectPreviousOccurrence(input)
   'doomleck':
     description: 'With argument: [word], Will select the text [word] after the cursor. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the first occurrence of [word2] after the cursor'
     grammarType: 'textCapture'
+    inputRequired: true
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
       @selectNextOccurrence(input)
   'wordneck':
     description: 'select the following whole word'
     grammarType: 'numberCapture'
+    inputRequired: false
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
       switch @currentApplication()
@@ -106,6 +112,7 @@ Commands.createDisabled
     description: 'select the previous whole word'
     grammarType: 'numberCapture'
     tags: ['text-manipulation', 'cursor', 'selection']
+    inputRequired: false
     action: (input) ->
       switch @currentApplication()
         when 'Sublime Text'

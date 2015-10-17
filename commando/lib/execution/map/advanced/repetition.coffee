@@ -5,6 +5,7 @@ Commands.createDisabled
     tags: ["voicecode", "repetition", "recommended"]
     repeatable: true
     historic: true
+    inputRequired: false
     action: (input, context) ->
       previous = context.lastFullCommand
       if previous
@@ -18,6 +19,7 @@ Commands.createDisabled
     tags: ["voicecode", "repetition", "recommended"]
     ignoreHistory: true
     historic: true
+    inputRequired: false # is it really?
     action: (input, context) ->
       times = parseInt(input)
       if times?

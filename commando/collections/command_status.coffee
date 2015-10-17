@@ -233,4 +233,4 @@ CommandStatuses.helpers
     Execute script
     true
   getCommand: ->
-    new Commands.Base(@name, null)
+    new Command(@name, null)

@@ -3,6 +3,7 @@ Commands.createDisabled
     grammarType: "textCapture"
     description: "inserts an html tag with a dynamic name and dynamic attributes"
     tags: ["domain-specific", "html"]
+    inputRequired: false
     action: (input) ->
       textArray = input or []
       tagName = textArray[0] or ""

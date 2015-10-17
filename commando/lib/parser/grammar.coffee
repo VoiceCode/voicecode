@@ -376,7 +376,7 @@ class @Grammar
     customCommand = #{cc}
     """
   buildCustomCommand: (name) ->
-    command = new Commands.Base(name, null)
+    command = new Command(name, null)
     token = if command.info.misspellings?.length
       name.split(" ").join('_')
     else

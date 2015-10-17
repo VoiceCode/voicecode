@@ -5,8 +5,9 @@ Commands.createDisabled
     grammarType: 'textCapture'
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: 'normal normal'
+    inputRequired: true
     action: (name) ->
       if name?.length
-        emoticon = @fuzzyMatch Settings.emoticons, name
+        emoticon = @fuzzyMatch Settings.emoticons, namee
         if emoticon?.length
           @string emoticon
