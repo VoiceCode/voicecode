@@ -13,12 +13,12 @@ Meteor.startup ->
   modifiers.checkVocabulary() unless Settings.slaveMode
   @ParseGenerator = {}
 
-  if Settings.dragonCommandsMode is 'new-school'
-    console.log 'loading dynamic grammar...'
-    @dynamicGrammar = new @DynamicGrammar
-    @dynamicGrammar.generate()
-
   unless false
+    if Settings.dragonCommandMode is 'new-school'
+      console.log 'loading new-school grammar...'
+      @newSchoolCommandMode = new @NewSchoolCommandMode
+      @newSchoolCommandMode.generate(3).create()
+
     Commands.reloadGrammar()
     @synchronizer = new Synchronizer()
     synchronizer.synchronize()

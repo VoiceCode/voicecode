@@ -44,8 +44,8 @@ w = (commaSeparatedString) ->
 
 _.extend Settings,
   dragonVersion: 4
-  # dragonCommandsMode: old-school/new-school/pure-vocab
-  dragonCommandsMode: 'old-school'
+  # dragonCommandMode: old-school/new-school/pure-vocab
+  dragonCommandMode: 'old-school'
   slaveMode: false
   slaveModePort: 4444
   slaves: {

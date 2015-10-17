@@ -1,3 +1,9 @@
+_.extend Settings,
+  dragonVersion: 5
+  slaveMode: true
+  userAssetsPath: ''
+  dragonCommandMode: 'new-school'
+
 # jarvis bake pizza with bacon garlic and mozzarella
 # jarvis make pizza with beef garlic mozzarella
 # jarvis make pizza with foie gras and mayo with gorgonzola and some chili
@@ -11,7 +17,7 @@ Commands.create "pizza",
   kind : "action"
   grammarType : "dynamic"
   description : "jarvis ai bakes pizza"
-  triggerPhrase : '(ai) (action)* pizza (with)* (ingredient) (and)* (ingredient)*'
+  triggerPhrase : '(ai) (action)* pizza (with)* (ingredient)* (and)* (ingredient)*'
   variables: {
     'action': {
       mapping:

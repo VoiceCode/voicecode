@@ -147,6 +147,12 @@ class @Command
     @kind = @info.kind or "action"
     @grammarType = @info.grammarType or "individual"
     @normalizeInput()
+    @lists = {}
+    @variableNames = {}
+    if @isDynamicTriggerPhrase()
+      @variableNames = @parseVariableNames()
+      @lists = @generateLists()
+
   normalizeInput: ->
     switch @info.grammarType
       when "textCapture"
@@ -223,7 +229,6 @@ class @Command
         repetitionIndex: Commands.repetitionIndex
     context
 
-
   listNames: ->
     _.collect @info.customGrammar, (item) ->
       item.list if item.list?
@@ -236,3 +241,75 @@ class @Command
         {first: parseInt(input)}
       else
         {first: null, last: null}
+
+  getTriggerPhrase: ->
+    triggerPhrase = @info.namespace or @namespace
+    if @info.triggerPhrase?
+      triggerPhrase = @info.triggerPhrase
+    if @isDynamicTriggerPhrase()
+      triggerPhrase = @getDynamicTriggerPhrase()
+    triggerPhrase
+
+  isDynamicTriggerPhrase: ->
+    triggerPhrase = @info.namespace or @namespace
+    if @info.triggerPhrase?
+      triggerPhrase = @info.triggerPhrase
+    triggerPhrase.match(/\(/)?
+
+  # TODO: take order of occurrence into account?
+  parseVariableNames: ->
+    return [] unless @info.triggerPhrase?
+    mandatory = @info.triggerPhrase.match(/\([a-zA-Z]+\)\*/g)
+    optional = @info.triggerPhrase.match(/\([a-zA-Z]+\)(?!\*)/g)
+    return [] unless mandatory? or optional?
+    variables = {}
+    variables.mandatory = _.map mandatory, (v) -> v.replace /[\(\)]/g, ''
+    variables.optional = _.map optional, (v) -> v.replace /[\(\)\*]/g, ''
+    return variables
+
+   getAllVariableNames: ->
+     return [] unless @info.triggerPhrase?
+     variables = @info.triggerPhrase.match(/\([a-zA-Z]+\)/g)
+     return [] unless variables?
+     variables = _.map variables, (v) -> v.replace /[\(\)]/g, ''
+     return variables
+
+   getVariableValuesFor: (variableName)->
+     return [variableName] unless @info.variables?[variableName]?
+     _.flatten _.map @info.variables[variableName].mapping, (values) -> values
+
+   generateLists: ->
+     variableNames = @getAllVariableNames()
+     occurrenceCount = _.countBy(variableNames, (v) -> v)
+     variableValues = {}
+     # counting occurrences and generating a list of values
+     _.each _.unique(variableNames), (variableName) =>
+       variableValues[variableName] = @getVariableValuesFor variableName
+
+     # console.error occurrenceCount
+     # console.error variableNames
+     # console.error variableValues
+     lists = {}
+     maximumTokenCount = {}
+     _.each _.unique(variableNames), (variableName) ->
+       lists[variableName] ?= {}
+       maximumTokenCount[variableName] ?= []
+       # breaking up each value into tokens and counting how many sublists
+       # this list will need to be split into
+       variableValues[variableName] = _.map variableValues[variableName], (value, index) ->
+         value = value.split ' '
+         if maximumTokenCount[variableName] < value.length
+           maximumTokenCount[variableName] = value.length
+         value
+     # console.error variableValues
+     maximumTokenCount
+     # console.error maximumTokenCount
+
+     _.each _.unique(variableNames), (variableName) ->
+       _.each [1..occurrenceCount[variableName]], (occurrence) ->
+         lists[variableName][occurrence] ?= {}
+         _.each [1..maximumTokenCount[variableName]], (sublistIndex) ->
+           lists[variableName][occurrence][sublistIndex] =
+           _.compact(_.map variableValues[variableName], (tokens) -> tokens[(sublistIndex-1)] || null)
+     # console.error lists
+     lists

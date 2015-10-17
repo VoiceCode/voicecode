@@ -1,5 +1,4 @@
-@DragonDictateSynchronizer ?= {}
-class @DragonDictateSynchronizer.OldSchool
+class @DragonSynchronizer
   constructor: ->
     @sqlite3 = Meteor.npmRequire("sqlite3").verbose()
     @bundles = {global: "global"}
@@ -8,6 +7,7 @@ class @DragonDictateSynchronizer.OldSchool
     @applicationVersions = {}
     @connectMain()
     @connectDynamic()
+    @lists = {}
   connectMain: ->
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
@@ -40,10 +40,6 @@ class @DragonDictateSynchronizer.OldSchool
     # Execute("whoami")?.trim()
     path = process.env.HOME?.split('/')
     path[path.length - 1]
-  databaseFile: (extension) ->
-    file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    # console.log file
-    file
   getBundleId: (name) ->
     if @bundles[name]
       @bundles[name]
@@ -101,162 +97,10 @@ class @DragonDictateSynchronizer.OldSchool
     LEFT OUTER JOIN ZACTION AS A ON A.Z_PK=C.Z_PK
     LEFT OUTER JOIN ZTRIGGER AS T ON T.Z_PK=C.Z_PK
     """
-  synchronize: ->
-    @synchronizeStatic()
-    @synchronizeDynamic()
-
-  synchronizeDynamic: ->
-    if @error
-      console.log "error: dragon dynamic database not connected"
-      return false
-    lists = Commands.Utility.getUsedOptionLists(filtered: true)
-
-    # remove unneeded lists
-    @dynamicRun "DELETE FROM ZGENERALTERM WHERE ZNAME NOT IN ($listNames)",
-      $listNames: _.keys(lists)
-
-
-    existingLists = {}
-    for record in @dynamicAll("SELECT * FROM ZGENERALTERM")
-      existingLists[record.ZNAME] = record
-
-    for name, items of lists
-      if existingLists[name]?
-        # it exists
-        @synchronizeListItems
-          name: name
-          listId: existingLists[name].Z_PK
-          items: lists[name]
-      else
-        # needs creating
-        @createList name, lists[name]
-
-
-    # remove unneeded list items
-    listIds = _.map @dynamicAll("SELECT Z_PK FROM ZGENERALTERM"), (item) -> item.Z_PK
-    @dynamicRun "DELETE FROM ZSPECIFICTERM WHERE ZGENERALTERM NOT IN ($listIds)",
-      $listIds: listIds
-
-  createList: (name, items) ->
-    @dynamicRun "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, '#', $name, $spokenLanguage, 'Alt')",
-      $name: name
-      $spokenLanguage: Settings.localeSettings[Settings.locale].dragonTriggerSpokenLanguage
-
-    # get the new id
-    result = @dynamicGet "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
-    id = result?.Z_PK
-
-    for item in items
-      @createListItem item, id
-
-
   createListItem: (name, listId) ->
     @dynamicRun "INSERT INTO ZSPECIFICTERM (Z_ENT, Z_OPT, ZNUMERICVALUE, ZGENERALTERM, ZNAME) VALUES (2, 1, 0, $listId, $name)",
       $name: name
       $listId: listId
-
-  synchronizeListItems: ({name, listId, items}) ->
-    existing = {}
-    for record in @dynamicAll "SELECT * FROM ZSPECIFICTERM WHERE ZGENERALTERM = #{listId}"
-      existing[record.ZNAME] = record
-
-    for item in items
-      if existing[item]
-        delete existing[item]
-      else
-        @createListItem item, listId
-
-    # leftovers
-    for name, item of existing
-      @dynamicRun "DELETE FROM ZSPECIFICTERM WHERE Z_PK = #{item.Z_PK};"
-
-  synchronizeStatic: () ->
-    if @error
-      console.log "error: dragon database not connected"
-      return false
-    results = {}
-    needsCreating = []
-    needsUpdating = []
-    needsDeleting = []
-
-    existing = @getJoinedCommands()
-    for item in existing
-      trigger = item.ZSTRING?.trim()
-      lookupField = item.ZDESC.trim()
-
-      if trigger and lookupField.indexOf("voicecode") >= 0
-        bundle = (item.ZAPPBUNDLE or "global").trim()
-        results[bundle] ||= {}
-        results[bundle][trigger] = item
-      else # Cleaning up after v4 => v5 update
-        # Searching by voice code instead of the text variable
-        # to prevent deletion of user commands (you never know...)
-        if trigger and trigger.indexOf("voicecode") and Settings.dragonVersion is 5
-          needsDeleting.push
-            id: item.Z_PK
-            trigger: trigger
-            bundle: bundle
-
-    for name in Commands.Utility.enabledCommandNames()
-      generator = new DragonCommandGenerator(name, null)
-      chainedYesNo = [true]
-      if Settings.dragonVersion is 5
-        chainedYesNo = [true, false]
-      for chained in chainedYesNo
-        dragonName = generator.generateCommandName chained
-        # prevent creation of an empty trigger (vc-catch-all)
-        continue if dragonName is ""
-
-        body = generator
-        for scope in command.getTriggerScopes()
-          bundle = @getBundleId(scope)
-          if bundle?.length
-            value = results[bundle]?[dragonName]
-            if value?
-              if value.ZTEXT?.trim() is body.trim()
-                # everything is fine, command is good
-              else
-                # command body needs updating
-                needsUpdating.push
-                  id: value.Z_PK
-                  body: body
-                  bodyWas: value.ZTEXT
-                  bundle: bundle
-            else if command.needsDragonCommand()
-              # command is missing
-              needsCreating.push
-                bundle: bundle
-                triggerPhrase: dragonName
-                body: body
-            else
-              # command doesn't need to exist in dragon
-
-            if results[bundle]?[dragonName]?
-              delete results[bundle][dragonName]
-
-    # leftovers
-    for bundle, items of results
-      for trigger, content of items
-        needsDeleting.push
-          id: content.Z_PK
-          trigger: trigger
-          bundle: bundle
-
-    final =
-      needsCreating: needsCreating.length
-      needsUpdating: needsUpdating.length
-      needsDeleting: needsDeleting.length
-
-    console.log final
-
-    console.log "synchronizing commands"
-    for item in needsCreating
-      @createCommand item.bundle, item.triggerPhrase, item.body
-    for item in needsUpdating
-      @updateAction item.id, item.body
-    for item in needsDeleting
-      @deleteCommand item.id
-
   getNextRecordId: ->
     result = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
     (result?.Z_PK or 0) + 1
@@ -268,13 +112,14 @@ class @DragonDictateSynchronizer.OldSchool
       id = @lastId + 1
     @lastId = id
     id
+
   createCommand: (bundleId, triggerPhrase, body) ->
     locale = Settings.localeSettings[Settings.locale]
     commandId = @createCommandId()
     applicationVersion = if bundleId is "global"
       0
     else
-     @getApplicationVersion bundleId
+      @getApplicationVersion bundleId
 
     id = @getNextRecordId()
     username = @getUsername()
@@ -289,8 +134,7 @@ class @DragonDictateSynchronizer.OldSchool
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'trigger'"
     @run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'command'"
     @run "COMMIT TRANSACTION;"
-  updateAction: (id, body) ->
-    @run "UPDATE ZACTION SET ZTEXT = $body WHERE Z_PK = #{id};", {$body: body}
+
   deleteCommand: (id) ->
     if id
       @run "BEGIN TRANSACTION;"
@@ -298,3 +142,84 @@ class @DragonDictateSynchronizer.OldSchool
       @run "DELETE FROM ZACTION WHERE Z_PK = #{id};"
       @run "DELETE FROM ZTRIGGER WHERE Z_PK = #{id};"
       @run "COMMIT TRANSACTION;"
+
+  databaseFile: (extension) ->
+    # file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
+    file = [@home(), "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
+    file
+
+  deleteAllDynamic: ->
+    @dynamicRun "DELETE FROM ZGENERALTERM"
+    @dynamicRun "DELETE FROM ZSPECIFICTERM"
+
+  deleteAllStatic: ->
+    @run "DELETE FROM ZACTION"
+    @run "DELETE FROM ZCOMMAND"
+    @run "DELETE FROM ZTRIGGER"
+
+  synchronize: ->
+    @deleteAllStatic()
+    @deleteAllDynamic()
+    @synchronizeStatic()
+    @synchronizeDynamic()
+
+  createList: (name, items, bundle = '#') ->
+    @dynamicRun "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundle, $name, $spokenLanguage, 'Alt')",
+      $name: name
+      $spokenLanguage: Settings.localeSettings[Settings.locale].dragonTriggerSpokenLanguage
+      $bundle: bundle
+    # get the new id
+    result = @dynamicGet "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
+    id = result?.Z_PK
+    if @error
+      console.error '-'
+      console.error @error
+
+    for item in items
+      @createListItem item, id
+
+  synchronizeStatic: () ->
+    if @error
+      console.log "error: dragon database not connected"
+      return false
+    needsCreating = []
+    for name in Commands.Utility.enabledCommandNames()
+      chainedYesNo = [yes]
+      if Settings.dragonVersion is 5
+        chainedYesNo = [yes, no]
+      # console.error name
+      command = new DragonCommand(name, null)
+      _.extend @lists, command.lists unless _.isEmpty command.lists
+      continue unless command.needsDragonCommand()
+      if Settings.dragonCommandMode is 'new-school'
+        continue unless command.kind in ['dynamic', 'grammar']
+      for hasChain in chainedYesNo
+        continue if name is 'vc-catch-all' and hasChain is no
+        dragonName = command.generateCommandName hasChain
+        dragonBody = command.generateCommandBody hasChain
+        scopes = command.getTriggerScopes()
+        for scope in scopes
+          bundle = @getBundleId(scope)
+          continue if bundle is null and scope isnt "global"
+          bundle = "global" if bundle is null
+          needsCreating.push
+            bundle: bundle
+            triggerPhrase: dragonName
+            body: dragonBody
+
+    console.log "synchronizing commands"
+    for item in needsCreating
+      @createCommand item.bundle, item.triggerPhrase, item.body
+
+  synchronizeDynamic: ->
+    if @error
+      console.log "error: dragon dynamic database not connected"
+      return false
+    # console.log @lists
+    _.each @lists, (occurrences, variableName) =>
+      _.each occurrences, (sublists, occurrence) =>
+        _.each sublists, (listValues, sub) =>
+          scopes = ["global"]
+          for scope in scopes
+            bundle = '#' if scope is 'global'
+            @createList "#{variableName}oc#{occurrence}sub#{sub}", listValues, bundle

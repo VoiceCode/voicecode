@@ -1,5 +1,3 @@
-
-
 class @NatLinkSynchronizer
   constructor: ->
   synchronize: ->
@@ -8,12 +6,8 @@ class @NatLinkSynchronizer
 class @Synchronizer
   constructor: ->
     if platform is "darwin"
-      switch Settings.dragonCommandsMode
-        when 'new-school'
-          @synchronizer = new DragonDictateSynchronizer.NewSchool()
-        when 'old-school'
-          @synchronizer = new DragonDictateSynchronizer.OldSchool()
+      @synchronizer = new DragonSynchronizer
     else if platform is "windows"
-      @synchronizer = new NatLinkSynchronizer()
+      @synchronizer = new NatLinkSynchronizer
   synchronize: ->
     @synchronizer.synchronize()
