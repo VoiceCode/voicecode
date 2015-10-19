@@ -39,7 +39,18 @@ Commands.keys =
 Commands.delayedEditFunctions = []
 Commands.monitoringMouseToCancelSpacing = true
 
+Commands.validate = (name, options) ->
+  if typeof name is "object"
+    _.each name, (options, name) ->
+      Commands.validate name, options
+    return
+  if options.triggerPhrase?
+    if options.triggerPhrase.match(/\(.*?\d+.*?\)/g)?
+      console.error "Error in command creation: #{name}"
+      console.error 'Please don\'t use integers in triggerPhrase'
+
 Commands.create = (name, options) ->
+  Commands.validate name, options
   if typeof name is "string"
     options.enabled = true
     Commands.mapping[name] = options
@@ -52,17 +63,20 @@ Commands.createWithDefaults = (defaults, options) ->
   for key, value of options
     command = _.extend {}, defaults, value
     command.enabled = true
+    Commands.validate key, command
     Commands.mapping[key] = command
 
 Commands.createDisabled = (name, options) ->
   if typeof name is "string"
     Commands.mapping[name] = options
   else if typeof name is "object"
+    Commands.validate name
     _.extend Commands.mapping, name
 
 Commands.createDisabledWithDefaults = (defaults, options) ->
   for key, value of options
     command = _.extend {}, defaults, value
+    Commands.validate key, command
     Commands.mapping[key] = command
 
 # queues all the command edits until sometime in the future, where they are all called at once
@@ -229,6 +243,7 @@ class @Command
         repetitionIndex: Commands.repetitionIndex
     context
 
+  # DEPRECATED
   listNames: ->
     _.collect @info.customGrammar, (item) ->
       item.list if item.list?
@@ -256,60 +271,63 @@ class @Command
       triggerPhrase = @info.triggerPhrase
     triggerPhrase.match(/\(/)?
 
-  # TODO: take order of occurrence into account?
+  # variables do not get `beautified` here.
+  # (some/thing else) will result in 'some/thing else'
+  # @getAllVariableNames() will make it into 'somethingelse'
   parseVariableNames: ->
     return [] unless @info.triggerPhrase?
-    mandatory = @info.triggerPhrase.match(/\([a-zA-Z]+\)\*/g)
-    optional = @info.triggerPhrase.match(/\([a-zA-Z]+\)(?!\*)/g)
+    optional = @info.triggerPhrase.match(/\([a-zA-Z/\s]+\)(?=\*)/g)
+    mandatory = @info.triggerPhrase.match(/\([a-zA-Z/\s]+\)(?!\*)/g)
     return [] unless mandatory? or optional?
     variables = {}
-    variables.mandatory = _.map mandatory, (v) -> v.replace /[\(\)]/g, ''
-    variables.optional = _.map optional, (v) -> v.replace /[\(\)\*]/g, ''
+    variables.mandatory = _.map mandatory, (v) -> v.replace /[()]/g, ''
+    variables.optional = _.map optional, (v) -> v.replace /[()]/g, ''
     return variables
 
-   getAllVariableNames: ->
-     return [] unless @info.triggerPhrase?
-     variables = @info.triggerPhrase.match(/\([a-zA-Z]+\)/g)
-     return [] unless variables?
-     variables = _.map variables, (v) -> v.replace /[\(\)]/g, ''
-     return variables
+  getAllVariableNames: ->
+    _.chain(@parseVariableNames()).flatten().map((v) -> v.replace /[\W/\s]/g, '').value()
 
-   getVariableValuesFor: (variableName)->
-     return [variableName] unless @info.variables?[variableName]?
-     _.flatten _.map @info.variables[variableName].mapping, (values) -> values
+  getVariableValuesFor: (variableName) ->
+    if @info.variables?[variableName]?
+      if _.isArray @info.variables[variableName]
+        @info.variables[variableName]
+      else if _.isObject @info.variables[variableName]
+        _.flatten _.map @info.variables[variableName].mapping, (v) -> v
+    else
+      variableName = variableName.split '/'
+      _.unique _.flatten _.map variableName, (v) -> v.split ' '
 
-   generateLists: ->
-     variableNames = @getAllVariableNames()
-     occurrenceCount = _.countBy(variableNames, (v) -> v)
-     variableValues = {}
-     # counting occurrences and generating a list of values
-     _.each _.unique(variableNames), (variableName) =>
-       variableValues[variableName] = @getVariableValuesFor variableName
+  generateLists: ->
+    variableNames = @getAllVariableNames()
+    # console.log variableNames
+    occurrenceCount = _.countBy(variableNames, (v) -> v)
+    variableValues = {}
+    _.each _.unique(variableNames), (variableName) =>
+      variableValues[variableName] = @getVariableValuesFor variableName
 
-     # console.error occurrenceCount
-     # console.error variableNames
-     # console.error variableValues
-     lists = {}
-     maximumTokenCount = {}
-     _.each _.unique(variableNames), (variableName) ->
-       lists[variableName] ?= {}
-       maximumTokenCount[variableName] ?= []
-       # breaking up each value into tokens and counting how many sublists
-       # this list will need to be split into
-       variableValues[variableName] = _.map variableValues[variableName], (value, index) ->
-         value = value.split ' '
-         if maximumTokenCount[variableName] < value.length
-           maximumTokenCount[variableName] = value.length
-         value
-     # console.error variableValues
-     maximumTokenCount
-     # console.error maximumTokenCount
+    # console.error occurrenceCount
+    # console.error variableNames
+    # console.error variableValues
+    lists = {}
+    maximumTokenCount = {}
+    _.each _.unique(variableNames), (variableName) ->
+      lists[variableName] ?= {}
+      maximumTokenCount[variableName] ?= []
+      # breaking up each value into tokens and counting how many sublists
+      # this list will need to be split into
+      variableValues[variableName] = _.map variableValues[variableName], (value, index) ->
+        value = value.split ' '
+        if maximumTokenCount[variableName] < value.length
+          maximumTokenCount[variableName] = value.length
+        value
+    # console.error variableValues
+    # console.error maximumTokenCount
 
-     _.each _.unique(variableNames), (variableName) ->
-       _.each [1..occurrenceCount[variableName]], (occurrence) ->
-         lists[variableName][occurrence] ?= {}
-         _.each [1..maximumTokenCount[variableName]], (sublistIndex) ->
-           lists[variableName][occurrence][sublistIndex] =
-           _.compact(_.map variableValues[variableName], (tokens) -> tokens[(sublistIndex-1)] || null)
-     # console.error lists
-     lists
+    _.each _.unique(variableNames), (variableName) ->
+      _.each [1..occurrenceCount[variableName]], (occurrence) ->
+        lists[variableName][occurrence] ?= {}
+        _.each [1..maximumTokenCount[variableName]], (sublistIndex) ->
+          lists[variableName][occurrence][sublistIndex] =
+          _.compact(_.map variableValues[variableName], (tokens) -> tokens[(sublistIndex-1)] || null)
+    # console.error lists
+    lists

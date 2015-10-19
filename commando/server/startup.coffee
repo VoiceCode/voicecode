@@ -15,7 +15,6 @@ Meteor.startup ->
 
   unless false
     if Settings.dragonCommandMode is 'new-school'
-      console.log 'loading new-school grammar...'
       @newSchoolCommandMode = new @NewSchoolCommandMode
       @newSchoolCommandMode.generate(3).create()
 

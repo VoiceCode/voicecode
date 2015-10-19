@@ -7,13 +7,14 @@ class @NewSchoolCommandMode
     all = _.map Commands.mapping, (value, key) ->
       if value.enabled and value.isSpoken isnt false and
       value.needsDragonCommand isnt false and
-      value.kind isnt 'grammar'
-
+      # value.kind not 'grammar' and
+      value.grammarType isnt 'dynamic'
         spoken = value.triggerPhrase or key
         return {spoken, command: value}
       return null
 
     all = _.compact all
+    # console.error all
     yesInput = _.filter all, ({command}) -> command.inputRequired || false
     noInput = _.reject all, ({command}) -> command.inputRequired || false
     noncontinuous = _.filter all, ({command}) -> command.continuous is false
@@ -50,14 +51,12 @@ class @NewSchoolCommandMode
     variables = {}
     triggerPhrase = ''
     groupsInTotal = _.size @groups
-    _.each [0...groupsInTotal], (iteration) =>
-      groupName = groupNames.charAt iteration
+    _.each [0...groupsInTotal], (groupNumber) =>
+      groupName = groupNames.charAt groupNumber
       triggerPhrase += "(#{groupName})"
-      triggerPhrase += '*' if iteration > 1
-      triggerPhrase += ' ' unless iteration is groupsInTotal
-      variables[groupName] =
-        mapping:
-          commands: @groups[iteration]
+      triggerPhrase += '*' if groupNumber > 0
+      triggerPhrase += ' ' unless groupNumber is groupsInTotal
+      variables[groupName] = _.toArray @groups[groupNumber]
     # console.log groups
     Commands.create "commands",
       kind : "grammar" # take notice

@@ -27,9 +27,12 @@ class @DragonCommand extends Command
 
   getDynamicTriggerPhrase: ->
     trigger = @info.triggerPhrase
-    trigger = trigger.replace /^\(([a-zA-Z]+)\)\**/, '(($1))'
-    trigger = trigger.replace /\(([a-zA-Z]+)\)\*/g, '(//$1//)'
-    trigger = trigger.replace /\(([a-zA-Z]+)\)(?!\))/g, '(($1))'
+    trigger = trigger.replace /\//g, ''
+    trigger = trigger.replace /[(\|\/](\w*?\s)/g, -> arguments[0][...-1]
+    trigger = trigger.replace /^\(([a-zA-Z/\s]+)\)\**/, '(($1))'
+    trigger = trigger.replace /\(([a-zA-Z/\s]+)\)\*/g, '(//$1//)'
+    trigger = trigger.replace /\(([a-zA-Z/\s]+)\)(?!\))/g, '(($1))'
+    # console.error trigger
     _.each _.countBy(@getAllVariableNames(), (v) -> v), (count, variableName) =>
       _.each [1..count], (occurrence) =>
         # console.error "searching for: #{variableName}"

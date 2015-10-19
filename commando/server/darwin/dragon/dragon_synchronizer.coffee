@@ -7,6 +7,7 @@ class @DragonSynchronizer
     @applicationVersions = {}
     @connectMain()
     @connectDynamic()
+    @commands = {}
     @lists = {}
   connectMain: ->
     file = @databaseFile("ddictatecommands")
@@ -56,9 +57,12 @@ class @DragonSynchronizer
         @applicationNames[bundle] = name
         bundle
       else
+        @bundles[name] = null # catching empty so we don't retry
+        @applicationNames[bundle] = name
         # console.log "could not get bundle identifier for: #{name}"
         null
   getApplicationVersion: (bundle) ->
+    return 0 if bundle is null # handling global
     name = @applicationNames[bundle]
     if @applicationVersions[name]?
       @applicationVersions[name]
@@ -116,6 +120,7 @@ class @DragonSynchronizer
   createCommand: (bundleId, triggerPhrase, body) ->
     locale = Settings.localeSettings[Settings.locale]
     commandId = @createCommandId()
+    bundleId = null if bundleId is 'global'
     applicationVersion = if bundleId is "global"
       0
     else
@@ -189,19 +194,22 @@ class @DragonSynchronizer
         chainedYesNo = [yes, no]
       # console.error name
       command = new DragonCommand(name, null)
-      _.extend @lists, command.lists unless _.isEmpty command.lists
+      @commands[name] = command
+      @lists[name] = command.lists unless _.isEmpty command.lists
       continue unless command.needsDragonCommand()
+      if Settings.dragonCommandMode is 'pure-vocab'
+        continue if name isnt 'vc-catch-all'
       if Settings.dragonCommandMode is 'new-school'
-        continue unless command.kind in ['dynamic', 'grammar']
+        continue unless command.info.grammarType is 'dynamic'
       for hasChain in chainedYesNo
         continue if name is 'vc-catch-all' and hasChain is no
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         scopes = command.getTriggerScopes()
         for scope in scopes
-          bundle = @getBundleId(scope)
-          continue if bundle is null and scope isnt "global"
-          bundle = "global" if bundle is null
+          bundle = 'global'
+          bundle = @getBundleId(scope) if scope isnt 'global'
+          continue if bundle is null
           needsCreating.push
             bundle: bundle
             triggerPhrase: dragonName
@@ -216,10 +224,12 @@ class @DragonSynchronizer
       console.log "error: dragon dynamic database not connected"
       return false
     # console.log @lists
-    _.each @lists, (occurrences, variableName) =>
-      _.each occurrences, (sublists, occurrence) =>
-        _.each sublists, (listValues, sub) =>
-          scopes = ["global"]
-          for scope in scopes
-            bundle = '#' if scope is 'global'
-            @createList "#{variableName}oc#{occurrence}sub#{sub}", listValues, bundle
+    _.each @lists, (lists, commandName) =>
+      _.each lists, (occurrences, variableName) =>
+        _.each occurrences, (sublists, occurrence) =>
+          _.each sublists, (listValues, sub) =>
+            scopes = @commands[commandName].getTriggerScopes()
+            for scope in scopes
+              continue if bundle is null and scope isnt "global"
+              bundle = '#' if scope is 'global'
+              @createList "#{variableName}oc#{occurrence}sub#{sub}", listValues, bundle

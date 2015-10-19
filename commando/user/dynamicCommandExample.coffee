@@ -17,7 +17,7 @@ Commands.create "pizza",
   kind : "action"
   grammarType : "dynamic"
   description : "jarvis ai bakes pizza"
-  triggerPhrase : '(ai) (action)* pizza (with)* (ingredient)* (and)* (ingredient)*'
+  triggerPhrase : '(ai) (action)* pizza (with/with out)* (ingredient)* (and)* (ingredient)*'
   variables: {
     'action': {
       mapping:
