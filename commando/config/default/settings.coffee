@@ -325,6 +325,7 @@ _.extend Settings,
     "adam": "atom"
     "consol": "console"
     "consul": "console"
+    "et cetera": "etc."
   vocabulary: [
     "trello"
     "auto space"
