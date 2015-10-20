@@ -261,15 +261,10 @@ class @Command
     triggerPhrase = @info.namespace or @namespace
     if @info.triggerPhrase?
       triggerPhrase = @info.triggerPhrase
-    if @isDynamicTriggerPhrase()
-      triggerPhrase = @getDynamicTriggerPhrase()
     triggerPhrase
 
   isDynamicTriggerPhrase: ->
-    triggerPhrase = @info.namespace or @namespace
-    if @info.triggerPhrase?
-      triggerPhrase = @info.triggerPhrase
-    triggerPhrase.match(/\(/)?
+    @getTriggerPhrase().match(/\(/)?
 
   # variables do not get `beautified` here.
   # (some/thing else) will result in 'some/thing else'

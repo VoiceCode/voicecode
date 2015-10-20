@@ -5,9 +5,10 @@ class @DragonCommand extends Command
   generateCommandBody: (hasChain = false)->
     body = @getTriggerPhrase()
     if @isDynamicTriggerPhrase body
+      body = @generateDynamicCommandName()
       body = body.replace /(\({2}|\(\/{2})(\w+)(\){2}|\/{2}\))/g, ->
         arg = _.toArray arguments
-        variableName = arg[2].charAt(0).toUpperCase() + arg[2].slice(1)
+        variableName = arg[2].charAt(0).toUpperCase() + arg[2].slice 1
         "${var#{variableName}} "
     body += " ${varText}" if hasChain
     body = body.replace /\s+/g, ' '
@@ -19,40 +20,43 @@ class @DragonCommand extends Command
 
   generateCommandName: (hasChain = false)->
     trigger = @getTriggerPhrase()
+    if @isDynamicTriggerPhrase()
+      trigger = @generateDynamicCommandName()
+
     trigger = "#{trigger} /!Text!/" if hasChain
     trigger = trigger.replace /\s+/g, ' '
     trigger = trigger.replace /^\s/, ''
     trigger = trigger.replace /\s$/, ''
     return trigger
 
-  getDynamicTriggerPhrase: ->
+  generateDynamicCommandName: ->
     trigger = @info.triggerPhrase
     trigger = trigger.replace /\//g, ''
-    trigger = trigger.replace /[(\|\/](\w*?\s)/g, -> arguments[0][...-1]
-    trigger = trigger.replace /^\(([a-zA-Z/\s]+)\)\**/, '(($1))'
-    trigger = trigger.replace /\(([a-zA-Z/\s]+)\)\*/g, '(//$1//)'
-    trigger = trigger.replace /\(([a-zA-Z/\s]+)\)(?!\))/g, '(($1))'
+    trigger = trigger.replace /[(/](\w*?\s)/g, -> arguments[0][...-1]
+    # trigger = trigger.replace /^\(([a-zA-Z/\s]+)\)\**?/, '(($1))'
+    # trigger = trigger.replace /\(([a-zA-Z/\s]+)\)\*/g, '(//$1//)'
+    # trigger = trigger.replace /\(([a-zA-Z/\s]+)(?!\))/g, '(($1))'
     # console.error trigger
+    characters = 'abcdefg'
+    characters =  characters.split('')
     _.each _.countBy(@getAllVariableNames(), (v) -> v), (count, variableName) =>
       _.each [1..count], (occurrence) =>
         # console.error "searching for: #{variableName}"
         numberOfSubs = _.size @lists[variableName][occurrence]
-        expression = new RegExp "(#{variableName}[\/\/|\)\)])"
+        expression = new RegExp "\\(#{variableName}\\)\\**"
         nextOccurrence = expression.exec trigger
-        # console.error nextOccurrence
         switch _.last nextOccurrence[0].split('')
           when ')'
             subs = _.reduce [1..numberOfSubs], (memo, sub) ->
-              "#{memo} ((#{variableName}oc#{occurrence}sub#{sub}))"
+              "#{memo} ((#{variableName}oc#{characters[occurrence]}sub#{characters[sub]}))"
             , ''
-            trigger = trigger.replace "((#{variableName}))", subs
+            trigger = trigger.replace '('+variableName+')', subs
           else
             subs = _.reduce [1..numberOfSubs], (memo, sub) ->
-              "#{memo} (//#{variableName}oc#{occurrence}sub#{sub}//)"
+              "#{memo} (//#{variableName}oc#{characters[occurrence]}sub#{characters[sub]}//)"
             , ''
-            trigger = trigger.replace "(//#{variableName}//)", subs
+            trigger = trigger.replace '('+variableName+')*', subs
     trigger.replace /\s+/g, ' '
-
 
   getTriggerScopes: ->
     @info.triggerScopes or [@info.triggerScope or "global"]

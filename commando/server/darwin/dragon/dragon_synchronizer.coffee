@@ -149,8 +149,8 @@ class @DragonSynchronizer
       @run "COMMIT TRANSACTION;"
 
   databaseFile: (extension) ->
-    # file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    file = [@home(), "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
+    file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
+    # file = [@home(), "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
     file
 
   deleteAllDynamic: ->
@@ -223,7 +223,9 @@ class @DragonSynchronizer
     if @error
       console.log "error: dragon dynamic database not connected"
       return false
-    # console.log @lists
+    # console.log @list
+    characters = 'abcdefg'
+    characters = characters.split('')
     _.each @lists, (lists, commandName) =>
       _.each lists, (occurrences, variableName) =>
         _.each occurrences, (sublists, occurrence) =>
@@ -232,4 +234,4 @@ class @DragonSynchronizer
             for scope in scopes
               continue if bundle is null and scope isnt "global"
               bundle = '#' if scope is 'global'
-              @createList "#{variableName}oc#{occurrence}sub#{sub}", listValues, bundle
+              @createList "#{variableName}oc#{characters[occurrence]}sub#{characters[sub]}", listValues, bundle

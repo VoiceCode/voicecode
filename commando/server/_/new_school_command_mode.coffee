@@ -24,9 +24,11 @@ class @NewSchoolCommandMode
     noncontinuous = _.pluck noncontinuous, 'spoken'
     groups = _.map [0..groupsInTotal], -> []
     # noInput = ['one two three', 'four five six', 'non con']
-    # yesInput = ['yesin put']
+    # yesInput = ['input']
     # noncontinuous = ['non con']
-
+    # console.log "noInput #{noInput}"
+    # console.log "yesInput #{yesInput}"
+    # console.log "noncontinuous #{noncontinuous}"
     _.each [0..groupsInTotal], (currentGroupNumber) ->
       commandsToInclude = noInput
       if currentGroupNumber is groupsInTotal
@@ -47,7 +49,7 @@ class @NewSchoolCommandMode
     @
 
   create: ->
-    groupNames = 'acbdefg'
+    groupNames = 'abcdefg'
     variables = {}
     triggerPhrase = ''
     groupsInTotal = _.size @groups
@@ -58,7 +60,7 @@ class @NewSchoolCommandMode
       triggerPhrase += ' ' unless groupNumber is groupsInTotal
       variables[groupName] = _.toArray @groups[groupNumber]
     # console.log groups
-    Commands.create "commands",
+    Commands.create "vc-all-with-input",
       kind : "grammar" # take notice
       grammarType : "dynamic"
       description : ""
@@ -66,5 +68,4 @@ class @NewSchoolCommandMode
       variables: variables
       tags : ["ai"]
       continuous: false
-      action : (input) ->
-        return new Pizza
+      action : (input)->
