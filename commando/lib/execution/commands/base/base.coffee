@@ -134,11 +134,12 @@ Commands.loadConditionalModules = (enabledCommands) ->
       Commands.keys.repeater.push key
 
     if type is "custom"
-      try
-        Commands.mapping[key].customGrammar = customGrammarParser.parse(value.rule)
-      catch e
-        console.log "error parsing custom grammar for command: #{key}"
-        console.log e
+      # try
+      Commands.mapping[key].grammar = new CustomGrammar(value.rule, value.variables)
+      # catch e
+      #   console.log "error parsing custom grammar for command: #{key}"
+      #   console.log e
+
 
 
 class Commands.Base
@@ -153,6 +154,9 @@ class Commands.Base
         @input = Actions.normalizeTextArray @input
       when "numberRange"
         @input = @normalizeNumberRange(@input)
+      when "custom"
+        @grammar = @info.grammar
+        @input = @grammar.normalizeInput(@input)
   transform: ->
     Transforms[@info.transform]
   generate: ->
@@ -251,26 +255,27 @@ class Commands.Base
 
   generateStandaloneDragonBody: ->
     space = @info.namespace or @namespace
+    sections = []
+    if @grammarType is "custom"
+      sections = sections.concat @generateCustomCommandSections()
+    else
+      sections.push space
     """
-    echo -e "#{space}" | nc -U /tmp/voicecode.sock
+    echo -e "#{sections.join(' ')}" | nc -U /tmp/voicecode.sock
     """
 
   generateChainedDragonBody: ->
-    space = @info.namespace or @namespace
     # """
     # curl http://commando:5000/parse --data-urlencode space="#{space}" --data-urlencode phrase="\\${varText}"
     # """
-    variables = []
+    sections = []
     if @grammarType is "custom"
-      for item in @info.customGrammar
-        if item.list?
-          v = item.list.charAt(0).toUpperCase() + item.list.slice(1).toLowerCase()
-          variables.push "${var#{v}}"
-        else if item.text?
-          variables.push item.text
-    variables.push "${varText}"
+      sections = sections.concat @generateCustomCommandSections()
+    else
+      sections.push(@info.namespace or @namespace)
+    sections.push "${varText}"
     """
-    echo -e "#{space} #{variables.join(' ')}" | nc -U /tmp/voicecode.sock
+    echo -e "#{sections.join(' ')}" | nc -U /tmp/voicecode.sock
     """
   generateStandaloneDragonCommandName: ->
     if @grammarType is "custom"
@@ -278,20 +283,35 @@ class Commands.Base
     else
       @getTriggerPhrase()
 
-
   generateChainedDragonCommandName: ->
     if @grammarType is "custom"
       @generateCustomDragonCommandName()
     else
       _.compact([@getTriggerPhrase(), "/!Text!/"]).join(' ')
+
+  generateCustomCommandSections: ->
+    sections = []
+    if @info.grammar.includeName
+      sections.push(@info.namespace or @namespace)
+    for item in @info.grammar.tokens
+      if item.list?
+        name = item.uniqueName
+        v = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+        sections.push "${var#{v}}"
+      else if item.text?
+        sections.push item.text
+    sections
+
   generateCustomDragonCommandName: (appendVariable = true)->
-    results = [@getTriggerPhrase()]
-    for item in @info.customGrammar
+    results = []
+    if @info.grammar.includeName
+      results.push @getTriggerPhrase()
+    for item in @info.grammar.tokens
       if item.list?
         if item.optional
-          results.push "(//#{item.list}//)"
+          results.push "(//#{item.name}//)"
         else
-          results.push "((#{item.list}))"
+          results.push "((#{item.name}))"
       else if item.text?
         if item.optional
           results.push "(//#{item.text}//)"
@@ -300,13 +320,8 @@ class Commands.Base
     results.push "/!Text!/" if appendVariable
     results.join ' '
 
-
   digest: ->
     CryptoJS.MD5(@generateDragonBody()).toString()
-
-  listNames: ->
-    _.collect @info.customGrammar, (item) ->
-      item.list if item.list?
 
   normalizeNumberRange: (input) ->
     if typeof input is "object"
@@ -316,3 +331,5 @@ class Commands.Base
         {first: parseInt(input)}
       else
         {first: null, last: null}
+
+

@@ -110,7 +110,7 @@ class @DragonDictateSynchronizer
     if @error
       console.log "error: dragon dynamic database not connected"
       return false
-    lists = Commands.Utility.getUsedOptionLists(filtered: true)
+    lists = Commands.Utility.getUsedOptionLists('spoken')
 
     # remove unneeded lists
     @dynamicRun "DELETE FROM ZGENERALTERM WHERE ZNAME NOT IN ($listNames)",

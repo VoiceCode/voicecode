@@ -1,4 +1,5 @@
 this.customGrammarParser = (function() {
+  "use strict";
 
   function cgp$subclass(child, parent) {
     function ctor() { this.constructor = child; }
@@ -6,48 +7,53 @@ this.customGrammarParser = (function() {
     child.prototype = new ctor();
   }
 
-  function SyntaxError(message, expected, found, offset, line, column) {
+  function cgp$SyntaxError(message, expected, found, location) {
     this.message  = message;
     this.expected = expected;
     this.found    = found;
-    this.offset   = offset;
-    this.line     = line;
-    this.column   = column;
-
+    this.location = location;
     this.name     = "SyntaxError";
+
+    if (typeof Error.captureStackTrace === "function") {
+      Error.captureStackTrace(this, cgp$SyntaxError);
+    }
   }
 
-  cgp$subclass(SyntaxError, Error);
+  cgp$subclass(cgp$SyntaxError, Error);
 
-  function parse(input) {
+  function cgp$parse(input) {
     var options = arguments.length > 1 ? arguments[1] : {},
+        parser  = this,
 
         cgp$FAILED = {},
 
         cgp$startRuleFunctions = { start: cgp$parsestart },
         cgp$startRuleFunction  = cgp$parsestart,
 
-        cgp$c0 = [],
-        cgp$c1 = cgp$FAILED,
-        cgp$c2 = "(",
-        cgp$c3 = { type: "literal", value: "(", description: "\"(\"" },
-        cgp$c4 = ")",
-        cgp$c5 = { type: "literal", value: ")", description: "\")\"" },
-        cgp$c6 = null,
-        cgp$c7 = "?",
-        cgp$c8 = { type: "literal", value: "?", description: "\"?\"" },
-        cgp$c9 = function(name, optional) {return {list: name, optional: !!optional};},
-        cgp$c10 = function(words) {return {text: words.join(' ')};},
-        cgp$c11 = " ",
-        cgp$c12 = { type: "literal", value: " ", description: "\" \"" },
-        cgp$c13 = /^[a-z]/i,
-        cgp$c14 = { type: "class", value: "[a-z]i", description: "[a-z]i" },
-        cgp$c15 = function(letters) {return letters.join('');},
+        cgp$c0 = function(includeName, tokens) {return {includeName: includeName, tokens: tokens};},
+        cgp$c1 = "<name>",
+        cgp$c2 = { type: "literal", value: "<name>", description: "\"<name>\"" },
+        cgp$c3 = function() {return true;},
+        cgp$c4 = "(",
+        cgp$c5 = { type: "literal", value: "(", description: "\"(\"" },
+        cgp$c6 = ")",
+        cgp$c7 = { type: "literal", value: ")", description: "\")\"" },
+        cgp$c8 = "*",
+        cgp$c9 = { type: "literal", value: "*", description: "\"*\"" },
+        cgp$c10 = function(listTokens, optional) {return {name: listTokens.join(''), list: listTokens, optional: !!optional};},
+        cgp$c11 = "/",
+        cgp$c12 = { type: "literal", value: "/", description: "\"/\"" },
+        cgp$c13 = function(name, separator) {return name},
+        cgp$c14 = function(words) {return {text: words.join(' ')};},
+        cgp$c15 = " ",
+        cgp$c16 = { type: "literal", value: " ", description: "\" \"" },
+        cgp$c17 = /^[a-z]/i,
+        cgp$c18 = { type: "class", value: "[a-z]i", description: "[a-z]i" },
+        cgp$c19 = function(letters) {return letters.join('');},
 
         cgp$currPos          = 0,
-        cgp$reportedPos      = 0,
-        cgp$cachedPos        = 0,
-        cgp$cachedPosDetails = { line: 1, column: 1, seenCR: false },
+        cgp$savedPos         = 0,
+        cgp$posDetailsCache  = [{ line: 1, column: 1, seenCR: false }],
         cgp$maxFailPos       = 0,
         cgp$maxFailExpected  = [],
         cgp$silentFails      = 0,
@@ -63,38 +69,51 @@ this.customGrammarParser = (function() {
     }
 
     function text() {
-      return input.substring(cgp$reportedPos, cgp$currPos);
+      return input.substring(cgp$savedPos, cgp$currPos);
     }
 
-    function offset() {
-      return cgp$reportedPos;
-    }
-
-    function line() {
-      return cgp$computePosDetails(cgp$reportedPos).line;
-    }
-
-    function column() {
-      return cgp$computePosDetails(cgp$reportedPos).column;
+    function location() {
+      return cgp$computeLocation(cgp$savedPos, cgp$currPos);
     }
 
     function expected(description) {
       throw cgp$buildException(
         null,
         [{ type: "other", description: description }],
-        cgp$reportedPos
+        input.substring(cgp$savedPos, cgp$currPos),
+        cgp$computeLocation(cgp$savedPos, cgp$currPos)
       );
     }
 
     function error(message) {
-      throw cgp$buildException(message, null, cgp$reportedPos);
+      throw cgp$buildException(
+        message,
+        null,
+        input.substring(cgp$savedPos, cgp$currPos),
+        cgp$computeLocation(cgp$savedPos, cgp$currPos)
+      );
     }
 
     function cgp$computePosDetails(pos) {
-      function advance(details, startPos, endPos) {
-        var p, ch;
+      var details = cgp$posDetailsCache[pos],
+          p, ch;
 
-        for (p = startPos; p < endPos; p++) {
+      if (details) {
+        return details;
+      } else {
+        p = pos - 1;
+        while (!cgp$posDetailsCache[p]) {
+          p--;
+        }
+
+        details = cgp$posDetailsCache[p];
+        details = {
+          line:   details.line,
+          column: details.column,
+          seenCR: details.seenCR
+        };
+
+        while (p < pos) {
           ch = input.charAt(p);
           if (ch === "\n") {
             if (!details.seenCR) { details.line++; }
@@ -108,19 +127,31 @@ this.customGrammarParser = (function() {
             details.column++;
             details.seenCR = false;
           }
-        }
-      }
 
-      if (cgp$cachedPos !== pos) {
-        if (cgp$cachedPos > pos) {
-          cgp$cachedPos = 0;
-          cgp$cachedPosDetails = { line: 1, column: 1, seenCR: false };
+          p++;
         }
-        advance(cgp$cachedPosDetails, cgp$cachedPos, pos);
-        cgp$cachedPos = pos;
-      }
 
-      return cgp$cachedPosDetails;
+        cgp$posDetailsCache[pos] = details;
+        return details;
+      }
+    }
+
+    function cgp$computeLocation(startPos, endPos) {
+      var startPosDetails = cgp$computePosDetails(startPos),
+          endPosDetails   = cgp$computePosDetails(endPos);
+
+      return {
+        start: {
+          offset: startPos,
+          line:   startPosDetails.line,
+          column: startPosDetails.column
+        },
+        end: {
+          offset: endPos,
+          line:   endPosDetails.line,
+          column: endPosDetails.column
+        }
+      };
     }
 
     function cgp$fail(expected) {
@@ -134,7 +165,7 @@ this.customGrammarParser = (function() {
       cgp$maxFailExpected.push(expected);
     }
 
-    function cgp$buildException(message, expected, pos) {
+    function cgp$buildException(message, expected, found, location) {
       function cleanupExpected(expected) {
         var i = 1;
 
@@ -171,8 +202,8 @@ this.customGrammarParser = (function() {
             .replace(/\r/g,   '\\r')
             .replace(/[\x00-\x07\x0B\x0E\x0F]/g, function(ch) { return '\\x0' + hex(ch); })
             .replace(/[\x10-\x1F\x80-\xFF]/g,    function(ch) { return '\\x'  + hex(ch); })
-            .replace(/[\u0180-\u0FFF]/g,         function(ch) { return '\\u0' + hex(ch); })
-            .replace(/[\u1080-\uFFFF]/g,         function(ch) { return '\\u'  + hex(ch); });
+            .replace(/[\u0100-\u0FFF]/g,         function(ch) { return '\\u0' + hex(ch); })
+            .replace(/[\u1000-\uFFFF]/g,         function(ch) { return '\\u'  + hex(ch); });
         }
 
         var expectedDescs = new Array(expected.length),
@@ -193,35 +224,77 @@ this.customGrammarParser = (function() {
         return "Expected " + expectedDesc + " but " + foundDesc + " found.";
       }
 
-      var posDetails = cgp$computePosDetails(pos),
-          found      = pos < input.length ? input.charAt(pos) : null;
-
       if (expected !== null) {
         cleanupExpected(expected);
       }
 
-      return new SyntaxError(
+      return new cgp$SyntaxError(
         message !== null ? message : buildMessage(expected, found),
         expected,
         found,
-        pos,
-        posDetails.line,
-        posDetails.column
+        location
       );
     }
 
     function cgp$parsestart() {
-      var s0, s1;
+      var s0, s1, s2, s3;
 
-      s0 = [];
-      s1 = cgp$parsetoken();
+      s0 = cgp$currPos;
+      s1 = cgp$parseincludeName();
+      if (s1 === cgp$FAILED) {
+        s1 = null;
+      }
       if (s1 !== cgp$FAILED) {
-        while (s1 !== cgp$FAILED) {
-          s0.push(s1);
-          s1 = cgp$parsetoken();
+        s2 = [];
+        s3 = cgp$parsetoken();
+        if (s3 !== cgp$FAILED) {
+          while (s3 !== cgp$FAILED) {
+            s2.push(s3);
+            s3 = cgp$parsetoken();
+          }
+        } else {
+          s2 = cgp$FAILED;
+        }
+        if (s2 !== cgp$FAILED) {
+          cgp$savedPos = s0;
+          s1 = cgp$c0(s1, s2);
+          s0 = s1;
+        } else {
+          cgp$currPos = s0;
+          s0 = cgp$FAILED;
         }
       } else {
-        s0 = cgp$c1;
+        cgp$currPos = s0;
+        s0 = cgp$FAILED;
+      }
+
+      return s0;
+    }
+
+    function cgp$parseincludeName() {
+      var s0, s1, s2;
+
+      s0 = cgp$currPos;
+      if (input.substr(cgp$currPos, 6) === cgp$c1) {
+        s1 = cgp$c1;
+        cgp$currPos += 6;
+      } else {
+        s1 = cgp$FAILED;
+        if (cgp$silentFails === 0) { cgp$fail(cgp$c2); }
+      }
+      if (s1 !== cgp$FAILED) {
+        s2 = cgp$parses();
+        if (s2 !== cgp$FAILED) {
+          cgp$savedPos = s0;
+          s1 = cgp$c3();
+          s0 = s1;
+        } else {
+          cgp$currPos = s0;
+          s0 = cgp$FAILED;
+        }
+      } else {
+        cgp$currPos = s0;
+        s0 = cgp$FAILED;
       }
 
       return s0;
@@ -243,58 +316,119 @@ this.customGrammarParser = (function() {
 
       s0 = cgp$currPos;
       if (input.charCodeAt(cgp$currPos) === 40) {
-        s1 = cgp$c2;
+        s1 = cgp$c4;
         cgp$currPos++;
       } else {
         s1 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c3); }
+        if (cgp$silentFails === 0) { cgp$fail(cgp$c5); }
       }
       if (s1 !== cgp$FAILED) {
-        s2 = cgp$parseword();
+        s2 = [];
+        s3 = cgp$parselistToken();
+        if (s3 !== cgp$FAILED) {
+          while (s3 !== cgp$FAILED) {
+            s2.push(s3);
+            s3 = cgp$parselistToken();
+          }
+        } else {
+          s2 = cgp$FAILED;
+        }
         if (s2 !== cgp$FAILED) {
           if (input.charCodeAt(cgp$currPos) === 41) {
-            s3 = cgp$c4;
+            s3 = cgp$c6;
             cgp$currPos++;
           } else {
             s3 = cgp$FAILED;
-            if (cgp$silentFails === 0) { cgp$fail(cgp$c5); }
+            if (cgp$silentFails === 0) { cgp$fail(cgp$c7); }
           }
           if (s3 !== cgp$FAILED) {
-            if (input.charCodeAt(cgp$currPos) === 63) {
-              s4 = cgp$c7;
+            if (input.charCodeAt(cgp$currPos) === 42) {
+              s4 = cgp$c8;
               cgp$currPos++;
             } else {
               s4 = cgp$FAILED;
-              if (cgp$silentFails === 0) { cgp$fail(cgp$c8); }
+              if (cgp$silentFails === 0) { cgp$fail(cgp$c9); }
             }
             if (s4 === cgp$FAILED) {
-              s4 = cgp$c6;
+              s4 = null;
             }
             if (s4 !== cgp$FAILED) {
               s5 = cgp$parses();
               if (s5 !== cgp$FAILED) {
-                cgp$reportedPos = s0;
-                s1 = cgp$c9(s2, s4);
+                cgp$savedPos = s0;
+                s1 = cgp$c10(s2, s4);
                 s0 = s1;
               } else {
                 cgp$currPos = s0;
-                s0 = cgp$c1;
+                s0 = cgp$FAILED;
               }
             } else {
               cgp$currPos = s0;
-              s0 = cgp$c1;
+              s0 = cgp$FAILED;
             }
           } else {
             cgp$currPos = s0;
-            s0 = cgp$c1;
+            s0 = cgp$FAILED;
           }
         } else {
           cgp$currPos = s0;
-          s0 = cgp$c1;
+          s0 = cgp$FAILED;
         }
       } else {
         cgp$currPos = s0;
-        s0 = cgp$c1;
+        s0 = cgp$FAILED;
+      }
+
+      return s0;
+    }
+
+    function cgp$parselistToken() {
+      var s0, s1, s2, s3, s4, s5;
+
+      s0 = cgp$currPos;
+      s1 = cgp$parseword();
+      if (s1 !== cgp$FAILED) {
+        s2 = cgp$currPos;
+        s3 = cgp$parses();
+        if (s3 !== cgp$FAILED) {
+          if (input.charCodeAt(cgp$currPos) === 47) {
+            s4 = cgp$c11;
+            cgp$currPos++;
+          } else {
+            s4 = cgp$FAILED;
+            if (cgp$silentFails === 0) { cgp$fail(cgp$c12); }
+          }
+          if (s4 !== cgp$FAILED) {
+            s5 = cgp$parses();
+            if (s5 !== cgp$FAILED) {
+              s3 = [s3, s4, s5];
+              s2 = s3;
+            } else {
+              cgp$currPos = s2;
+              s2 = cgp$FAILED;
+            }
+          } else {
+            cgp$currPos = s2;
+            s2 = cgp$FAILED;
+          }
+        } else {
+          cgp$currPos = s2;
+          s2 = cgp$FAILED;
+        }
+        if (s2 === cgp$FAILED) {
+          s2 = null;
+        }
+        if (s2 !== cgp$FAILED) {
+          cgp$savedPos = s0;
+          s1 = cgp$c13(s1, s2);
+          s0 = s1;
+        } else {
+          cgp$currPos = s0;
+          s0 = cgp$FAILED;
+        }
+      } else {
+        cgp$currPos = s0;
+        s0 = cgp$FAILED;
       }
 
       return s0;
@@ -312,11 +446,11 @@ this.customGrammarParser = (function() {
           s2 = cgp$parseword();
         }
       } else {
-        s1 = cgp$c1;
+        s1 = cgp$FAILED;
       }
       if (s1 !== cgp$FAILED) {
-        cgp$reportedPos = s0;
-        s1 = cgp$c10(s1);
+        cgp$savedPos = s0;
+        s1 = cgp$c14(s1);
       }
       s0 = s1;
 
@@ -328,20 +462,20 @@ this.customGrammarParser = (function() {
 
       s0 = [];
       if (input.charCodeAt(cgp$currPos) === 32) {
-        s1 = cgp$c11;
+        s1 = cgp$c15;
         cgp$currPos++;
       } else {
         s1 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c12); }
+        if (cgp$silentFails === 0) { cgp$fail(cgp$c16); }
       }
       while (s1 !== cgp$FAILED) {
         s0.push(s1);
         if (input.charCodeAt(cgp$currPos) === 32) {
-          s1 = cgp$c11;
+          s1 = cgp$c15;
           cgp$currPos++;
         } else {
           s1 = cgp$FAILED;
-          if (cgp$silentFails === 0) { cgp$fail(cgp$c12); }
+          if (cgp$silentFails === 0) { cgp$fail(cgp$c16); }
         }
       }
 
@@ -353,40 +487,40 @@ this.customGrammarParser = (function() {
 
       s0 = cgp$currPos;
       s1 = [];
-      if (cgp$c13.test(input.charAt(cgp$currPos))) {
+      if (cgp$c17.test(input.charAt(cgp$currPos))) {
         s2 = input.charAt(cgp$currPos);
         cgp$currPos++;
       } else {
         s2 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c14); }
+        if (cgp$silentFails === 0) { cgp$fail(cgp$c18); }
       }
       if (s2 !== cgp$FAILED) {
         while (s2 !== cgp$FAILED) {
           s1.push(s2);
-          if (cgp$c13.test(input.charAt(cgp$currPos))) {
+          if (cgp$c17.test(input.charAt(cgp$currPos))) {
             s2 = input.charAt(cgp$currPos);
             cgp$currPos++;
           } else {
             s2 = cgp$FAILED;
-            if (cgp$silentFails === 0) { cgp$fail(cgp$c14); }
+            if (cgp$silentFails === 0) { cgp$fail(cgp$c18); }
           }
         }
       } else {
-        s1 = cgp$c1;
+        s1 = cgp$FAILED;
       }
       if (s1 !== cgp$FAILED) {
         s2 = cgp$parses();
         if (s2 !== cgp$FAILED) {
-          cgp$reportedPos = s0;
-          s1 = cgp$c15(s1);
+          cgp$savedPos = s0;
+          s1 = cgp$c19(s1);
           s0 = s1;
         } else {
           cgp$currPos = s0;
-          s0 = cgp$c1;
+          s0 = cgp$FAILED;
         }
       } else {
         cgp$currPos = s0;
-        s0 = cgp$c1;
+        s0 = cgp$FAILED;
       }
 
       return s0;
@@ -401,12 +535,19 @@ this.customGrammarParser = (function() {
         cgp$fail({ type: "end", description: "end of input" });
       }
 
-      throw cgp$buildException(null, cgp$maxFailExpected, cgp$maxFailPos);
+      throw cgp$buildException(
+        null,
+        cgp$maxFailExpected,
+        cgp$maxFailPos < input.length ? input.charAt(cgp$maxFailPos) : null,
+        cgp$maxFailPos < input.length
+          ? cgp$computeLocation(cgp$maxFailPos, cgp$maxFailPos + 1)
+          : cgp$computeLocation(cgp$maxFailPos, cgp$maxFailPos)
+      );
     }
   }
 
   return {
-    SyntaxError: SyntaxError,
-    parse:       parse
+    SyntaxError: cgp$SyntaxError,
+    parse:       cgp$parse
   };
 })();

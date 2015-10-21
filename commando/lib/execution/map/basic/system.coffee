@@ -56,10 +56,13 @@ Commands.createDisabled
 
   'windy':
     grammarType: 'custom'
-    rule: '(digits)? (windowPositions)?'
+    rule: '<name> (digits)* (windowPositions)*'
     description: 'set the size/position of the frontmost window to one of the preset sizes/positions'
     misspellings: ['wendy']
     tags: ['system', 'window', 'recommended']
+    variables:
+      digits: -> Settings.digits
+      windowPositions: -> Settings.windowPositions
     action: ({digits, windowPositions}) ->
       if digits? or windowPositions?
         preset = windowPositions or Settings.windowPositions['middle']

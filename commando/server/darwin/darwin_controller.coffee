@@ -101,6 +101,7 @@ class @DarwinController
 
   dragonHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
+    console.log 'dragon', phrase
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyGrowl.indexOf normalized
@@ -119,6 +120,7 @@ class @DarwinController
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
+    console.log 'growl', phrase
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyDragon.indexOf normalized
