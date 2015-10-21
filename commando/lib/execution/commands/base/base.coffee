@@ -148,11 +148,12 @@ Commands.loadConditionalModules = (enabledCommands) ->
       Commands.keys.repeater.push key
 
     if type is "custom"
-      try
-        Commands.mapping[key].customGrammar = customGrammarParser.parse(value.rule)
-      catch e
-        console.log "error parsing custom grammar for command: #{key}"
-        console.log e
+      # try
+      Commands.mapping[key].grammar = new CustomGrammar(value.rule, value.variables)
+      # catch e
+      #   console.log "error parsing custom grammar for command: #{key}"
+      #   console.log e
+
 
 
 class @Command
@@ -161,11 +162,6 @@ class @Command
     @kind = @info.kind or "action"
     @grammarType = @info.grammarType or "individual"
     @normalizeInput()
-    @lists = {}
-    @variableNames = {}
-    if @isDynamicTriggerPhrase()
-      @variableNames = @parseVariableNames()
-      @lists = @generateLists()
 
   normalizeInput: ->
     switch @info.grammarType
@@ -173,6 +169,9 @@ class @Command
         @input = Actions.normalizeTextArray @input
       when "numberRange"
         @input = @normalizeNumberRange(@input)
+      when "custom"
+        @grammar = @info.grammar
+        @input = @grammar.normalizeInput(@input)
   transform: ->
     Transforms[@info.transform]
   generate: ->
@@ -243,10 +242,15 @@ class @Command
         repetitionIndex: Commands.repetitionIndex
     context
 
-  # DEPRECATED
   listNames: ->
     _.collect @info.customGrammar, (item) ->
       item.list if item.list?
+
+  getTriggerScopes: ->
+    @info.triggerScopes or [@info.triggerScope or "global"]
+
+  needsDragonCommand: ->
+    @info.needsDragonCommand != false
 
   normalizeNumberRange: (input) ->
     if typeof input is "object"

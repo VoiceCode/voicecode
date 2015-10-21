@@ -93,10 +93,15 @@ class @DarwinController
       unixServer.listen socketPath
 
   normalizePhraseComparison: (phrase) ->
-    phrase.toLowerCase().replace(/[\W]+/g, "")
+    if typeof Parser is 'undefined'
+      console.log "ERROR: the parser is not initialized - probably a problem with the license code, email, or internet connection"
+      null
+    else
+      JSON.stringify Parser.parse(phrase.toLowerCase() + " ")
 
   dragonHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
+    console.log 'dragon', phrase
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyGrowl.indexOf normalized
@@ -115,6 +120,7 @@ class @DarwinController
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
+    console.log 'growl', phrase
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyDragon.indexOf normalized

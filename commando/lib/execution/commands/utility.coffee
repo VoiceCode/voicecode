@@ -59,14 +59,17 @@ Commands.Utility =
       Commands.mapping[key].module is module
     )
 
-  getUsedOptionLists: ({filtered}={filtered: true}) ->
+  getUsedOptionLists: (kind='spoken') ->
     lists = {}
 
     for name in Commands.Utility.customCommandNames()
-      command = new Command(name, null)
-      for listName in command.listNames()
-        unless listName in lists
-          lists[listName] = Settings.getSpokenOptionsForList(listName, filtered)
+      command = new Commands.Base(name, null)
+      for listName, options of command.grammar.listsWithOptions(kind)
+        if listName in lists
+          unless _.isEqual options, lists[listName]
+            console.error "conflicting dynamic list values from command: #{name}, list: #{listName}"
+        else
+          lists[listName] = options
     lists
 
   documentationReport: ->

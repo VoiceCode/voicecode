@@ -7,12 +7,26 @@ class @Alphabet
     else
       instance = @
       @roots = _.invert Settings.letters
-      @loadCommands()
+      # @loadCommands()
+      @createCommand()
       @checkVocabulary() unless Settings.slaveMode
   buildPhonemeString: (individuals) ->
     _.map individuals, (letter) ->
       @roots[letter]
     .join('')
+  createCommand: ->
+    Commands.create 'vc-spelling',
+      kind: 'recognition'
+      description: 'phonetic alphabet'
+      grammarType: 'custom'
+      rule: '(alphabet) (alphabet)* (alphabet)* (alphabet)* (alphabet)* (alphabet)*'
+      variables:
+        alphabet: @possibleAlphabetValues()
+  possibleAlphabetValues: ->
+    results = _.values(Settings.letters)
+    results.push Settings.uppercaseLetterPrefix
+    results.push Settings.singleLetterSuffix
+    results
   loadCommands: ->
     _.each Settings.letters, (value, key) ->
       Commands.create value,

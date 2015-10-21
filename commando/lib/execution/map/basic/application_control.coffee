@@ -38,7 +38,9 @@ Commands.createDisabled
     description: 'open application'
     tags: ['application', 'system', 'launching', 'recommended']
     grammarType: 'custom'
-    rule: '(applications)'
+    rule: '<name> (applications)'
+    variables:
+      applications: -> Settings.applications
     action: ({applications}) ->
       if applications?
         @openApplication applications

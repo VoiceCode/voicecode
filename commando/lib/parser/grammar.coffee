@@ -131,9 +131,6 @@ class @Grammar
         modifierCommand /
         literalCommand
 
-    customIdentifier
-      = identifier:(#{@customCommands()}) ss {return identifier;}
-
     textCaptureCommand
       = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}
     textCaptureCommandContinuous
@@ -264,8 +261,8 @@ class @Grammar
     ss = " "+
 
     // identifier = id:(textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
+
     identifier = id:(
-      customIdentifier /
       textCaptureIdentifierContinuous /
       numberCaptureIdentifierContinuous /
       numberRangeIdentifierContinuous /
@@ -278,7 +275,7 @@ class @Grammar
       modifierPrefix
     ) s {return id;}
 
-    word = !identifier text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/')+ ss {return text.join('')}
+    word = !identifier !customCommand text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/')+ ss {return text.join('')}
 
     symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
 
@@ -365,31 +362,36 @@ class @Grammar
     """
   customCommandsContent: ->
     cc = _.map Commands.Utility.sortedCommandKeys("custom"), (name) =>
-      "(" + @buildCustomCommand(name) + ")"
-    .join(" / ")
+      command = new Commands.Base(name, null)
+      unless command.kind is "recognition"
+        "(" + @buildCustomCommand(command) + ")"
+    result = _.compact(cc).join(" / ")
 
     # ccc = _.map Commands.Utility.sortedCommandKeys("custom", true), (name) =>
     #   "(" + @buildCustomCommand(name) + ")"
     # .join(" / ")
 
     """
-    customCommand = #{cc}
+    customCommand = #{result}
     """
-  buildCustomCommand: (name) ->
-    command = new Command(name, null)
-    token = if command.info.misspellings?.length
-      name.split(" ").join('_')
+  buildCustomCommand: (command) ->
+    name = command.namespace
+    first = if command.grammar.includeName
+      token = if command.info.misspellings?.length
+        name.split(" ").join('_')
+      else
+        '"' + name + '"'
+      [token, "ss"]
     else
-      '"' + name + '"'
-    first = [token, "ss"]
+      []
     second = []
-    for item in command.info.customGrammar
+    for item in command.grammar.tokens
       if item.list?
         if item.optional
-          first.push "_#{item.list}:(_#{item.list})?"
+          first.push "_#{item.uniqueName}:(_#{item.name})?"
         else
-          first.push "_#{item.list}:(_#{item.list})"
-        second.push "#{item.list}: _#{item.list}"
+          first.push "_#{item.uniqueName}:(_#{item.name})"
+        second.push "#{item.uniqueName}: _#{item.uniqueName}"
       else if item.text?
         if item.optional
           first.push "('#{item.text}')?"
@@ -401,11 +403,11 @@ class @Grammar
     first.join(" ") + " " + "{return {command: '#{name}', arguments: {#{returnObject}}};}"
 
   customLists: ->
-    _.map(Commands.Utility.getUsedOptionLists(filtered: false), @buildCustomList).join("\n")
+    _.map(Commands.Utility.getUsedOptionLists('recognized'), @buildCustomList).join("\n")
 
   buildCustomList: (items, name) ->
     sorted = _.sortBy(items, (e) -> e).reverse()
     itemString = _.map sorted, (item) ->
       "\"#{item}\""
     .join " / "
-    "_#{name} = value:(#{itemString}) ss {return Settings.value('#{name}', value);}"
+    "_#{name} = value:(#{itemString}) ss {return value;}"

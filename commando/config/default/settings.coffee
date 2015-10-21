@@ -16,26 +16,6 @@ Settings.extend = (key, map) ->
 Settings.addContext = (determiningFunction) ->
   Settings.contextChain.unshift determiningFunction
 
-Settings.getSpokenOptionsForList = (listName, filtered=true) ->
-  list = Settings[listName]
-  if list?
-    if Object.prototype.toString.call(list) is '[object Array]'
-      if filtered
-        _.filter list, (item) ->
-          item[0] != "_"
-      else
-        _.map list, (item) ->
-          item.replace("_", '')
-    else if typeof list is "object"
-      if filtered
-        _.filter _.keys(list), (item) ->
-          item[0] != "_"
-      else
-        _.map _.keys(list), (item) ->
-          item.replace("_", '')
-  else
-    []
-
 Settings.value = (listName, value) ->
   Settings[listName][value] or Settings[listName]["_#{value}"]
 
@@ -327,6 +307,7 @@ _.extend Settings,
     "adam": "atom"
     "consol": "console"
     "consul": "console"
+    "et cetera": "etc."
   vocabulary: [
     "trello"
     "auto space"
