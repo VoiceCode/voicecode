@@ -13,10 +13,10 @@ Meteor.startup ->
   modifiers.checkVocabulary() unless Settings.slaveMode
   @ParseGenerator = {}
 
-  unless false
+  unless Settings.slaveMode
     if Settings.dragonCommandMode is 'new-school'
       @newSchoolCommandMode = new @NewSchoolCommandMode
-      @newSchoolCommandMode.generate(3).create()
+      @newSchoolCommandMode.generate(4).create()
 
     Commands.reloadGrammar()
     @synchronizer = new Synchronizer()

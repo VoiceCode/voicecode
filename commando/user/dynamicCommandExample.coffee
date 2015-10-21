@@ -1,7 +1,5 @@
 _.extend Settings,
   dragonVersion: 5
-  slaveMode: true
-  userAssetsPath: ''
   dragonCommandMode: 'new-school'
 
 # jarvis bake pizza with bacon garlic and mozzarella

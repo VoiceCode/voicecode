@@ -6,7 +6,7 @@ class UserAssetsController
     @path = Meteor.npmRequire 'path'
     @coffeeScript = Meteor.npmRequire 'coffee-script'
     @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
-    console.log @assetsPath
+    console.log "Assets path: #{@assetsPath}"
     instance = @
 
   getUserHome: ->
