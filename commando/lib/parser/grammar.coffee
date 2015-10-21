@@ -362,19 +362,20 @@ class @Grammar
     """
   customCommandsContent: ->
     cc = _.map Commands.Utility.sortedCommandKeys("custom"), (name) =>
-      "(" + @buildCustomCommand(name) + ")"
-    .join(" / ")
+      command = new Commands.Base(name, null)
+      unless command.kind is "recognition"
+        "(" + @buildCustomCommand(command) + ")"
+    result = _.compact(cc).join(" / ")
 
     # ccc = _.map Commands.Utility.sortedCommandKeys("custom", true), (name) =>
     #   "(" + @buildCustomCommand(name) + ")"
     # .join(" / ")
 
     """
-    customCommand = #{cc}
+    customCommand = #{result}
     """
-  buildCustomCommand: (name) ->
-    command = new Commands.Base(name, null)
-
+  buildCustomCommand: (command) ->
+    name = command.namespace
     first = if command.grammar.includeName
       token = if command.info.misspellings?.length
         name.split(" ").join('_')
