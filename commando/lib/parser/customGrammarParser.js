@@ -1,5 +1,4 @@
 this.customGrammarParser = (function() {
-  "use strict";
 
   function cgp$subclass(child, parent) {
     function ctor() { this.constructor = child; }
@@ -40,10 +39,10 @@ this.customGrammarParser = (function() {
         cgp$c7 = { type: "literal", value: ")", description: "\")\"" },
         cgp$c8 = "*",
         cgp$c9 = { type: "literal", value: "*", description: "\"*\"" },
-        cgp$c10 = function(listTokens, optional) {return {name: listTokens.join(''), list: listTokens, optional: !!optional};},
+        cgp$c10 = function(listTokens, optional) {return {name: listTokens.join('').replace(/ /g, ''), list: listTokens, optional: !!optional};},
         cgp$c11 = "/",
         cgp$c12 = { type: "literal", value: "/", description: "\"/\"" },
-        cgp$c13 = function(name, separator) {return name},
+        cgp$c13 = function(name, separator) {return name.join(' ')},
         cgp$c14 = function(words) {return {text: words.join(' ')};},
         cgp$c15 = " ",
         cgp$c16 = { type: "literal", value: " ", description: "\" \"" },
@@ -386,7 +385,16 @@ this.customGrammarParser = (function() {
       var s0, s1, s2, s3, s4, s5;
 
       s0 = cgp$currPos;
-      s1 = cgp$parseword();
+      s1 = [];
+      s2 = cgp$parseword();
+      if (s2 !== cgp$FAILED) {
+        while (s2 !== cgp$FAILED) {
+          s1.push(s2);
+          s2 = cgp$parseword();
+        }
+      } else {
+        s1 = cgp$FAILED;
+      }
       if (s1 !== cgp$FAILED) {
         s2 = cgp$currPos;
         s3 = cgp$parses();

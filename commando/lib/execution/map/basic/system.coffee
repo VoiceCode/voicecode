@@ -61,19 +61,19 @@ Commands.createDisabled
 
   'windy':
     grammarType: 'custom'
-    rule: '<name> (digits)* (windowPositions)*'
+    rule: '<name> (digit)* (windowPosition)*'
     description: 'set the size/position of the frontmost window to one of the preset sizes/positions'
     misspellings: ['wendy']
     tags: ['system', 'window', 'recommended']
     variables:
-      digits: -> Settings.digits
-      windowPositions: -> Settings.windowPositions
-    action: ({digits, windowPositions}) ->
-      if digits? or windowPositions?
-        preset = windowPositions or Settings.windowPositions['middle']
+      digit: -> Settings.digits
+      windowPosition: -> Settings.windowPositions
+    action: ({digit, windowPosition}) ->
+      if digit? or windowPosition?
+        preset = windowPosition or Settings.windowPosition['middle']
         screenInfo = @getScreenInfo()
-        screen = if digits?
-          screenInfo.screens[digits - 1] or screenInfo.currentFrame
+        screen = if digit?
+          screenInfo.screens[digit - 1] or screenInfo.currentFrame
         else
           screenInfo.currentFrame
 
