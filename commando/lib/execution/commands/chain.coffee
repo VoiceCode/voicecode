@@ -46,7 +46,7 @@ class Commands.Chain
       combined = _.map(results, (result) ->
         command = new Command(result.command, result.arguments, result.context)
         individual = command.generate()
-        if command.info.ignoreHistory
+        if command.ignoreHistory
           Commands.repetitionIndex = 0
         else
           Commands.lastIndividualCommand = individual
@@ -208,7 +208,7 @@ class Commands.Chain
           'skoosh'
 
   getAutoSpacingFromCommand: (command, multiPhrase) ->
-    info = Commands.mapping[command.command]
+    info = Commands.get command.command
     spacing = if multiPhrase
       info.multiPhraseAutoSpacing
     else

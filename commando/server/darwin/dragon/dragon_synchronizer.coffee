@@ -188,20 +188,30 @@ class @DragonSynchronizer
       console.log "error: dragon database not connected"
       return false
     needsCreating = []
+
+    chainedYesNo = [yes]
+    if Settings.dragonVersion is 5
+      chainedYesNo = [yes, no]
+
     for name in Commands.Utility.enabledCommandNames()
-      chainedYesNo = [yes]
-      if Settings.dragonVersion is 5
-        chainedYesNo = [yes, no]
       # console.error name
       command = new DragonCommand(name, null)
-      @commands[name] = command
-      @lists[name] = command.lists unless _.isEmpty command.lists
       continue unless command.needsDragonCommand()
+      @commands[name] = command
+      @lists[name] = command.dragonLists if command.dragonLists?
       if Settings.dragonCommandMode is 'pure-vocab'
         continue if name isnt 'vc-catch-all'
       if Settings.dragonCommandMode is 'new-school'
-        continue unless command.info.grammarType is 'dynamic'
+        continue unless command.grammarType in ['custom', 'textCapture'] or
+        command.kind is 'recognition'
       for hasChain in chainedYesNo
+        # assume input always required for textCapture
+        # exceptions will be handled by new school recognition command
+        if Settings.dragonCommandMode is 'new-school' and
+        command.grammarType is 'textCapture' and
+        hasChain is no
+          continue
+
         continue if name is 'vc-catch-all' and hasChain is no
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
@@ -223,9 +233,6 @@ class @DragonSynchronizer
     if @error
       console.log "error: dragon dynamic database not connected"
       return false
-    # console.log @list
-    characters = 'abcdefg'
-    characters = characters.split('')
     _.each @lists, (lists, commandName) =>
       _.each lists, (occurrences, variableName) =>
         _.each occurrences, (sublists, occurrence) =>
@@ -234,4 +241,4 @@ class @DragonSynchronizer
             for scope in scopes
               continue if bundle is null and scope isnt "global"
               bundle = '#' if scope is 'global'
-              @createList "#{variableName}oc#{characters[occurrence]}sub#{characters[sub]}", listValues, bundle
+              @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle

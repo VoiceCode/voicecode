@@ -1,6 +1,6 @@
 Commands.createDisabled
   "vc-catch-all":
-    kind: "none"
+    kind: "recognition"
     grammarType: "none"
     description: "catches all text - just for creation in Dragon"
     tags: ["voicecode", "recommended"]

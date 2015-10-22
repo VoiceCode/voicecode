@@ -3,7 +3,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'formats spoken arguments in NSUpperCamelCase (automatically inserts the "NS" part)'
     tags: ['text', 'objective-c', 'domain-specific']
-    inputRequired: true
+    inputRequired: false
     action: (input) ->
       if input
         @string 'NS' + Transforms.stud(input)
@@ -13,6 +13,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'formats spoken arguments in UIUpperCamelCase - automatically inserts the "UI" part. (pronounced like U-turn)'
     tags: ['text', 'objective-c', 'domain-specific']
+    inputRequired: false
     action: (input) ->
       if input
         @string 'UI' + Transforms.stud(input)
@@ -22,6 +23,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'formats spoken arguments in CGUpperCamelCase (automatically inserts the "CG" part)'
     tags: ['text', 'objective-c', 'domain-specific']
+    inputRequired: false
     action: (input) ->
       if input
         @string 'CG' + Transforms.stud(input)

@@ -63,7 +63,7 @@ Commands.Utility =
     lists = {}
 
     for name in Commands.Utility.customCommandNames()
-      command = new Commands.Base(name, null)
+      command = new Command(name, null)
       for listName, options of command.grammar.listsWithOptions(kind)
         if listName in lists
           unless _.isEqual options, lists[listName]

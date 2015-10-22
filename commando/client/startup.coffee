@@ -2,9 +2,11 @@
 
 @reloadGrammar = ->
   console.log "reloading grammar"
+  Events.emit 'grammarReloading'
   Meteor.call "parseGeneratorString", (error, results) ->
     ParseGenerator.string = results
     @Parser = eval(ParseGenerator.string)
+    Events.emit 'grammarLoaded'
 
 
 # Meteor.subscribe "history"
@@ -35,4 +37,3 @@ Meteor.startup ->
 
 
 # Meteor.ClientCall.apply "client", "logMessage", ["hello"], (error, result) ->
-  

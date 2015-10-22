@@ -8,7 +8,7 @@ class @NewSchoolCommandMode
       if value.enabled and value.isSpoken isnt false and
       value.needsDragonCommand isnt false and
       # value.kind not 'grammar' and
-      value.grammarType isnt 'dynamic'
+      value.grammarType isnt 'custom'
         spoken = value.triggerPhrase or key
         return {spoken, command: value}
       return null
@@ -49,23 +49,34 @@ class @NewSchoolCommandMode
     @
 
   create: ->
-    groupNames = 'abcdefg'
     variables = {}
     triggerPhrase = ''
     groupsInTotal = _.size @groups
+    groupNames = ['one', 'two', 'three', 'four']
     _.each [0...groupsInTotal], (groupNumber) =>
-      groupName = groupNames.charAt groupNumber
+      groupName = "group#{groupNames[groupNumber]}"
       triggerPhrase += "(#{groupName})"
       triggerPhrase += '*' if groupNumber > 0
       triggerPhrase += ' ' unless groupNumber is groupsInTotal
       variables[groupName] = _.toArray @groups[groupNumber]
-    # console.log groups
     Commands.create "vc-all-with-input",
-      kind : "grammar" # take notice
-      grammarType : "dynamic"
+      kind : "recognition"
+      grammarType : "custom"
       description : ""
-      triggerPhrase : triggerPhrase
+      rule : triggerPhrase
       variables: variables
       tags : ["ai"]
       continuous: false
       action : (input)->
+
+  mutate: ->
+    @mutateSearchCommands()
+
+  mutateSearchCommands: ->
+    findables = {findables: Commands.keys.findables}
+    _.each Commands.keys.singleSearch, (commandName) ->
+      Commands.edit commandName, 'commandEdit', (command) ->
+        command.grammarType = 'custom'
+        command.rule = '<name> (findables)*'
+        command.variables = findables
+        command

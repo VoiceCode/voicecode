@@ -1,17 +1,21 @@
 class @DragonCommand extends Command
   constructor: ->
     super
+    @dragonLists = null
+    if @grammarType is 'custom'
+      @dragonLists = @generateDragonLists()
 
   generateCommandBody: (hasChain = false)->
     body = @getTriggerPhrase()
-    if @isDynamicTriggerPhrase body
-      body = @generateDynamicCommandName()
-      body = body.replace /(\({2}|\(\/{2})(\w+)(\){2}|\/{2}\))/g, ->
+    if @grammarType is 'custom'
+      body = @generateCustomCommandName()
+      body = body.replace /(\({2}|\(\/{2})(.+?)(\){2}|\/{2}\))/g, ->
         arg = _.toArray arguments
-        variableName = arg[2].charAt(0).toUpperCase() + arg[2].slice 1
+        variableName = arg[2].charAt(0).toUpperCase() + arg[2].slice(1).toLowerCase()
         "${var#{variableName}} "
     body += " ${varText}" if hasChain
     body = body.replace /\s+/g, ' '
+    body = body.replace /_/g, ''
     body = body.replace /^\s/, ''
     body = body.replace /\s$/, ''
     """
@@ -20,50 +24,85 @@ class @DragonCommand extends Command
 
   generateCommandName: (hasChain = false)->
     trigger = @getTriggerPhrase()
-    if @isDynamicTriggerPhrase()
-      trigger = @generateDynamicCommandName()
-
+    if @grammarType is 'custom'
+      trigger = @generateCustomCommandName hasChain
     trigger = "#{trigger} /!Text!/" if hasChain
     trigger = trigger.replace /\s+/g, ' '
     trigger = trigger.replace /^\s/, ''
     trigger = trigger.replace /\s$/, ''
+
     return trigger
 
-  generateDynamicCommandName: ->
-    trigger = @info.triggerPhrase
-    trigger = trigger.replace /\//g, ''
+  generateCustomCommandName: ->
+    trigger = @rule
+    if @grammar.includeName?
+      trigger = trigger.replace /<name>/, @getTriggerPhrase()
     trigger = trigger.replace /[(/](\w*?\s)/g, -> arguments[0][...-1]
-    # trigger = trigger.replace /^\(([a-zA-Z/\s]+)\)\**?/, '(($1))'
-    # trigger = trigger.replace /\(([a-zA-Z/\s]+)\)\*/g, '(//$1//)'
-    # trigger = trigger.replace /\(([a-zA-Z/\s]+)(?!\))/g, '(($1))'
+    trigger = trigger.replace /\//g, ''
     # console.error trigger
-    characters = 'abcdefg'
-    characters =  characters.split('')
-    _.each _.countBy(@getAllVariableNames(), (v) -> v), (count, variableName) =>
+    _.each _.countBy((_.compact(_.pluck @grammar.tokens, 'name')), (v) -> v), (count, variableName) =>
       _.each [1..count], (occurrence) =>
         # console.error "searching for: #{variableName}"
-        numberOfSubs = _.size @lists[variableName][occurrence]
-        expression = new RegExp "\\(#{variableName}\\)\\**"
+        numberOfSubs = _.size @dragonLists[variableName][occurrence]
+        expression = new RegExp "\\(#{variableName}\\)\\*?"
         nextOccurrence = expression.exec trigger
-        switch _.last nextOccurrence[0].split('')
-          when ')'
-            subs = _.reduce [1..numberOfSubs], (memo, sub) ->
-              "#{memo} ((#{variableName}oc#{characters[occurrence]}sub#{characters[sub]}))"
-            , ''
-            trigger = trigger.replace '('+variableName+')', subs
+        optional = if _.last(nextOccurrence[0].split('')) is '*'
+          true
+        else
+          false
+        subs = _.reduce [1..numberOfSubs], (memo, sub, currentSub) ->
+          if optional or currentSub > 0
+            "#{memo} (//#{variableName}_#{occurrence}_#{sub}//)"
           else
-            subs = _.reduce [1..numberOfSubs], (memo, sub) ->
-              "#{memo} (//#{variableName}oc#{characters[occurrence]}sub#{characters[sub]}//)"
-            , ''
-            trigger = trigger.replace '('+variableName+')*', subs
-    trigger.replace /\s+/g, ' '
+            "#{memo} ((#{variableName}_#{occurrence}_#{sub}))"
+        , ''
+        trigger = trigger.replace '('+variableName+')', subs
+    trigger = trigger.replace /\*+/g, ''
+    # console.error trigger
+    trigger
 
   getTriggerScopes: ->
-    @info.triggerScopes or [@info.triggerScope or "global"]
+    @triggerScopes or [@triggerScope or "global"]
 
   needsDragonCommand: ->
-    @info.needsDragonCommand != false
+    @needsDragonCommand != false
 
+  generateDragonLists: ->
+    variableNames = _.compact _.pluck @grammar.tokens, 'name'
+    occurrenceCount = _.countBy(variableNames, (v) -> v)
+    variableValues = {}
+    _.each _.unique(variableNames), (variableName) =>
+      variableValues[variableName] = @grammar.lists[variableName].items
+      unless _.isArray variableValues[variableName]
+        variableValues[variableName] = _.keys variableValues[variableName]
+
+
+    # console.error occurrenceCount
+    # console.error variableNames
+    # console.error variableValues
+    lists = {}
+    maximumTokenCount = {}
+    _.each _.unique(variableNames), (variableName) ->
+      lists[variableName] ?= {}
+      maximumTokenCount[variableName] ?= 1
+      # breaking up each value into tokens and counting how many sublists
+      # this list will need to be split into
+      variableValues[variableName] = _.map variableValues[variableName], (value, index) ->
+        value = value.split ' '
+        if maximumTokenCount[variableName] < value.length
+          maximumTokenCount[variableName] = value.length
+        value
+    # console.error variableValues
+    # console.error maximumTokenCount
+
+    _.each _.unique(variableNames), (variableName) ->
+      _.each [1..occurrenceCount[variableName]], (occurrence) ->
+        lists[variableName][occurrence] ?= {}
+        _.each [1..maximumTokenCount[variableName]], (sublistIndex) ->
+          lists[variableName][occurrence][sublistIndex] =
+          _.compact(_.map variableValues[variableName], (tokens) -> tokens[(sublistIndex-1)] || null)
+    # console.error lists
+    lists
 
   # generateCommandBodyIfStatement: (varName, suffix)->
   #   varName = varName.charAt(0).toUpperCase() + varName.slice(1)

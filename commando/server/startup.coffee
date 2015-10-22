@@ -1,5 +1,6 @@
 Meteor.startup ->
   console.log "Copyright (c) VoiceCode.io 2015 - all rights reserved"
+  @ParseGenerator = {}
   @Grammar = new Grammar()
   @alphabet = new Alphabet()
   repetition = new Repetition()
@@ -7,26 +8,28 @@ Meteor.startup ->
   @userAssetsController = new UserAssetsController
   userAssetsController.init()
   @enabledCommandsManager = new EnabledCommandsManager()
-  @vocabulary = new Vocabulary() unless Settings.slaveMode
-  Commands.performCommandEdits()
-  Commands.loadConditionalModules(enabledCommandsManager.settings)
-  modifiers.checkVocabulary() unless Settings.slaveMode
-  @ParseGenerator = {}
 
-  unless Settings.slaveMode
-    if Settings.dragonCommandMode is 'new-school'
-      @newSchoolCommandMode = new @NewSchoolCommandMode
-      @newSchoolCommandMode.generate(4).create()
-
-    Commands.reloadGrammar()
-    @synchronizer = new Synchronizer()
-    synchronizer.synchronize()
 
   if Settings.slaveMode
     _.each Commands.mapping, (command, name) ->
-      Commands.mapping[name].enabled = true
-    enabledCommandsManager.enable(_.keys Commands.mapping)
-    Commands.reloadGrammar()
+      Commands.enable name
+
+  Commands.initialize()
+
+  unless false
+    @vocabulary = new Vocabulary()
+    if Settings.dragonCommandMode is 'new-school'
+      @newSchoolCommandMode = new @NewSchoolCommandMode
+      # @newSchoolCommandMode.mutate()
+      @newSchoolCommandMode.generate(4).create()
+  modifiers.checkVocabulary()
+
+  unless false
+    @synchronizer = new Synchronizer()
+    # synchronizer.synchronize()
+
+
+  Commands.reloadGrammar()
 
   if Settings.mouseTracking
     @mouseTracker = new MouseTracker().start()
