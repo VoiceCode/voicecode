@@ -107,7 +107,7 @@ Commands.createDisabled
               from: first
               to: last
 
-  'seltill':
+  'seltil':
     grammarType: 'numberCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'
     # TODO remove this misspelling after a few more releases because of command name change

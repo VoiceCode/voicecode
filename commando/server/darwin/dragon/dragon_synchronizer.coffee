@@ -9,6 +9,7 @@ class @DragonSynchronizer
     @connectDynamic()
     @commands = {}
     @lists = {}
+    @insertedLists = []
   connectMain: ->
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
@@ -179,7 +180,7 @@ class @DragonSynchronizer
     if @error
       console.error '-'
       console.error @error
-
+    @insertedLists.push "#{bundle}#{name}"
     for item in items
       @createListItem item, id
 
@@ -202,7 +203,7 @@ class @DragonSynchronizer
       if Settings.dragonCommandMode is 'pure-vocab'
         continue if name isnt 'vc-catch-all'
       if Settings.dragonCommandMode is 'new-school'
-        continue unless command.grammarType in ['custom', 'textCapture'] or
+        continue unless command.grammarType in ['custom', 'textCapture', 'oneArgument'] or
         command.kind is 'recognition'
       for hasChain in chainedYesNo
         # assume input always required for textCapture
@@ -233,6 +234,7 @@ class @DragonSynchronizer
     if @error
       console.log "error: dragon dynamic database not connected"
       return false
+
     _.each @lists, (lists, commandName) =>
       _.each lists, (occurrences, variableName) =>
         _.each occurrences, (sublists, occurrence) =>
@@ -241,4 +243,5 @@ class @DragonSynchronizer
             for scope in scopes
               continue if bundle is null and scope isnt "global"
               bundle = '#' if scope is 'global'
-              @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle
+              unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
+                @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle

@@ -3,7 +3,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     grammarType: 'none'
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
     tags: ['text', 'recommended']
-    needsDragonCommand: false
+    needsCommand: false
     isSpoken: false
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: (input) ->

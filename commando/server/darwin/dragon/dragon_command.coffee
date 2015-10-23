@@ -2,12 +2,12 @@ class @DragonCommand extends Command
   constructor: ->
     super
     @dragonLists = null
-    if @grammarType is 'custom'
+    if @rule?
       @dragonLists = @generateDragonLists()
 
   generateCommandBody: (hasChain = false)->
     body = @getTriggerPhrase()
-    if @grammarType is 'custom'
+    if @rule?
       body = @generateCustomCommandName()
       body = body.replace /(\({2}|\(\/{2})(.+?)(\){2}|\/{2}\))/g, ->
         arg = _.toArray arguments
@@ -24,14 +24,13 @@ class @DragonCommand extends Command
 
   generateCommandName: (hasChain = false)->
     trigger = @getTriggerPhrase()
-    if @grammarType is 'custom'
+    if @rule?
       trigger = @generateCustomCommandName hasChain
     trigger = "#{trigger} /!Text!/" if hasChain
     trigger = trigger.replace /\s+/g, ' '
     trigger = trigger.replace /^\s/, ''
     trigger = trigger.replace /\s$/, ''
-
-    return trigger
+    trigger
 
   generateCustomCommandName: ->
     trigger = @rule
@@ -65,7 +64,7 @@ class @DragonCommand extends Command
     @triggerScopes or [@triggerScope or "global"]
 
   needsDragonCommand: ->
-    @needsDragonCommand != false
+    @needsCommand != false
 
   generateDragonLists: ->
     variableNames = _.compact _.pluck @grammar.tokens, 'name'
@@ -100,7 +99,8 @@ class @DragonCommand extends Command
         lists[variableName][occurrence] ?= {}
         _.each [1..maximumTokenCount[variableName]], (sublistIndex) ->
           lists[variableName][occurrence][sublistIndex] =
-          _.compact(_.map variableValues[variableName], (tokens) -> tokens[(sublistIndex-1)] || null)
+          _.unique _.compact(_.map variableValues[variableName], (tokens) ->
+            tokens[(sublistIndex-1)] || null)
     # console.error lists
     lists
 

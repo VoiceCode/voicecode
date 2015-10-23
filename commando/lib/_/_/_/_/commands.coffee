@@ -1,6 +1,7 @@
 class Commands
   constructor: ->
     @mapping = {}
+    @renamings = {}
     @history = []
     @context = "global"
     @initialized = false
@@ -50,6 +51,8 @@ class Commands
       _.each name, (options, name) ->
         @validate name, options
       return
+    if @mapping[name]?
+      console.error "Overwritten '#{name}' command!"
     if options.rule?.match(/\(.*?\d+.*?\)/g)?
       console.error "Error in command creation: #{name}"
       console.error 'Please don\'t use integers in list names'
@@ -67,14 +70,19 @@ class Commands
   create: (name, options) ->
     @validate name, options
     if typeof name is "string"
-      options.enabled ?= false
+      options.enabled ?= true
+      options.grammarType ?= 'individual'
+      options.kind ?= 'action'
       @mapping[name] = options
       if options.enabled is true
         @enable name
     else if typeof name is "object"
       _.extend @mapping, name
       for name, options in name
-        options.enabled ?= false
+        options.enabled ?= true
+        options.grammarType ?= 'individual'
+        options.kind ?= 'action'
+
         if options.enabled is true
           @enable name
 
@@ -106,22 +114,24 @@ class Commands
       @performCommandEdits()
 
   get: (name) ->
+    if @renamings[name]?
+      console.error "Reference to a renamed command: #{name} => #{@renamings[name]}"
+      return @mapping[@renamings[name]]
     @mapping[name]
 
   performCommandEdits: ->
-    _.each @delayedEditFunctions, ({name, callback, editType}) =>
+    _delayedEditFunctions = @delayedEditFunctions
+    @delayedEditFunctions = []
+    _.each _delayedEditFunctions, ({name, callback, editType}) =>
       command = @get name
       if command?
         result = callback command
-        if not result?
-          delete @mapping[name]
-        else
+        if _.isObject result
           @mapping[name] = result
-        Events.emit editType, name
+        Events.emit editType, name, !!result
       else
         console.error "#{editType} failed: '#{name}' was not found"
-    @loadConditionalModules @delayedEditFunctions
-    @delayedEditFunctions = []
+    @loadConditionalModules _.pluck _delayedEditFunctions, 'name'
 
   override: (name, action) ->
     console.error "Failed overriding '#{name}'. Commands.override is deprecated. Use Commands.extend"
@@ -155,8 +165,27 @@ class Commands
 
   changeName: (name, newName) ->
     @edit name, 'commandNameChanged', (command) =>
+      # don't do anything if we have renamed like this already
+      if @renamings[name]? and @renamings[name] is newName
+        console.error "Won't rename #{name} #{newName}"
+        return false
+
+      # # check to see if we are renaming a previously overwritten command
+      # if @renamings[name]? and @renamings[name] is "_#{name}"
+      #   console.error "Previously renamed #{name}"
+      #   command = @mapping["_#{name}"]
+      #   delete @renamings[name]
+
+      if @mapping[newName]?
+        @mapping["_#{newName}"] = @mapping[newName]
+        console.error "Overwritten '#{newName}' command by taking its name. Now called _#{newName}"
+        # @renamings[newName] = "_#{newName}"
+
       @mapping[newName] = command
-      null
+      @renamings[name] = newName
+      # unless name.charAt(0) is '_'
+      delete @mapping[name]
+      true
 
   loadConditionalModules: (enabledCommands) ->
     for key, value of @mapping
@@ -176,7 +205,7 @@ class Commands
       if value.repeater?
         @keys.repeater.push key
 
-      if type is "custom"
+      if value.rule?
         # try
         @mapping[key].grammar = new CustomGrammar(value.rule, value.variables)
         # catch e

@@ -1,5 +1,5 @@
 class CustomGrammar
-  constructor: (@rule, @definitions) ->
+  constructor: (@rule, @definitions = {}) ->
     @parsed = customGrammarParser.parse rule
     @tokens = @parsed.tokens
     @handleDuplicateLists()
@@ -48,7 +48,7 @@ class CustomGrammar
     for name in @listNames
       spoken = input[name]
       if spoken?
-        spokenList = 
+        spokenList =
         results[name] = @lists[@reverseNameLookup[name]].value(spoken)
     results
 

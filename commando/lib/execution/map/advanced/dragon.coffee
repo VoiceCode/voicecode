@@ -72,7 +72,7 @@ Commands.createDisabled
 Commands.createWithDefaults
   kind: "none"
   tags: ["ignored"]
-  needsDragonCommand: false
+  needsCommand: false
   continuous: false
   isSpoken: false
 ,

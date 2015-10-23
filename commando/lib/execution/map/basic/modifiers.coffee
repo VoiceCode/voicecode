@@ -8,6 +8,7 @@ class @Modifiers
       instance = @
       @roots = _.invert Settings.letters
       @loadCommands()
+      @checkVocabulary()
   buildPhonemeString: (individuals) ->
     _.map individuals, (letter) ->
       @roots[letter]

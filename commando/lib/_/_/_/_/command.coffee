@@ -1,20 +1,17 @@
 class @Command
   constructor: (@namespace, @input = null, @context={}) ->
-    _.extend @, Commands.mapping[@namespace]
-    @kind ?= 'action'
-    @grammarType ?= 'individual'
+    _.extend @, Commands.get @namespace
     @normalizeInput()
 
   normalizeInput: ->
-    switch @grammarType
-      when "textCapture"
-        @input = Actions.normalizeTextArray @input
-      when "numberRange"
-        @input = @normalizeNumberRange(@input)
-      when "custom"
-        unless @grammar?
-          @grammar = new CustomGrammar @rule, @variables
-        @input = @grammar.normalizeInput(@input)
+    if @rule?
+      @input = @grammar.normalizeInput(@input)
+    else
+      switch @grammarType
+        when "textCapture"
+          @input = Actions.normalizeTextArray @input
+        when "numberRange"
+          @input = @normalizeNumberRange(@input)
 
   transform: ->
     Transforms[@transform]
