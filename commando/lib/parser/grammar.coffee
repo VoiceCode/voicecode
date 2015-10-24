@@ -36,6 +36,7 @@ class @Grammar
     results = []
     for name in keys
       command = Commands.mapping[name]
+      continue unless command?
       if command.enabled
         if command.misspellings?.length
           if name is "."

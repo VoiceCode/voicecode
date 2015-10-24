@@ -68,8 +68,11 @@ class Commands
       command
 
   create: (name, options) ->
-    @validate name, options
     if typeof name is "string"
+      @validate name, options
+      # if @mapping[name]?
+      #   console.error "Won't re-create command: #{name}"
+      #   return false
       options.enabled ?= true
       options.grammarType ?= 'individual'
       options.kind ?= 'action'
@@ -77,14 +80,8 @@ class Commands
       if options.enabled is true
         @enable name
     else if typeof name is "object"
-      _.extend @mapping, name
       for name, options in name
-        options.enabled ?= true
-        options.grammarType ?= 'individual'
-        options.kind ?= 'action'
-
-        if options.enabled is true
-          @enable name
+        @create name, options
 
   createWithDefaults: (defaults, options) ->
     for key, value of options
@@ -120,18 +117,20 @@ class Commands
     @mapping[name]
 
   performCommandEdits: ->
-    _delayedEditFunctions = @delayedEditFunctions
-    @delayedEditFunctions = []
-    _.each _delayedEditFunctions, ({name, callback, editType}) =>
+    _.each @delayedEditFunctions, ({name, callback, editType}) =>
       command = @get name
       if command?
         result = callback command
+
+        if @renamings[name]?
+          name = @renamings[name]
+
         if _.isObject result
-          @mapping[name] = result
+          @mapping[name] = @loadConditionalModules name, result
         Events.emit editType, name, !!result
       else
         console.error "#{editType} failed: '#{name}' was not found"
-    @loadConditionalModules _.pluck _delayedEditFunctions, 'name'
+    @delayedEditFunctions = []
 
   override: (name, action) ->
     console.error "Failed overriding '#{name}'. Commands.override is deprecated. Use Commands.extend"
@@ -157,7 +156,7 @@ class Commands
   addMisspellings: (name, misspellings) ->
     @edit name, 'commandMisspellingsAdded', (command) ->
       command.misspellings ?= []
-      command.misspellings = command.misspellings.concat misspellings
+      command.misspellings = command.misspellings.concat _.difference misspellings, command.misspellings
       command
 
   addAliases: (name, aliases) ->
@@ -167,49 +166,37 @@ class Commands
     @edit name, 'commandNameChanged', (command) =>
       # don't do anything if we have renamed like this already
       if @renamings[name]? and @renamings[name] is newName
-        console.error "Won't rename #{name} #{newName}"
+        # console.error "Won't rename #{name} #{newName}"
         return false
 
-      # # check to see if we are renaming a previously overwritten command
-      # if @renamings[name]? and @renamings[name] is "_#{name}"
-      #   console.error "Previously renamed #{name}"
-      #   command = @mapping["_#{name}"]
-      #   delete @renamings[name]
-
       if @mapping[newName]?
-        @mapping["_#{newName}"] = @mapping[newName]
-        console.error "Overwritten '#{newName}' command by taking its name. Now called _#{newName}"
-        # @renamings[newName] = "_#{newName}"
+        console.log "Overwritten '#{newName}' command by taking its name."
 
       @mapping[newName] = command
       @renamings[name] = newName
-      # unless name.charAt(0) is '_'
       delete @mapping[name]
       true
 
-  loadConditionalModules: (enabledCommands) ->
-    for key, value of @mapping
-      enabled = enabledCommands[key]
-      @mapping[key].enabled = @mapping[key].enabled or enabled
+  loadConditionalModules: (name, command) ->
+    type = command.grammarType
+    if type in @primaryGrammarTypes
+      unless name in @keys[type]
+        @keys[type].push name
+      unless command.continuous is false
+        unless name in @keys[type + "Continuous"]
+          @keys[type + "Continuous"].push name
 
-      type = value.grammarType or "individual"
+    if command.findable?
+      @keys.findable.push name
 
-      if type in @primaryGrammarTypes
-        @keys[type].push key
-        unless value.continuous is false
-          @keys[type + "Continuous"].push key
+    if command.repeater?
+      @keys.repeater.push name
 
-      if value.findable?
-        @keys.findable.push key
-
-      if value.repeater?
-        @keys.repeater.push key
-
-      if value.rule?
-        # try
-        @mapping[key].grammar = new CustomGrammar(value.rule, value.variables)
-        # catch e
-        #   console.log "error parsing custom grammar for command: #{key}"
-        #   console.log e
-
+    if command.rule?
+      # try
+      command.grammar = new CustomGrammar(command.rule, command.variables)
+      # catch e
+      #   console.log "error parsing custom grammar for command: #{key}"
+      #   console.log e
+    command
 @Commands = new Commands
