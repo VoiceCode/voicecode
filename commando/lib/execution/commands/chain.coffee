@@ -3,6 +3,7 @@ class Commands.Chain
     @phrase = @normalizePhrase phrase
   normalizePhrase: (phrase) ->
     result = []
+    phrase = phrase.replace /\s+/g, ' '
     parts = phrase.toLowerCase().split('')
     for c, index in parts
       item = c

@@ -1,15 +1,16 @@
 Meteor.startup ->
   console.log "Copyright (c) VoiceCode.io 2015 - all rights reserved"
   @ParseGenerator = {}
+  @enabledCommandsManager = new EnabledCommandsManager()
   @userAssetsController = new UserAssetsController
   userAssetsController.init()
   @Grammar = new Grammar()
   @alphabet = new Alphabet()
   repetition = new Repetition()
   @modifiers = new Modifiers()
-  @enabledCommandsManager = new EnabledCommandsManager()
 
-  if Settings.slaveMode
+
+  if true
     _.each Commands.mapping, (command, name) ->
       Commands.enable name
 
