@@ -1,5 +1,5 @@
 loadGrammar = ->
-  Events.emit 'grammarLoading'
+  emit 'grammarLoading'
   # try
   fingerprint =
     data:
@@ -34,10 +34,10 @@ loadGrammar = ->
     @Parser = undefined
     throw throwable
 
-  Events.emit 'grammarLoaded'
+  emit 'grammarLoaded'
   # catch error
     # console.error error
-    # Events.emit 'grammarLoadFailed'
+    # emit 'grammarLoadFailed'
 
 isReloading = false
 needsReloading = false

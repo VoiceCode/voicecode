@@ -113,7 +113,7 @@ class Commands
   get: (name) ->
     isRenamed = _.findWhere @renamings, {from: name}
     if isRenamed?
-      Events.emit 'commandRenamedReference', isRenamed
+      emit 'commandRenamedReference', isRenamed
       return @mapping[isRenamed.to]
     @mapping[name]
 
@@ -129,7 +129,7 @@ class Commands
 
         if _.isObject result
           @mapping[name] = @loadConditionalModules name, result
-        Events.emit editType, name, !!result
+        emit editType, name, !!result
       else
         console.error "#{editType} failed: '#{name}' was not found"
     @delayedEditFunctions = []
@@ -169,7 +169,7 @@ class Commands
       # don't do anything if we have renamed like this already
       # if @renamings[name]? and @renamings[name] is newName
       if _.findWhere(@renamings, {to: newName})?
-        console.error "Won't rename #{name} #{newName} once more"
+        # console.error "Won't rename #{name} #{newName} once more"
         return false
       if _.findWhere(@renamings, {to: name})?
         # renaming something that has already been renamed

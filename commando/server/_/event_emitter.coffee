@@ -14,3 +14,4 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
     super
 
 @Events = new EventEmitter
+@emit = Events.emit
