@@ -1,4 +1,4 @@
-Commands.createDisabled
+Commands.createDisabledWithDefaults {inputRequired: false},
   'page up':
     description: 'press PageUp key [N] times'
     grammarType: 'numberCapture'
@@ -32,11 +32,13 @@ Commands.createDisabled
   'scrodgeway':
     description: 'scroll way down'
     tags: ['scroll', 'down', 'recommended']
+    grammarType: 'individual'
     action: (input) ->
       @scrollDown(999)
   'scroopway':
     description: 'scroll way up'
     tags: ['scroll', 'up', 'recommended']
+    grammarType: 'individual'
     action: (input) ->
       @scrollUp(999)
   'sweeper':

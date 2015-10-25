@@ -4,6 +4,7 @@ Commands.createDisabled
     description: 'go to line number.'
     tags: ['sublime', 'xcode']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    inputRequired: false
     action: (input) ->
       switch @currentApplication()
         when 'Sublime Text'
@@ -29,6 +30,7 @@ Commands.createDisabled
     description: 'go to line number then position cursor at end of line.'
     tags: ['sublime', 'xcode']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    inputRequired: false
     action: (input) ->
       @do 'spring', input
       if input?
@@ -39,6 +41,7 @@ Commands.createDisabled
     description: 'go to line number then position cursor at beginning of line.'
     tags: ['xcode']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    inputRequired: false
     action: (input) ->
       @do 'spring', input
       if input?
@@ -49,6 +52,7 @@ Commands.createDisabled
     description: 'go to line number then insert a new line below.'
     tags: ['sublime', 'xcode']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    inputRequired: false
     action: (input) ->
       @do 'spring', input
       if input?
@@ -59,6 +63,7 @@ Commands.createDisabled
     description: 'go to line number then select entire line.'
     tags: ['sublime']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    inputRequired: false
     action: (input) ->
       @do 'spring', input
       if input?
@@ -81,6 +86,7 @@ Commands.createDisabled
     description: 'selects text in a line range: selrang ten twenty.'
     tags: ['atom', 'sublime']
     triggerScopes: ['Atom', 'Sublime Text']
+    inputRequired: true
     action: (input) ->
       if input?
         number = input.toString()
@@ -101,13 +107,14 @@ Commands.createDisabled
               from: first
               to: last
 
-  'seltill':
+  'seltil':
     grammarType: 'numberCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'
     # TODO remove this misspelling after a few more releases because of command name change
     misspellings: ['seltil']
     tags: ['atom', 'sublime']
     triggerScopes: ['Atom', 'Sublime Text']
+    inputRequired: true
     action: (input) ->
       if input?
         switch @currentApplication()
@@ -126,6 +133,7 @@ Commands.createDisabled
     description: 'Insert the text from another line at the current cursor position'
     tags: ['atom']
     triggerScopes: ['Atom']
+    inputRequired: true
     action: (input) ->
       if input?
         switch @currentApplication()
@@ -136,6 +144,7 @@ Commands.createDisabled
     grammarType: 'numberRange'
     tags: ['editing', 'atom', 'sublime']
     description: 'toggle comments on the line or range'
+    inputRequired: false
     action: ({first, last} = {}) ->
       switch @currentApplication()
         when 'Sublime Text'

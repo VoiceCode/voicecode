@@ -5,6 +5,7 @@ Commands.createDisabled
     misspellings: ['sparked']
     tags: ['clipboard', 'recommended']
     spaceBefore: true
+    inputRequired: false
     action: (input) ->
       if input?
         previous = @getStoredItem('clipboard', input)
@@ -29,6 +30,7 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     description: 'insert space then paste the clipboard (or named item from {stoosh} command)'
     tags: ['clipboard', 'recommended']
+    inputRequired: false
     action: (input) ->
       @space()
       @do 'spark', input
@@ -43,6 +45,7 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     description: 'copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via {spark [name]})'
     tags: ['clipboard', 'recommended']
+    inputRequired: false
     action: (input) ->
       @copy()
       if input?

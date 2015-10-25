@@ -1,4 +1,4 @@
-Commands.createDisabled
+Commands.createDisabledWithDefaults {inputRequired: true},
   "shrink":
     grammarType: "textCapture"
     description: "inserts a common abbreviation"

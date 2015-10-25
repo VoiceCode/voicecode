@@ -3,7 +3,9 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     description: 'opens drop-down menu by name. A few special arguments are also allowed: [bluetooth, wi-fi, clock, battery]'
     tags: ['application', 'system', 'recommended']
+    inputRequired: true
     action: (input) ->
+      return unless input?.length
       specialItems = ['bluetooth', 'wi-fi', 'clock', 'battery', 'user']
       if input in specialItems
         @applescript """
@@ -16,7 +18,7 @@ Commands.createDisabled
         tell application "System Events" to tell (process 1 where frontmost is true)
           click menu bar item 1 of menu bar 1
         end tell
-        """, false        
+        """, false
       else
         menuItem = Settings.menuItemAliases[input] or input
         @openMenuBarItem menuItem
@@ -32,6 +34,7 @@ Commands.createDisabled
     description: 'adjust the system volume [0-100]'
     tags: ['system', 'recommended']
     continuous: false
+    inputRequired: true
     action: (input) ->
       @setVolume(input)
 
@@ -40,6 +43,7 @@ Commands.createDisabled
     description: 'increase the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
     continuous: false
+    inputRequired: false
     action: (input) ->
       currentVolume = @getCurrentVolume() or 0
       @setVolume currentVolume + (input or 10)
@@ -49,6 +53,7 @@ Commands.createDisabled
     description: 'decrease the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
     continuous: false
+    inputRequired: false
     action: (input) ->
       currentVolume = @getCurrentVolume() or 0
       @setVolume currentVolume - (input or 10)

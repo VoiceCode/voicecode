@@ -25,6 +25,7 @@ Commands.createDisabled
     tags: ['domain-specific', 'shell']
     triggerScopes: ['iTerm', 'Terminal']
     continuous: false
+    inputRequired: false
     action: (input) ->
       options = _.map((input or []), (item) ->
         " -#{item}"
@@ -38,6 +39,7 @@ Commands.createDisabled
     tags: ['domain-specific', 'shell']
     triggerScopes: ['iTerm', 'Terminal']
     continuous: false
+    inputRequired: false
     action: (input) ->
       @string "history #{input or ''}"
       @enter()
@@ -75,6 +77,7 @@ Commands.createDisabled
     description: 'changes directory to any directory in the predefined list'
     tags: ['text', 'domain-specific', 'shell']
     continuous: false
+    inputRequired: true
     action: (input) ->
       if input?.length
         current = @currentApplication()
@@ -88,12 +91,16 @@ Commands.createDisabled
           @string "cd #{directory} ; ls"
           @enter()
   'shell':
-    grammarType: 'textCapture'
+    grammarType: 'custom'
     description: 'insert a shell command from the predefined shell commands list'
     tags: ['text', 'shell']
     misspellings: ['shall', 'chell']
+    rule: '<name> (shellcommands)'
+    triggerScopes: ['iTerm', 'Terminal']
+    variables:
+      shellcommands: -> _.keys Settings.shellCommands
     continuous: false
-    action: (input) ->
-      if input?.length
-        text = @fuzzyMatch Settings.shellCommands, input.join(' ')
-        @string text
+    inputRequired: true
+    action: ({shellcommands}) ->
+      text = @fuzzyMatch Settings.shellCommands, shellcommands
+      @string text

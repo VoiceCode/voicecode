@@ -130,6 +130,7 @@ Commands.createDisabled
     grammarType: 'numberRange'
     tags: ['deleting', 'recommended']
     misspellings: ['snipeline']
+    inputRequired: false
     action: ({first, last} = {}) ->
       console.log "snipline", arguments
       switch @currentApplication()

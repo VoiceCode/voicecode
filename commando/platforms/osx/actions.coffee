@@ -338,8 +338,9 @@ class Platforms.osx.actions extends Platforms.base.actions
     else
       null
 
-  exec: (script) ->
-    Execute script
+  exec: (script, options = null) ->
+    options ?= {silent: true}
+    Execute script, options
 
   runAtomCommand: (name, options) ->
     info =
@@ -594,7 +595,7 @@ class Platforms.osx.actions extends Platforms.base.actions
     if clipboard.charAt(clipboard.length - 1) is "\n"
       downtimes -= 1
 
-    @repeat downtimes, => 
+    @repeat downtimes, =>
       @key 'down', 'shift'
 
   symmetricSelectionExpansion: (number) ->
@@ -657,7 +658,7 @@ class Platforms.osx.actions extends Platforms.base.actions
         @left(distanceRight)
 
         width = distanceLeft - first.length - distanceRight
-        @repeat width, => 
+        @repeat width, =>
           @key 'left', 'shift'
       else if clipboard.indexOf(first) >= 0
         totalLength = clipboard?.length

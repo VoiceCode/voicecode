@@ -1,7 +1,7 @@
 Commands.createDisabledWithDefaults
   tags: ['itunes']
   continuous: false
-  needsDragonCommand: false
+  needsCommand: false
 ,
   'play pause':
     description: 'play or pause the current song in iTunes'

@@ -19,7 +19,7 @@ Template.Interpreter.events
       actions = new Platforms.base.displayActions()
       display = _.map result.interpretation, (e) ->
         actions.reset()
-        command = new Commands.Base(e.command, e.arguments)
+        command = new Command(e.command, e.arguments)
         individual = command.generate()
         individual.call(actions)
         actions.result

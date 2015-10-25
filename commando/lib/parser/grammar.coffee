@@ -36,6 +36,7 @@ class @Grammar
     results = []
     for name in keys
       command = Commands.mapping[name]
+      continue unless command?
       if command.enabled
         if command.misspellings?.length
           if name is "."
@@ -362,7 +363,7 @@ class @Grammar
     """
   customCommandsContent: ->
     cc = _.map Commands.Utility.sortedCommandKeys("custom"), (name) =>
-      command = new Commands.Base(name, null)
+      command = new Command(name, null)
       unless command.kind is "recognition"
         "(" + @buildCustomCommand(command) + ")"
     result = _.compact(cc).join(" / ")
@@ -377,7 +378,7 @@ class @Grammar
   buildCustomCommand: (command) ->
     name = command.namespace
     first = if command.grammar.includeName
-      token = if command.info.misspellings?.length
+      token = if command.misspellings?.length
         name.split(" ").join('_')
       else
         '"' + name + '"'

@@ -12,6 +12,7 @@ Commands.createDisabled
     description: 'mouse double click, then copy'
     tags: ['mouse', 'combo', 'recommended', 'clipboard']
     mouseLatency: true
+    inputRequired: false
     action: (input, context) ->
       @do 'duke', input, context
       @do 'stoosh', input
@@ -19,6 +20,7 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     description: 'mouse double click, then paste'
     tags: ['mouse', 'combo', 'clipboard']
+    inputRequired: false
     mouseLatency: true
     action: (input, context) ->
       @do 'duke', input, context
@@ -35,6 +37,7 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     description: 'select entire line, then copy'
     tags: ['selection', 'combo', 'clipboard']
+    inputRequired: false
     action: (input) ->
       @do 'shackle'
       @do 'stoosh', input
@@ -42,6 +45,7 @@ Commands.createDisabled
     grammarType: 'oneArgument'
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
+    inputRequired: false
     action: (input) ->
       @do 'shackle'
       @do 'spark', input
@@ -50,6 +54,7 @@ Commands.createDisabled
     description: 'select entire line, then copy'
     tags: ['selection', 'combo', 'clipboard']
     mouseLatency: true
+    inputRequired: false
     action: (input, context) ->
       @do 'chibble', input, context
       @do 'stoosh', input
@@ -58,6 +63,7 @@ Commands.createDisabled
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
     mouseLatency: true
+    inputRequired: false
     action: (input, context) ->
       @do 'chibble', input, context
       @do 'spark', input

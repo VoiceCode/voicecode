@@ -34,3 +34,9 @@
 	    Applescript """
 	    display notification "#{message}" with title "VoiceCode"
 	    """
+
+
+Events.on 'grammarLoadFailed', ->
+		Notify "Please check your license key, and make sure you are online"
+Events.on 'grammarLoaded', ->
+		Notify 'VoiceCode is running!'

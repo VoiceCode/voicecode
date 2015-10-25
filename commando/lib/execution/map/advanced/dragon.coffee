@@ -3,6 +3,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: "put dragon into sleep mode"
     tags: ["dragon"]
+    inputRequired: false
     action: (input) ->
       dictateName = Settings.dragonApplicationName
       @applescript """
@@ -61,7 +62,7 @@ Commands.createDisabled
         end tell
       end try
       """
-      
+
   "over and out":
     description: "turn the microphone off. This command is nice because it is 'chainable' in a phrase"
     tags: ["dragon", "recommended"]
@@ -71,7 +72,7 @@ Commands.createDisabled
 Commands.createWithDefaults
   kind: "none"
   tags: ["ignored"]
-  needsDragonCommand: false
+  needsCommand: false
   continuous: false
   isSpoken: false
 ,

@@ -3,6 +3,7 @@ Commands.createDisabled
     description: 'place a phone call to the given person (uses Settings.phoneNumbers). Requires an iPhone connected to the same wi-fi network as the computer'
     tags: ['messaging', 'phone']
     grammarType: 'textCapture'
+    inputRequired: true
     action: (input) ->
       if input
         number = @fuzzyMatch Settings.phoneNumbers, input.join(' ')
@@ -24,6 +25,7 @@ Commands.createDisabled
     description: 'place a facetime call to the given person (uses Settings.phoneNumbers)'
     tags: ['messaging', 'phone']
     grammarType: 'textCapture'
+    inputRequired: false
     action: (input) ->
       if input
         number = @fuzzyMatch Settings.phoneNumbers, input.join(' ')

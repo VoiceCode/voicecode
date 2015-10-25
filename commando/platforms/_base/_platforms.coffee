@@ -23,7 +23,7 @@ class Platforms.base.actions
 
   # run another command
   do: (name, input=null, context={}) ->
-    command = new Commands.Base(name, input, context)
+    command = new Command(name, input, context)
     command.generate().call(@)
 
   runCommand: (name, input) ->

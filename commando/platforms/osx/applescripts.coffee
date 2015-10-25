@@ -118,7 +118,7 @@ Platforms.osx.applescript =
       when "block"
         Scripts.makeBlockAction input, action
       when "mimic"
-        command = new Commands.Base(action.command, action.parameters)
+        command = new Command(action.command, action.parameters)
         command.generate()
     delay = if action.delay?
       "delay #{action.delay}"

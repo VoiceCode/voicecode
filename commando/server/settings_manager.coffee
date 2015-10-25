@@ -30,6 +30,10 @@ class @EnabledCommandsManager extends SettingsManager
     if instance
       return instance
     else
+      Events.on 'commandEnabled', (commandName) =>
+        @enable [commandName]
+      Events.on 'commandDisabled', (commandName) =>
+        @disable [commandName]
       instance = super("enabled_commands")
   migrate: ->
     @settings = {}

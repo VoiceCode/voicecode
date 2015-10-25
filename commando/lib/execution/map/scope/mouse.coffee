@@ -8,6 +8,7 @@ Commands.createDisabled
       [11-19] => grid on monitor 1;
       [21-29] => grid on monitor 2"""
     tags: ['smartnav', 'mouse']
+    inputRequired: true
     action: (input) ->
       quadrants = [
         [0.5, 0.5]

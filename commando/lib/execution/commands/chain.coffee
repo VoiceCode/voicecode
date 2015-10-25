@@ -3,6 +3,7 @@ class Commands.Chain
     @phrase = @normalizePhrase phrase
   normalizePhrase: (phrase) ->
     result = []
+    phrase = phrase.replace /\s+/g, ' '
     parts = phrase.toLowerCase().split('')
     for c, index in parts
       item = c
@@ -44,9 +45,9 @@ class Commands.Chain
       Commands.monitoringMouseToCancelSpacing = false
       Commands.lastParsing = results
       combined = _.map(results, (result) ->
-        command = new Commands.Base(result.command, result.arguments, result.context)
+        command = new Command(result.command, result.arguments, result.context)
         individual = command.generate()
-        if command.info.ignoreHistory
+        if command.ignoreHistory
           Commands.repetitionIndex = 0
         else
           Commands.lastIndividualCommand = individual
@@ -85,7 +86,7 @@ class Commands.Chain
     results = @parse()
     if results?
       combined = _.map(results, (result) ->
-        command = new Commands.Base(result.command, result.arguments)
+        command = new Command(result.command, result.arguments)
         command.generate()
       )
       combined
@@ -208,7 +209,7 @@ class Commands.Chain
           'skoosh'
 
   getAutoSpacingFromCommand: (command, multiPhrase) ->
-    info = Commands.mapping[command.command]
+    info = Commands.get command.command
     spacing = if multiPhrase
       info.multiPhraseAutoSpacing
     else

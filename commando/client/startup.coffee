@@ -1,5 +1,5 @@
 @ParseGenerator = {}
-
+@emit = ->
 @reloadGrammar = ->
   console.log "reloading grammar"
   Meteor.call "parseGeneratorString", (error, results) ->
@@ -23,16 +23,15 @@ Meteor.startup ->
   @alphabet = new Alphabet()
   repetition = new Repetition()
   @modifiers = new Modifiers()
-  Commands.performCommandEdits()
+  Commands.initialize()
   reloadGrammar()
   Meteor.call "loadSettings", "enabled_commands", (error, result) =>
     if error
       console.log error
     else
       @enabledCommands = result
-      Commands.loadConditionalModules(enabledCommands)
+      # Commands.loadConditionalModules(enabledCommands)
       Session.set("loading", false)
 
 
 # Meteor.ClientCall.apply "client", "logMessage", ["hello"], (error, result) ->
-  
