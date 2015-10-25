@@ -241,6 +241,7 @@ class @DragonSynchronizer
           _.each sublists, (listValues, sub) =>
             scopes = @commands[commandName].getTriggerScopes()
             for scope in scopes
+              bundle = @getBundleId(scope) if scope isnt 'global'
               continue if bundle is null and scope isnt "global"
               bundle = '#' if scope is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists

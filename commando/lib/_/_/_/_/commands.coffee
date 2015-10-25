@@ -1,7 +1,7 @@
 class Commands
   constructor: ->
     @mapping = {}
-    @renamings = {}
+    @renamings = []
     @history = []
     @context = "global"
     @initialized = false
@@ -111,9 +111,10 @@ class Commands
       @performCommandEdits()
 
   get: (name) ->
-    if @renamings[name]?
-      console.error "Reference to a renamed command: #{name} => #{@renamings[name]}"
-      return @mapping[@renamings[name]]
+    isRenamed = _.findWhere @renamings, {from: name}
+    if isRenamed?
+      Events.emit 'commandRenamedReference', isRenamed
+      return @mapping[isRenamed.to]
     @mapping[name]
 
   performCommandEdits: ->
@@ -122,8 +123,9 @@ class Commands
       if command?
         result = callback command
 
-        if @renamings[name]?
-          name = @renamings[name]
+        isRenamed = _.findWhere @renamings, {from: name}
+        if isRenamed?
+          name = isRenamed.to
 
         if _.isObject result
           @mapping[name] = @loadConditionalModules name, result
@@ -165,15 +167,21 @@ class Commands
   changeName: (name, newName) ->
     @edit name, 'commandNameChanged', (command) =>
       # don't do anything if we have renamed like this already
-      if @renamings[name]? and @renamings[name] is newName
-        # console.error "Won't rename #{name} #{newName}"
+      # if @renamings[name]? and @renamings[name] is newName
+      if _.findWhere(@renamings, {to: newName})?
+        console.error "Won't rename #{name} #{newName} once more"
         return false
+      if _.findWhere(@renamings, {to: name})?
+        # renaming something that has already been renamed
+        # removing previous renaming reference, allowing swapping command names
+        console.error "Reference to original of #{name} now lost."
+        @renamings = _.reject @renamings, ({to}) -> to is name
 
       if @mapping[newName]?
-        console.log "Overwritten '#{newName}' command by taking its name."
+        console.error "Overwritten '#{newName}' command by taking its name."
 
       @mapping[newName] = command
-      @renamings[name] = newName
+      @renamings.push {from: name, to: newName}
       delete @mapping[name]
       true
 

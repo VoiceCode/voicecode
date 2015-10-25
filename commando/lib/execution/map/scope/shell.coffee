@@ -91,13 +91,16 @@ Commands.createDisabled
           @string "cd #{directory} ; ls"
           @enter()
   'shell':
-    grammarType: 'textCapture'
+    grammarType: 'custom'
     description: 'insert a shell command from the predefined shell commands list'
     tags: ['text', 'shell']
     misspellings: ['shall', 'chell']
+    rule: '<name> (shellcommands)'
+    triggerScopes: ['iTerm', 'Terminal']
+    variables:
+      shellcommands: -> _.keys Settings.shellCommands
     continuous: false
     inputRequired: true
-    action: (input) ->
-      if input?.length
-        text = @fuzzyMatch Settings.shellCommands, input.join(' ')
-        @string text
+    action: ({shellcommands}) ->
+      text = @fuzzyMatch Settings.shellCommands, shellcommands
+      @string text

@@ -3,12 +3,12 @@ class @NewSchoolCommandMode
     @groups = []
 
   generate: (groupsInTotal = 3)->
+    console.error 'Generating new grammar'
     groupsInTotal--
     all = _.map Commands.mapping, (value, key) ->
       if value.enabled and value.isSpoken isnt false and
       value.needsCommand isnt false and
-      value.kind isnt 'recognition' and
-      value.grammarType isnt 'custom'
+      value.kind isnt 'recognition' and not value.rule?
         spoken = value.triggerPhrase or key
         return {spoken, command: value}
       return null
@@ -35,6 +35,7 @@ class @NewSchoolCommandMode
     # console.log noncontinuous
     yesInput = _.pluck yesInput, 'spoken'
     noInput = _.pluck noInput, 'spoken'
+    yesInput.push 'shin'
     noncontinuous = _.pluck noncontinuous, 'spoken'
     groups = _.map [0..groupsInTotal], -> []
     # noInput = ['one two three', 'four five six', 'non con']
