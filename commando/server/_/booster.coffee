@@ -5019,7 +5019,7 @@ class Booster
     @path = Meteor.npmRequire('path')
 
   writeToFile: (filename, content) ->
-    file = @path.resolve(projectRoot, 'user/boost', filename)
+    file = @path.resolve(userAssetsController.assetsPath, 'boost', filename)
     @fs.writeFileSync file, content, 'utf8'
 
   generateFileContent: (commandName) ->

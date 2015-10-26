@@ -50,7 +50,7 @@ class @Modifiers
     </plist>
     """
     path = Meteor.npmRequire('path')
-    file = path.resolve(projectRoot, "user", "modifiers.xml")
+    file = path.resolve(userAssetsController.assetsPath, "modifiers.xml")
     fs = Meteor.npmRequire('fs')
     fs.writeFileSync file, content, 'utf8'
   createVocabContent: ->

@@ -34,11 +34,14 @@ Meteor.startup ->
 
   @ParseGenerator = {}
   @Grammar = new Grammar
-  @alphabet = new Alphabet
   repetition = new Repetition
-  @modifiers = new Modifiers
-  @enabledCommandsManager = new EnabledCommandsManager
   @userAssetsController = new UserAssetsController
+  @enabledCommandsManager = new EnabledCommandsManager
+  @alphabet = new Alphabet
+  @modifiers = new Modifiers
+
+  userAssetsController.runUserCode()
+  userAssetsController.watchForChanges()
 
   # if Settings.slaveMode
   #   _.each Commands.mapping, (command, name) ->

@@ -31,11 +31,19 @@ class UserAssetsController
 
   init: ->
     try
-      @fs.statSync @assetsPath
+      @fs.mkdirSync @assetsPath
+      # @fs.statSync @assetsPath
     catch error
-      return if error.code is 'ENOENT'
+      if error.code is 'EEXIST'
+        # this is good
+      else
+        console.error "could not create user assets directory: #{@assetsPath}"
+        @state = "error"
 
-    @startWatching @assetsPath
+    @watchForChanges()
+
+  runUserCode: ->
+    return if @state is "error"
     @walk @assetsPath, '.+\.coffee$', (filePath) =>
       @readFile filePath, (data) =>
         @compileCoffeeScript data, (data)->
@@ -46,7 +54,8 @@ class UserAssetsController
             console.error filePath
             console.error error
 
-  startWatching: ->
+  watchForChanges: ->
+    return if @state is "error"
     @watcher = @fs.watch @assetsPath, {persistent: true, recursive: false},
     Meteor.bindEnvironment @handleFileChange @assetsPath
 
@@ -57,11 +66,12 @@ class UserAssetsController
   handleFileChange: (directoryPath) ->
     (event, fileName) =>
       return unless event is 'change'
-      console.log "User asset changed: #{directoryPath}/#{fileName}, reacting...."
-      @readFile "#{directoryPath}/#{fileName}", Meteor.bindEnvironment (data) =>
-        @compileCoffeeScript data, eval
-        # What actions to perform here?
-        Commands.performCommandEdits()
-        Commands.reloadGrammar()
+      if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
+        console.log "User asset changed: #{directoryPath}/#{fileName}, reacting...."
+        @readFile "#{directoryPath}/#{fileName}", Meteor.bindEnvironment (data) =>
+          @compileCoffeeScript data, eval
+          # What actions to perform here?
+          Commands.performCommandEdits()
+          Commands.reloadGrammar()
 
 @UserAssetsController = UserAssetsController
