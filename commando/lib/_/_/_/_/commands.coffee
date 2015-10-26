@@ -42,8 +42,9 @@ class Commands
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
 
-  initialize: ->
+  initialize: (enabledCommands) ->
     @performCommandEdits()
+    @prepareAllCommands(enabledCommands)
     @initialized = true
 
   validate: (name, options) ->
@@ -128,7 +129,7 @@ class Commands
           name = isRenamed.to
 
         if _.isObject result
-          @mapping[name] = @loadConditionalModules name, result
+          @mapping[name] = @prepareCommand name, result
         emit editType, name, !!result
       else
         console.error "#{editType} failed: '#{name}' was not found"
@@ -185,7 +186,7 @@ class Commands
       delete @mapping[name]
       true
 
-  loadConditionalModules: (name, command) ->
+  prepareCommand: (name, command) ->
     type = command.grammarType
     if type in @primaryGrammarTypes
       unless name in @keys[type]
@@ -207,4 +208,10 @@ class Commands
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
     command
+  prepareAllCommands: (enabledCommands) ->
+    for key, value of @mapping
+      enabled = enabledCommands[key]
+      @mapping[key].enabled = @mapping[key].enabled or enabled
+      @prepareCommand(key, value)
+
 @Commands = new Commands

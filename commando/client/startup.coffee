@@ -30,7 +30,7 @@ Meteor.startup ->
       console.log error
     else
       @enabledCommands = result
-      # Commands.loadConditionalModules(enabledCommands)
+      Commands.enableFromUserSettings(enabledCommands)
       Session.set("loading", false)
 
 

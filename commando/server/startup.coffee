@@ -40,11 +40,11 @@ Meteor.startup ->
   @enabledCommandsManager = new EnabledCommandsManager
   @userAssetsController = new UserAssetsController
 
-  if Settings.slaveMode
-    _.each Commands.mapping, (command, name) ->
-      Commands.enable name
+  # if Settings.slaveMode
+  #   _.each Commands.mapping, (command, name) ->
+  #     Commands.enable name
 
-  Commands.initialize()
+  Commands.initialize(enabledCommandsManager.settings)
 
   unless Settings.slaveMode
     @vocabulary = new Vocabulary()
