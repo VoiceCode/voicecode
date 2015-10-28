@@ -3,15 +3,44 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
   constructor: ->
     return instance if instance?
     @debug = true
-    # @suppressedLogEntries = []
-    @suppressedLogEntries = ['commandEnabled']
-    console.error "event emitter"
+    @suppressedDebugEntries = []
+    @suppressedDebugEntries = [
+      'commandEnabled',
+      'commandDisabled',
+      'commandNameChanged',
+      'commandNotFound',
+      'commandExtended',
+      'commandMisspellingsAdded',
+      'commandOverwritten',
+      'dragonSynchronizingStarted',
+      'dragonSynchronizingEnded',
+      'writingFile',
+      'grammarLoading',
+      'grammarLoaded',
+      'grammarLoadFailed'
+    ]
     instance = @
-  emit: (event)->
+
+  error: (event) ->
+    console.error "ERROR: #{event}", _.toArray(arguments)[1..]
+    @emit.apply @, _.toArray arguments
+
+  log: (event) ->
+    console.log "LOG: #{event}", _.toArray(arguments)[1..]
+    @emit.apply @, _.toArray arguments
+
+  warning: (event) ->
+    console.log "WARNING: #{event}", _.toArray(arguments)[1..]
+    @emit.apply @, _.toArray arguments
+
+  emit: (event) ->
     if @debug
-      unless event in @suppressedLogEntries
+      unless event in @suppressedDebugEntries
         console.error "emitting: #{event}", _.toArray(arguments)[1..]
     super
 
 @Events = new EventEmitter
-@emit = Events.emit
+@emit = _.bind Events.emit, Events
+@error = _.bind Events.error, Events
+@log = _.bind Events.log, Events
+@warning = _.bind Events.warning, Events

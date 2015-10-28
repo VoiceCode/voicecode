@@ -2,7 +2,6 @@ Commands.createDisabled
   "shin":
     description: "does nothing, but enters into voice code"
     misspellings: ["chin"]
-    kind: 'recognition'
     tags: ["text", "recommended"]
     action: ->
       null

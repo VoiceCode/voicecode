@@ -44,7 +44,6 @@ class Commands
 
   initialize: (enabledCommands) ->
     @performCommandEdits()
-    @prepareAllCommands(enabledCommands)
     @initialized = true
 
   validate: (name, options) ->
@@ -53,10 +52,9 @@ class Commands
         @validate name, options
       return
     if @mapping[name]?
-      console.error "Overwritten '#{name}' command!"
+      warning 'commandOverwritten', name, "Command #{name} overridden by command with a same name"
     if options.rule?.match(/\(.*?\d+.*?\)/g)?
-      console.error "Error in command creation: #{name}"
-      console.error 'Please don\'t use integers in list names'
+      error 'commandValidationError', name, 'Please don\'t use integers in list names'
 
   enable: (name) ->
     @edit name, 'commandEnabled', (command) ->
@@ -114,9 +112,10 @@ class Commands
   get: (name) ->
     isRenamed = _.findWhere @renamings, {from: name}
     if isRenamed?
-      emit 'commandRenamedReference', isRenamed
+      # log 'commandRenamedReference', isRenamed
       return @mapping[isRenamed.to]
     @mapping[name]
+
 
   performCommandEdits: ->
     _.each @delayedEditFunctions, ({name, callback, editType}) =>
@@ -130,13 +129,15 @@ class Commands
 
         if _.isObject result
           @mapping[name] = @prepareCommand name, result
-        emit editType, name, !!result
+        emit editType, !!result, name
       else
-        console.error "#{editType} failed: '#{name}' was not found"
+        emit editType, false, name
+        emit 'commandNotFound', name
     @delayedEditFunctions = []
 
   override: (name, action) ->
-    console.error "Failed overriding '#{name}'. Commands.override is deprecated. Use Commands.extend"
+    error 'deprecation', "Failed overriding '#{name}'. \n
+    Commands.override is deprecated. Use Commands.extend"
 
   extend: (name, extension) ->
     @edit name, 'commandExtended', (command) ->
@@ -175,11 +176,11 @@ class Commands
       if _.findWhere(@renamings, {to: name})?
         # renaming something that has already been renamed
         # removing previous renaming reference, allowing swapping command names
-        console.error "Reference to original of #{name} now lost."
+        warning 'commandOverwritten', name, "Command #{name} overridden by renaming twice"
         @renamings = _.reject @renamings, ({to}) -> to is name
 
       if @mapping[newName]?
-        console.error "Overwritten '#{newName}' command by taking its name."
+        warning 'commandOverwritten', newName, "Command #{newName} overridden by renaming"
 
       @mapping[newName] = command
       @renamings.push {from: name, to: newName}
@@ -208,10 +209,8 @@ class Commands
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
     command
-  prepareAllCommands: (enabledCommands) ->
-    for key, value of @mapping
-      enabled = enabledCommands[key]
-      @mapping[key].enabled = @mapping[key].enabled or enabled
-      @prepareCommand(key, value)
 
 @Commands = new Commands
+
+Meteor.methods
+  "Commands.getMapping": (name) -> Commands.mapping
