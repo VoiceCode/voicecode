@@ -49,7 +49,7 @@ class Commands
 
   validate: (name, options) ->
     if typeof name is "object"
-      _.each name, (options, name) ->
+      _.each name, (options, name) =>
         @validate name, options
       return
     if @mapping[name]?
@@ -81,11 +81,11 @@ class Commands
       if options.enabled is true
         @enable name
     else if typeof name is "object"
-      for name, options in name
+      _.each name, (options, name) =>
         @create name, options
 
   createWithDefaults: (defaults, options) ->
-    for key, value of options
+    _.each options, (value, key) =>
       command = _.extend {}, defaults, value
       command.enabled = true
       @create key, command
@@ -95,7 +95,7 @@ class Commands
       options.enabled = false
       @create name, options
     else if typeof name is "object"
-      for key, value of name
+      _.each name, (value, key) =>
         value.enabled = false
         @create key, value
 
