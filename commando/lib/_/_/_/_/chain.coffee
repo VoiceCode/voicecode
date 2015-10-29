@@ -48,12 +48,12 @@ class @Chain
     Commands.repetitionIndex = 0
     Commands.lastParsing = []
     results = @parse()
-    log 'chainParsed', results
+    log 'chainParsed', results, JSON.stringify results
     unless _.isEmpty preprocessors
       results = _.reduce preprocessors, (chain, callback) ->
         callback chain
       , results
-    log 'chainPreprocessed', results
+    log 'chainPreprocessed', results, JSON.stringify results
 
     if results?
       Commands.lastCommandOfPreviousPhrase = _.last(results)
