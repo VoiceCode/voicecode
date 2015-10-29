@@ -231,22 +231,12 @@ class @Grammar
     literalCommand
       = text:(overrideCommand / nestableTextCommand / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {command: "vc-literal", arguments: text};}
 
-    nestableFreeTextIdentifier
+    nestableTextIdentifier
       = "shrink" / "treemail" / "trusername" / "trassword"
 
-    nestableSingleTextIdentifier
-      = item:("vc-todo")
-      {return "champ";}
-
-    nestableTextCommand = nestableFreeTextCommand / nestableSingleTextCommand
-
-    nestableFreeTextCommand
-      = identifier:nestableFreeTextIdentifier ss arguments:(word)+
+    nestableTextCommand
+      = identifier:nestableTextIdentifier ss arguments:(word)+
       {return grammarTransform(identifier, (arguments));}
-
-    nestableSingleTextCommand
-      = identifier:nestableSingleTextIdentifier ss arguments:(word)?
-      {return grammarTransform(identifier, arguments);}
 
     // translations
 
@@ -270,7 +260,7 @@ class @Grammar
       individualIdentifierContinuous /
       oneArgumentIdentifierContinuous /
       singleSearchIdentifierContinuous /
-      nestableSingleTextIdentifier /
+      nestableTextIdentifier /
       overrideIdentifier /
       modifierIdentifier /
       modifierPrefix
