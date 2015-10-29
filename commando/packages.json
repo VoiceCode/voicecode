@@ -3,5 +3,7 @@
   "nodobjc": "2.0.0",
   "sqlite3": "3.0.8",
   "coffee-script": "1.10.0",
-  "events": "1.1.0"
+  "events": "1.1.0",
+  "forever": "0.15.1",
+  "forever-monitor": "1.7.0"
 }

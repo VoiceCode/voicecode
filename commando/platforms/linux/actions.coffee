@@ -70,4 +70,4 @@ class Platforms.linux.actions extends Platforms.base.actions
   selectBlock: ->
   deletePartialWord: (direction) ->
   notify: (text) ->
-    Notify(text)
+    notify null, null, text

@@ -1,8 +1,12 @@
+Function::property = (prop, desc) ->
+  Object.defineProperty @prototype, prop, desc
+
 class Commands
+  history = {}
   constructor: ->
+    # Events.on 'chainPreprocessed', (commands) => @history commands
     @mapping = {}
     @renamings = []
-    @history = []
     @context = "global"
     @initialized = false
     @conditionalModules = {}
@@ -44,8 +48,27 @@ class Commands
 
   initialize: (enabledCommands) ->
     @performCommandEdits()
-    @prepareAllCommands(enabledCommands)
     @initialized = true
+  @historyTypes: -> ['global']
+  @property 'history',
+    get: =>
+      types = {}
+      console.error @historyTypes
+      _.each @historyTypes, (type) =>
+        Object.defineProperty types, type,
+          get: =>
+            history[type]
+          set: (commands) =>
+            history[type] ?= []
+            unless history is 'global'
+              history[type] = []
+            _.each commands, (command) ->
+              history[type].push command
+            history[type] = history[type][-10..]
+      types
+
+  getCurrentNameFor: (commandName) ->
+    (_.pluck @renamings, {from: commandName})?.to || commandName
 
   validate: (name, options) ->
     if typeof name is "object"
@@ -53,10 +76,9 @@ class Commands
         @validate name, options
       return
     if @mapping[name]?
-      console.error "Overwritten '#{name}' command!"
+      warning 'commandOverwritten', name, "Command #{name} overridden by command with a same name"
     if options.rule?.match(/\(.*?\d+.*?\)/g)?
-      console.error "Error in command creation: #{name}"
-      console.error 'Please don\'t use integers in list names'
+      error 'commandValidationError', name, 'Please don\'t use integers in list names'
 
   enable: (name) ->
     @edit name, 'commandEnabled', (command) ->
@@ -74,6 +96,7 @@ class Commands
       # if @mapping[name]?
       #   console.error "Won't re-create command: #{name}"
       #   return false
+      options.namespace = name
       options.enabled ?= true
       options.grammarType ?= 'individual'
       options.kind ?= 'action'
@@ -114,9 +137,10 @@ class Commands
   get: (name) ->
     isRenamed = _.findWhere @renamings, {from: name}
     if isRenamed?
-      emit 'commandRenamedReference', isRenamed
+      # log 'commandRenamedReference', isRenamed
       return @mapping[isRenamed.to]
     @mapping[name]
+
 
   performCommandEdits: ->
     _.each @delayedEditFunctions, ({name, callback, editType}) =>
@@ -130,13 +154,15 @@ class Commands
 
         if _.isObject result
           @mapping[name] = @prepareCommand name, result
-        emit editType, name, !!result
+        emit editType, !!result, name
       else
-        console.error "#{editType} failed: '#{name}' was not found"
+        emit editType, false, name
+        emit 'commandNotFound', name
     @delayedEditFunctions = []
 
   override: (name, action) ->
-    console.error "Failed overriding '#{name}'. Commands.override is deprecated. Use Commands.extend"
+    error 'deprecation', "Failed overriding '#{name}'. \n
+    Commands.override is deprecated. Use Commands.extend"
 
   extend: (name, extension) ->
     @edit name, 'commandExtended', (command) ->
@@ -175,12 +201,14 @@ class Commands
       if _.findWhere(@renamings, {to: name})?
         # renaming something that has already been renamed
         # removing previous renaming reference, allowing swapping command names
-        console.error "Reference to original of #{name} now lost."
+        warning 'commandOverwritten', name, "Command #{name} overridden by renaming twice"
         @renamings = _.reject @renamings, ({to}) -> to is name
 
       if @mapping[newName]?
-        console.error "Overwritten '#{newName}' command by taking its name."
+        warning 'commandOverwritten', newName, "Command #{newName} overridden by renaming"
 
+      command.namespace = newName
+      command.misspellings = []
       @mapping[newName] = command
       @renamings.push {from: name, to: newName}
       delete @mapping[name]
@@ -208,10 +236,8 @@ class Commands
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
     command
-  prepareAllCommands: (enabledCommands) ->
-    for key, value of @mapping
-      enabled = enabledCommands[key]
-      @mapping[key].enabled = @mapping[key].enabled or enabled
-      @prepareCommand(key, value)
 
 @Commands = new Commands
+
+Meteor.methods
+  "Commands.getMapping": (name) -> Commands.mapping

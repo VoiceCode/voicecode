@@ -1,6 +1,6 @@
 class @Command
-  constructor: (@namespace, @input = null, @context={}) ->
-    _.extend @, Commands.get @namespace
+  constructor: (name, @input = null, @context={}) ->
+    _.extend @, Commands.get name
     @normalizeInput()
 
   normalizeInput: ->
@@ -23,10 +23,9 @@ class @Command
       when "action"
         action = @action
         -> action.call(@, input, context)
-    # if @override?
-    #   override = @override
-    #   input = @input
-    #   -> override.call(@, input, funk)
+      else
+        -> null
+
     core = if @extensions?
       extensions = []
       extensions.push funk
@@ -40,7 +39,6 @@ class @Command
             callback.call(@, input, context)
     else
       funk
-
     segments = []
 
     # before actions

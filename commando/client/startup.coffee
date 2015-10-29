@@ -23,14 +23,13 @@ Meteor.startup ->
   @alphabet = new Alphabet()
   repetition = new Repetition()
   @modifiers = new Modifiers()
-  Commands.initialize()
   reloadGrammar()
   Meteor.call "loadSettings", "enabled_commands", (error, result) =>
     if error
       console.log error
     else
       @enabledCommands = result
-      Commands.enableFromUserSettings(enabledCommands)
+      Commands.initialize(enabledCommands)
       Session.set("loading", false)
 
 

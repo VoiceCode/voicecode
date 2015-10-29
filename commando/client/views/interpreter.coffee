@@ -7,7 +7,7 @@ Template.Interpreter.helpers
 Template.Interpreter.events
   'click #interpret': (event, template) ->
     phrase = template.find('#phrase').value
-    chain = new Commands.Chain("#{phrase} ")
+    chain = new Chain("#{phrase} ")
     try
       result = chain.execute()
       interpretation = _.map result.interpretation, (item) ->

@@ -25,7 +25,7 @@ Template.Mobile.events
   'change #immediate': (e, t) ->
     checked = $(e.target).prop("checked")
     Session.set("immediateExecution", checked)
-    # chain = new Commands.Chain("#{phrase} ")
+    # chain = new Chain("#{phrase} ")
   'change #immediate': (event, template) ->
     # try
     #   result = chain.execute()

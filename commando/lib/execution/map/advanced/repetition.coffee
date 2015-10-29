@@ -1,3 +1,18 @@
+Chain.preprocess (chain) ->
+  newChain = []
+  repetitionWords = _.map Settings.repetitionWords, (howMany, name) ->
+    name = Commands.getCurrentNameFor name
+    name = "#{name} way" #TODO: make way a variable
+    {name, howMany}
+  _.each chain, (command) ->
+    newChain.push command
+    if command.command in _.pluck repetitionWords, 'name'
+      howMany = (_.findWhere repetitionWords, {name: command.command}).howMany
+      newChain.pop()
+      newChain = _.times howMany, -> newChain
+      newChain = _.flatten newChain
+  newChain
+
 Commands.createDisabled
   "creek":
     grammarType: "numberCapture"
@@ -15,7 +30,8 @@ Commands.createDisabled
   "repple":
     grammarType: "numberCapture"
     repeater: "variable"
-    description: "Repeats an individual command component. Right after any command say [repple X] to repeat it X times"
+    description: "Repeats an individual command component.
+    Right after any command say [repple X] to repeat it X times"
     tags: ["voicecode", "repetition", "recommended"]
     ignoreHistory: true
     historic: true
@@ -33,7 +49,9 @@ Commands.createDisabled
 
 class @Repetition
   constructor: ->
-    @words = Settings.repetitionWords
+    @words = _.clone Settings.repetitionWords
+    _.each @words, (repetitionCount, word) =>
+      @words["#{word} way"] = repetitionCount #TODO: make way a variable
     @build()
   build: ->
     _.each @words, (value, key) ->

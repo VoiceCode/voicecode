@@ -164,10 +164,12 @@ class @DragonSynchronizer
     @run "DELETE FROM ZTRIGGER"
 
   synchronize: ->
+    emit 'dragonSynchronizingStarted'
     @deleteAllStatic()
     @deleteAllDynamic()
     @synchronizeStatic()
     @synchronizeDynamic()
+    emit 'dragonSynchronizingEnded'
 
   createList: (name, items, bundle = '#') ->
     @dynamicRun "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundle, $name, $spokenLanguage, 'Alt')",
@@ -226,7 +228,6 @@ class @DragonSynchronizer
             triggerPhrase: dragonName
             body: dragonBody
 
-    console.log "synchronizing commands"
     for item in needsCreating
       @createCommand item.bundle, item.triggerPhrase, item.body
 

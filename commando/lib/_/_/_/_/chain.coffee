@@ -1,6 +1,9 @@
-class Commands.Chain
+class @Chain
+  preprocessors = []
+
   constructor: (phrase) ->
     @phrase = @normalizePhrase phrase
+
   normalizePhrase: (phrase) ->
     result = []
     phrase = phrase.replace /\s+/g, ' '
@@ -20,9 +23,14 @@ class Commands.Chain
         item = "comma"
       result.push item
     result.join('')
+
+  @preprocess: (callback) ->
+    preprocessors.push callback
+
   parse: ->
     if typeof Parser is 'undefined'
-      console.log "ERROR: the parser is not initialized - probably a problem with the license code, email, or internet connection"
+      error 'chainMissingParser', null, "The parser is not initialized -
+      probably a problem with the license code, email, or internet connection"
     else
       # try
       parsed = Parser.parse(@phrase)
@@ -34,12 +42,19 @@ class Commands.Chain
       # catch e
       #   console.log e
       #   null
+
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
     Commands.lastParsing = []
     results = @parse()
-    console.log "parsed: #{JSON.stringify results}"
+    log 'chainParsed', results, JSON.stringify results
+    unless _.isEmpty preprocessors
+      results = _.reduce preprocessors, (chain, callback) ->
+        callback chain
+      , results
+    log 'chainPreprocessed', results, JSON.stringify results
+
     if results?
       Commands.lastCommandOfPreviousPhrase = _.last(results)
       Commands.monitoringMouseToCancelSpacing = false
@@ -124,7 +139,7 @@ class Commands.Chain
     if active
       if command.when?
         result = command.when.call(Actions)
-        console.log result: result
+        # console.log result: result
         result
       else
         active

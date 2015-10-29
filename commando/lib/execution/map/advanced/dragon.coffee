@@ -1,3 +1,12 @@
+Chain.preprocess (chain) ->
+  newChain = []
+  _.find chain, (command) ->
+    newChain.push command
+    if command.command is Commands.getCurrentNameFor 'snore'
+      return true
+    return false
+  newChain
+
 Commands.createDisabled
   "snore":
     grammarType: 'textCapture'
