@@ -56,10 +56,10 @@ class @SlaveController
     throttledLog()
     @clearTarget()
     [host, port] = Settings.slaves[slaveSocket.name]
-    reconnect = setTimeout =>
+    reconnect = Meteor.setTimeout =>
       @createSocket slaveSocket.name, host, port
       slaveSocket.destroy()
-      clearTimeout reconnect
+      Meteor.clearTimeout reconnect
     , 1000
 
   isActive: ->

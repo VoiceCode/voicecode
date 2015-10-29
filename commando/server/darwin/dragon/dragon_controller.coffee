@@ -27,6 +27,7 @@ class @DarwinDragonController
         command: "#{@dragonApplicationPath}Contents/MacOS/#{@dragonApplicationName}"
         silent: true
         sourceDir: ''
+        cwd: "#{@dragonApplicationPath}Contents/MacOS/"
 
     @dragonInstance.on 'restart', =>
       emit 'dragonRestart', @dragonInstance.times,
