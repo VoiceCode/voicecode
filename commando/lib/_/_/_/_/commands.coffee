@@ -1,8 +1,12 @@
+Function::property = (prop, desc) ->
+  Object.defineProperty @prototype, prop, desc
+
 class Commands
+  history = {}
   constructor: ->
+    # Events.on 'chainPreprocessed', (commands) => @history commands
     @mapping = {}
     @renamings = []
-    @history = []
     @context = "global"
     @initialized = false
     @conditionalModules = {}
@@ -45,6 +49,23 @@ class Commands
   initialize: (enabledCommands) ->
     @performCommandEdits()
     @initialized = true
+  @historyTypes: -> ['global']
+  @property 'history',
+    get: =>
+      types = {}
+      console.error @historyTypes
+      _.each @historyTypes, (type) =>
+        Object.defineProperty types, type,
+          get: =>
+            history[type]
+          set: (commands) =>
+            history[type] ?= []
+            unless history is 'global'
+              history[type] = []
+            _.each commands, (command) ->
+              history[type].push command
+            history[type] = history[type][-10..]
+      types
 
   getCurrentNameFor: (commandName) ->
     (_.pluck @renamings, {from: commandName})?.to || commandName

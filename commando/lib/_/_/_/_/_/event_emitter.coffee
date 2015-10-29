@@ -4,8 +4,6 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
     return instance if instance?
     @debug = true
     @suppressedDebugEntries = [
-    ]
-    @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'
       'commandNameChanged'
@@ -26,12 +24,15 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
       'slaveCommandReceived'
       'masterConnected'
       'masterDisconnected'
-      'assetEvaluationError'
       'assetEvaluation'
+      'assetEvaluationError'
       'assetPath'
       'growlPhrase'
       'dragonPhrase'
+      'slaveDisconnected'
+      'slaveConnected'
     ]
+    # @suppressedDebugEntries = []
     instance = @
 
   error: (event) ->
@@ -63,9 +64,10 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
         console.error "EMITTING: [#{event}]", _.toArray(arguments)[1..]
     super
 
-@Events = new EventEmitter
-@emit = _.bind Events.emit, Events
-@error = _.bind Events.error, Events
-@log = _.bind Events.log, Events
-@warning = _.bind Events.warning, Events
-@notify = _.bind Events.notify, Events
+if Meteor.isServer
+  @Events = new EventEmitter
+  @emit = _.bind Events.emit, Events
+  @error = _.bind Events.error, Events
+  @log = _.bind Events.log, Events
+  @warning = _.bind Events.warning, Events
+  @notify = _.bind Events.notify, Events

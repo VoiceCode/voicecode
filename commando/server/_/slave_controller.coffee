@@ -45,14 +45,14 @@ class @SlaveController
   onError: (slaveSocket, _error) ->
     @clearTarget()
     unless _error.code is 'ECONNREFUSED'
-      error 'slaveControllerError', {slave: slaveSocket.name, error: _error},
+      error 'slaveError', {slave: slaveSocket.name, error: _error},
       "#{slaveSocket.name} socket: #{_error.code}"
 
   onClose: (slaveSocket) ->
     unless throttledLog?
-      throttledLog = _.debounce ->
-        notify 'slaveControllerDisconnected', slaveSocket.name, "Connection closed: #{slaveSocket.name}"
-      , 1100, true
+      throttledLog = _.debounce Meteor.bindEnvironment(->
+        notify 'slaveDisconnected', slaveSocket.name, "Connection closed: #{slaveSocket.name}"
+      ), 3000, true
     throttledLog()
     @clearTarget()
     [host, port] = Settings.slaves[slaveSocket.name]
