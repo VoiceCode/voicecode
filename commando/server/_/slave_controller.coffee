@@ -16,6 +16,7 @@ class @SlaveController
 
   onConnect: (slaveSocket) ->
     log 'slaveConnected', slaveSocket.name, "Connected to: #{slaveSocket.name}"
+    Notify "Connected to: #{slaveSocket.name}"
     @connectedSlaves[slaveSocket.name] = slaveSocket
 
   createSocket: (name, host, port) ->
@@ -32,8 +33,7 @@ class @SlaveController
   process: (commandPhrase) ->
     commandPhrase = commandPhrase.toLowerCase()
     if commandPhrase.replace(/\s+/g, '') is 'slaver'
-      log 'slaveModeToggle', false, 'Slave mode off'
-      Notify 'Slave mode: off'
+      notify 'slaveModeToggle', null, 'Slave mode off'
       @clearTarget()
     else
       @sendToSlave commandPhrase
@@ -52,7 +52,7 @@ class @SlaveController
   onClose: (slaveSocket) ->
     unless throttledLog?
       throttledLog = _.debounce ->
-        log "Connection closed: #{slaveSocket.name}"
+        notify 'slaveControllerDisconnected', slaveSocket.name, "Connection closed: #{slaveSocket.name}"
       , 1100, true
     throttledLog()
     @clearTarget()
@@ -70,8 +70,7 @@ class @SlaveController
     return if _.isEmpty Settings.slaves
     return if _.isEmpty name
     @target = Actions.fuzzyMatchKey Settings.slaves, name
-    log 'slaveModeToggle', true, "Slave mode on: #{@target}"
-    Notify "Slave mode on: #{@target}"
+    notify 'slaveModeToggle', @target, "Slave mode on: #{@target}"
 
   clearTarget: ->
     @target = null

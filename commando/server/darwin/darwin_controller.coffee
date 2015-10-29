@@ -101,7 +101,7 @@ class @DarwinController
 
   dragonHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
-    console.log 'dragon', phrase
+    log 'dragonPhrase', phrase, "Dragon: '#{phrase}'"
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyGrowl.indexOf normalized
@@ -120,7 +120,7 @@ class @DarwinController
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
-    console.log 'growl', phrase
+    log 'growlPhrase', phrase, "Growl: '#{phrase}'"
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyDragon.indexOf normalized
@@ -147,16 +147,15 @@ class @DarwinController
 
   listenAsSlave: ->
     socketServer = net.createServer Meteor.bindEnvironment (socket) =>
-      console.log 'Master connected!'
+      notify 'masterConnected', null, "Master connected!"
       socket.on 'data', Meteor.bindEnvironment(@slaveDataHandler.bind(@))
       socket.on 'end', (socket) ->
-        console.log 'Master disconnected...'
+        notify 'masterDisconnected', null, "Master disconnected..."
 
     socketServer.listen Settings.slaveModePort, ->
-      console.log "Awaiting connection from master on port #{Settings.slaveModePort}"
+      log null, null, "Awaiting connection from master on port #{Settings.slaveModePort}"
 
-  slaveDataHandler: (data) ->
-    phrase = data.toString('utf8').replace("\n", "").replace("\r", "").toLowerCase()
-    console.log "Master said: #{phrase}"
+  slaveDataHandler: (phrase) ->
+    log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
     chain = new Chain(phrase + " ")
     results = chain.execute(true)

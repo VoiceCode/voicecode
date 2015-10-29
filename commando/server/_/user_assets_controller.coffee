@@ -6,7 +6,7 @@ class UserAssetsController
     @path = Meteor.npmRequire 'path'
     @coffeeScript = Meteor.npmRequire 'coffee-script'
     @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
-    console.log "Assets path: #{@assetsPath}"
+    log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
     @init()
     instance = @
 
@@ -37,7 +37,8 @@ class UserAssetsController
       if error.code is 'EEXIST'
         # this is good
       else
-        console.error "could not create user assets directory: #{@assetsPath}"
+        error 'assetDirectoryError', @assetsPath,
+         "Could not create user assets directory: #{@assetsPath}"
         @state = "error"
 
     @watchForChanges()
@@ -47,12 +48,12 @@ class UserAssetsController
     @walk @assetsPath, '.+\.coffee$', (filePath) =>
       @readFile filePath, (data) =>
         @compileCoffeeScript data, (data)->
-          console.log "Loading user asset: #{filePath}"
+          log 'assetEvaluation', filePath, "Loading user asset: #{filePath}"
           try
             eval data
-          catch error
-            console.error filePath
-            console.error error
+          catch err
+            error 'assetEvaluationError', filePath, "filePath: #{filePath}"
+            error 'assetEvaluationError', err, err
 
   watchForChanges: ->
     return if @state is "error"
@@ -67,11 +68,11 @@ class UserAssetsController
     (event, fileName) =>
       return unless event is 'change'
       if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
-        console.log "User asset changed: #{directoryPath}/#{fileName}, reacting...."
         @readFile "#{directoryPath}/#{fileName}", Meteor.bindEnvironment (data) =>
           @compileCoffeeScript data, eval
           # What actions to perform here?
-          Commands.performCommandEdits()
+          log 'assetChanged', {directoryPath, filename},
+          "User asset changed: #{directoryPath}/#{fileName}, reacting...."
           Commands.reloadGrammar()
 
 @UserAssetsController = UserAssetsController

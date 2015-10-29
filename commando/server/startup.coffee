@@ -1,4 +1,4 @@
-console.log "Copyright (c) VoiceCode.io 2015 - all rights reserved"
+log null, null, "Copyright (c) VoiceCode.io 2015 - all rights reserved"
 detectPlatform = ->
   switch process.platform
     when "darwin"
