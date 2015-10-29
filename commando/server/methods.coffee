@@ -3,7 +3,7 @@ Meteor.methods
     ParseGenerator?.string
 
   execute: (phrase) ->
-    chain = new Commands.Chain(phrase)
+    chain = new Chain(phrase)
     results = chain.execute(true)
 
   findDragonCommand: (name) ->

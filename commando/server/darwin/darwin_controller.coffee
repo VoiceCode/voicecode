@@ -114,7 +114,7 @@ class @DarwinController
         if slaveController.isActive()
           slaveController.process phrase
         else
-          chain = new Commands.Chain(phrase + " ")
+          chain = new Chain(phrase + " ")
           results = chain.execute(true)
 
 
@@ -134,7 +134,7 @@ class @DarwinController
       if slaveController.isActive()
         slaveController.process phrase
       else
-        chain = new Commands.Chain(phrase + " ")
+        chain = new Chain(phrase + " ")
         results = chain.execute(true)
 
   setDragonInfo: ->
@@ -158,5 +158,5 @@ class @DarwinController
   slaveDataHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "").replace("\r", "").toLowerCase()
     console.log "Master said: #{phrase}"
-    chain = new Commands.Chain(phrase + " ")
+    chain = new Chain(phrase + " ")
     results = chain.execute(true)

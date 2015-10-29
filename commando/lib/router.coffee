@@ -27,7 +27,7 @@ Router.route '/miss', ->
   body = @request.body
   console.log body
   phrase = "#{body.space} "
-  chain = new Commands.Chain(phrase)
+  chain = new Chain(phrase)
   results = chain.execute(false)
   @response.writeHead(200, {'Content-Type': 'text/plain'})
   @response.end("success")
@@ -37,7 +37,7 @@ Router.route '/parse', ->
   body = @request.body
   console.log body
   phrase = "#{body.space} #{body.phrase || ""} "
-  chain = new Commands.Chain(phrase)
+  chain = new Chain(phrase)
   results = chain.execute(true)
 
   if Meteor.settings.showRecognition
@@ -57,7 +57,7 @@ Router.route 'api/recall', ->
     item = PreviousCommands.findOne(id)
     console.log item
     if item
-      chain = new Commands.Chain(item.spoken + " ")
+      chain = new Chain(item.spoken + " ")
       results = chain.execute(true)
   @response.writeHead(200, {'Content-Type': 'text/plain'})
   @response.end("success")

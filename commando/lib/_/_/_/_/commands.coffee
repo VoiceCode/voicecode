@@ -46,6 +46,9 @@ class Commands
     @performCommandEdits()
     @initialized = true
 
+  getCurrentNameFor: (commandName) ->
+    (_.pluck @renamings, {from: commandName})?.to || commandName
+
   validate: (name, options) ->
     if typeof name is "object"
       _.each name, (options, name) ->
@@ -72,6 +75,7 @@ class Commands
       # if @mapping[name]?
       #   console.error "Won't re-create command: #{name}"
       #   return false
+      options.namespace = name
       options.enabled ?= true
       options.grammarType ?= 'individual'
       options.kind ?= 'action'
@@ -182,6 +186,8 @@ class Commands
       if @mapping[newName]?
         warning 'commandOverwritten', newName, "Command #{newName} overridden by renaming"
 
+      command.namespace = newName
+      command.misspellings = []
       @mapping[newName] = command
       @renamings.push {from: name, to: newName}
       delete @mapping[name]

@@ -1,12 +1,12 @@
 class @SlaveController
   # singleton
   instance = null
+  throttledLog = null
   constructor: ->
     return instance if instance?
     instance = @
     @connectedSlaves = {}
     @target = null
-    @debug = false
 
   connect: ->
     return if _.isEmpty Settings.slaves
@@ -15,7 +15,7 @@ class @SlaveController
       @createSocket name, host, port
 
   onConnect: (slaveSocket) ->
-    console.log "Connected to: #{slaveSocket.name}"
+    log 'slaveConnected', slaveSocket.name, "Connected to: #{slaveSocket.name}"
     @connectedSlaves[slaveSocket.name] = slaveSocket
 
   createSocket: (name, host, port) ->
@@ -32,23 +32,29 @@ class @SlaveController
   process: (commandPhrase) ->
     commandPhrase = commandPhrase.toLowerCase()
     if commandPhrase.replace(/\s+/g, '') is 'slaver'
-      console.log 'Slave mode: off'
+      log 'slaveModeToggle', false, 'Slave mode off'
       Notify 'Slave mode: off'
       @clearTarget()
     else
-      console.log "Executing '#{commandPhrase}' on #{@target}"
       @sendToSlave commandPhrase
+      log 'slaveModeExecutedRemote', commandPhrase,
+      "Executing '#{commandPhrase}' on #{@target}"
 
   sendToSlave: (commandPhrase, target = @target) ->
     @connectedSlaves[target].write commandPhrase
 
-  onError: (slaveSocket, error) ->
+  onError: (slaveSocket, _error) ->
     @clearTarget()
-    console.error "Error in #{slaveSocket.name} socket" if @debug
-    console.error error if @debug
+    unless _error.code is 'ECONNREFUSED'
+      error 'slaveControllerError', {slave: slaveSocket.name, error: _error},
+      "#{slaveSocket.name} socket: #{_error.code}"
 
   onClose: (slaveSocket) ->
-    console.log "Connection closed: #{slaveSocket.name}"
+    unless throttledLog?
+      throttledLog = _.debounce ->
+        log "Connection closed: #{slaveSocket.name}"
+      , 1100, true
+    throttledLog()
     @clearTarget()
     [host, port] = Settings.slaves[slaveSocket.name]
     reconnect = setTimeout =>
@@ -64,7 +70,7 @@ class @SlaveController
     return if _.isEmpty Settings.slaves
     return if _.isEmpty name
     @target = Actions.fuzzyMatchKey Settings.slaves, name
-    console.log "Slave mode on: #{@target}"
+    log 'slaveModeToggle', true, "Slave mode on: #{@target}"
     Notify "Slave mode on: #{@target}"
 
   clearTarget: ->

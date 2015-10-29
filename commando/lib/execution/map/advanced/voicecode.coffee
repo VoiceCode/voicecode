@@ -20,7 +20,7 @@ Commands.createDisabled
     action: (input) ->
       if input?.length
         workflow = @fuzzyMatch Settings.workflows, input.join(' ')
-        chain = new Commands.Chain(workflow + " ")
+        chain = new Chain(workflow + " ")
         results = chain.generateNestedInterpretation()
         _.each results, (command) =>
           command.call(@)

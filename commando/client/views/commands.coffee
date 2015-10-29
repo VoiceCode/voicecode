@@ -111,7 +111,7 @@ Template.CommandSummaryRow.events
       Meteor.setTimeout ->
         t.$("input[type='checkbox']").prop('checked', true)
       , 20
-      
+
 Template.CommandAction.helpers
   text: ->
     switch @kind

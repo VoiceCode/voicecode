@@ -10,6 +10,8 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
       'commandNameChanged',
       'commandNotFound',
       'commandExtended',
+      'commandAfterAdded',
+      'commandBeforeAdded',
       'commandMisspellingsAdded',
       'commandOverwritten',
       'dragonSynchronizingStarted',

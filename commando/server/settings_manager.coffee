@@ -57,7 +57,7 @@ class @EnabledCommandsManager extends SettingsManager
     Events.on 'commandNotFound', (commandName) =>
       delete @settings[commandName]
       @save()
-      
+
   migrate: ->
     @settings = {}
     for key, value of Commands.mapping
