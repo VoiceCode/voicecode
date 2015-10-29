@@ -277,6 +277,7 @@ Commands.createDisabledWithDefaults
       @string ' + '
   'minus':
     tags: ['symbol', 'minus', 'recommended']
+    misspellings: ['minas']
     repeatable: true
     findable: '-'
     spaceBefore: true
