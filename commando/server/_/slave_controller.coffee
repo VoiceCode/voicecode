@@ -15,18 +15,17 @@ class @SlaveController
       @createSocket name, host, port
 
   onConnect: (slaveSocket) ->
-    log 'slaveConnected', slaveSocket.name, "Connected to: #{slaveSocket.name}"
-    Notify "Connected to: #{slaveSocket.name}"
+    notify 'slaveConnected', slaveSocket.name, "Connected to: #{slaveSocket.name}"
     @connectedSlaves[slaveSocket.name] = slaveSocket
 
   createSocket: (name, host, port) ->
     slaveSocket = new net.Socket()
     slaveSocket.name = name
-    slaveSocket.on 'error', (error) =>
+    slaveSocket.on 'error', Meteor.bindEnvironment (error) =>
       @onError slaveSocket, error
-    slaveSocket.on 'close', () =>
+    slaveSocket.on 'close', Meteor.bindEnvironment =>
       @onClose(slaveSocket)
-    slaveSocket.on 'connect', () =>
+    slaveSocket.on 'connect', Meteor.bindEnvironment =>
       @onConnect(slaveSocket)
     slaveSocket.connect port, host
 

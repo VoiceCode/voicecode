@@ -41,7 +41,7 @@ Router.route '/parse', ->
   results = chain.execute(true)
 
   if Meteor.settings.showRecognition
-    Notify phrase
+    notify null, null, phrase
 
   @response.writeHead(200, {'Content-Type': 'text/plain'})
   @response.end("success")
@@ -285,4 +285,3 @@ Router.route 'api/passwords', ->
   @response.writeHead(200, {'Content-Type': 'text/plain'})
   @response.end(final)
 , {where: 'server'}
-

@@ -50,7 +50,10 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
     @emit.apply @, _.toArray arguments
 
   notify: (event) ->
-    Notify _.toArray(arguments)[2]
+    if Settings.notificationProvider is "log"
+      @log.apply @, _.toArray arguments
+    else
+      Notify _.toArray(arguments)[2]
     @emit.apply @, _.toArray arguments
 
   emit: (event) ->
