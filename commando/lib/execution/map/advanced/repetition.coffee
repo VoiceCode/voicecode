@@ -68,5 +68,7 @@ class @Repetition
           else
             value - 1
           if times > 0
-            @repeat times, =>
-              context.lastIndividualCommand.call(@)
+            last = context.lastIndividualCommand
+            if last?
+              @repeat times, =>
+                last.call(@)

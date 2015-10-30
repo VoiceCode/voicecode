@@ -24,6 +24,7 @@ Commands.createDisabled
         results = chain.generateNestedInterpretation()
         _.each results, (command) =>
           command.call(@)
+          @delay 50
   "keeper":
     grammarType: "none" # treated specially in the grammar
     description: "whatever follows this command will be interpreted literally"

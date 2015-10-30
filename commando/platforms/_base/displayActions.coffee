@@ -1,6 +1,44 @@
+simpleActions = [
+  "microphoneOff"
+  "selectContiguousMatching"
+  "click"
+  "doubleClick"
+  "tripleClick"
+  "rightClick"
+  "shiftClick"
+  "commandClick"
+  "optionClick"
+  "openBrowser"
+  "mouseUp"
+  "mouseDown"
+  "symmetricSelectionExpansion"
+  "selectCurrentOccurrence"
+  "selectPreviousOccurrence"
+  "selectNextOccurrence"
+  "scrollRight"
+  "scrollLeft"
+  "scrollUp"
+  "scrollDown"
+  "getSelectedText"
+  "selectPreviousWord"
+  "selectFollowingWord"
+  "selectBlock"
+  "clickAtPosition"
+]
+
+noDisplayActions = [
+  "setClipboard"
+]
+
 class Platforms.base.displayActions extends Platforms.base.actions
   constructor: () ->
     @storage = {}
+    _.each simpleActions, (action) =>
+      @[action] = =>
+        @result += action + "()"
+    _.each noDisplayActions, (action) =>
+      @[action] = =>
+        ""
   reset: () ->
     @result = ""
   key: (key, modifiers) ->
@@ -18,20 +56,6 @@ class Platforms.base.displayActions extends Platforms.base.actions
     ""
   keyUp: (key, modifiers) ->
     ""
-  click: ->
-    @result += "click"
-  doubleClick: ->
-    @result += "double-click"
-  tripleClick: ->
-    @result += "triple-click"
-  rightClick: ->
-    @result += "right-click"
-  shiftClick: ->
-    @result += "shift-click"
-  commandClick: ->
-    @result += "command-click"
-  optionClick: ->
-    @result += "option-click"
   applescript: (content) ->
     @result += "applescript: #{content}"
   openMenuBarItem: (item) ->
@@ -40,8 +64,6 @@ class Platforms.base.displayActions extends Platforms.base.actions
     @result += "scrollUp"
   openApplication: (name) ->
     @result += "openApplication(#{name or ''})"
-  openBrowser: ->
-    @result += "openBrowser"
   openURL: (url) ->
     @result += "openURL(#{url or ''})"
   delay: (ms) ->
@@ -65,18 +87,6 @@ class Platforms.base.displayActions extends Platforms.base.actions
     ""
   positionMouse: (x, y) ->
     @result += "positionMouse(#{x or ''}, #{y or ''})"
-  mouseUp: ->
-    @result += "mouseUp()"
-  mouseDown: ->
-    @result +=  "mouseDown()"
-  symmetricSelectionExpansion: ->
-    @result +=  "symmetricSelectionExpansion()"
-  selectCurrentOccurrence: ->
-    @result += "selectCurrentOccurrence()"
-  selectPreviousOccurrence: ->
-    @result += "selectPreviousOccurrence()"
-  selectNextOccurrence: ->
-    @result += "selectNextOccurrence()"
   makeModifierText: (modifiers) ->
     if modifiers?.length
       r = _.map modifiers.split(" "), (m) ->
@@ -84,37 +94,23 @@ class Platforms.base.displayActions extends Platforms.base.actions
       r.join('')
     else
       ""
-  scrollRight: ->
-    "scrollRight()"
-  scrollLeft: ->
-    "scrollLeft()"
-  scrollUp: ->
-    "scrollUp()"
-  scrollDown: ->
-    "scrollDown()"
-  getSelectedText: ->
-    "getSelectedText()"
   canDetermineSelections: ->
     false
   isTextSelected: ->
     false
-  selectPreviousWord: ->
-    @result += "selectPreviousWord()"
-  selectFollowingWord: ->
-    @result += "selectFollowingWord()"
   exec: (script) ->
     @result += "exec(#{script})"
   openMenuBarPath: (path) ->
     @result += "openMenuBarPath(#{path})"
   do: (other) ->
     @result += "do(#{other})"
-  selectContiguousMatching: ->
-    @result += "selectContiguousMatching()"
-  selectBlock: ->
-    @result += "selectBlock()"
   runAtomCommand: (command) ->
     @result += "runAtomCommand(#{command})"
   deletePartialWord: (direction) ->
     @result += "deletePartialWord(#{direction})"
   transformSelectedText: (options) ->
     @result += "transformSelectedText(#{options})"
+  getMousePosition: ->
+    {}
+  previousMouseLocation: ->
+    {}

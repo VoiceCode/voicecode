@@ -15,7 +15,7 @@
 @enabledCommands = {}
 
 Meteor.startup ->
-  Meteor.ClientCall.setClientId("client")
+  # Meteor.ClientCall.setClientId("client")
   @displayActions = new Platforms.base.displayActions()
   @Actions = new Platforms.base.actions()
   Session.set("loading", true)

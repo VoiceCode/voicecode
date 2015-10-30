@@ -92,7 +92,13 @@ Template.CommandSummaryRow.helpers
     Commands.mapping[@].tags or []
   actionDescriptor: ->
     displayActions.reset()
-    Commands.mapping[@].action?.call(displayActions)
+    command = Commands.mapping[@]
+    input = switch command.grammarType
+      when "custom"
+        {}
+      else
+        null
+    command.action?.call(displayActions, input, {})
     displayActions.result
 
 Template.CommandSummaryRow.events

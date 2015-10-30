@@ -72,9 +72,10 @@ class @EnabledCommandsManager extends SettingsManager
       @settings[name] = false
     @save()
 
-# Meteor.methods
-#   "loadSettings": (name) ->
-#     switch name
-#       when "enabled_commands"
-#         manager = new EnabledCommandsManager()
-#         manager.settings
+# called from the client / browser to get the list of commands that are enabled
+Meteor.methods
+  "loadSettings": (name) ->
+    switch name
+      when "enabled_commands"
+        manager = new EnabledCommandsManager()
+        manager.settings

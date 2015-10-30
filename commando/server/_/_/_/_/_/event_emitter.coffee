@@ -64,10 +64,9 @@ class EventEmitter extends Meteor.npmRequire('events').EventEmitter
         console.error "EMITTING: [#{event}]", _.toArray(arguments)[1..]
     super
 
-if Meteor.isServer
-  @Events = new EventEmitter
-  @emit = _.bind Events.emit, Events
-  @error = _.bind Events.error, Events
-  @log = _.bind Events.log, Events
-  @warning = _.bind Events.warning, Events
-  @notify = _.bind Events.notify, Events
+@Events = new EventEmitter
+@emit = _.bind Events.emit, Events
+@error = _.bind Events.error, Events
+@log = _.bind Events.log, Events
+@warning = _.bind Events.warning, Events
+@notify = _.bind Events.notify, Events
