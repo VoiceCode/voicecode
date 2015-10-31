@@ -24,12 +24,18 @@ Meteor.startup ->
   repetition = new Repetition()
   @modifiers = new Modifiers()
   reloadGrammar()
-  Meteor.call "loadSettings", "enabled_commands", (error, result) =>
+  Meteor.call "loadSettings", "enabled_commands", (error, enabledCommands) =>
     if error
       console.log error
     else
-      @enabledCommands = result
-      Commands.initialize(enabledCommands)
+      console.log "enabled", enabledCommands
+      _.each enabledCommands, (enabled, name) ->
+        if enabled
+          Commands.enable name
+        else
+          Command.disable name
+
+      Commands.initialize()
       Session.set("loading", false)
 
 

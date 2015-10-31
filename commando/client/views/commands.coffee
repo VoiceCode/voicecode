@@ -106,6 +106,7 @@ Template.CommandSummaryRow.helpers
       result = generated.code
       result = result.substring(result.indexOf('\n')+1)
       result = result.replace(/[\s]*[\w]+ = undefined\n/g, "\n")
+      result = result.replace(/[ ]+#[\s]*([0-9]+)?\n/g, '')
       result = result.replace(/_arg/g, "options")
       result = result.split("@['do']").join('@do')
       result = result.replace("if input != null then input.length else undefined", "input")

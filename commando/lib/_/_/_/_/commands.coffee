@@ -46,7 +46,7 @@ class Commands
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
 
-  initialize: (enabledCommands) ->
+  initialize: () ->
     @performCommandEdits()
     @initialized = true
   @historyTypes: -> ['global']

@@ -8,6 +8,6 @@ Commands.createDisabled
     inputRequired: true
     action: (name) ->
       if name?.length
-        emoticon = @fuzzyMatch Settings.emoticons, namee
+        emoticon = @fuzzyMatch Settings.emoticons, name
         if emoticon?.length
           @string emoticon
