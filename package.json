@@ -1,0 +1,24 @@
+{
+  "name": "voicecode",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/electron ./dist/app/startup.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimatter/voicecode.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dimatter/voicecode/issues"
+  },
+  "homepage": "https://github.com/dimatter/voicecode#readme",
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "electron-prebuilt": "^0.34.2",
+    "nodemon": "^1.8.0"
+  }
+}
