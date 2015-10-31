@@ -81,6 +81,9 @@ class @DarwinController
     global.slaveController = new SlaveController()
     slaveController.connect()
 
+    if Settings.defaultSlaveTarget
+      slaveController.setTarget(Settings.defaultSlaveTarget)
+
     @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
     @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
 
