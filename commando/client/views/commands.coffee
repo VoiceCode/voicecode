@@ -91,15 +91,21 @@ Template.CommandSummaryRow.helpers
   tags: ->
     Commands.mapping[@].tags or []
   actionDescriptor: ->
-    displayActions.reset()
+    # displayActions.reset()
+    # command = Commands.mapping[@]
+    # input = switch command.grammarType
+    #   when "custom"
+    #     {}
+    #   else
+    #     null
+    # command.action?.call(displayActions, input, {})
+    # displayActions.result
     command = Commands.mapping[@]
-    input = switch command.grammarType
-      when "custom"
-        {}
-      else
-        null
-    command.action?.call(displayActions, input, {})
-    displayActions.result
+    if command.action
+      result = window.js2coffee.build("var action = " + command.action.toString() + ";")
+      result.code
+    else
+      ""
 
 Template.CommandSummaryRow.events
   "click .modifierLabel": (e, t) ->

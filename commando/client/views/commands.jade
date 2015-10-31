@@ -11,11 +11,11 @@ template(name="Commands")
       .well
         +each tags
           +commandTag
-
-      if showModifiers
-        +moduleModifiers
-      else
-        +commandsGeneric
+  unless loading
+    if showModifiers
+      +moduleModifiers
+    else
+      +commandsGeneric
 
 template(name="commandsGeneric")
   table.table.table-hover.table-bordered.table-condensed.table-striped.table-responsive
@@ -45,11 +45,8 @@ template(name="CommandSummaryRow")
   td
     +each tags
       +commandTag
-  td
-    if isAction
-      | {{{actionDescriptor}}}
-    else if isText
-      code= transform
+  td(style="width:35%;")
+    pre= actionDescriptor
 
 template(name="CommandAction")
   code {{{text}}}
