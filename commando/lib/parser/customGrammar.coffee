@@ -1,6 +1,6 @@
 class CustomGrammar
   constructor: (@rule, @definitions = {}) ->
-    @parsed = customGrammarParser.parse rule
+    @parsed = customGrammarParser.parse @rule
     @tokens = @parsed.tokens
     @handleDuplicateLists()
     @includeName = @parsed.includeName
