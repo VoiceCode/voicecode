@@ -47,10 +47,14 @@ Commands.Utility =
         false
       else
         "all"
-    _.filter _.keys(Commands.mapping), (key) ->
-      command = Commands.mapping[key]
-      (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
-
+    if tag is "all"
+      _.filter _.keys(Commands.mapping), (key) ->
+        command = Commands.mapping[key]
+        (enabled is "all" or (command.enabled is enabled)) and (command.tags or []).indexOf("modifiers") < 0
+    else
+      _.filter _.keys(Commands.mapping), (key) ->
+        command = Commands.mapping[key]
+        (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
   customCommandNames: ->
     Commands.keys.custom.concat(Commands.keys.customContinuous)
 

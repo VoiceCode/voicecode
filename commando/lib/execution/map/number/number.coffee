@@ -34,7 +34,7 @@ numbers =
 _.each numbers, (value, key) ->
   Commands.createDisabled key,
     grammarType: 'none'
-    description: 'Enters the number: #{value}'
+    description: "Enters the number: #{value}"
     # namespace: '#{value}'
     tags: ['number', 'recommended']
     module: 'number'

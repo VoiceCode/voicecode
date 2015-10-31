@@ -25,7 +25,7 @@ _.each singleWords, (word) ->
   Commands.createDisabled word,
     kind: 'word'
     grammarType: 'none'
-    description: 'insert the word {#{word}}'
+    description: "insert the word {#{word}}"
     tags: ['words']
     continuous: false
 
@@ -33,7 +33,7 @@ _.each wordsWithTriggerPhrase, (trigger, word) ->
   Commands.createDisabled word,
     kind: 'word'
     grammarType: 'none'
-    description: 'insert the word {#{word}}'
+    description: "insert the word {#{word}}"
     tags: ['words']
     triggerPhrase: trigger
     continuous: false
