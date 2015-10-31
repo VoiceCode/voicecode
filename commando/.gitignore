@@ -1,6 +1,0 @@
-config/my_settings.json
-config/my_user_settings.coffee
-user/my_commands.coffee
-user/*.json
-user/*.xml
-snippets

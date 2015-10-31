@@ -1,7 +1,0 @@
-{
-  "license": "XXXXXXXXXXXXXX",
-  "email": "youremail@example.com",
-  "public": {
-  	"port": 5000
-  }
-}
