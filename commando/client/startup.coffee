@@ -33,7 +33,7 @@ Meteor.startup ->
         if enabled
           Commands.enable name
         else
-          Command.disable name
+          Commands.disable name
 
       Commands.initialize()
       Session.set("loading", false)
