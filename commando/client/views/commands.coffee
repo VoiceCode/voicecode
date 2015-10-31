@@ -102,8 +102,15 @@ Template.CommandSummaryRow.helpers
     # displayActions.result
     command = Commands.mapping[@]
     if command.action
-      result = window.js2coffee.build("var action = " + command.action.toString() + ";")
-      result.code
+      generated = window.js2coffee.build("var action = " + command.action.toString() + ";")
+      result = generated.code
+      result = result.replace(/[\s]*[\w]+ = undefined\n/g, "\n")
+      result = result.replace(/_arg/g, "options")
+      result = result.split("@['do']").join('@do')
+      result = result.replace("if input != null then input.length else undefined", "input")
+      result = result.replace(/\n[\s]return[\s]/g, "")
+      result = result.replace(/return[\s]*/g, "").trim()
+      result
     else
       ""
 
