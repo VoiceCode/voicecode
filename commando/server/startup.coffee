@@ -28,8 +28,11 @@ Meteor.startup ->
   @enabledCommandsManager = new EnabledCommandsManager
   @alphabet = new Alphabet
   @modifiers = new Modifiers
-  _.each enabledCommandsManager.settings, (command) ->
-    Commands.enable command
+  _.each enabledCommandsManager.settings, (enabled, name) ->
+    if enabled
+      Commands.enable name
+    else
+      Commands.disable name
   enabledCommandsManager.subscribeToEvents()
   userAssetsController.runUserCode()
   switch platform
@@ -46,9 +49,9 @@ Meteor.startup ->
   userAssetsController.watchForChanges()
   Commands.initialize()
 
-  if Settings.slaveMode or true
-    _.each Commands.mapping, (command, name) ->
-      Commands.enable name
+  # if Settings.slaveMode or true
+  #   _.each Commands.mapping, (command, name) ->
+  #     Commands.enable name
 
   unless Settings.slaveMode
     @vocabulary = new Vocabulary()
