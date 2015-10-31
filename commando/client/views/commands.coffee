@@ -113,6 +113,8 @@ Template.CommandSummaryRow.helpers
       result
     else
       ""
+Template.CommandSummaryRow.onRendered (template) ->
+  hljs.highlightBlock @find("pre")
 
 Template.CommandSummaryRow.events
   "click .modifierLabel": (e, t) ->
