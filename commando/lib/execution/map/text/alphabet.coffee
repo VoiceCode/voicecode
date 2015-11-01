@@ -19,7 +19,8 @@ class @Alphabet
       kind: 'recognition'
       description: 'phonetic alphabet'
       grammarType: 'custom'
-      rule: '(alphabet) (alphabet)* (alphabet)* (alphabet)* (alphabet)* (alphabet)*'
+      # rule: '(alphabet) (alphabet)* (alphabet)* (alphabet)* (alphabet)* (alphabet)*'
+      rule: '(alphabet) (alphabet)*'
       variables:
         alphabet: @possibleAlphabetValues()
   possibleAlphabetValues: ->

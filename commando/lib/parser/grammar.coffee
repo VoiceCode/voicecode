@@ -266,7 +266,7 @@ class @Grammar
       modifierPrefix
     ) s {return id;}
 
-    word = !identifier !customCommand text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/')+ ss {return text.join('')}
+    word = !identifier !customCommand text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss {return text.join('')}
 
     symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
 

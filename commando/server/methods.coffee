@@ -1,4 +1,6 @@
 Meteor.methods
+  getMapping: ->
+    Commands.mapping
   parseGeneratorString: ->
     ParseGenerator?.string
 

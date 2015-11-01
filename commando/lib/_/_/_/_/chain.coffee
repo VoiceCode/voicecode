@@ -36,8 +36,6 @@ class @Chain
       parsed = Parser.parse(@phrase)
       commands = @normalizeStructure parsed
       @applyMouseLatency commands
-      if Settings.autoSpacingEnabled.call(Actions)
-        commands = @applyAutoSpacing commands
       commands
       # catch e
       #   console.log e
@@ -53,6 +51,10 @@ class @Chain
       results = _.reduce preprocessors, (chain, callback) ->
         callback chain
       , results
+
+    if Settings.autoSpacingEnabled.call(Actions)
+      results = @applyAutoSpacing results
+
     log 'chainPreprocessed', results, JSON.stringify results
 
     if results?
