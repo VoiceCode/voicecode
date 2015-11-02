@@ -83,8 +83,9 @@ class DarwinController
     global.slaveController = new SlaveController()
     slaveController.connect()
 
-    @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
-    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
+    @listenOnSocket "/tmp/voicecode.sock", =>
+      Fiber(@dragonHandler).run.apply _.toArray arguments
+    @listenOnSocket "/tmp/voicecode2.sock",  =>
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
@@ -162,7 +163,9 @@ class DarwinController
 
   slaveDataHandler: (phrase) ->
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
-    chain = new Chain(phrase + " ")
-    results = chain.execute(true)
+    Fiber(->
+      chain = new Chain(phrase + " ")
+      results = chain.execute(true)
+    ).run()
 
 module.exports = new DarwinController

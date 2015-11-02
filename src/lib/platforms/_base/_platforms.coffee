@@ -24,8 +24,15 @@ module.exports = class Actions
     @do(name, input)
 
   delay: (ms) ->
-    sleep = require 'sleep'
-    sleep.usleep(ms * 1000)
+    fiber = Fiber.current
+    setTimeout (->
+      fiber.run()
+      return
+    ), ms
+    Fiber.yield()
+
+    # sleep = require 'sleep'
+    # sleep.usleep(ms * 1000)
 
   repeat: (times, callback) ->
     _(times).times callback
