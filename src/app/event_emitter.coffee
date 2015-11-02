@@ -5,7 +5,7 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    @debug = true
+    @debug = false
     @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'

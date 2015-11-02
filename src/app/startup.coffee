@@ -20,7 +20,7 @@ global.error = _.bind Events.error, Events
 global.log = _.bind Events.log, Events
 global.warning = _.bind Events.warning, Events
 global.notify = _.bind Events.notify, Events
-
+global.Fiber = require 'fibers'
 global.Command = require '../lib/command'
 global.Grammar = require '../lib/parser/grammar'
 global.Settings = require './settings'
@@ -47,6 +47,11 @@ _.each enabledCommandsManager.settings, (enabled, name) ->
 enabledCommandsManager.subscribeToEvents()
 userAssetsController.runUserCode()
 
+
+
+
+
+
 # DEVELOPER MODE ONLY
 Settings.slaveMode = true
 Settings.dontMessWithMyDragon = true
@@ -64,6 +69,10 @@ switch platform
     global.Actions = require '../lib/platforms/linux/actions'
 
 Commands.initialize()
+if Settings.slaveMode
+  _.each Commands.mapping, (command, name) ->
+    Commands.enable name
+
 parserController.generateParser()
 
 mainWindow = null
