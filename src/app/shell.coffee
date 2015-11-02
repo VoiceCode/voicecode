@@ -1,8 +1,9 @@
 Shell = require('shelljs')
 Execute = (script, options = null) ->
-  options ?= {silent: true}
+  options ?= {}
+  _.extend options, {silent: true}
   try
-    (Meteor.wrapAsync(Shell.exec, Shell))(script, options)
+    Shell(script, options)
   catch error
     console.error 'CAUGHT: '
     console.error error

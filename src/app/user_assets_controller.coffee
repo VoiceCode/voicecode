@@ -71,7 +71,7 @@ class UserAssetsController
         @readFile "#{directoryPath}/#{fileName}", (data) =>
           @compileCoffeeScript data, eval
           # What actions to perform here?
-          log 'assetChanged', {directoryPath, filename},
+          log 'assetChanged', {directoryPath, fileName},
           "User asset changed: #{directoryPath}/#{fileName}, reacting...."
           Commands.reloadGrammar()
 

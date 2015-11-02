@@ -9,10 +9,11 @@ atom = require 'gulp-atom'
 less = require 'gulp-less'
 path = require('path')
 install = require 'gulp-install'
+exec = require 'gulp-exec'
 
 gulp.task 'install', () ->
   return gulp.src('./package.json')
-    .pipe(gulp.dest('./compiled'))
+    .pipe(gulp.dest('./build'))
     .pipe(install({production: true}))
 
 gulp.task 'build', () ->
@@ -31,11 +32,14 @@ gulp.task 'serve', [
   'move-js'
   'build-front-end-js'
 ], ->
-  electron.start '--disable-http-cache'
+  electron.start ['--disable-http-cache']
   gulp.watch './src/**/*.coffee', ['rebuild-coffee']
   gulp.watch 'src/frontend/**/*.less', [ 'rebuild-css' ]
   gulp.watch 'src/frontend/**/*.cjsx', [ 'rebuild-front-end-js' ]
   gulp.watch 'src/frontend/**/*.html', [ 'rebuild-html' ]
+
+gulp.task 'electron-rebuild', ->
+  exec './node_modules/.bin/electron-rebuild -v 0.34.2 -n 48'
 
 gulp.task 'rebuild-html', [ 'build-html' ], ->
   electron.reload()
@@ -50,7 +54,10 @@ gulp.task 'rebuild-front-end-js', [ 'build-front-end-js' ], ->
   return
 
 gulp.task 'rebuild-coffee', ['build-coffee'], ->
-  electron.restart '--disable-http-cache'
+  electron.restart ['--disable-http-cache']
+
+gulp.task 'build-package', ->
+  exec 'npm install'
 
 gulp.task 'build-coffee', ->
   gulp.src './src/**/*.coffee'

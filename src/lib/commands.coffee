@@ -61,7 +61,7 @@ class Commands
         @validate name, options
       return
     if @mapping[name]?
-      warning 'commandOverwritten', name, "Command #{name} overridden by command with a same name"
+      warning 'commandOverwritten', name, "Command #{name} overwritten by command with a same name"
     if options.rule?.match(/\(.*?\d+.*?\)/g)?
       error 'commandValidationError', name, 'Please don\'t use integers in list names'
 
@@ -85,6 +85,7 @@ class Commands
       options.enabled ?= true
       options.grammarType ?= 'individual'
       options.kind ?= 'action'
+      console.trace name if name is 'null'
       @mapping[name] = options
       if options.enabled is true
         @enable name
@@ -122,7 +123,7 @@ class Commands
   get: (name) ->
     isRenamed = _.findWhere @renamings, {from: name}
     if isRenamed?
-      # log 'commandRenamedReference', isRenamed
+      log 'commandRenamedReference', isRenamed
       return @mapping[isRenamed.to]
     @mapping[name]
 
@@ -142,7 +143,7 @@ class Commands
         emit editType, !!result, name
       else
         emit editType, false, name
-        emit 'commandNotFound', name
+        error 'commandNotFound', name
     @delayedEditFunctions = []
 
   override: (name, action) ->
@@ -186,7 +187,7 @@ class Commands
       if _.findWhere(@renamings, {to: name})?
         # renaming something that has already been renamed
         # removing previous renaming reference, allowing swapping command names
-        warning 'commandOverwritten', name, "Command #{name} overridden by renaming twice"
+        warning 'commandOverwritten', name, "Command #{name} overwritten by renaming twice"
         @renamings = _.reject @renamings, ({to}) -> to is name
 
       if @mapping[newName]?

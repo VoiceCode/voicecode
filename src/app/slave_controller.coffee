@@ -1,4 +1,4 @@
-class @SlaveController
+class SlaveController
   # singleton
   instance = null
   throttledLog = null
@@ -74,7 +74,7 @@ class @SlaveController
   clearTarget: ->
     @target = null
 
-@SlaveController = SlaveController
+
 
 unless Settings.slaveMode
   invokeWith = if _.isEmpty Settings.slaves
@@ -90,3 +90,5 @@ unless Settings.slaveMode
     tags: ['voicecode']
     action: (input) ->
       slaveController.setTarget input
+
+module.exports = SlaveController

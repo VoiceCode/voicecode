@@ -1,5 +1,6 @@
 # console.log = require 'nslog'
-
+path = require 'path'
+notifier = require 'node-notifier'
 class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
@@ -34,7 +35,10 @@ class EventEmitter extends require('events').EventEmitter
       'slaveDisconnected'
       'slaveConnected'
     ]
-    # @suppressedDebugEntries = []
+    # @suppressedDebugEntries = [
+    #   'commandEnabled'
+    #   'commandOverwritten'
+    # ]
     instance = @
 
   error: (event) ->
@@ -44,19 +48,27 @@ class EventEmitter extends require('events').EventEmitter
 
   log: (event) ->
     namespace = event || 'VoiceCode'
-    console.log "LOG: [#{namespace}]", _.toArray(arguments)[2]
+    unless @debug
+      console.log "LOG: [#{namespace}]", _.toArray(arguments)[2]
     @emit.apply @, _.toArray arguments
 
   warning: (event) ->
     namespace = event || 'VoiceCode'
-    console.log "WARNING: [#{namespace}]", _.toArray(arguments)[2]
+    unless @debug
+      console.log "WARNING: [#{namespace}]", _.toArray(arguments)[2]
     @emit.apply @, _.toArray arguments
 
   notify: (event) ->
     if Settings.notificationProvider is "log"
       @log.apply @, _.toArray arguments
     else
-      Notify _.toArray(arguments)[2]
+      namespace = event || 'VoiceCode'
+      # TODO: take user settings into consideration
+      # https://github.com/mikaelbr/node-notifier
+      notifier.Growl().notify
+        title: 'VoiceCode'
+        message: _.toArray(arguments)[2]
+        icon: path.join(projectRoot, 'assets', 'vc.png')
     @emit.apply @, _.toArray arguments
 
   emit: (event) ->
@@ -66,4 +78,4 @@ class EventEmitter extends require('events').EventEmitter
         console.error "EMITTING: [#{event}]", _.toArray(arguments)[1..]
     super
 
-module.exports = EventEmitter
+module.exports = new EventEmitter

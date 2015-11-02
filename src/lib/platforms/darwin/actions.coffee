@@ -1,6 +1,9 @@
 
 Actions = require '../_base/_platforms'
 class DarwinActions extends Actions
+  constructor: ->
+    super
+    @keys = require './keyCodes'
   setCurrentApplication: (application) ->
     super
     if @inBrowser()
@@ -27,12 +30,12 @@ class DarwinActions extends Actions
     key = key.toString().toLowerCase()
 
     @notUndoable()
-    code = Platforms.osx.keyCodes[key]
+    code = @keys.keyCodes[key]
     if code?
       @_pressKey(code, @_normalizeModifiers(modifiers))
       @delay Settings.keyDelay or 8
     else
-      code = Platforms.osx.keyCodesShift[key]
+      code = @keys.keyCodesShift[key]
       if code?
         mods = _.unique((modifiers or []).concat("shift"))
         @_pressKey code, @_normalizeModifiers(mods)
@@ -47,19 +50,19 @@ class DarwinActions extends Actions
         @setUndoByDeleting string.length
         for item in string.split('')
           @delay Settings.characterDelay or 4
-          code = Platforms.osx.keyCodesRegular[item]
+          code = @keys.keyCodesRegular[item]
           if code?
             @_pressKey code
           else
-            code = Platforms.osx.keyCodesShift[item]
+            code = @keys.keyCodesShift[item]
             if code?
               @_pressKey code, ["shift"]
   keyDown: (key, modifiers) ->
-    code = Platforms.osx.keyCodes[key.toLowerCase()]
+    code = @keys.keyCodes[key.toLowerCase()]
     if code?
       @_keyDown code, @_normalizeModifiers(modifiers)
   keyUp: (key, modifiers) ->
-    code = Platforms.osx.keyCodes[key.toLowerCase()]
+    code = @keys.keyCodes[key.toLowerCase()]
     if code?
       @_keyUp code, @_normalizeModifiers(modifiers)
 
@@ -106,7 +109,7 @@ class DarwinActions extends Actions
   _pressKey: (key, modifiers) ->
     if modifiers? and @needsExplicitModifierPresses()
       for m in modifiers
-        @_keyDown Platforms.osx.keyCodes[m], [m]
+        @_keyDown @keys.keyCodes[m], [m]
         @delay Settings.modifierKeyDelay or 2
 
     @_keyDown key, modifiers
@@ -116,7 +119,7 @@ class DarwinActions extends Actions
       # get a copy of the modifiers so we can reverse it
       mods = modifiers.slice().reverse()
       for m in mods
-        @_keyUp Platforms.osx.keyCodes[m] #, [m]
+        @_keyUp @keys.keyCodes[m] #, [m]
         @delay Settings.modifierKeyDelay or 2
 
   getMousePosition: ->
@@ -441,15 +444,13 @@ class DarwinActions extends Actions
   _getCurrentBrowserUrl: (cb) ->
     switch @currentApplication()
       when "Google Chrome"
-        Execute """osascript <<EOD
+        Applescript """
         tell application "Google Chrome" to get URL of active tab of first window
-        EOD
-        """, cb
+        """, {async: false}
       when "Safari"
-        Execute """osascript <<EOD
+        Applescript """
         tell application "Safari" to return URL of front document as string
-        EOD
-        """, cb
+        """, {async: false}
 
   currentBrowserUrl: ({reset} = {reset: false}) ->
     if reset or !@_currentBrowserUrl?
