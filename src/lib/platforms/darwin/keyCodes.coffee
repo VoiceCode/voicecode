@@ -1,4 +1,4 @@
-Platforms.osx.keyCodes =
+exports.keyCodes =
   "a"                    : 0x00
   "b"                    : 0x0B
   "c"                    : 0x08
@@ -118,7 +118,7 @@ Platforms.osx.keyCodes =
   "."                    : 0x2F
   "`"                    : 0x32
 
-Platforms.osx.keyCodesRegular =
+exports.keyCodesRegular =
   "grave"                : 0x32
   "keypaddecimal"        : 0x41
   "keypadmultiply"       : 0x43
@@ -238,7 +238,7 @@ Platforms.osx.keyCodesRegular =
   "."                    : 0x2F
   "`"                    : 0x32
 
-Platforms.osx.keyCodesShift =
+exports.keyCodesShift =
   "A"                    : 0x00
   "B"                    : 0x0B
   "C"                    : 0x08

@@ -5,14 +5,14 @@ class DarwinController
     instance = @
 
     @loadFrameworks()
-    @initialize()
+    # @initialize()
     @setDragonInfo()
 
     @listeningOnMainSocket = true
     @historyGrowl = []
     @historyDragon = []
 
-    @tock()
+    # @tock()
 
     if Settings.slaveMode
       @listenAsSlave()
@@ -21,7 +21,8 @@ class DarwinController
 
   tock: ->
     event = undefined
-    while event = @app('nextEventMatchingMask', $.NSAnyEventMask.toString(), 'untilDate', null, 'inMode', $('kCFRunLoopDefaultMode'), 'dequeue', 1)
+    while event = @app('nextEventMatchingMask', $.NSAnyEventMask.toString(),
+    'untilDate', null, 'inMode', $('kCFRunLoopDefaultMode'), 'dequeue', 1)
       @app 'sendEvent', event
     # app 'updateWindows'
     setTimeout @tock.bind(@), 100
@@ -30,6 +31,7 @@ class DarwinController
     $.framework 'Foundation'
     $.framework 'Quartz'
     $.framework 'AppKit'
+    # TODO: de-globalize
     global.net = require 'net'
     global.fs = require 'fs'
 
@@ -46,12 +48,14 @@ class DarwinController
     @delegateInstance = @delegate('alloc')('init')
     @app 'setDelegate', @delegateInstance
 
-    @notificationCenter('addObserver', @delegateInstance, 'selector', 'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-    @notificationCenter('addObserver', @delegateInstance, 'selector', 'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
+    @notificationCenter('addObserver', @delegateInstance, 'selector',
+    'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
+    @notificationCenter('addObserver', @delegateInstance, 'selector',
+    'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
 
     $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
 
-    @app 'finishLaunching'
+    # @app 'finishLaunching'
 
   applicationChanged: (self, _cmd, notification) ->
     current = notification('object')('frontmostApplication')('localizedName').toString()

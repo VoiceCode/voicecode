@@ -1,4 +1,4 @@
-@Html = {}
+global.Html = {}
 
 Html.tags = [
   'a'
