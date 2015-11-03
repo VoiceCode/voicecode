@@ -1,6 +1,8 @@
 fs = require 'fs'
 path = require 'path'
+chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
+
 class UserAssetsController
   instance = null
   constructor: ->
@@ -41,38 +43,32 @@ class UserAssetsController
          "Could not create user assets directory: #{@assetsPath}"
         @state = "error"
 
-    @watchForChanges()
 
   runUserCode: ->
     return if @state is "error"
-    @walk @assetsPath, '.+\.coffee$', (filePath) =>
-      @readFile filePath, (data) =>
+    @watcher = chokidar.watch "#{@assetsPath}**/*.coffee", persistent: true
+    @watcher.on('add', (path) =>
+      @handleFileChange 'added', path
+    ).on('change', (path) ->
+      @handleFileChange 'changed', path
+    ).on('error', (err) ->
+      error 'userAssetEventError', err, err
+    ).on('ready', ->)
+
+
+  handleFileChange: (event, fileName) ->
+    if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
+      log 'userAssetEvent', {event, fileName},
+      "User asset #{event}: #{fileName}, evaluating...."
+
+      @readFile fileName, (data) =>
         @compileCoffeeScript data, (data)->
-          log 'assetEvaluation', filePath, "Loading user asset: #{filePath}"
           try
             eval data
           catch err
             error 'assetEvaluationError', filePath, "filePath: #{filePath}"
             error 'assetEvaluationError', err, err
-
-  watchForChanges: ->
-    return if @state is "error"
-    @watcher = fs.watch @assetsPath, {persistent: true, recursive: false},
-    @handleFileChange @assetsPath
-
-    @walk @assetsPath, null, (directoryPath) =>
-      fs.watch directoryPath, {persistent: true, recursive: false},
-      @handleFileChange directoryPath
-
-  handleFileChange: (directoryPath) ->
-    (event, fileName) =>
-      return unless event is 'change'
-      if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
-        @readFile "#{directoryPath}/#{fileName}", (data) =>
-          @compileCoffeeScript data, eval
-          # What actions to perform here?
-          log 'assetChanged', {directoryPath, fileName},
-          "User asset changed: #{directoryPath}/#{fileName}, reacting...."
-          Commands.reloadGrammar()
+        # What actions to perform here?
+        ParserController.generateParser()
 
 module.exports = new UserAssetsController

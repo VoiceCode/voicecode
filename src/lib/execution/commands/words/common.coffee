@@ -1,4 +1,3 @@
-console.log '!!!!!!!!!!'
 singleWords = [
   'and'
   'right'

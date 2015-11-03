@@ -1,3 +1,9 @@
+# /node_modules/.bin/electron-rebuild -v 0.34.2 -n 48
+# cd node_modules/fibers
+# HOME=~/.electron-gyp node-gyp rebuild --target=0.34.2 --arch=x64 --dist-url=https://atom.io/download/atom-shell
+# mkdir ./bin/darwin-x64-v8-4.5/
+# mv build/Release/fibers.node bin/darwin-x64-v8-4.5/
+
 gulp = require('gulp')
 browserify = require('browserify')
 babelify = require('babelify')
@@ -10,22 +16,24 @@ less = require 'gulp-less'
 path = require('path')
 install = require 'gulp-install'
 exec = require 'gulp-exec'
+clean = require 'gulp-rimraf'
 
-gulp.task 'install', () ->
-  return gulp.src('./package.json')
+gulp.task 'install', ->
+  gulp.src('./package.json')
     .pipe(gulp.dest('./build'))
     .pipe(install({production: true}))
 
-gulp.task 'build', () ->
-  return atom
+gulp.task 'build', ['install'], ->
+  atom
     srcPath : './dist'
     releasePath : './build'
     cachePath : './cache'
-    version : 'v0.28.1'
-    rebuild : false,
+    version : 'v0.34.2'
+    rebuild : true,
     platforms : ['darwin-x64']
 
 gulp.task 'serve', [
+  # 'clean-up'
   'build-html'
   'build-css'
   'build-coffee'
@@ -37,6 +45,11 @@ gulp.task 'serve', [
   gulp.watch 'src/frontend/**/*.less', [ 'rebuild-css' ]
   gulp.watch 'src/frontend/**/*.cjsx', [ 'rebuild-front-end-js' ]
   gulp.watch 'src/frontend/**/*.html', [ 'rebuild-html' ]
+
+gulp.task 'clean-up', ->
+  gulp.src('dist/**/*', {read: false})
+    .pipe(clean(force: true))
+
 
 gulp.task 'electron-rebuild', ->
   exec './node_modules/.bin/electron-rebuild -v 0.34.2 -n 48'

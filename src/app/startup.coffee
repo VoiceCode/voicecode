@@ -13,7 +13,7 @@ application = require 'app'
 BrowserWindow = require 'browser-window'
 client = require('electron-connect').client
 
-
+global.Settings = require './settings'
 global.Events = require './event_emitter'
 global.emit = _.bind Events.emit, Events
 global.error = _.bind Events.error, Events
@@ -23,33 +23,33 @@ global.notify = _.bind Events.notify, Events
 global.Fiber = require 'fibers'
 global.Command = require '../lib/command'
 global.Grammar = require '../lib/parser/grammar'
-global.Settings = require './settings'
 global.Commands = require '../lib/commands'
 global.Chain = require '../lib/chain'
 requireDirectory = require 'require-directory'
 requireDirectory module, '../lib/execution/',
   visit: (required)->
-    unless _.isEmpty required or (not _.isObject required)
+    if (not _.isEmpty required) and _.isObject required
       _.each required, (value, key) -> global[key] = value
-Commands.Utility = require '../lib/execution/commands/utility'
+Commands.Utility = require '../lib/utility/utility'
 global.userAssetsController = require './user_assets_controller'
+global.SlaveController = require './slave_controller'
 _.extend global, require './shell' # Execute, Applescript
 _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
 global.enabledCommandsManager = new EnabledCommandsManager
-global.Alphabet = require '../lib/execution/map/text/alphabet'
-global.Modifiers = require '../lib/execution/map/basic/modifiers'
-global.parserController = require '../lib/parser/parser_controller'
+global.alphabet = require '../lib/alphabet'
+global.Modifiers = require '../lib/modifiers'
+global.ParserController = require '../lib/parser/parser_controller'
+Commands.initializationState = 'loadingFromSettings'
 _.each enabledCommandsManager.settings, (enabled, name) ->
   if enabled
     Commands.enable name
   else
     Commands.disable name
+Commands.initialize() # why do we even have this?
 enabledCommandsManager.subscribeToEvents()
+Commands.initializationState = 'loadingUserCode'
 userAssetsController.runUserCode()
-
-
-
-
+Commands.initializationState = 'loaded'
 
 
 # DEVELOPER MODE ONLY
@@ -68,12 +68,12 @@ switch platform
   when "linux"
     global.Actions = require '../lib/platforms/linux/actions'
 
-Commands.initialize()
+
 if Settings.slaveMode
   _.each Commands.mapping, (command, name) ->
     Commands.enable name
 
-parserController.generateParser()
+ParserController.generateParser()
 
 mainWindow = null
 application.on 'ready', ->
@@ -84,5 +84,5 @@ application.on 'ready', ->
   # mainWindow.openDevTools()
   # mainWindow.on 'closed', ->
   #   mainWindow = null
-  #
+
   # client = client.create mainWindow

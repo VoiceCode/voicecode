@@ -5,23 +5,20 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    @debug = false
+    @debug = true
     @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'
       'commandNameChanged'
-      'commandNotFound'
+      # 'commandNotFound'
       'commandExtended'
       'commandAfterAdded'
       'commandBeforeAdded'
       'commandMisspellingsAdded'
-      'commandOverwritten'
+      # 'commandOverwritten'
       'dragonSynchronizingStarted'
       'dragonSynchronizingEnded'
       'writingFile'
-      'grammarLoading'
-      'grammarLoaded'
-      'grammarLoadFailed'
       'chainParsed'
       'chainPreprocessed'
       'slaveCommandReceived'
@@ -42,34 +39,36 @@ class EventEmitter extends require('events').EventEmitter
     instance = @
 
   error: (event) ->
-    namespace = event || 'VoiceCode'
-    console.error "ERROR: [#{namespace}]", _.toArray(arguments)[2]
+    unless @debug
+      namespace = event || 'VoiceCode'
+      console.error "ERROR: [#{namespace}]", _.toArray(arguments)[2]
     @emit.apply @, _.toArray arguments
 
   log: (event) ->
-    namespace = event || 'VoiceCode'
     unless @debug
+      namespace = event || 'VoiceCode'
       console.log "LOG: [#{namespace}]", _.toArray(arguments)[2]
     @emit.apply @, _.toArray arguments
 
   warning: (event) ->
-    namespace = event || 'VoiceCode'
     unless @debug
+      namespace = event || 'VoiceCode'
       console.log "WARNING: [#{namespace}]", _.toArray(arguments)[2]
     @emit.apply @, _.toArray arguments
 
   notify: (event) ->
-    if Settings.notificationProvider is "log"
-      @log.apply @, _.toArray arguments
-    else
+    unless @debug
       namespace = event || 'VoiceCode'
-      # TODO: take user settings into consideration
-      # https://github.com/mikaelbr/node-notifier
-      notifier.Growl().notify
-        title: 'VoiceCode'
-        message: _.toArray(arguments)[2]
-        icon: path.join(projectRoot, 'assets', 'vc.png')
-    @emit.apply @, _.toArray arguments
+      if Settings.notificationProvider is "log"
+        @log.apply @, _.toArray arguments
+      else
+        # TODO: take user settings into consideration
+        # https://github.com/mikaelbr/node-notifier
+        notifier.Growl().notify
+          title: 'VoiceCode'
+          message: _.toArray(arguments)[2]
+          icon: path.join(projectRoot, 'assets', 'vc.png')
+      @emit.apply @, _.toArray arguments
 
   emit: (event) ->
     return unless event?

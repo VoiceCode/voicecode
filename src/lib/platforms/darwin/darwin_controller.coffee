@@ -83,9 +83,9 @@ class DarwinController
     global.slaveController = new SlaveController()
     slaveController.connect()
 
-    @listenOnSocket "/tmp/voicecode.sock", =>
-      Fiber(@dragonHandler).run.apply _.toArray arguments
-    @listenOnSocket "/tmp/voicecode2.sock",  =>
+    @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
+
+    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>

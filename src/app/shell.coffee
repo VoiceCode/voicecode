@@ -1,9 +1,9 @@
 Shell = require('shelljs')
 Execute = (script, options = null) ->
   options ?= {}
-  _.extend options, {silent: true}
+  _.extend options, {silent: true, async:false}
   try
-    Shell(script, options)
+    s = Shell.exec script, options
   catch error
     console.error 'CAUGHT: '
     console.error error
@@ -15,9 +15,9 @@ Execute = (script, options = null) ->
 
 Applescript = (script, options = null) ->
   Execute """osascript <<EOD
-  #{script}
-  EOD
-  """, options
+          #{script}
+          EOD
+          """, options
 
 
 
