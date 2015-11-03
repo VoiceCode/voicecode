@@ -10,6 +10,7 @@ class Commands
     @renamings = []
     @context = "global"
     @initialized = false
+    @initializationState = null
     @conditionalModules = {}
     @lastIndividualCommand = null
     @lastFullCommand = null
@@ -57,8 +58,8 @@ class Commands
 
   validate: (name, options) ->
     if typeof name is "object"
-      _.each name, (options, name) =>
-        @validate name, options
+      _.each name, (options, n) =>
+        @validate n, options
       return
     if @mapping[name]?
       warning 'commandOverwritten', name, "Command #{name} overwritten by command with a same name"
@@ -85,7 +86,6 @@ class Commands
       options.enabled ?= true
       options.grammarType ?= 'individual'
       options.kind ?= 'action'
-      console.trace name if name is 'null'
       @mapping[name] = options
       if options.enabled is true
         @enable name
@@ -116,6 +116,7 @@ class Commands
 
   # queues all the command edits until sometime in the future, where they are all called at once
   edit: (name, editType, callback) ->
+    console.trace name unless name?
     @delayedEditFunctions.push {name, editType, callback}
     if @initialized
       @performCommandEdits()
@@ -131,19 +132,21 @@ class Commands
   performCommandEdits: ->
     _.each @delayedEditFunctions, ({name, callback, editType}) =>
       command = @get name
+      isRenamed = _.findWhere @renamings, {from: name}
+      if isRenamed?
+        name = isRenamed.to
+
       if command?
         result = callback command
-
-        isRenamed = _.findWhere @renamings, {from: name}
-        if isRenamed?
-          name = isRenamed.to
 
         if _.isObject result
           @mapping[name] = @prepareCommand name, result
         emit editType, !!result, name
       else
         emit editType, false, name
-        error 'commandNotFound', name
+        unless isRenamed? or @initializationState is 'loadingFromSettings'
+          console.log @initializationState
+          error 'commandNotFound', name
     @delayedEditFunctions = []
 
   override: (name, action) ->

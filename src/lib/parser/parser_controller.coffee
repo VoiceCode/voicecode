@@ -6,12 +6,17 @@ class ParserController
     @cryptojs = require 'crypto-js'
     @fingerprintHash = null
     @fingerprint = null
+    @debouncedGenerateParser = null
     @initialize()
 
   initialize: ->
     Events.on 'generateParserFailed', _.bind @regress, @
 
   generateParser: ->
+    @debouncedGenerateParser ?= _.debounce @_generateParser.bind(@), 1000
+    @debouncedGenerateParser()
+
+  _generateParser: ->
     @generateFingerprint()
     @generateFingerprintHash()
     {
@@ -25,12 +30,11 @@ class ParserController
         @getNewParser()
       catch e
         @regress e
+    @debouncedGenerateParser = null
 
   regress: (reason) ->
-    {settings:
-      content: oldParser
-    } = @loadFromDisk()
-    log null, null, 'Regressing to old parser because: ', reason
+    {content: oldParser} = @loadFromDisk()
+    log 'parserRegression', null, "Regressing to old parser because: #{reason}"
     @setParser oldParser
 
   setParser: (parserAsAString) ->
@@ -71,8 +75,6 @@ class ParserController
         'Content-Type': 'application/x-www-form-urlencoded'
         'Content-Length': Buffer.byteLength(payload)
     req = https.request options, (res) =>
-      # console.log 'STATUS: ' + res.statusCode
-      # console.log 'HEADERS: ' + JSON.stringify(res.headers)
       res.setEncoding 'utf8'
       data = ''
       res.on 'data', (chunk) ->
@@ -82,10 +84,10 @@ class ParserController
         try
           newParser = eval data
         catch e
-          error 'generateParserFailed', data, 'Failed evaluating new parser.'
+          error 'generateParserFailed', data.substring(0, 300), 'Failed evaluating new parser.'
           return
         if newParser.success is false
-          error 'generateParserFailed', newParser, 'Parser got no success.'
+          error 'generateParserFailed', newParser.substring(0, 300), 'Parser got no success.'
           return
         @setParser newParser
         @writeToDisk

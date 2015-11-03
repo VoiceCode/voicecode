@@ -1,4 +1,4 @@
-module.exports = class DarwinDragonController
+class DarwinDragonController
   instance = null
   constructor: ->
     return instance if instance?
@@ -48,3 +48,4 @@ module.exports = class DarwinDragonController
       @dragonInstance.restart()
     else
       @start()
+module.exports = new DarwinDragonController
