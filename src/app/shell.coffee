@@ -1,9 +1,10 @@
 Shell = require('shelljs')
+
 Execute = (script, options = null) ->
   options ?= {}
-  _.extend options, {silent: true, async:false}
+  _.extend options, {silent: true}
   try
-    s = Shell.exec script, options
+    return Shell.exec(script, options).output
   catch error
     console.error 'CAUGHT: '
     console.error error

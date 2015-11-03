@@ -33,7 +33,7 @@ gulp.task 'build', ['install'], ->
     platforms : ['darwin-x64']
 
 gulp.task 'serve', [
-  # 'clean-up'
+  'kill-electron'
   'build-html'
   'build-css'
   'build-coffee'
@@ -46,13 +46,16 @@ gulp.task 'serve', [
   gulp.watch 'src/frontend/**/*.cjsx', [ 'rebuild-front-end-js' ]
   gulp.watch 'src/frontend/**/*.html', [ 'rebuild-html' ]
 
-gulp.task 'clean-up', ->
-  gulp.src('dist/**/*', {read: false})
-    .pipe(clean(force: true))
+gulp.task 'kill-electron', ->
+  exec 'killall -9 Electron'
+  return
+  # gulp.src('dist/**/*', {read: false})
+  #   .pipe(clean(force: true))
 
 
 gulp.task 'electron-rebuild', ->
   exec './node_modules/.bin/electron-rebuild -v 0.34.2 -n 48'
+  return
 
 gulp.task 'rebuild-html', [ 'build-html' ], ->
   electron.reload()
@@ -66,7 +69,7 @@ gulp.task 'rebuild-front-end-js', [ 'build-front-end-js' ], ->
   electron.reload()
   return
 
-gulp.task 'rebuild-coffee', ['build-coffee'], ->
+gulp.task 'rebuild-coffee', ['build-coffee', 'kill-electron'], ->
   electron.restart ['--disable-http-cache']
 
 gulp.task 'build-package', ->

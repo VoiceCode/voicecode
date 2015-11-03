@@ -74,8 +74,6 @@ class SlaveController
   clearTarget: ->
     @target = null
 
-
-
 unless Settings.slaveMode
   invokeWith = if _.isEmpty Settings.slaves
     'createDisabled'

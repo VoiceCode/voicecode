@@ -58,8 +58,8 @@ class Commands
 
   validate: (name, options) ->
     if typeof name is "object"
-      _.each name, (options, n) =>
-        @validate n, options
+      _.each name, (options, name) =>
+        @validate name, options
       return
     if @mapping[name]?
       warning 'commandOverwritten', name, "Command #{name} overwritten by command with a same name"
@@ -116,7 +116,6 @@ class Commands
 
   # queues all the command edits until sometime in the future, where they are all called at once
   edit: (name, editType, callback) ->
-    console.trace name unless name?
     @delayedEditFunctions.push {name, editType, callback}
     if @initialized
       @performCommandEdits()

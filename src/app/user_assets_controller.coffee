@@ -34,7 +34,6 @@ class UserAssetsController
   init: ->
     try
       fs.mkdirSync @assetsPath
-      # fs.statSync @assetsPath
     catch error
       if error.code is 'EEXIST'
         # this is good
@@ -48,15 +47,15 @@ class UserAssetsController
     return if @state is "error"
     @watcher = chokidar.watch "#{@assetsPath}**/*.coffee", persistent: true
     @watcher.on('add', (path) =>
-      @handleFileChange 'added', path
-    ).on('change', (path) ->
-      @handleFileChange 'changed', path
+      @handleFile 'added', path
+    ).on('change', (path) =>
+      @handleFile 'changed', path
     ).on('error', (err) ->
       error 'userAssetEventError', err, err
     ).on('ready', ->)
 
 
-  handleFileChange: (event, fileName) ->
+  handleFile: (event, fileName) ->
     if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
       log 'userAssetEvent', {event, fileName},
       "User asset #{event}: #{fileName}, evaluating...."
@@ -66,7 +65,7 @@ class UserAssetsController
           try
             eval data
           catch err
-            error 'assetEvaluationError', filePath, "filePath: #{filePath}"
+            error 'assetEvaluationError', fileName, "fileName: #{fileName}"
             error 'assetEvaluationError', err, err
         # What actions to perform here?
         ParserController.generateParser()

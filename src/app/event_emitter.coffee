@@ -5,7 +5,7 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    @debug = true
+    @debug = false
     @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'
@@ -41,40 +41,46 @@ class EventEmitter extends require('events').EventEmitter
   error: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
-      console.error "ERROR: [#{namespace}]", _.toArray(arguments)[2]
+      console.log chalk.white.bold.bgRed('  ERROR  '),
+      chalk.white.bgBlack(" #{namespace}:"),
+      chalk.white.bgBlack(_.toArray(arguments)[2])
     @emit.apply @, _.toArray arguments
 
   log: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
-      console.log "LOG: [#{namespace}]", _.toArray(arguments)[2]
+      console.log chalk.white.bold.bgBlue('   LOG   '),
+      chalk.white.bgBlack(" #{namespace}:"),
+      chalk.white.bgBlack(_.toArray(arguments)[2])
     @emit.apply @, _.toArray arguments
 
   warning: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
-      console.log "WARNING: [#{namespace}]", _.toArray(arguments)[2]
+      console.log chalk.white.bold.bgYellow(' WARNING '),
+      chalk.white.bgBlack(" #{namespace}:"),
+      chalk.white.bgBlack(_.toArray(arguments)[2])
     @emit.apply @, _.toArray arguments
 
   notify: (event) ->
     unless @debug
-      namespace = event || 'VoiceCode'
-      if Settings.notificationProvider is "log"
-        @log.apply @, _.toArray arguments
-      else
+      if Settings.notificationProvider is "Growl"
         # TODO: take user settings into consideration
         # https://github.com/mikaelbr/node-notifier
+        namespace = event || 'VoiceCode'
         notifier.Growl().notify
           title: 'VoiceCode'
           message: _.toArray(arguments)[2]
           icon: path.join(projectRoot, 'assets', 'vc.png')
+      @log.apply @, _.toArray arguments
       @emit.apply @, _.toArray arguments
 
   emit: (event) ->
     return unless event?
     if @debug
       unless event in @suppressedDebugEntries
-        console.error "EMITTING: [#{event}]", _.toArray(arguments)[1..]
+        console.log "%s %s \n", chalk.white.bold.bgRed('   EVENT   '),
+        chalk.black.bgWhite(" #{event} "),  _.toArray(arguments)[1..]
     super
 
 module.exports = new EventEmitter

@@ -9,6 +9,17 @@ global.platform =
       "linux"
 
 global._ = require 'lodash'
+global.chalk = require 'chalk'
+global.debug = ->
+  console.trace "%s \n", chalk.white.bold.bgRed('   DEBUG   '),
+  _.toArray(arguments)
+replify = require('replify')
+repl = require('http').createServer()
+replify 'vc', repl
+
+
+
+
 application = require 'app'
 BrowserWindow = require 'browser-window'
 client = require('electron-connect').client
@@ -36,7 +47,7 @@ global.SlaveController = require './slave_controller'
 _.extend global, require './shell' # Execute, Applescript
 _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
 global.enabledCommandsManager = new EnabledCommandsManager
-global.alphabet = require '../lib/alphabet'
+global.Alphabet = require '../lib/alphabet'
 global.Modifiers = require '../lib/modifiers'
 global.ParserController = require '../lib/parser/parser_controller'
 Commands.initializationState = 'loadingFromSettings'
@@ -54,15 +65,15 @@ Commands.initializationState = 'loaded'
 
 # DEVELOPER MODE ONLY
 Settings.slaveMode = true
-Settings.dontMessWithMyDragon = true
+# Settings.dontMessWelectronithMyDragon = false
 
 switch platform
   when "darwin"
     global.$ = require('nodobjc')
     global.Actions = require '../lib/platforms/darwin/actions'
-    global.darwinController = require '../lib/platforms/darwin/darwin_controller'
+    global.DarwinController = require '../lib/platforms/darwin/darwin_controller'
     unless Settings.slaveMode
-      global.dragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
+      global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
   when "win32"
     global.Actions = require '../lib/platforms/windows/actions'
   when "linux"

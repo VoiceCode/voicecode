@@ -333,7 +333,7 @@ class Grammar
     trillion = "trillion" ss {return '000000000000';}
 
     phonemeRoot = letter:(#{@buildPhonemeChain()})
-      {return alphabet.roots[letter];}
+      {return Alphabet.roots[letter];}
 
     phonemeIndividual = first:phonemeRoot ss {return first;}
     phonemeCapital = '#{Settings.uppercaseLetterPrefix}' ss root:phonemeRoot ss {return root.toUpperCase();}

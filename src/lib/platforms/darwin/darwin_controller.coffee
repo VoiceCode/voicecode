@@ -5,14 +5,14 @@ class DarwinController
     instance = @
 
     @loadFrameworks()
-    # @initialize()
+    @initialize()
     @setDragonInfo()
 
     @listeningOnMainSocket = true
     @historyGrowl = []
     @historyDragon = []
 
-    # @tock()
+    @tock()
 
     if Settings.slaveMode
       @listenAsSlave()
@@ -36,26 +36,28 @@ class DarwinController
     global.fs = require 'fs'
 
   initialize: ->
-    @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
-    @notificationCenter = @sharedWorkspace('notificationCenter')
-    @mainQueue = $.NSOperationQueue('mainQueue')
-    @app = $.NSApplication('sharedApplication')
+    Fiber(=>
+      @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
+      @notificationCenter = @sharedWorkspace('notificationCenter')
+      @mainQueue = $.NSOperationQueue('mainQueue')
+      @app = $.NSApplication('sharedApplication')
 
-    @delegate = $.NSObject.extend('AppDelegate')
-    @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
-    @delegate.register()
+      @delegate = $.NSObject.extend('AppDelegate')
+      @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
+      @delegate.register()
 
-    @delegateInstance = @delegate('alloc')('init')
-    @app 'setDelegate', @delegateInstance
+      @delegateInstance = @delegate('alloc')('init')
+      @app 'setDelegate', @delegateInstance
 
-    @notificationCenter('addObserver', @delegateInstance, 'selector',
-    'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-    @notificationCenter('addObserver', @delegateInstance, 'selector',
-    'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
+      @notificationCenter('addObserver', @delegateInstance, 'selector',
+      'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
+      @notificationCenter('addObserver', @delegateInstance, 'selector',
+      'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
 
-    $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
+      $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
 
-    # @app 'finishLaunching'
+      # @app 'finishLaunching'
+    ).run()
 
   applicationChanged: (self, _cmd, notification) ->
     current = notification('object')('frontmostApplication')('localizedName').toString()
@@ -83,9 +85,9 @@ class DarwinController
     global.slaveController = new SlaveController()
     slaveController.connect()
 
-    @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
+    @listenOnSocket "/tmp/voicecode_.sock", @dragonHandler
 
-    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
+    @listenOnSocket "/tmp/voicecode_2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
