@@ -66,7 +66,7 @@ class UserAssetsController
           try
             eval data
           catch err
-            error 'assetEvaluationError', filePath, "filePath: #{filePath}"
+            error 'assetEvaluationError', fileName, "filePath: #{fileName}"
             error 'assetEvaluationError', err, err
         # What actions to perform here?
         ParserController.generateParser()
