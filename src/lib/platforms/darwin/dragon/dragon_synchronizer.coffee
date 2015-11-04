@@ -1,4 +1,4 @@
-class @DragonSynchronizer
+class DragonSynchronizer
   constructor: ->
     @sqlite3 = require("sqlite3").verbose()
     @bundles = {global: "global"}
@@ -10,40 +10,77 @@ class @DragonSynchronizer
     @commands = {}
     @lists = {}
     @insertedLists = []
+
   connectMain: ->
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
     if exists
-      @database = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (error) =>
-        if error
-          console.log "Error: Could not connect to Dragon Dictate command database"
-          @error = true
-      @all = @database.all.bind(@database)
-      @get = @database.get.bind(@database)
-      @run = @database.run.bind(@database)
+      @database = asyncblock (flow) ->
+        flow.errorCallback = (err) ->
+          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
+        new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, flow.add()
+        flow.wait()
+      @all = =>
+        args = _.toArray arguments
+        asyncblock (flow) =>
+          flow.firstArgIsError = false
+          args.push flow.callback()
+          flow.sync @database.all.bind(@database).apply args
+      @get = =>
+        args = _.toArray arguments
+        asyncblock (flow) =>
+          flow.firstArgIsError = false
+          args.push flow.callback()
+          flow.sync @database.get.bind(@database).apply args
+      @run = =>
+        args = _.toArray arguments
+        asyncblock (flow) =>
+          flow.firstArgIsError = false
+          args.push flow.callback()
+          flow.sync @database.run.bind(@database).apply args
     else
-      console.log "error: Dragon Dictate commands database was not found at: #{file}"
+      error 'dragonSynchronizerError', file,
+      "Dragon Dictate commands database was not found at: #{file}"
+      @error = true
+
   connectDynamic: ->
     file = @databaseFile("ddictatedynamic")
     exists = fs.existsSync(file)
     if exists
-      @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
-        if err
-          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic command database"
-          @error = true
-      @dynamicAll = @dynamicDatabase.all.bind(@dynamicDatabase)
-      @dynamicGet = @dynamicDatabase.get.bind(@dynamicDatabase)
-      @dynamicRun = @dynamicDatabase.run.bind(@dynamicDatabase)
+      @dynamicDatabase = asyncblock (flow) ->
+        flow.errorCallback = (err) ->
+          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
+        new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, flow.add()
+        flow.wait()
+      @all = =>
+        args = _.toArray arguments
+        asyncblock (flow) =>
+          flow.firstArgIsError = false
+          args.push flow.callback()
+          flow.sync @dynamicDatabase.all.bind(@dynamicDatabase).apply args
+      @get = =>
+        args = _.toArray arguments
+        asyncblock (flow) =>
+          flow.firstArgIsError = false
+          args.push flow.callback()
+          flow.sync @dynamicDatabase.get.bind(@dynamicDatabase).apply args
+      @run = =>
+        args = _.toArray arguments
+        asyncblock (flow) =>
+          flow.firstArgIsError = false
+          args.push flow.callback()
+          flow.sync @dynamicDatabase.run.bind(@dynamicDatabase).apply args
     else
       error 'dragonSynchronizerError', file,
       "Dragon Dictate dynamic commands database was not found at: #{file}"
       @error = true
+
   home: ->
     process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
+
   whoami: ->
-    # Execute("whoami")?.trim()
-    path = process.env.HOME?.split('/')
-    path[path.length - 1]
+    Execute("whoami")?.trim()
+
   getBundleId: (name) ->
     if @bundles[name]
       @bundles[name]
@@ -64,6 +101,7 @@ class @DragonSynchronizer
         @applicationNames[bundle] = name
         # console.log "could not get bundle identifier for: #{name}"
         null
+
   getApplicationVersion: (bundle) ->
     return 0 if bundle is null # handling global
     name = @applicationNames[bundle]
@@ -86,19 +124,23 @@ class @DragonSynchronizer
             0
         @applicationVersions[name] = found
         found
+
   getUsername: ->
     if @username?
       @username
     else
       @username = @whoami()
       @username
+
   normalizeBundle: (bundle) ->
     if bundle is "global"
       null
     else
       bundle
+
   digest: (triggerPhrase, bundleId) ->
     CryptoJS.MD5([triggerPhrase, bundleId].join('')).toString()
+
   getJoinedCommands: ->
     @all """SELECT * FROM ZCOMMAND AS C
     LEFT OUTER JOIN ZACTION AS A ON A.Z_PK=C.Z_PK
@@ -108,10 +150,12 @@ class @DragonSynchronizer
     @dynamicRun "INSERT INTO ZSPECIFICTERM (Z_ENT, Z_OPT, ZNUMERICVALUE, ZGENERALTERM, ZNAME) VALUES (2, 1, 0, $listId, $name)",
       $name: name
       $listId: listId
+
   getNextRecordId: ->
     result = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
     (result?.Z_PK or 0) + 1
     # @get "SELECT last_insert_rowid() FROM ZTRIGGER"
+
   createCommandId: ->
     id = Date.now()
     # in case of collision
@@ -152,8 +196,8 @@ class @DragonSynchronizer
       @run "COMMIT TRANSACTION;"
 
   databaseFile: (extension) ->
-    file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    # file = [@home(), "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
+    # file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
+    file = [@home(), "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
     file
 
   deleteAllDynamic: ->
@@ -182,22 +226,21 @@ class @DragonSynchronizer
     result = @dynamicGet "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
     id = result?.Z_PK
     if @error
-      console.error '-'
-      console.error @error
+      error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
     @insertedLists.push "#{bundle}#{name}"
     for item in items
       @createListItem item, id
 
   synchronizeStatic: () ->
     if @error
-      console.log "error: dragon database not connected"
+      error 'dragonSynchronizeStaticError', null, "Dragon database not connected"
       return false
     needsCreating = []
 
     chainedYesNo = [yes]
     if Settings.dragonVersion is 5
       chainedYesNo = [yes, no]
-
+    DragonCommand = require './dragon_command'
     for name in Commands.Utility.enabledCommandNames()
       # console.error name
       command = new DragonCommand(name, null)
@@ -235,7 +278,7 @@ class @DragonSynchronizer
 
   synchronizeDynamic: ->
     if @error
-      console.log "error: dragon dynamic database not connected"
+      error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
       return false
 
     _.each @lists, (lists, commandName) =>
@@ -249,3 +292,4 @@ class @DragonSynchronizer
               bundle = '#' if scope is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
                 @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle
+module.exports = new DragonSynchronizer
