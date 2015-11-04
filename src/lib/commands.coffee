@@ -123,7 +123,7 @@ class Commands
   get: (name) ->
     isRenamed = _.findWhere @renamings, {from: name}
     if isRenamed?
-      log 'commandRenamedReference', isRenamed
+      log 'commandRenamedReference', isRenamed, "#{isRenamed.from} => #{isRenamed.to}"
       return @mapping[isRenamed.to]
     @mapping[name]
 
@@ -144,12 +144,11 @@ class Commands
       else
         emit editType, false, name
         unless isRenamed? or @initializationState is 'loadingFromSettings'
-          console.log @initializationState
           error 'commandNotFound', name
     @delayedEditFunctions = []
 
   override: (name, action) ->
-    error 'deprecation', "Failed overriding '#{name}'. \n
+    error 'deprecation', "Failed overriding '#{name}'.
     Commands.override is deprecated. Use Commands.extend"
 
   extend: (name, extension) ->
@@ -177,7 +176,9 @@ class Commands
       command
 
   addAliases: (name, aliases) ->
-    console.error "Failed adding aliases to '#{name}'. 'addAliases' has been renamed to 'addMisspellings'. "
+    error 'deprecation',
+    "Failed adding aliases to '#{name}'.
+    'addAliases' has been renamed to 'addMisspellings'. "
 
   changeName: (name, newName) ->
     @edit name, 'commandNameChanged', (command) =>

@@ -43,7 +43,7 @@ class EventEmitter extends require('events').EventEmitter
       namespace = event || 'VoiceCode'
       console.log chalk.white.bold.bgRed('  ERROR  '),
       chalk.white.bgBlack(" #{namespace}:"),
-      chalk.white.bgBlack(_.toArray(arguments)[2])
+      chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
     @emit.apply @, _.toArray arguments
 
   log: (event) ->
@@ -51,7 +51,7 @@ class EventEmitter extends require('events').EventEmitter
       namespace = event || 'VoiceCode'
       console.log chalk.white.bold.bgBlue('   LOG   '),
       chalk.white.bgBlack(" #{namespace}:"),
-      chalk.white.bgBlack(_.toArray(arguments)[2])
+      chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
     @emit.apply @, _.toArray arguments
 
   warning: (event) ->
@@ -59,7 +59,7 @@ class EventEmitter extends require('events').EventEmitter
       namespace = event || 'VoiceCode'
       console.log chalk.white.bold.bgYellow(' WARNING '),
       chalk.white.bgBlack(" #{namespace}:"),
-      chalk.white.bgBlack(_.toArray(arguments)[2])
+      chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
     @emit.apply @, _.toArray arguments
 
   notify: (event) ->
@@ -83,4 +83,10 @@ class EventEmitter extends require('events').EventEmitter
         chalk.black.bgWhite(" #{event} "),  _.toArray(arguments)[1..]
     super
 
-module.exports = new EventEmitter
+Events = new EventEmitter
+global.emit = _.bind Events.emit, Events
+global.error = _.bind Events.error, Events
+global.log = _.bind Events.log, Events
+global.warning = _.bind Events.warning, Events
+global.notify = _.bind Events.notify, Events
+module.exports = Events

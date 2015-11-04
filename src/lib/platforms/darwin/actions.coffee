@@ -335,13 +335,7 @@ class DarwinActions extends Actions
 
   applescript: (content, shouldReturn=true) ->
     @notUndoable()
-    console.log applescript: content
-    script = $.NSAppleScript('alloc')('initWithSource', $(content))
-    results = script('executeAndReturnError', null)
-    if shouldReturn
-      results('stringValue')?.toString()
-    else
-      null
+    Applescript content, shouldReturn
 
   exec: (script, options = null) ->
     options ?= {silent: true}
@@ -354,7 +348,7 @@ class DarwinActions extends Actions
 
     escaped = JSON.stringify(info).replace(/\\/g, '\\\\').replace(/"/g, '\\"')
     command = """echo "#{escaped}" | nc -U /tmp/voicecode-atom.sock"""
-    console.log command
+    debug command
     @exec command
 
   openMenuBarItem: (item) ->
