@@ -39,10 +39,13 @@ class ParserController
 
   setParser: (parserAsAString) ->
     try
-      global.Parser = eval parserAsAString
-      log 'generateParserSuccess', Parser, 'Parser acquired.'
+      @parser = eval parserAsAString
+      log 'generateParserSuccess', @parser, 'Parser acquired.'
     catch e
       error 'generateParserFailed', e, 'Failed evaluating new parser.'
+
+  parse: (input) ->
+    @parser.parse input
 
   writeToDisk: (data) ->
     @settingsManager ?= new SettingsManager("parser")
@@ -60,6 +63,9 @@ class ParserController
 
   generateFingerprintHash: (fingerprint = @fingerprint)->
     @fingerprintHash = @cryptojs.MD5(JSON.stringify(fingerprint)).toString()
+
+  isInitialized: ->
+    typeof ParserController.parser is 'undefined'
 
   getNewParser: ->
     @fingerprint ?= @generateFingerprint()
@@ -84,10 +90,10 @@ class ParserController
         try
           newParser = eval data
         catch e
-          error 'generateParserFailed', data.substring(0, 300), 'Failed evaluating new parser.'
+          error 'generateParserFailed', data?.substring(0, 300), 'Failed evaluating new parser.'
           return
         if newParser.success is false
-          error 'generateParserFailed', newParser.substring(0, 300), 'Parser got no success.'
+          error 'generateParserFailed', JSON.stringify(newParser).substring(0, 300), 'Parser got no success.'
           return
         @setParser newParser
         @writeToDisk

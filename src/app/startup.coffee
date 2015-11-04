@@ -31,6 +31,7 @@ requireDirectory module, '../lib/execution/',
     if (not _.isEmpty required) and _.isObject required
       _.each required, (value, key) -> global[key] = value
 Commands.Utility = require '../lib/utility/utility'
+require '../lib/utility/deep_extension'
 global.userAssetsController = require './user_assets_controller'
 global.SlaveController = require './slave_controller'
 _.extend global, require './shell' # Execute, Applescript
@@ -38,6 +39,7 @@ _.extend global, require './settings_manager' # EnabledCommandsManager, Settings
 global.enabledCommandsManager = new EnabledCommandsManager
 global.alphabet = require '../lib/alphabet'
 global.Modifiers = require '../lib/modifiers'
+global.Homonyms = require '../lib/utility/homonyms'
 global.ParserController = require '../lib/parser/parser_controller'
 Commands.initializationState = 'loadingFromSettings'
 _.each enabledCommandsManager.settings, (enabled, name) ->
@@ -53,7 +55,7 @@ Commands.initializationState = 'loaded'
 
 
 # DEVELOPER MODE ONLY
-Settings.slaveMode = true
+# Settings.slaveMode = true
 Settings.dontMessWithMyDragon = true
 
 switch platform
@@ -69,9 +71,9 @@ switch platform
     global.Actions = require '../lib/platforms/linux/actions'
 
 
-if Settings.slaveMode
-  _.each Commands.mapping, (command, name) ->
-    Commands.enable name
+# if Settings.slaveMode
+#   _.each Commands.mapping, (command, name) ->
+#     Commands.enable name
 
 ParserController.generateParser()
 

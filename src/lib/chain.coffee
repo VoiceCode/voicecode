@@ -6,6 +6,7 @@ class Chain
 
   normalizePhrase: (phrase) ->
     result = []
+    phrase = phrase + " "
     phrase = phrase.replace /\s+/g, ' '
     parts = phrase.toLowerCase().split('')
     for c, index in parts
@@ -28,18 +29,18 @@ class Chain
     preprocessors.push callback
 
   parse: ->
-    if typeof Parser is 'undefined'
-      error 'chainMissingParser', null, "The parser is not initialized -
-      probably a problem with the license code, email, or internet connection"
-    else
+    if ParserController.isInitialized()
       # try
-      parsed = Parser.parse(@phrase)
+      parsed = ParserController.parse(@phrase)
       commands = @normalizeStructure parsed
       @applyMouseLatency commands
       commands
       # catch e
       #   console.log e
       #   null
+    else
+      error 'chainMissingParser', null, "The parser is not initialized -
+      probably a problem with the license code, email, or internet connection"
 
   execute: (shouldInvoke) ->
     Commands.subcommandIndex = 0
