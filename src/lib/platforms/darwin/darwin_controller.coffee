@@ -97,12 +97,13 @@ class DarwinController
       unixServer.listen socketPath
 
   normalizePhraseComparison: (phrase) ->
-    if typeof Parser is 'undefined'
-      error null, null, "The parser is not initialized -
+    if ParserController.isInitialized()
+      JSON.stringify ParserController.parse(phrase.toLowerCase() + " ")
+    else
+      error 'chainMissingParser', null, "The parser is not initialized -
       probably a problem with the license code, email, or internet connection"
       null
-    else
-      JSON.stringify Parser.parse(phrase.toLowerCase() + " ")
+      # phrase.toLowerCase()
 
   dragonHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
@@ -119,9 +120,7 @@ class DarwinController
         if slaveController.isActive()
           slaveController.process phrase
         else
-          chain = new Chain(phrase + " ")
-          results = chain.execute(true)
-
+          @executeChain(phrase)
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
@@ -139,8 +138,13 @@ class DarwinController
       if slaveController.isActive()
         slaveController.process phrase
       else
-        chain = new Chain(phrase + " ")
-        results = chain.execute(true)
+        @executeChain(phrase)
+
+  executeChain: (phrase) ->
+    Fiber(->
+      chain = new Chain(phrase)
+      results = chain.execute()
+    ).run()
 
   setDragonInfo: ->
     switch Settings.dragonVersion
@@ -164,9 +168,6 @@ class DarwinController
 
   slaveDataHandler: (phrase) ->
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
-    Fiber(->
-      chain = new Chain(phrase + " ")
-      results = chain.execute(true)
-    ).run()
+    @executeChain(phrase)
 
 module.exports = new DarwinController

@@ -25,11 +25,13 @@ global.$ = require('nodobjc')
 global.Events = require './event_emitter'
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
+require '../lib/utility/deep_extension'
 # PRODUCTION:
 # asyncblock.nostack (startupFlow) ->
 asyncblock (startupFlow) ->
   startupFlow.firstArgIsError = false
   global.Settings = require './settings'
+  global.Homonyms = require '../lib/utility/homonyms'
   global.UserAssetsController = require './user_assets_controller'
   # startupFlow.taskTimeout = 3
   # startupFlow.timeoutIsError = false

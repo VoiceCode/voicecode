@@ -6,6 +6,7 @@ class Chain
 
   normalizePhrase: (phrase) ->
     result = []
+    phrase = phrase + " "
     phrase = phrase.replace /\s+/g, ' '
     parts = phrase.toLowerCase().split('')
     for c, index in parts
@@ -28,20 +29,20 @@ class Chain
     preprocessors.push callback
 
   parse: ->
-    if typeof Parser is 'undefined'
-      error 'chainMissingParser', null, "The parser is not initialized -
-      probably a problem with the license code, email, or internet connection"
-    else
+    if ParserController.isInitialized()
       # try
-      parsed = Parser.parse(@phrase)
+      parsed = ParserController.parse(@phrase)
       commands = @normalizeStructure parsed
       @applyMouseLatency commands
       commands
       # catch e
       #   console.log e
       #   null
+    else
+      error 'chainMissingParser', null, "The parser is not initialized -
+      probably a problem with the license code, email, or internet connection"
 
-  execute: (shouldInvoke) ->
+  execute: ->
     Commands.subcommandIndex = 0
     Commands.repetitionIndex = 0
     Commands.lastParsing = []
@@ -76,16 +77,16 @@ class Chain
       Commands.lastFullCommand = combined
       Commands.previousUndoByDeletingCount = Commands.aggregateUndoByDeletingCount
       Commands.aggregateUndoByDeletingCount = 0
-      if shouldInvoke
-        _.each combined, (callback) ->
-          if callback?
-            Commands.currentUndoByDeletingCount = 0
-            callback.call(Actions)
-            if Commands.currentUndoByDeletingCount > 0
-              Commands.aggregateUndoByDeletingCount += Commands.currentUndoByDeletingCount
-            else
-              Commands.aggregateUndoByDeletingCount = 0
 
+      # execute each section
+      _.each combined, (callback) ->
+        if callback?
+          Commands.currentUndoByDeletingCount = 0
+          callback.call(Actions)
+          if Commands.currentUndoByDeletingCount > 0
+            Commands.aggregateUndoByDeletingCount += Commands.currentUndoByDeletingCount
+          else
+            Commands.aggregateUndoByDeletingCount = 0
 
       setTimeout ->
         Commands.monitoringMouseToCancelSpacing = true

@@ -1,7 +1,7 @@
 w = (commaSeparatedString) ->
   commaSeparatedString.split(/, |\n/)
 
-@Homonyms =
+Homonyms =
   initialize: ->
     Homonyms.sorted = {}
     s = Homonyms.sorted
@@ -1231,3 +1231,5 @@ w = (commaSeparatedString) ->
     w "you're, yore, your"
   ]
 Homonyms.initialize()
+
+module.exports = Homonyms
