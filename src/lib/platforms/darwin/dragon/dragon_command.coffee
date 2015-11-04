@@ -1,4 +1,4 @@
-class @DragonCommand extends Command
+class DragonCommand extends Command
   constructor: ->
     super
     @dragonLists = null
@@ -112,3 +112,4 @@ class @DragonCommand extends Command
   # export var#{varName}#{suffix}=" ${var#{varName}#{suffix}}"
   # fi
   #   """
+modules.export = DragonCommand

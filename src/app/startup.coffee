@@ -30,12 +30,13 @@ require '../lib/utility/deep_extension'
 # asyncblock.nostack (startupFlow) ->
 asyncblock (startupFlow) ->
   startupFlow.firstArgIsError = false
-  global.Settings = require './settings'
-  global.Homonyms = require '../lib/utility/homonyms'
-  global.UserAssetsController = require './user_assets_controller'
   # startupFlow.taskTimeout = 3
   # startupFlow.timeoutIsError = false
   startupFlow.errorCallback = debug
+
+  global.Settings = require './settings'
+  global.Homonyms = require '../lib/utility/homonyms'
+  global.UserAssetsController = require './user_assets_controller'
   Events.once 'userAssetEvaluation', startupFlow.add 'user_settings'
   UserAssetsController.getAssets 'user_settings.coffee'
   startupFlow.wait 'user_settings'
@@ -71,7 +72,7 @@ asyncblock (startupFlow) ->
 
   # DEVELOPER MODE ONLY
   Settings.slaveMode = false
-  # Settings.dontMessWelectronithMyDragon = false
+  Settings.dontMessWelectronithMyDragon = true
 
   switch platform
     when "darwin"
@@ -89,7 +90,27 @@ asyncblock (startupFlow) ->
     _.each Commands.mapping, (command, name) ->
       Commands.enable name
 
-  ParserController.generateParser()
+  # now I'm just being silly :-)
+  globalState = Fiber ->
+    asyncblock (flow) ->
+      flow.errorCallback = ->
+        notify null, null, 'Something went wrong ;('
+      flow.firstArgIsError = false
+      flow.taskTimeout = 3000
+      flow.timeoutIsError = false
+
+      Events.once 'dragonSynchronizingEnded', flow.add()
+      Events.once 'dragonStarted', flow.add()
+      flow.wait()
+      notify null, null, 'Operational!'
+
+  global.Synchronizer = require './synchronize'
+  s = Fiber ->
+    Synchronizer.synchronize()
+  s.run()
+  p = Fiber ->
+    ParserController.generateParser()
+  p.run()
 
   mainWindow = null
   application.on 'ready', ->
