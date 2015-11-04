@@ -27,15 +27,17 @@ class @DragonSynchronizer
     file = @databaseFile("ddictatedynamic")
     exists = fs.existsSync(file)
     if exists
-      @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (error) =>
-        if error
-          console.log "Error: Could not connect to Dragon Dictate dynamic command database"
+      @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
+        if err
+          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic command database"
           @error = true
       @dynamicAll = @dynamicDatabase.all.bind(@dynamicDatabase)
       @dynamicGet = @dynamicDatabase.get.bind(@dynamicDatabase)
       @dynamicRun = @dynamicDatabase.run.bind(@dynamicDatabase)
     else
-      console.log "error: Dragon Dictate dynamic commands database was not found at: #{file}"
+      error 'dragonSynchronizerError', file,
+      "Dragon Dictate dynamic commands database was not found at: #{file}"
+      @error = true
   home: ->
     process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
   whoami: ->
@@ -58,7 +60,7 @@ class @DragonSynchronizer
         @applicationNames[bundle] = name
         bundle
       else
-        @bundles[name] = null # catching empty so we don't retry
+        @bundles[name] = null # caching empty so we don't retry
         @applicationNames[bundle] = name
         # console.log "could not get bundle identifier for: #{name}"
         null

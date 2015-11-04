@@ -2,18 +2,19 @@ class DarwinDragonController
   instance = null
   constructor: ->
     return instance if instance?
-    @forever = require "forever-monitor"
+    # @forever = require "forever-monitor"
     @dragonInstance = null
     @dragonApplicationName = if Settings.dragonVersion is 4
-      'Dragon Dictate'
-     else
-       'Dragon'
-    @dragonApplicationPath = Applescript """
-    set D to id of application "#{@dragonApplicationName}"
-    tell application "Finder"
-    	POSIX path of (application file id D as alias)
-    end tell
-    """
+        'Dragon Dictate'
+      else
+        'Dragon'
+    @dragonApplicationPath =
+    Applescript """
+                set D to id of application "#{@dragonApplicationName}"
+                tell application "Finder"
+                  POSIX path of (application file id D as alias)
+                end tell
+                """
     @dragonApplicationPath = @dragonApplicationPath.replace /\n/, ''
     unless Settings.dontMessWithMyDragon
       Events.on 'dragonSynchronizingEnded', => @restart()

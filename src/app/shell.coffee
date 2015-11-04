@@ -1,23 +1,26 @@
 Shell = require('shelljs')
+
 Execute = (script, options = null) ->
   options ?= {}
-  _.extend options, {silent: true, async:false}
+  _.extend options, {silent: true}
   try
-    s = Shell.exec script, options
-  catch error
-    console.error 'CAUGHT: '
-    console.error error
-    console.error 'while executing: '
-    console.error script
-    console.error 'try passing {silent: false} as the second parameter to Execute'
-    console.error 'in order to see script output'
+    result = Shell.exec(script, options)
+    if result.code isnt 0
+      throw Error "Command returned #{result.code}!"
+    return result.output
+  catch err
+    error null, null, 'CAUGHT: '
+    error null, null, err
+    error null, null, 'WHILE EXECUTING: '
+    error null, null, script
 
-
-Applescript = (script, options = null) ->
-  Execute """osascript <<EOD
-          #{script}
-          EOD
-          """, options
+Applescript = (content, shouldReturn = true) ->
+  script = $.NSAppleScript('alloc')('initWithSource', $(content))
+  results = script('executeAndReturnError', null)
+  if shouldReturn
+    results('stringValue')?.toString()
+  else
+    null
 
 
 

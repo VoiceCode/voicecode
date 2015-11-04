@@ -19,6 +19,7 @@
   "homepage": "https://github.com/dimatter/voicecode#readme",
   "dependencies": {
     "app-root-path": "^1.0.0",
+    "asyncblock": "^2.2.0",
     "chalk": "^1.1.1",
     "chokidar": "^1.2.0",
     "coffee-script": "^1.10.0",
@@ -63,6 +64,7 @@
     "react": "^0.14.1",
     "react-dom": "^0.14.1",
     "reactify": "^1.1.0",
+    "replify": "^1.2.0",
     "vinyl-source-stream": "^1.1.0"
   }
 }

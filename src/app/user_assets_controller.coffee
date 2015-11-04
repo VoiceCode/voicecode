@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
+asyncblock = require 'asyncblock'
 
 class UserAssetsController
   instance = null
@@ -10,20 +11,12 @@ class UserAssetsController
     @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
     log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
     @init()
+    @watchers = {}
     instance = @
+
 
   getUserHome: ->
     process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME']
-
-  walk: (currentDirPath, filenameMask = null, callback) ->
-    filenameMask = new RegExp filenameMask if filenameMask?
-    fs.readdirSync(currentDirPath).forEach (name) =>
-      filePath = path.join(currentDirPath, name)
-      stat = fs.statSync(filePath)
-      if (stat.isDirectory() and not filenameMask?) or (stat.isFile() and filePath.match filenameMask)
-        callback filePath, stat
-      else if stat.isDirectory()
-        @walk filePath, filenameMask, callback
 
   readFile: (filePath, callback) ->
     callback (fs.readFileSync filePath, {encoding: 'utf8'})
@@ -34,7 +27,6 @@ class UserAssetsController
   init: ->
     try
       fs.mkdirSync @assetsPath
-      # fs.statSync @assetsPath
     catch error
       if error.code is 'EEXIST'
         # this is good
@@ -43,32 +35,55 @@ class UserAssetsController
          "Could not create user assets directory: #{@assetsPath}"
         @state = "error"
 
+    path =  "#{@assetsPath}/user_settings.coffee"
+    data = """
+_.extend Settings,
+  license: ''
+  email: ''
+  dragonVersion: 5
+    """
+    fs.writeFile path, data, {flag: 'wx'}, (err) =>
+      if err
+        if err.code isnt 'EEXIST'
+          # need to explicitly call global.error,
+          # there is an error variable in a closure /sad feelsk
+          global.error 'assetSettingsFileError', err, err
+          @state = "error"
+        else
+          # this is good, file exists
+          return
+      log 'assetSettingsFileCreated', "#{@assetsPath}/user_settings.coffee",
+      "User settings file created #{@assetsPath}/user_settings.coffee"
 
-  runUserCode: ->
+
+  getAssets: (assetsMask, ignoreMask = false) ->
     return if @state is "error"
-    @watcher = chokidar.watch "#{@assetsPath}**/*.coffee", persistent: true
-    @watcher.on('add', (path) =>
-      @handleFileChange 'added', path
-    ).on('change', (path) ->
-      @handleFileChange 'changed', path
+    @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
+      persistent: true
+      ignored: ignoreMask
+    @watchers[assetsMask].on('add', (path) =>
+      @handleFile 'added', path
+    ).on('change', (path) =>
+      @handleFile 'changed', path
     ).on('error', (err) ->
       error 'userAssetEventError', err, err
     ).on('ready', ->)
 
 
-  handleFileChange: (event, fileName) ->
+  handleFile: (event, fileName) ->
     if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
       log 'userAssetEvent', {event, fileName},
-      "User asset #{event}: #{fileName}, evaluating...."
-
+      "User asset #{event}: #{fileName}"
       @readFile fileName, (data) =>
-        @compileCoffeeScript data, (data)->
+        @compileCoffeeScript data, (data) ->
           try
             eval data
           catch err
-            error 'assetEvaluationError', fileName, "filePath: #{fileName}"
-            error 'assetEvaluationError', err, err
-        # What actions to perform here?
-        ParserController.generateParser()
+            error 'userAssetEvaluationError', fileName, "fileName: #{fileName}"
+            error 'userAssetEvaluationError', err, err
+          log 'userAssetEvaluation', {event, fileName},
+          "User asset evaluated: #{fileName}"
+
+
 
 module.exports = new UserAssetsController

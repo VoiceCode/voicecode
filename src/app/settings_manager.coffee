@@ -4,7 +4,7 @@ path = require 'path'
 class SettingsManager
   debouncedSave = null
   constructor: (@name) ->
-    @file = path.resolve(userAssetsController.assetsPath, "#{@name}.json")
+    @file = path.resolve(UserAssetsController.assetsPath, "#{@name}.json")
     if @needsMigration()
       @migrate()
     else
@@ -68,4 +68,4 @@ class EnabledCommandsManager extends SettingsManager
       @settings[name] = false
     @save()
 
-module.exports = {SettingsManager, EnabledCommandsManager}
+module.exports = {SettingsManager, EnabledCommandsManager: new EnabledCommandsManager}

@@ -36,26 +36,28 @@ class DarwinController
     global.fs = require 'fs'
 
   initialize: ->
-    @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
-    @notificationCenter = @sharedWorkspace('notificationCenter')
-    @mainQueue = $.NSOperationQueue('mainQueue')
-    @app = $.NSApplication('sharedApplication')
+    Fiber(=>
+      @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
+      @notificationCenter = @sharedWorkspace('notificationCenter')
+      @mainQueue = $.NSOperationQueue('mainQueue')
+      @app = $.NSApplication('sharedApplication')
 
-    @delegate = $.NSObject.extend('AppDelegate')
-    @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
-    @delegate.register()
+      @delegate = $.NSObject.extend('AppDelegate')
+      @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
+      @delegate.register()
 
-    @delegateInstance = @delegate('alloc')('init')
-    @app 'setDelegate', @delegateInstance
+      @delegateInstance = @delegate('alloc')('init')
+      @app 'setDelegate', @delegateInstance
 
-    @notificationCenter('addObserver', @delegateInstance, 'selector',
-    'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-    @notificationCenter('addObserver', @delegateInstance, 'selector',
-    'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
+      @notificationCenter('addObserver', @delegateInstance, 'selector',
+      'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
+      @notificationCenter('addObserver', @delegateInstance, 'selector',
+      'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
 
-    $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
+      $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
 
-    # @app 'finishLaunching'
+      # @app 'finishLaunching'
+    ).run()
 
   applicationChanged: (self, _cmd, notification) ->
     current = notification('object')('frontmostApplication')('localizedName').toString()
@@ -65,27 +67,26 @@ class DarwinController
       Commands.lastCommandOfPreviousPhrase = null
 
     if current in Settings.dragonIncompatibleApplications
-      console.log "disabling main command socket for compatibility with: #{current}"
+      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{current}"
       @listeningOnMainSocket = false
     else unless @listeningOnMainSocket
       setTimeout =>
         @listeningOnMainSocket = true
-        console.log "re-enabling main command socket"
+        log 'mainSocketListening', true, "Re-enabling main command socket"
       , Settings.dragonIncompatibleApplicationDelay or 5000
 
   mouseHandler: (self, event) ->
-    # console.log "mousedown", event
     if Commands.monitoringMouseToCancelSpacing
-      console.log "canceling auto spacing"
+      log 'autoSpacing', false, "Canceling auto spacing"
       Commands.lastCommandOfPreviousPhrase = null
 
   listen: ->
     global.slaveController = new SlaveController()
     slaveController.connect()
 
-    @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
+    @listenOnSocket "/tmp/voicecode_.sock", @dragonHandler
 
-    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
+    @listenOnSocket "/tmp/voicecode_2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>

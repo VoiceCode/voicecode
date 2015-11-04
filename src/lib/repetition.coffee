@@ -47,7 +47,7 @@ Commands.createDisabled
           @repeat times, =>
             context.lastIndividualCommand.call(@)
 
-class @Repetition
+class Repetition
   constructor: ->
     @words = _.clone Settings.repetitionWords
     _.each @words, (repetitionCount, word) =>
@@ -72,3 +72,5 @@ class @Repetition
             if last?
               @repeat times, =>
                 last.call(@)
+
+module.exports = new Repetition

@@ -11,6 +11,9 @@ class ParserController
 
   initialize: ->
     Events.on 'generateParserFailed', _.bind @regress, @
+    Events.on 'userAssetEvent', ({event})=>
+      if event in  ['added', 'changed']
+        @generateParser()
 
   generateParser: ->
     @debouncedGenerateParser ?= _.debounce @_generateParser.bind(@), 1000
@@ -87,7 +90,7 @@ class ParserController
           error 'generateParserFailed', data.substring(0, 300), 'Failed evaluating new parser.'
           return
         if newParser.success is false
-          error 'generateParserFailed', newParser.substring(0, 300), 'Parser got no success.'
+          error 'generateParserFailed', data.substring(0, 300), "Parser got no success: #{newParser.message}"
           return
         @setParser newParser
         @writeToDisk

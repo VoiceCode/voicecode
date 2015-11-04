@@ -58,8 +58,8 @@ class Commands
 
   validate: (name, options) ->
     if typeof name is "object"
-      _.each name, (options, n) =>
-        @validate n, options
+      _.each name, (options, name) =>
+        @validate name, options
       return
     if @mapping[name]?
       warning 'commandOverwritten', name, "Command #{name} overwritten by command with a same name"
@@ -116,7 +116,6 @@ class Commands
 
   # queues all the command edits until sometime in the future, where they are all called at once
   edit: (name, editType, callback) ->
-    console.trace name unless name?
     @delayedEditFunctions.push {name, editType, callback}
     if @initialized
       @performCommandEdits()
@@ -124,7 +123,7 @@ class Commands
   get: (name) ->
     isRenamed = _.findWhere @renamings, {from: name}
     if isRenamed?
-      log 'commandRenamedReference', isRenamed
+      log 'commandRenamedReference', isRenamed, "#{isRenamed.from} => #{isRenamed.to}"
       return @mapping[isRenamed.to]
     @mapping[name]
 
@@ -145,12 +144,11 @@ class Commands
       else
         emit editType, false, name
         unless isRenamed? or @initializationState is 'loadingFromSettings'
-          console.log @initializationState
           error 'commandNotFound', name
     @delayedEditFunctions = []
 
   override: (name, action) ->
-    error 'deprecation', "Failed overriding '#{name}'. \n
+    error 'deprecation', "Failed overriding '#{name}'.
     Commands.override is deprecated. Use Commands.extend"
 
   extend: (name, extension) ->
@@ -178,7 +176,9 @@ class Commands
       command
 
   addAliases: (name, aliases) ->
-    console.error "Failed adding aliases to '#{name}'. 'addAliases' has been renamed to 'addMisspellings'. "
+    error 'deprecation',
+    "Failed adding aliases to '#{name}'.
+    'addAliases' has been renamed to 'addMisspellings'. "
 
   changeName: (name, newName) ->
     @edit name, 'commandNameChanged', (command) =>
