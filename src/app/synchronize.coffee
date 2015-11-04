@@ -1,13 +1,15 @@
-class @NatLinkSynchronizer
+class NatLinkSynchronizer
   constructor: ->
   synchronize: ->
-    console.log "updating commands"
+    debug 'NatLinkSynchronizer'
 
-class @Synchronizer
+class Synchronizer
   constructor: ->
     if platform is "darwin"
-      @synchronizer = new DragonSynchronizer
+      @synchronizer = require '../lib/platforms/darwin/dragon/dragon_synchronizer'
     else if platform is "windows"
       @synchronizer = new NatLinkSynchronizer
   synchronize: ->
     @synchronizer.synchronize()
+
+module.exports = new Synchronizer
