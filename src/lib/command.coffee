@@ -20,17 +20,16 @@ class Command
   generate: ->
     input = @input
     context = @generateContext()
-    funk = switch @kind
-      when "action"
-        action = @action
-        -> action.call(@, input, context)
-      else
-        -> null
+    funk = if @action?
+      action = @action
+      -> action.call(@, input, context)
+    else
+      -> null
 
-    core = if @extensions?
+    core = if @before?
       extensions = []
       extensions.push funk
-      _.each @extensions, (e) ->
+      _.each @before, (e) ->
         extensions.push ->
           e.call(@, input, context)
       ->
@@ -41,16 +40,6 @@ class Command
     else
       funk
     segments = []
-
-    # before actions
-    if @before?
-      beforeList = []
-      _.each @before, (e) ->
-        beforeList.push ->
-          e.call(@, input, context)
-      segments.push ->
-        for callback in beforeList.reverse()
-          callback.call(@)
 
     # core actions
     segments.push core

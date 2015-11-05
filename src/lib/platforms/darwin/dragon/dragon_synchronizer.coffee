@@ -1,3 +1,4 @@
+fs = require 'fs'
 class DragonSynchronizer
   constructor: ->
     @sqlite3 = require("sqlite3").verbose()
@@ -10,18 +11,20 @@ class DragonSynchronizer
     @commands = {}
     @lists = {}
     @insertedLists = []
+    @error = false
 
   connectMain: ->
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
     if exists
       @database = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
-        error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
-        @error = true
-        return
+        if err?
+          error 'aredragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
+          @error = true
       @all = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -30,6 +33,7 @@ class DragonSynchronizer
       @get = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -38,6 +42,7 @@ class DragonSynchronizer
       @run = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -53,12 +58,13 @@ class DragonSynchronizer
     exists = fs.existsSync(file)
     if exists
       @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
-        error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
-        @error = true
-        return
+        if err?
+          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
+          @error = true
       @dynamicAll = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -67,6 +73,7 @@ class DragonSynchronizer
       @dynamicGet = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -75,9 +82,8 @@ class DragonSynchronizer
       @dynamicRun = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
-
-        # debug args
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
@@ -230,7 +236,8 @@ class DragonSynchronizer
       @deleteAllDynamic()
       @synchronizeStatic()
       @synchronizeDynamic()
-    emit 'dragonSynchronizingEnded'
+    unless @error
+      emit 'dragonSynchronizingEnded'
 
   createList: (name, items, bundle = '#') ->
     @dynamicRun "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundle, $name, $spokenLanguage, 'Alt')",

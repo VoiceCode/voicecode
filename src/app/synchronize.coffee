@@ -9,6 +9,8 @@ class Synchronizer
       @synchronizer = require '../lib/platforms/darwin/dragon/dragon_synchronizer'
     else if platform is "windows"
       @synchronizer = new NatLinkSynchronizer
+
+    Events.on 'parserChanged', => @synchronize
   synchronize: ->
     @synchronizer.synchronize()
 
