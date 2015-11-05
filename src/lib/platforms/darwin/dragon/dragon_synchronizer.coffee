@@ -1,3 +1,4 @@
+fs = require 'fs'
 class DragonSynchronizer
   constructor: ->
     @sqlite3 = require("sqlite3").verbose()
@@ -10,6 +11,7 @@ class DragonSynchronizer
     @commands = {}
     @lists = {}
     @insertedLists = []
+    @error = false
 
   connectMain: ->
     file = @databaseFile("ddictatecommands")
@@ -234,7 +236,8 @@ class DragonSynchronizer
       @deleteAllDynamic()
       @synchronizeStatic()
       @synchronizeDynamic()
-    emit 'dragonSynchronizingEnded'
+    unless @error
+      emit 'dragonSynchronizingEnded'
 
   createList: (name, items, bundle = '#') ->
     @dynamicRun "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundle, $name, $spokenLanguage, 'Alt')",

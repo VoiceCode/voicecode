@@ -32,12 +32,19 @@ class EventEmitter extends require('events').EventEmitter
       'slaveDisconnected'
       'slaveConnected'
     ]
-    # @suppressedDebugEntries = [
-    #   'commandEnabled'
-    #   'commandOverwritten'
-    # ]
+    @suppressedDebugEntries = [
+      'commandEnabled'
+      'commandOverwritten'
+      'commandExtended'
+      'commandAfterAdded'
+      'commandBeforeAdded'
+      'commandMisspellingsAdded'
+      'commandNameChanged'
+    ]
     instance = @
-
+  on: (event, callback) ->
+    super
+    
   error: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'

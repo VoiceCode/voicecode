@@ -27,7 +27,7 @@ class ParserController
       content: oldParser
     } = @loadFromDisk()
     if oldFingerprintHash is @fingerprintHash
-      @setParser oldParser
+      @setParser oldParser, false
     else
       try
         @getNewParser()
@@ -38,12 +38,14 @@ class ParserController
   regress: (reason) ->
     {content: oldParser} = @loadFromDisk()
     log 'parserRegression', null, "Regressing to old parser because: #{reason}"
-    @setParser oldParser
+    @setParser oldParser, false
 
-  setParser: (parserAsAString) ->
+  setParser: (parserAsAString, parserChanged = true) ->
     try
       @parser = eval parserAsAString
       log 'generateParserSuccess', @parser, 'Parser acquired.'
+      if parserChanged
+        emit 'parserChanged', @parser
     catch e
       error 'generateParserFailed', e, 'Failed evaluating new parser.'
 

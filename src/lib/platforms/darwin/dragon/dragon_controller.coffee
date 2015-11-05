@@ -16,10 +16,9 @@ class DarwinDragonController
                 end tell
                 """
     @dragonApplicationPath = @dragonApplicationPath?.trim()
-    unless Settings.dontMessWithMyDragon
-      Events.on 'dragonSynchronizingEnded', => @restart()
     instance = @
   start: ->
+    return if Settings.dontMessWithMyDragon
     if @dragonInstance?
       @restart()
     else
@@ -30,23 +29,29 @@ class DarwinDragonController
         sourceDir: ''
         cwd: "#{@dragonApplicationPath}Contents/MacOS/"
 
+    @dragonInstance.on 'start', =>
+      log 'dragonStarted', @dragonInstance,
     @dragonInstance.on 'restart', =>
-      emit 'dragonRestart', @dragonInstance.times,
+      log 'dragonRestarted', @dragonInstance.times,
       'Restarting Dragon for ' + @dragonInstance.times + ' time'
     @dragonInstance.on 'exit:code', (code) ->
-      error 'dragonExit', code
+      error 'dragonExited', code
     @dragonInstance.on 'stderr', (buffer) =>
       if buffer.toString().indexOf('>> TRACE') >= 0
         @dragonInstance.kill()
 
-
   stop: ->
-    return false unless @dragonInstance?
+    return unless @dragonInstance?
     @dragonInstance.stop()
 
   restart: ->
+    return if Settings.dontMessWithMyDragon
     if @dragonInstance?
       @dragonInstance.restart()
     else
       @start()
+
+  subscribeToEvents: ->
+    Events.on 'dragonSynchronizingEnded', => @restart()
+
 module.exports = new DarwinDragonController
