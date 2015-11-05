@@ -1,7 +1,7 @@
 {
   "name": "voicecode",
   "version": "1.0.2",
-  "description": "",
+  "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
   "main": "dist/app/startup.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

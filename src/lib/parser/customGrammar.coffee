@@ -1,4 +1,4 @@
-customGrammarParser = require './customGrammarParser.js'
+customGrammarParser = require './customGrammarParser'
 SpeakableList = require './speakableList'
 
 class CustomGrammar

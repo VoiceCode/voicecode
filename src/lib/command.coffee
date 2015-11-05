@@ -1,6 +1,7 @@
 class Command
   constructor: (name, @input = null, @context={}) ->
     _.extend @, Commands.get name
+    # if @input?
     @normalizeInput()
 
   normalizeInput: ->

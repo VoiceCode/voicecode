@@ -22,6 +22,7 @@ class DragonSynchronizer
       @all = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -30,6 +31,7 @@ class DragonSynchronizer
       @get = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -38,6 +40,7 @@ class DragonSynchronizer
       @run = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -59,6 +62,7 @@ class DragonSynchronizer
       @dynamicAll = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -67,6 +71,7 @@ class DragonSynchronizer
       @dynamicGet = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
@@ -75,9 +80,8 @@ class DragonSynchronizer
       @dynamicRun = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
+          return
         args = _.toArray arguments
-
-        debug args
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
@@ -223,10 +227,13 @@ class DragonSynchronizer
 
   synchronize: ->
     emit 'dragonSynchronizingStarted'
-    @deleteAllStatic()
-    @deleteAllDynamic()
-    @synchronizeStatic()
-    @synchronizeDynamic()
+    if @error
+      error 'dragonSynchronizerError', null, "Could not synchronize with Dragon Dictate database"
+    else
+      @deleteAllStatic()
+      @deleteAllDynamic()
+      @synchronizeStatic()
+      @synchronizeDynamic()
     emit 'dragonSynchronizingEnded'
 
   createList: (name, items, bundle = '#') ->
@@ -304,4 +311,5 @@ class DragonSynchronizer
               bundle = '#' if scope is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
                 @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle
+
 module.exports = new DragonSynchronizer
