@@ -16,8 +16,9 @@ class DragonSynchronizer
     exists = fs.existsSync(file)
     if exists
       @database = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
-        error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
-        @error = true
+        if err?
+          error 'aredragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
+          @error = true
       @all = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
@@ -52,8 +53,9 @@ class DragonSynchronizer
     exists = fs.existsSync(file)
     if exists
       @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
-        error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
-        @error = true
+        if err?
+          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
+          @error = true
       @dynamicAll = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
