@@ -1,4 +1,5 @@
 CustomGrammar = require './parser/customGrammar'
+
 class Commands
   instance = null
   history = {}
@@ -82,11 +83,7 @@ class Commands
       # if @mapping[name]?
       #   console.error "Won't re-create command: #{name}"
       #   return false
-      options.namespace = name
-      options.enabled ?= true
-      options.grammarType ?= 'individual'
-      options.kind ?= 'action'
-      @mapping[name] = options
+      @mapping[name] = @normalizeOptions name, options
       if options.enabled is true
         @enable name
     else if typeof name is "object"
@@ -139,7 +136,7 @@ class Commands
         result = callback command
 
         if _.isObject result
-          @mapping[name] = @prepareCommand name, result
+          @mapping[name] = @normalizeOptions name, result
         emit editType, !!result, name
       else
         emit editType, false, name
@@ -203,27 +200,32 @@ class Commands
       delete @mapping[name]
       true
 
-  prepareCommand: (name, command) ->
-    type = command.grammarType
+  normalizeOptions: (name, options) ->
+    options.namespace = name
+    options.enabled ?= true
+    options.grammarType ?= 'individual'
+    options.kind ?= 'action'
+
+    type = options.grammarType
     if type in @primaryGrammarTypes
       unless name in @keys[type]
         @keys[type].push name
-      unless command.continuous is false
+      unless options.continuous is false
         unless name in @keys[type + "Continuous"]
           @keys[type + "Continuous"].push name
 
-    if command.findable?
+    if options.findable?
       @keys.findable.push name
 
-    if command.repeater?
+    if options.repeater?
       @keys.repeater.push name
 
-    if command.rule?
+    if options.rule?
       # try
-      command.grammar = new CustomGrammar(command.rule, command.variables)
+      options.grammar = new CustomGrammar(options.rule, options.variables)
       # catch e
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
-    command
+    options
 
 module.exports = new Commands
