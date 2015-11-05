@@ -18,6 +18,7 @@ class DragonSynchronizer
       @database = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
         error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
         @error = true
+        return
       @all = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
@@ -54,6 +55,7 @@ class DragonSynchronizer
       @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
         error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
         @error = true
+        return
       @dynamicAll = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
@@ -221,10 +223,13 @@ class DragonSynchronizer
 
   synchronize: ->
     emit 'dragonSynchronizingStarted'
-    @deleteAllStatic()
-    @deleteAllDynamic()
-    @synchronizeStatic()
-    @synchronizeDynamic()
+    if @error
+      error 'dragonSynchronizerError', null, "Could not synchronize with Dragon Dictate database"
+    else
+      @deleteAllStatic()
+      @deleteAllDynamic()
+      @synchronizeStatic()
+      @synchronizeDynamic()
     emit 'dragonSynchronizingEnded'
 
   createList: (name, items, bundle = '#') ->
@@ -302,4 +307,5 @@ class DragonSynchronizer
               bundle = '#' if scope is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
                 @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle
+
 module.exports = new DragonSynchronizer

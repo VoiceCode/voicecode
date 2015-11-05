@@ -114,12 +114,12 @@ asyncblock (startupFlow) ->
 
   mainWindow = null
   application.on 'ready', ->
-    # mainWindow = new BrowserWindow
-    #   width: 900
-    #   height: 600
-    # mainWindow.loadUrl "file://#{projectRoot}/dist/frontend/main.html"
-    # mainWindow.openDevTools()
-    # mainWindow.on 'closed', ->
-    #   mainWindow = null
+    mainWindow = new BrowserWindow
+      width: 900
+      height: 600
+    mainWindow.loadUrl "file://#{projectRoot}/dist/frontend/main.html"
+    mainWindow.openDevTools()
+    mainWindow.on 'closed', ->
+      mainWindow = null
 
-    # client = client.create mainWindow
+    client = client.create mainWindow
