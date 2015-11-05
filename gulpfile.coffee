@@ -5,6 +5,8 @@
 # mv build/Release/fibers.node bin/darwin-x64-v8-4.5/
 
 gulp = require('gulp')
+# https://github.com/gulpjs/gulp/blob/master/docs/recipes/fast-browserify-builds-with-watchify.md
+# watchify = require('watchify')
 browserify = require('browserify')
 babelify = require('babelify')
 source = require('vinyl-source-stream')
