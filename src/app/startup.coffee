@@ -11,8 +11,8 @@ global.platform =
 global._ = require 'lodash'
 global.chalk = require 'chalk'
 global.debug = ->
-  console.trace "%s \n", chalk.white.bold.bgRed('   DEBUG   '),
-  _.toArray(arguments)
+  console.log chalk.white.bold.bgRed('   DEBUG   ')
+  console.log _.toArray arguments
 
 # DEVELOPMENT
 replify = require('replify')
@@ -29,7 +29,12 @@ global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
 require '../lib/utility/deep_extension'
 
-Events.on 'applicationMustStart', ->
+process.on 'uncaughtException', (err) ->
+  console.log chalk.white.bold.bgRed('   UNCAUGHT EXCEPTION   ')
+  console.log err.stack
+  process.exit(1)
+
+Events.on 'applicationStart', ->
   asyncblock (startupFlow) -> # DEVELOPMENT
   # asyncblock.nostack (startupFlow) ->
     startupFlow.firstArgIsError = false
@@ -38,9 +43,10 @@ Events.on 'applicationMustStart', ->
     # startupFlow.errorCallback = debug
 
     global.Settings = require './settings'
+    Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
     global.Homonyms = require '../lib/utility/homonyms'
     global.UserAssetsController = require './user_assets_controller'
-    Events.once 'userAssetEvaluation', startupFlow.add 'user_settings'
+    Events.once 'userAssetsLoaded', startupFlow.add 'user_settings'
     UserAssetsController.getAssets 'user_settings.coffee'
     startupFlow.wait 'user_settings'
     global.Command = require '../lib/command'
@@ -61,17 +67,8 @@ Events.on 'applicationMustStart', ->
     global.Modifiers = require '../lib/modifiers'
     global.ParserController = require '../lib/parser/parser_controller'
     global.Synchronizer = require './synchronize'
-    Commands.initializationState = 'loadingFromSettings'
-    _.each EnabledCommandsManager.settings, (enabled, name) ->
-      if enabled
-        Commands.enable name
-      else
-        Commands.disable name
-    Commands.initialize() # why do we even have this?
-    EnabledCommandsManager.subscribeToEvents()
-    Commands.initializationState = 'loadingUserCode'
+    Commands.initialize()
     UserAssetsController.getAssets '**/*.coffee', '**/user_settings.coffee'
-    Commands.initializationState = 'loaded'
 
 
     # DEVELOPER MODE ONLY
@@ -108,9 +105,6 @@ Events.on 'applicationMustStart', ->
     #     flow.wait()
     #     notify null, null, 'Operational!'
 
-    Events.once 'generateParserSuccess', ->
-      DragonController.subscribeToEvents()
-      DragonController.start()
 
     p = Fiber ->
       ParserController.generateParser()
@@ -128,4 +122,4 @@ Events.on 'applicationMustStart', ->
       #
       # client = client.create mainWindow
 
-emit 'applicationMustStart'
+emit 'applicationStart'

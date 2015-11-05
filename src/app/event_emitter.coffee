@@ -5,17 +5,17 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
+    instance = @
     @debug = true
     @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'
       'commandNameChanged'
-      # 'commandNotFound'
-      'commandExtended'
+      'commandNotFound'
       'commandAfterAdded'
       'commandBeforeAdded'
       'commandMisspellingsAdded'
-      # 'commandOverwritten'
+      'commandOverwritten'
       'dragonSynchronizingStarted'
       'dragonSynchronizingEnded'
       'writingFile'
@@ -33,18 +33,20 @@ class EventEmitter extends require('events').EventEmitter
       'slaveConnected'
     ]
     @suppressedDebugEntries = [
-      'commandEnabled'
-      'commandOverwritten'
-      'commandExtended'
-      'commandAfterAdded'
-      'commandBeforeAdded'
-      'commandMisspellingsAdded'
-      'commandNameChanged'
+      # 'deprecation'
+      # # 'enableCommand'
+      # 'commandEnabled'
+      # 'commandOverwritten'
+      # 'commandAfterAdded'
+      # 'commandBeforeAdded'
+      # 'commandMisspellingsAdded'
+      # 'commandNameChanged'
+      # 'userAssetEvent'
+      # 'userAssetEvaluated'
     ]
-    instance = @
   on: (event, callback) ->
     super
-    
+
   error: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
@@ -80,7 +82,7 @@ class EventEmitter extends require('events').EventEmitter
           message: _.toArray(arguments)[2]
           icon: path.join(projectRoot, 'assets', 'vc.png')
       @log.apply @, _.toArray arguments
-      @emit.apply @, _.toArray arguments
+    @emit.apply @, _.toArray arguments
 
   emit: (event) ->
     return unless event?

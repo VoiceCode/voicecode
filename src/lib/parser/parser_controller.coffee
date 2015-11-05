@@ -43,9 +43,9 @@ class ParserController
   setParser: (parserAsAString, parserChanged = true) ->
     try
       @parser = eval parserAsAString
-      log 'generateParserSuccess', @parser, 'Parser acquired.'
+      log 'generateParserSuccess', true, 'Parser acquired.'
       if parserChanged
-        emit 'parserChanged', @parser
+        emit 'parserChanged'
     catch e
       error 'generateParserFailed', e, 'Failed evaluating new parser.'
 

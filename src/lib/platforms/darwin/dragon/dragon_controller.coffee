@@ -16,6 +16,10 @@ class DarwinDragonController
                 end tell
                 """
     @dragonApplicationPath = @dragonApplicationPath?.trim()
+    Events.once 'generateParserSuccess', ->
+      DragonController.subscribeToEvents()
+      DragonController.start()
+
     instance = @
   start: ->
     return if Settings.dontMessWithMyDragon

@@ -10,7 +10,7 @@ class Synchronizer
     else if platform is "windows"
       @synchronizer = new NatLinkSynchronizer
 
-    Events.on 'parserChanged', @synchronize
+    Events.on 'parserChanged', => @synchronize
   synchronize: ->
     @synchronizer.synchronize()
 

@@ -8,12 +8,12 @@ class UserAssetsController
   instance = null
   constructor: ->
     return instance if instance?
+    instance = @
     @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
     log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
     @init()
     @watchers = {}
-    instance = @
-
+    @debouncedFinish = null
 
   getUserHome: ->
     process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME']
@@ -58,6 +58,7 @@ _.extend Settings,
 
   getAssets: (assetsMask, ignoreMask = false) ->
     return if @state is "error"
+    emit 'userAssetsLoading'
     @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
       persistent: true
       ignored: ignoreMask
@@ -67,23 +68,28 @@ _.extend Settings,
       @handleFile 'changed', path
     ).on('error', (err) ->
       error 'userAssetEventError', err, err
-    ).on('ready', ->)
-
+    ).on 'ready', ->
 
   handleFile: (event, fileName) ->
     if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
       log 'userAssetEvent', {event, fileName},
       "User asset #{event}: #{fileName}"
-      @readFile fileName, (data) =>
-        @compileCoffeeScript data, (data) ->
-          try
-            eval data
-          catch err
-            error 'userAssetEvaluationError', fileName, "fileName: #{fileName}"
-            error 'userAssetEvaluationError', err, err
-          log 'userAssetEvaluation', {event, fileName},
-          "User asset evaluated: #{fileName}"
-
+      asyncblock (flow) =>
+        flow.firstArgIsError = false
+        data = flow.sync @readFile fileName, flow.callback()
+        try
+          data = flow.sync @compileCoffeeScript data, flow.callback()
+          eval data
+        catch err
+          warning 'userAssetEvaluationError', fileName, "fileName: #{fileName}"
+          warning 'userAssetEvaluationError', err, err
+        log 'userAssetEvaluated', {event, fileName},
+        "User asset evaluated: #{fileName}"
+        @debouncedFinish ?= _.debounce =>
+          emit 'userAssetsLoaded'
+          @debouncedFinish = null
+        , 500
+        @debouncedFinish()
 
 
 module.exports = new UserAssetsController
