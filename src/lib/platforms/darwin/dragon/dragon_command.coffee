@@ -112,4 +112,4 @@ class DragonCommand extends Command
   # export var#{varName}#{suffix}=" ${var#{varName}#{suffix}}"
   # fi
   #   """
-modules.export = DragonCommand
+module.exports = DragonCommand

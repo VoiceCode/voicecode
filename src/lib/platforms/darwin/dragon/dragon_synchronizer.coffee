@@ -15,29 +15,33 @@ class DragonSynchronizer
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
     if exists
-      @database = asyncblock (flow) ->
-        flow.errorCallback = (err) ->
-          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
-        new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, flow.add()
-        flow.wait()
+      @database = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
+        error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
+        @error = true
       @all = =>
+        if @error
+          error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @database.all.bind(@database).apply args
+          flow.sync @database.all.bind(@database).apply null, args
       @get = =>
+        if @error
+          error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @database.get.bind(@database).apply args
+          flow.sync @database.get.bind(@database).apply null, args
       @run = =>
+        if @error
+          error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @database.run.bind(@database).apply args
+          flow.sync @database.run.bind(@database).apply null, args
     else
       error 'dragonSynchronizerError', file,
       "Dragon Dictate commands database was not found at: #{file}"
@@ -47,29 +51,35 @@ class DragonSynchronizer
     file = @databaseFile("ddictatedynamic")
     exists = fs.existsSync(file)
     if exists
-      @dynamicDatabase = asyncblock (flow) ->
-        flow.errorCallback = (err) ->
-          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
-        new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, flow.add()
-        flow.wait()
-      @all = =>
+      @dynamicDatabase = new @sqlite3.Database file, @sqlite3.OPEN_READWRITE, (err) =>
+        error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
+        @error = true
+      @dynamicAll = =>
+        if @error
+          error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @dynamicDatabase.all.bind(@dynamicDatabase).apply args
-      @get = =>
+          flow.sync @dynamicDatabase.all.bind(@dynamicDatabase).apply null, args
+      @dynamicGet = =>
+        if @error
+          error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @dynamicDatabase.get.bind(@dynamicDatabase).apply args
-      @run = =>
+          flow.sync @dynamicDatabase.get.bind(@dynamicDatabase).apply null, args
+      @dynamicRun = =>
+        if @error
+          error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
+
+        debug args
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @dynamicDatabase.run.bind(@dynamicDatabase).apply args
+          flow.sync @dynamicDatabase.run.bind(@dynamicDatabase).apply null, args
     else
       error 'dragonSynchronizerError', file,
       "Dragon Dictate dynamic commands database was not found at: #{file}"
