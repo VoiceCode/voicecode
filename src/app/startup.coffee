@@ -32,7 +32,7 @@ asyncblock (startupFlow) ->
   startupFlow.firstArgIsError = false
   # startupFlow.taskTimeout = 3
   # startupFlow.timeoutIsError = false
-  startupFlow.errorCallback = debug
+  # startupFlow.errorCallback = debug
 
   global.Settings = require './settings'
   global.Homonyms = require '../lib/utility/homonyms'
