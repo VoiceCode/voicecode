@@ -77,7 +77,7 @@ class DragonSynchronizer
           error 'dragonSynchronizerError', @error, "Could not execute query"
         args = _.toArray arguments
 
-        debug args
+        # debug args
         asyncblock (flow) =>
           flow.firstArgIsError = false
           args.push flow.callback()
