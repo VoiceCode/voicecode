@@ -174,7 +174,6 @@ class Commands
 
   performCommandEdits: ->
     _.each @delayedEditFunctions, ({name, callback, editType, edition}) =>
-      console.log name, editType
       command = @get name
 
       isRenamed = _.findWhere @renamings, {from: name}
@@ -189,13 +188,16 @@ class Commands
           debug {command, editType, edition, e}
         if _.isObject result
           @mapping[name] = @normalizeOptions name, result
-        emit editType, !!result, name
+        emit editType, result, name
+        true
       else
         # allow addressing nonexistent commands while loading from settings
         # as we are not fully initialized yet
         if not isRenamed?
           if @commandEditsFrom is 'settings'
             @edit name, editType, callback # let us try again in the next iteration
+            # TODO I'm not sure if adding this to the end of the array will get picked up in the _.each loop - has it been tried?
+            # also couldn't it cause an infinite loop if it does get added to the current array being looped?
           else
             error 'commandNotFound', name
     @delayedEditFunctions = []
