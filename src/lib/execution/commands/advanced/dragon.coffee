@@ -8,7 +8,8 @@ Chain.preprocess (chain) ->
   newChain
 
 Commands.createDisabled
-  "snore":
+  "dragon.microphone.mute":
+    spoken: 'snore'
     grammarType: 'textCapture'
     description: "put dragon into sleep mode"
     tags: ["dragon"]
@@ -20,19 +21,21 @@ Commands.createDisabled
         set microphone to sleep
       end tell
       """
-  "restart dragon":
+  "dragon.restart":
+    spoken: 'restart dragon'
     description: "restarts Dragon Dictate"
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
       dictateName = Settings.dragonApplicationName
+      # TODO: rewrite, take dragon controller into consideration
       @applescript """
       tell application "#{dictateName}" to quit
       delay 2
       tell application "#{dictateName}" to activate
       """, false
 
-  "dragtrain":
+  "dragon.vocabulary.trainFromSelection":
     description: "Train Dragon vocabulary from selection"
     tags: ["dragon", "recommended"]
     continuous: false
@@ -46,8 +49,9 @@ Commands.createDisabled
       end try
       """, false
 
-  "show dragon vocab":
-    description: "switch to Dragon Dictate, and open vocabulary window"
+  "dragon.vocabulary.showWindow":
+    spoken: 'show dragon vocab'
+    description: "Open Dragon vocabulary window"
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
@@ -59,7 +63,8 @@ Commands.createDisabled
       end try
       """, false
 
-  "show dragon commands":
+  "dragon.commands.showWindow":
+    spoken: 'show dragon commands'
     description: "switch to Dragon Dictate, and open commands window"
     tags: ["dragon", "recommended"]
     continuous: false
@@ -72,7 +77,8 @@ Commands.createDisabled
       end try
       """
 
-  "over and out":
+  "dragon.microphone.off":
+    spoken: 'over and out'
     description: "turn the microphone off. This command is nice because it is 'chainable' in a phrase"
     tags: ["dragon", "recommended"]
     action: ->
@@ -83,7 +89,6 @@ Commands.createWithDefaults
   tags: ["ignored"]
   needsCommand: false
   continuous: false
-  isSpoken: false
 ,
   # consume command text from dragon growl notifications
   "wakeup": {}

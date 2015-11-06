@@ -1,124 +1,127 @@
 Commands.createDisabled
-  'chibble':
+  'core.combo.selectLineUnderMouse':
+    spoken: 'chibble'
     description: 'selects the entire line of text cursor hovers over'
     tags: ['mouse', 'combo', 'recommended']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
+      @do 'core.mouse.click', input, context
       @key 'Left', 'command'
       @key 'Right', 'command shift'
-  'dookoosh':
+  'core.combo.double-clickThenCopy':
+    spoken: 'dookoosh'
     grammarType: 'oneArgument'
     description: 'mouse double click, then copy'
     tags: ['mouse', 'combo', 'recommended', 'clipboard']
     mouseLatency: true
     inputRequired: false
     action: (input, context) ->
-      @do 'duke', input, context
-      @do 'stoosh', input
-  'doopark':
+      @do 'core.mouse.double-click', input, context
+      @do 'core.clipboard.copy', input
+  'core.combo.double-clickThenPaste':
+    spoken: 'doopark'
     grammarType: 'oneArgument'
     description: 'mouse double click, then paste'
     tags: ['mouse', 'combo', 'clipboard']
     inputRequired: false
     mouseLatency: true
     action: (input, context) ->
-      @do 'duke', input, context
-      @do 'spark', input
-  'chiffpark':
+      @do 'core.mouse.double-click', input, context
+      @do 'core.clipboard.paste', input
+  'core.combo.mouseClickThenPaste':
+    spoken: 'chiffpark'
     grammarType: 'oneArgument'
     description: 'mouse single click, then paste'
     tags: ['mouse', 'combo', 'recommended', 'clipboard']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
-      @do 'spark', input
-  'shackloosh':
+      @do 'core.mouse.click', input, context
+      @do 'core.clipboard.paste', input
+  'core.combo.selectLineThenCopy':
+    spoken: 'shackloosh'
     grammarType: 'oneArgument'
     description: 'select entire line, then copy'
     tags: ['selection', 'combo', 'clipboard']
     inputRequired: false
     action: (input) ->
-      @do 'shackle'
-      @do 'stoosh', input
-  'shacklark':
+      @do 'core.select.all.lineText'
+      @do 'core.clipboard.copy', input
+  'core.combo.selectLineThenPaste':
+    spoken: 'shacklark'
     grammarType: 'oneArgument'
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
     inputRequired: false
     action: (input) ->
-      @do 'shackle'
-      @do 'spark', input
-  'chibloosh':
+      @do 'core.select.all.lineText'
+      @do 'core.clipboard.paste', input
+  'core.combo.selectLineUnderMouseThenCopy':
+    spoken: 'chibloosh'
     grammarType: 'oneArgument'
-    description: 'select entire line, then copy'
-    tags: ['selection', 'combo', 'clipboard']
+    description: 'select entire line under mouse, then copy'
+    tags: ['selection', 'mouse', 'combo', 'clipboard']
     mouseLatency: true
     inputRequired: false
     action: (input, context) ->
-      @do 'chibble', input, context
-      @do 'stoosh', input
-  'chiblark':
+      @do 'core.combo.selectLineUnderMouse', input, context
+      @do 'core.clipboard.copy', input
+  'core.combo.selectLineUnderMousesAndPaste':
+    spoken: 'chiblark'
     grammarType: 'oneArgument'
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
     mouseLatency: true
     inputRequired: false
     action: (input, context) ->
-      @do 'chibble', input, context
-      @do 'spark', input
-  'chiffacoon':
+      @do 'core.combo.selectLineUnderMouse', input, context
+      @do 'core.clipboard.paste', input
+  'core.combo.clickThenInsertNewLineBelow':
+    spoken: 'chiffacoon'
     description: 'click, then insert new line below'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
-      @do 'shockoon'
-  'chiffkoosh':
+      @do 'core.mouse.click', input, context
+      @do 'core.common.newLineBelow'
+  'core.combo.clickThenSpace':
+    spoken: 'chiffkoosh'
     description: 'click, then insert a space'
     tags: ['mouse', 'combo', 'space']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
-      @do 'skoosh'
-  'sappy':
+      @do 'core.mouse.click', input, context
+      @do 'core.common.space'
+  'core.combo.clickThenDeleteLine':
+    spoken: 'sappy'
     misspellings: ['sapi']
     description: 'click, then delete entire line'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
-      @do 'snipline'
-  'sapper':
+      @do 'core.mouse.click', input, context
+      @do 'core.delete.all.line'
+  'core.combo.clickThenDeleteLineRight':
+    spoken: 'sapper'
     description: 'click, then delete line to the right'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
-      @do 'snipper'
-  'sapple':
+      @do 'core.mouse.click', input, context
+      @do 'core.delete.all.right'
+  'core.combo.clickThenDeleteLineLeft':
+    spoken: 'sapple'
     description: 'click, then delete line to the left'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'chiff', input, context
-      @do 'snipple'
-  'grabsy':
-    description: 'will grab the text underneath the mouse, then insert it at the current cursor location. Only supports a few applications for now but will be expanded.'
+      @do 'core.mouse.click', input, context
+      @do 'core.delete.all.left'
+  # RENAMING ALERT
+  'core.combo.copyUnderMouseAndInsertAtCursor':
+    spoken: 'grabsy'
+    description: 'Will grab the text underneath the mouse,
+    then insert it at the current cursor location.
+    Only supports a few applications for now but will be expanded.'
     tags: ['mouse', 'combo', 'clipboard']
     action: () ->
-      switch @currentApplication()
-        when "iTerm"
-          @rightClick()
-          @rightClick()
-          @paste()
-        when "Sublime Text"
-          @doubleClick()
-          @delay 200
-          @copy()
-          @delay 50
-          @sublime()
-            .jumpBack()
-            .jumpBack()
-            .execute()
-          @paste()
+      null

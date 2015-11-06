@@ -1,20 +1,20 @@
 Commands.createDisabled
-  "vc-catch-all":
+  "core.modes.catchAll":
     kind: "recognition"
     grammarType: "none"
     description: "catches all text - just for creation in Dragon"
-    tags: ["voicecode", "recommended"]
+    tags: ["voicecode", "recommended", 'modes']
     triggerPhrase: ""
-    isSpoken: false
-  "recon":
-    description: "show previous commands in Alfred"
-    tags: ["voicecode", "alfred"]
+  "core.showHistory":
+    spoken: 'recon'
+    description: "Show command history"
+    tags: ["voicecode"]
     action: ->
-      @key " ", 'option'
-      @string "vc "
-  "flak":
+      # TODO: implement UI
+  'core.executeWorkflow':
+    spoken: "flak"
     grammarType: "textCapture"
-    description: "execute predefined voice script"
+    description: "Execute workflow"
     tags: ["voicecode"]
     inputRequired: true
     action: (input) ->
@@ -25,14 +25,16 @@ Commands.createDisabled
         _.each results, (command) =>
           command.call(@)
           @delay 50
-  "keeper":
+  'core.interpretLiterally'
+    spoken: "keeper"
     grammarType: "none" # treated specially in the grammar
     description: "whatever follows this command will be interpreted literally"
     tags: ["voicecode", "recommended"]
     action: (input) ->
       if input?.length
         @string input.join(" ")
-  "set mode":
+  'core.setMode'
+    spoken: "set mode"
     grammarType: "textCapture"
     description: "change voicecode command execution mode"
     tags: ["system", "voicecode"]
@@ -42,7 +44,8 @@ Commands.createDisabled
       if input?.length
         mode = @fuzzyMatch Settings.modes, input.join(' ')
         @setGlobalMode(mode)
-  "scratchy":
+  'core.smartDelete'
+    spoken: "scratchy"
     description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"
     tags: ["system", "voicecode", "recommended"]
     action: () ->
@@ -55,7 +58,8 @@ Commands.createDisabled
         else
           @repeat count, =>
             @key 'delete'
-  "tragic":
+  'core.smartSelect'
+    spoken: "tragic"
     description: "tries to select the previously inserted text if possible"
     tags: ["system", "voicecode", "recommended"]
     action: () ->
@@ -63,7 +67,8 @@ Commands.createDisabled
       if count? and count > 0
         for i in [1..count]
           @key 'left', 'shift'
-  "strict on":
+  'core.modes.strict.enable'
+    spoken: "strict on"
     grammarType: "textCapture"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
@@ -74,7 +79,8 @@ Commands.createDisabled
       else
         "default"
       @enableStrictMode mode
-  "strict off":
+  'core.modes.strict.disable'
+    spoken: "strict off"
     grammarType: "individual"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]

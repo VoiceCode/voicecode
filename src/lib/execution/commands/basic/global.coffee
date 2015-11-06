@@ -1,58 +1,41 @@
 Commands.createDisabled
-  'goneck':
+  'core.object.next':
+    spoken: 'goneck'
     description: 'go to next thing (application-specific), tab, message, etc.'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
-      switch @currentApplication()
-        when 'Skype'
-          @key 'right', 'command option'
-        when 'Mail'
-          @key 'down', 'command'
-        else
-          @key ']', 'command shift'
-  'gopreev':
+      @key ']', 'command shift'
+  'core.object.previous':
+    spoken: 'gopreev'
     description: 'go to previous thing (application-specific), tab, message, etc.'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
-      switch @currentApplication()
-        when 'Skype'
-          @key 'left', 'command option'
-        when 'Mail'
-          @key 'up', 'command'
-        else
-          @key '[', 'command shift'
-  'baxley':
+      @key '[', 'command shift'
+  'core.object.backwards':
+    spoken: 'baxley'
     description: 'go "back" - whatever that might mean in context'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
-      switch @currentApplication()
-        when 'Safari', 'Google Chrome', 'Firefox'
-          @key '[', 'command'
-        when 'Sublime Text'
-          @key '-', 'control'
-  'fourthly':
+      null
+  'core.object.forwards':
+    spoken: 'fourthly'
     description: 'go "forward" - whatever that might mean in context'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
-      switch @currentApplication()
-        when 'Safari', 'Google Chrome', 'Firefox'
-          @key ']', 'command'
-        when 'Sublime Text'
-          @key '-', 'control shift'
-  'freshly':
+      null
+
+  'core.object.refresh':
+    spoken: 'freshly'
     description: 'reload or refresh depending on context'
     tags: ['recommended', 'navigation']
     action: ->
-      switch @currentApplication()
-        when 'Safari', 'Google Chrome', 'Firefox'
-          @key 'R', 'command'
-        when 'Atom'
-          @key 'L', 'control option command'
-  'cheese':
+      null
+  'core.combo.downArrowsAndEnter':
+    spoken: 'cheese'
     description: 'presses the down arrow [x] times then presses return (for choosing items from lists that don\'t have direct shortcuts)'
     tags: ['navigation']
     grammarType: 'numberCapture'

@@ -1,5 +1,6 @@
 Commands.createDisabledWithDefaults {inputRequired: true},
-  "shrink":
+  "core.insertAbbreviation":
+    spoken: 'shrink'
     grammarType: "textCapture"
     description: "inserts a common abbreviation"
     tags: ["text", "snippet"]
@@ -9,7 +10,8 @@ Commands.createDisabledWithDefaults {inputRequired: true},
       if input?.length
         result = @fuzzyMatch Settings.abbreviations, input.join(' ')
         @string result
-  "quinn":
+  "core.insertCodeSnippet":
+    spoken: 'quinn'
     grammarType: "textCapture"
     description: "inserts an IDE code snippet"
     tags: ["text", "snippet"]
@@ -20,7 +22,8 @@ Commands.createDisabledWithDefaults {inputRequired: true},
         @delay 200
         completion = Settings.codeSnippetCompletions[@currentApplication()] or "tab"
         @key completion
-  "trassword":
+  "core.insertPassword":
+    spoken: 'trassword'
     grammarType: "textCapture"
     description: "inserts a password from the predefined passwords list"
     tags: ["text", "snippet"]
@@ -28,7 +31,8 @@ Commands.createDisabledWithDefaults {inputRequired: true},
       if input?.length
         result = @fuzzyMatch Settings.passwords, input.join(' ')
         @string result
-  "treemail":
+  "core.insertMail":
+    spoken: 'treemail'
     grammarType: "textCapture"
     description: "inserts an email from the predefined emails list"
     tags: ["text", "snippet"]
@@ -36,7 +40,8 @@ Commands.createDisabledWithDefaults {inputRequired: true},
       if input?.length
         result = @fuzzyMatch Settings.emails, input.join(' ')
         @string result
-  "trusername":
+  "core.insertUsername":
+    spoken: 'trusername'
     grammarType: "textCapture"
     description: "inserts a username from the predefined usernames list"
     tags: ["text", "snippet"]

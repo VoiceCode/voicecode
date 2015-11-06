@@ -1,7 +1,8 @@
 Commands.createDisabled
-  "hytag":
+  "html.insertTag":
+    spoken: 'hytag'
     grammarType: "textCapture"
-    description: "inserts an html tag with a dynamic name and dynamic attributes"
+    description: "Inserts an html tag with a dynamic name and dynamic attributes"
     tags: ["domain-specific", "html"]
     inputRequired: false
     action: (input) ->
