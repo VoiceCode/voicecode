@@ -4,7 +4,7 @@
   "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
   "main": "dist/app/startup.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/tape/bin/tape dist/test/**/*.js | faucet",
     "start": "gulp"
   },
   "repository": {
@@ -65,6 +65,7 @@
     "react-dom": "^0.14.1",
     "reactify": "^1.1.0",
     "replify": "^1.2.0",
+    "tape": "^4.2.2",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.6.0"
   }
