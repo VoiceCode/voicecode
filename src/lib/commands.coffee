@@ -173,6 +173,8 @@ class Commands
     return true
 
   performCommandEdits: ->
+    delayedEditFunctions = _.clone @delayedEditFunctions
+    @delayedEditFunctions = []
     _.each @delayedEditFunctions, ({name, callback, editType, edition}) =>
       command = @get name
 
@@ -191,16 +193,21 @@ class Commands
         emit editType, result, name
         true
       else
-        # allow addressing nonexistent commands while loading from settings
-        # as we are not fully initialized yet
+        ###
+          Allow addressing nonexistent commands while loading from settings
+          as we are not fully initialized yet
+          scenario: user has a package with createDisabled commands.
+          user enabled some of them.
+          EnabledCommandsManager tries to enableCommand a nonexistent(yet)
+          command from the package. Next time we performCommandEdits,
+          those commands will exist
+        ###
         if not isRenamed?
           if @commandEditsFrom is 'settings'
-            @edit name, editType, callback # let us try again in the next iteration
-            # TODO I'm not sure if adding this to the end of the array will get picked up in the _.each loop - has it been tried?
-            # also couldn't it cause an infinite loop if it does get added to the current array being looped?
+            # let us try again in the next performCommandEdits()
+            @edit name, editType, callback
           else
             error 'commandNotFound', name
-    @delayedEditFunctions = []
 
   override: (name, action) ->
     error 'deprecation', "Failed overriding '#{name}'.

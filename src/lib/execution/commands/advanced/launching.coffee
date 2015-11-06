@@ -3,8 +3,9 @@ Commands.createDisabledWithDefaults
   inputRequired: true
   tags: ["system", "launching"]
 ,
-  "webs":
-    description: "opens a website by name"
+  "core.openWebsite":
+    spoken: 'webs'
+    description: "Open a website by name"
     action: (input) ->
       if input?.length
         address = @fuzzyMatch Settings.websites, (input or []).join(" ")
@@ -13,13 +14,16 @@ Commands.createDisabledWithDefaults
         @openBrowser()
         @delay(50)
         @newTab()
-  "dears":
-    description: "opens a directory in the finder"
+  "core.openDirectory":
+    spoken: 'dears'
+    description: "Open a directory in file browser"
     action: (input) ->
       if input?.length
         directory = @fuzzyMatch Settings.directories, input.join(' ')
         @revealFinderDirectory directory
-  "sispref":
+  "core.openSystemPreferences":
+    spoken: 'sispref'
+    description: 'Open system preferences'
     tags: ["system", "launching"]
     action: (input) ->
       if input?.length

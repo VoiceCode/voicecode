@@ -1,42 +1,49 @@
 Commands.createDisabled
-  'doomway':
-    description: 'move the cursor to the bottom of the page'
+  'core.cursor.way.down':
+    spoken: 'doomway'
+    formdescription: 'Move the cursor to the bottom of the page'
     tags: ['cursor', 'recommended']
     action: ->
       @key 'down', 'command'
-  'doom':
+  'core.cursor.down':
+    spoken: 'doom'
     description: 'press the down arrow'
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
       @down()
-  'jeepway':
-    description: 'move the cursor to the top of the page'
+  'core.cursor.way.up':
+    spoken: 'jeepway'
+    description: 'Move the cursor to the top of the page'
     tags: ['cursor', 'recommended']
     action: ->
       @key 'up', 'command'
-  'jeep':
+  'core.cursor.up':
+    spoken: 'jeep'
     description: 'Press the up arrow'
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
       @up()
-  'crimp':
+  'core.cursor.left':
+    spoken: 'crimp'
     description: 'press the left arrow'
     misspellings: ['crimped']
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
       @left()
-  'chris':
+  'core.cursor.right':
+    spoken: 'chris'
     description: 'press the right arrow'
     tags: ['cursor', 'recommended']
     misspellings: ['krist', 'crist']
     repeatable: true
     action: ->
       @right()
-  'shunkrim':
-    description: 'move the cursor by word to the left'
+  'core.cursor.wordLeft':
+    spoken: 'shunkrim'
+    description: 'Move the cursor by word to the left'
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
@@ -45,20 +52,23 @@ Commands.createDisabled
           @key 'left', 'control'
         else
           @key 'left', 'option'
-  'wonkrim':
-    description: 'move the cursor by partial word to the left'
+  'core.cursor.wordPartialLeft':
+    spoken: 'wonkrim'
+    description: 'Move the cursor by partial word to the left'
     tags: ['cursor']
     repeatable: true
     action: ->
       @key 'left', 'control'
-  'wonkrish':
-    description: 'move the cursor by partial word to the right'
+  'core.cursor.wordPartialRight':
+    spoken: 'wonkrish'
+    description: 'Move the cursor by partial word to the right'
     tags: ['cursor']
     repeatable: true
     action: ->
       @key 'right', 'control'
-  'shunkrish':
-    description: 'move the cursor by word to the right'
+  'core.cursor.wordRight':
+    spoken: 'shunkrish'
+    description: 'Move the cursor by word to the right'
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
@@ -67,8 +77,9 @@ Commands.createDisabled
           @key 'right', 'control'
         else
           @key 'right', 'option'
-  'ricky':
-    description: 'moves the cursor all the way to the right'
+  'core.cursor.way.right':
+    spoken: 'ricky'
+    description: 'Move the cursor all the way to the right'
     tags: ['cursor', 'recommended']
     action: ->
       switch @currentApplication()
@@ -76,14 +87,16 @@ Commands.createDisabled
           @key 'end'
         else
           @key 'right', 'command'
-  'derek':
-    description: 'moves the cursor on the way to the right than inserts a space'
+  'core.cursor.way.rightThenSpace':
+    spoken: 'derek'
+    description: 'Move the cursor all the way to the right than inserts a space'
     tags: ['cursor', 'space', 'right', 'combo', 'recommended']
     misspellings: ['derrick']
     action: ->
       @key 'right', 'command'
       @space()
-  'nudgle':
+  'core.text.nudge.left':
+    spoken: 'nudgle'
     description: 'remove a space before the adjacent word on the left'
     tags: ['cursor', 'space', 'deleting', 'left', 'combo', 'recommended']
     repeatable: true
@@ -91,7 +104,8 @@ Commands.createDisabled
     action: ->
       @key 'left', 'option'
       @key 'delete'
-  'ricksy':
+  'core.select.way.right':
+    spoken: 'ricksy'
     description: 'selects all text to the right'
     tags: ['selection', 'right', 'recommended']
     action: ->
@@ -100,91 +114,78 @@ Commands.createDisabled
           @key 'end', 'shift'
         else
           @key 'right', 'command shift'
-  'lefty':
-    description: 'move the cursor all the way to the left'
+  'core.cursor.way.left':
+    spoken: 'lefty'
+    description: 'Move the cursor all the way to the left'
     tags: ['cursor', 'left', 'recommended']
     action: ->
       switch @currentApplication()
+        # TODO: package
         when "Parallels Desktop"
           @key 'home'
         else
           @key 'left', 'command'
-  'lecksy':
+  'core.select.way.left'
+    spoken: 'lecksy'
     description: 'selects all text to the left'
     tags: ['selection', 'left', 'recommended']
     action: ->
       switch @currentApplication()
+        # TODO: package
         when "Parallels Desktop"
           @key 'home', 'shift'
         else
           @key 'left', 'command shift'
-  'shackle':
-    description: 'selects the entire line'
+  'core.select.all.lineText':
+    spoken: 'shackle'
+    description: 'selects the entire line text'
     tags: ['selection', 'recommended']
     misspellings: ['sheqel', 'shikel', 'shekel']
     action: ->
       @key 'left', 'command'
       @key 'right', 'command shift'
-  'snipline':
-    description: 'with no arguments will delete the entire line(s). With a single argument will move to that line and delete it. With a number range will delete the range of lines'
+  'core.delete.all.line':
+    spoken: 'snipline'
+    description: 'With no arguments will delete the entire line(s).
+    With a single argument will move to that line and delete it.
+    With a number range will delete the range of lines'
     grammarType: 'numberRange'
     tags: ['deleting', 'recommended']
     misspellings: ['snipeline']
     inputRequired: false
     action: ({first, last} = {}) ->
-      console.log "snipline", arguments
-      switch @currentApplication()
-        when 'Sublime Text'
-          if last?
-            @sublime().selectRange(first, last).execute()
-          else if first?
-            @sublime().goToLine(first).execute()
-          @key 'k', 'control shift'
-        when 'Atom'
-          if last?
-            @runAtomCommand 'selectLineRange',
-              from: first
-              to: last
-          else if first?
-            @runAtomCommand 'goToLine', first
-          @delay 40
-          @key 'k', 'control shift'
-        else
-          @key 'delete'
-          @key 'right', 'command'
-          @key 'delete', 'command'
-  'snipper':
-    description: 'will delete everything to the right'
+      @key 'delete'
+      @key 'right', 'command'
+      @key 'delete', 'command'
+  'core.delete.all.right':
+    spoken: 'snipper'
+    description: 'Will delete everything to the right'
     tags: ['deleting', 'right', 'recommended']
     misspellings: ['sniper']
     action: ->
-      if @currentApplication is 'Sublime Text'
-        @key 'k', ['control']
-      else
-        @key 'right', 'command shift'
-        @key 'delete'
-  'snipple':
+      @key 'right', 'command shift'
+      @key 'delete'
+  'core.delete.all.left':
+    spoken: 'snipple'
     tags: ['deleting', 'left', 'recommended']
-    description: 'will delete everything to the left'
+    description: 'Will delete everything to the left'
     action: ->
       @key 'delete', 'command'
-  'jolt':
-    description: 'will duplicate the current line'
+  'core.object.duplicate':
+    spoken: 'jolt'
+    description: 'Will duplicate whichever makes sense in the context'
     tags: ['text-manipulation', 'recommended']
     misspellings: ['joel']
     action: ->
-      switch @currentApplication()
-        when 'Sublime Text', 'Atom'
-          @key 'd', 'command shift'
-        else
-          @do 'shackle'
-          @copy()
-          @right()
-          @enter()
-          @paste()
-  'swan':
-    description: "Enters 'Ace Jump' / 'Easy Motion' mode"
+      # TODO: re-implement
+      # RENAMING ALERT
+      @do 'core.select.all.lineText'
+      @copy()
+      @do 'core.common.newLineBelow'
+      @paste()
+  'core.showShortcuts':
+    spoken: 'swan'
+    description: "Show shortcuts"
     tags: ['cursor']
     action: ->
-      if @currentApplication is 'Sublime Text'
-        @key ';', 'command'
+      null
