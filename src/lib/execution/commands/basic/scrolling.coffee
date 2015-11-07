@@ -33,14 +33,14 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     tags: ['scroll', 'up', 'recommended']
     action: (input) ->
       @scrollUp(input or 10)
-  'scroll.down.all':
+  'scroll.way.down':
     spoken: 'scrodgeway'
     description: 'scroll way down'
     tags: ['scroll', 'down', 'recommended']
     grammarType: 'individual'
     action: (input) ->
       @scrollDown(999)
-  'scroll.up.all':
+  'scroll.away.up':
     spoken: 'scroopway'
     description: 'scroll way up'
     tags: ['scroll', 'up', 'recommended']

@@ -4,14 +4,10 @@ packageInfo = {
   triggerScopes: ['Skype']
 }
 
-Commands.before 'core.object.next', packageInfo, (index, context) ->
-  switch @currentApplication()
-    when 'Skype'
-      @key 'right', 'command option'
-      @stop()
+Commands.before 'object.next', packageInfo, (input, context) ->
+  @key 'right', 'command option'
+  @stop()
 
-Commands.before 'core.object.previous', packageInfo, (index, context) ->
-  switch @currentApplication()
-    when 'Skype'
-      @key 'left', 'command option'
-      @stop()
+Commands.before 'object.previous', packageInfo, (input, context) ->
+  @key 'left', 'command option'
+  @stop()

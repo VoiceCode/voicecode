@@ -1,5 +1,5 @@
 Commands.createDisabled
-  'core.various.emo':
+  'various.emo':
     spoken: 'emo'
     description: 'old-school emoticons'
     tags: ['text']

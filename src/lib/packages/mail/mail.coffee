@@ -4,14 +4,10 @@ packageInfo = {
   triggerScopes: ['Mail']
 }
 
-Commands.before 'core.object.next', packageInfo, (index, context) ->
-  switch @currentApplication()
-    when 'Mail'
-      @key 'down', 'command'
-      @stop()
+Commands.before 'object.next', packageInfo, (input, context) ->
+  @key 'down', 'command'
+  @stop()
 
-Commands.before 'core.object.previous', packageInfo, (index, context) ->
-  switch @currentApplication()
-    when 'Mail'
-      @key 'up', 'command'
-      @stop()
+Commands.before 'object.previous', packageInfo, (input, context) ->
+  @key 'up', 'command'
+  @stop()

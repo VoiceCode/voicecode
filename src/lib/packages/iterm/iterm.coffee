@@ -4,9 +4,10 @@ packageInfo = {
   triggerScopes: ['iTerm']
 }
 
-# RENAMING ALERT
-# should this be an extension of core? will there ever be a core function implementation?
-Commands.before 'core.combo.copyUnderMouseAndInsertAtCursor', packageInfo, (index, context) ->
+Commands.after 'git.status', packageInfo, (input, context) ->
+  @enter()
+
+Commands.before 'combo.copyUnderMouseAndInsertAtCursor', packageInfo, (input, context) ->
   @rightClick()
   @rightClick()
   @paste()

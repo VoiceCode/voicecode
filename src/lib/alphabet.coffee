@@ -15,7 +15,7 @@ class Alphabet
       @roots[letter]
     .join('')
   createCommand: ->
-    Commands.create 'core.spelling',
+    Commands.create 'spelling',
       kind: 'recognition'
       description: 'phonetic alphabet'
       grammarType: 'custom'

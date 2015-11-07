@@ -1,5 +1,5 @@
 Commands.createDisabled
-  'select.down.all':
+  'select.all.down':
     spoken: 'shroomway'
     description: 'select all text downward'
     tags: ['selection', 'recommended']
@@ -12,7 +12,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       @key 'down', 'shift'
-  'select.up.all':
+  'select.all.up':
     spoken: 'shreepway'
     description: 'select all text upward'
     tags: ['selection', 'recommended']
@@ -59,10 +59,7 @@ Commands.createDisabled
     tags: ['text-manipulation']
     misspellings: ['foley', 'fawley']
     action: ->
-      if @currentApplication() is 'Sublime Text'
-        @key 'l', ['command']
-      else
-        @selectBlock()
+      @selectBlock()
   'select.expand.horizontal':
     spoken: 'spando'
     description: 'expand selection symmetrically (horizontally)'
@@ -81,7 +78,10 @@ Commands.createDisabled
       @verticalSelectionExpansion(input or 1)
   'select.range.currentLine':
     spoken: 'kerleck'
-    description: 'With argument: [word], Will select the text [word] on the current line. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the last occurrence of [word2] on the current line'
+    description: 'With argument: [word], Will select the text [word] on
+    the current line. With arguments: [word1], [word2], Will select the text
+    starting with the first occurrence of [word1] and ending with the last
+    occurrence of [word2] on the current line'
     grammarType: 'textCapture'
     tags: ['text-manipulation', 'cursor', 'selection']
     inputRequired: true
@@ -89,7 +89,10 @@ Commands.createDisabled
       @selectCurrentOccurrence(input)
   'select.range.upward':
     spoken: 'jeepleck'
-    description: 'With argument: [word], Will select the text [word] previous to the cursor. With arguments: [word1], [word2], Will select the text starting with the last occurrence of [word1] and ending with the last occurrence of [word2] previous to the cursor'
+    description: 'With argument: [word], Will select the text [word]
+    previous to the cursor. With arguments: [word1], [word2], Will select
+    the text starting with the last occurrence of [word1] and ending with the
+    last occurrence of [word2] previous to the cursor'
     grammarType: 'textCapture'
     inputRequired: true
     tags: ['text-manipulation', 'cursor', 'selection']
@@ -97,7 +100,10 @@ Commands.createDisabled
       @selectPreviousOccurrence(input)
   'select.range.downward':
     spoken: 'doomleck'
-    description: 'With argument: [word], Will select the text [word] after the cursor. With arguments: [word1], [word2], Will select the text starting with the first occurrence of [word1] and ending with the first occurrence of [word2] after the cursor'
+    description: 'With argument: [word], Will select the text
+    [word] after the cursor. With arguments: [word1], [word2],
+    Will select the text starting with the first occurrence of
+    [word1] and ending with the first occurrence of [word2] after the cursor'
     grammarType: 'textCapture'
     inputRequired: true
     tags: ['text-manipulation', 'cursor', 'selection']
@@ -110,19 +116,10 @@ Commands.createDisabled
     inputRequired: false
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
-      switch @currentApplication()
-        when 'Sublime Text'
-          s = new Contexts.Sublime()
-          @repeat input or 1, ->
-            s.selectNextWord()
-          s.execute()
-        when 'Atom'
-          @runAtomCommand 'selectNextWord', input or 1
-        else
-          @selectContiguousMatching
-            input: input
-            expression: /\w/
-            direction: 1
+      @selectContiguousMatching
+        input: input
+        expression: /\w/
+        direction: 1
   'select.word.previous':
     spoken: 'wordpreev'
     description: 'select the previous whole word'
@@ -130,16 +127,26 @@ Commands.createDisabled
     tags: ['text-manipulation', 'cursor', 'selection']
     inputRequired: false
     action: (input) ->
+      @selectContiguousMatching
+        input: input
+        expression: /\w/
+        direction: -1
+  'select.all.left':
+    spoken: 'lecksy'
+    description: 'selects all text to the left'
+    tags: ['selection', 'left', 'recommended']
+    action: ->
       switch @currentApplication()
-        when 'Sublime Text'
-          s = new Contexts.Sublime()
-          @repeat input or 1, ->
-            s.selectPreviousWord()
-          s.execute()
-        when 'Atom'
-          @runAtomCommand 'selectPreviousWord', input or 1
+        # TODO: package
+        when "Parallels Desktop"
+          @key 'home', 'shift'
         else
-          @selectContiguousMatching
-            input: input
-            expression: /\w/
-            direction: -1
+          @key 'left', 'command shift'
+  'select.all.lineText':
+    spoken: 'shackle'
+    description: 'selects the entire line text'
+    tags: ['selection', 'recommended']
+    misspellings: ['sheqel', 'shikel', 'shekel']
+    action: ->
+      @key 'left', 'command'
+      @key 'right', 'command shift'

@@ -1,12 +1,12 @@
 Commands.createDisabled
-  'core.delimiter': # RENAMING ALERT
+  'delimiter': # RENAMING ALERT
     spoken: 'shin'
     description: "does nothing, but enters into voice code"
     misspellings: ["chin"]
     tags: ["text", "recommended"]
     action: ->
       null
-  'core.common.space':
+  'common.space':
     spoken: 'skoosh'
     description: "insert a space"
     findable: " "
@@ -15,7 +15,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       @space()
-  'core.combo.shiftSpace':
+  'combo.shiftSpace':
     spoken: 'sky koosh'
     description: "press shift+space (useful for scrolling up, or other random purposes in certain applications)"
     vocabulary: true
@@ -23,7 +23,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       @key 'space', 'shift'
-  'core.common.newLineBelow':
+  'common.newLineBelow':
     spoken: 'shockoon'
     description: "Inserts a new line below the current line"
     tags: ["return", "combo", "recommended"]
@@ -35,7 +35,7 @@ Commands.createDisabled
       else
         @key "right", "command"
         @enter()
-  'core.common.newLineAbove':
+  'common.newLineAbove':
     spoken: 'shockey'
     description: "Inserts a new line above the current line"
     misspellings: ["chalky", "shocking", "shocky"]
