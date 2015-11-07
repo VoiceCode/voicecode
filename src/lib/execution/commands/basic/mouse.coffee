@@ -1,5 +1,6 @@
 Commands.createDisabled
-  'duke':
+  'mouse.doubleClick':
+    spoken: 'duke'
     description: 'double click'
     tags: ['mouse', 'recommended']
     mouseLatency: true
@@ -8,7 +9,8 @@ Commands.createDisabled
         @doubleClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
       else
         @doubleClick()
-  'chipper':
+  'mouse.rightClick':
+    spoken: 'chipper'
     description: 'right click'
     tags: ['mouse', 'recommended']
     mouseLatency: true
@@ -17,7 +19,8 @@ Commands.createDisabled
         @rightClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
       else
         @rightClick()
-  'chiff':
+  'mouse.click':
+    spoken: 'chiff'
     description: 'left click'
     tags: ['mouse', 'recommended']
     mouseLatency: true
@@ -26,7 +29,8 @@ Commands.createDisabled
         @clickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
       else
         @click()
-  'chaffin':
+  'mouse.previousPosition.click':
+    spoken: 'chaffin'
     description: 'Latency compensated left click. "mouseDwellTracking" needs to be enabled for this to work.
       This allows you to click then move the mouse, and have it still perform the click where the mouse used to be. Only works well with a regular mouse or trackpad (not SmartNav)'
     tags: ['mouse', 'dwelling']
@@ -40,12 +44,14 @@ Commands.createDisabled
 
       @clickAtPosition previous
 
-  'triplick':
+  'mouse.tripleClick':
+    spoken: 'triplick'
     description: 'left click'
     tags: ['mouse', 'recommended']
     action: ->
       @tripleClick()
-  'shicks':
+  'mouse.shiftClick':
+    spoken: 'shicks'
     description: 'shift+click'
     tags: ['mouse', 'recommended']
     misspellings: ['chicks']
@@ -55,7 +61,8 @@ Commands.createDisabled
         @shiftClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
       else
         @shiftClick()
-  'chom lick':
+  'mouse.commandClick':
+    spoken: 'chom lick'
     description: 'command+click'
     tags: ['mouse']
     vocabulary: true
@@ -65,38 +72,45 @@ Commands.createDisabled
         @commandClickAtPosition @previousMouseLocation(context.mouseLatencyIndex + 1)
       else
         @commandClick()
-  'crop lick':
+  'mouse.optionClick':
+    spoken: 'crop lick'
     description: 'option+click'
     tags: ['mouse']
     vocabulary: true
     action: ->
       @optionClick()
-  'pretzel':
+  'mouse.press':
+    spoken: 'pretzel'
     description: 'press down mouse and hold'
     tags: ['mouse']
     action: ->
       @mouseDown()
-  'relish':
+  'mouse.release':
+    spoken: 'relish'
     description: 'release the mouse after press and hold'
     tags: ['mouse']
     action: ->
       @mouseUp()
-  'dwelling on':
+  'mouse.dwelling.on':
+    spoken: 'dwelling on'
     description: 'turn on "dwell clicking" - whenever the mouse stops moving it will do a left click. "mouseDwellTracking" needs to be enabled for this to work'
     tags: ['mouse', 'dwelling']
     action: ->
       @enableDwellClicking()
-  'dwelling off':
+  'mouse.dwelling.off':
+    spoken: 'dwelling off'
     description: 'turn off "dwell clicking"'
     tags: ['mouse', 'dwelling']
     action: ->
       @disableDwellClicking()
-  'griffin':
+  'mouse.dwelling.once':
+    spoken: 'griffin'
     description: 'makes it so the mouse will click next time it pauses (dwells) - this makes it faster to click sometimes because it eliminates the latency. You would use it when you already know you are going to click but the mouse is still moving toward its destination'
     tags: ['mouse', 'dwelling']
     action: ->
       @dwellClickOnce()
-  'store mouse position':
+  'mouse.position.store':
+    spoken: 'store mouse position'
     description: 'store current mouse position to the clipboard, so that you can paste it elsewhere. If an argument is spoken, it stores to the named clipboard'
     tags: ['clipboard', 'mouse', 'snippet']
     grammarType: 'textCapture'

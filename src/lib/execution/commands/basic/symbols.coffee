@@ -1,68 +1,80 @@
 Commands.createDisabledWithDefaults
   tags: ['symbol', 'recommended']
 ,
-  'dot':
+  'symbol.dot':
+    spoken: 'dot'
     findable: '.'
     misspellings: ['.']
     spaceBefore: true
     action: ->
       @string '.'
-  'star':
+  'symbol.star':
+    spoken: 'star'
     misspellings: ['*']
     findable: '*'
     spaceBefore: true
     action: ->
       @string '*'
-  'slash':
+  'symbol.slash':
+    spoken: 'slash'
     misspellings: ['/']
     findable: '/'
     spaceBefore: true
     action: ->
       @string '/'
-  'shalls':
+  'symbol.backslash':
+    spoken: 'shalls'
     # misspellings: ['\\']
     description: "backslash. hint: 'shalls' is 'slash' backward."
     findable: '\\'
     action: ->
       @string '\\'
-  'comma':
+  'symbol.comma':
+    spoken: 'comma'
     misspellings: [',']
     findable: ','
     action: ->
       @string ','
-  'tilde':
+  'symbol.tilde':
+    spoken: 'tilde'
     misspellings: ['~']
     findable: '~'
     spaceBefore: true
     action: ->
       @string '~'
-  'colon':
+  'symbol.colon':
+    spoken: 'colon'
     misspellings: [':']
     findable: ':'
     spaceBefore: true
     action: ->
       @string ':'
-  'equeft':
+  'symbol.equal.padded':
+    spoken: 'equeft'
     findable: ' = '
     action: ->
       @string ' = '
-  'smaqual':
+  'symbol.equal':
+    spoken: 'smaqual'
     findable: '='
     action: ->
       @string '='
-  'qualcoif':
+  'symbol.equal.surround.doubleQuotes':
+    spoken: 'qualcoif'
     tags: ['symbol', 'quotes', 'recommended']
     findable: '="'
     action: ->
       @string '=""'
       @left()
-  'qualposh':
+  'symbol.equal.surround.singleQuotes':
+    spoken: 'qualposh'
     findable: "='"
     tags: ['symbol', 'quotes', 'recommended']
     action: ->
       @string "=''"
       @left()
-  'prexcoif':
+  'symbol.surround.parentheses.quotes':
+    spoken: 'prexcoif'
     description: 'inserts parentheses then double quotes leaving cursor inside them. If text is selected, will wrap the selected text'
     tags: ['symbol', 'quotes', 'recommended']
     action: ->
@@ -73,7 +85,8 @@ Commands.createDisabledWithDefaults
         @string '("")'
         @left()
         @left()
-  'prex':
+  'symbol.surround.parentheses':
+    spoken: 'prex'
     description: 'inserts parentheses leaving cursor inside them. If text is selected, will wrap the selected text'
     findable: '()'
     spaceBefore: true
@@ -84,10 +97,12 @@ Commands.createDisabledWithDefaults
       else
         @string '()'
         @left()
-  'prekris':
+  'symbol.parentheses':
+    spoken: 'prekris'
     action: ->
       @string '()'
-  'brax':
+  'symbol.brackets':
+    spoken: 'brax'
     description: 'inserts brackets leaving cursor inside them. If text is selected, will wrap the selected text'
     findable: '[]'
     spaceBefore: true
@@ -98,26 +113,31 @@ Commands.createDisabledWithDefaults
       else
         @string '[]'
         @left()
-  'kirksorp':
+  'symbol.braces.left':
+    spoken: 'kirksorp'
     findable: '{'
     action: ->
       @string '{'
-  'kirkos':
+  'symbol.braces.right':
+    spoken: 'kirkos'
     findable: '}'
     action: ->
       @string '}'
-  'kirk':
+  'symbol.braces.surround':
+    spoken: 'kirk'
     findable: '{}'
     spaceBefore: true
     action: ->
       @string '{}'
       @left()
-  'kirblock':
+  'symbol.braces.surround.block':
+    spoken: 'kirblock'
     action: ->
       @string '{}'
       @left()
       @enter()
-  'prank':
+  'symbol.space.surround':
+    spoken: 'prank'
     description: 'inserts 2 spaces leaving cursor in the middle. If text is selected, will wrap the selected text in spaces'
     findable: '  '
     action: ->
@@ -127,31 +147,38 @@ Commands.createDisabledWithDefaults
       else
         @string '  '
         @left()
-  'minquall':
+  'symbol.minusEqual.padded':
+    spoken: 'minquall'
     findable: ' -= '
     action: ->
       @string ' -= '
-  'pluqual':
+  'symbol.plusEqual.padded':
+    spoken: 'pluqual'
     findable: ' += '
     action: ->
       @string ' += '
-  'banquall':
+  'symbol.notEqual.padded':
+    spoken: 'banquall'
     findable: ' != '
     action: ->
       @string ' != '
-  'longqual':
+  'symbol.isEqual.padded':
+    spoken: 'longqual'
     findable: ' == '
     action: ->
       @string ' == '
-  'lessqual':
+  'symbol.lessEqual.padded':
+    spoken: 'lessqual'
     findable: ' <= '
     action: ->
       @string ' <= '
-  'grayqual':
+  'symbol.moreEqual.padded':
+    spoken: 'grayqual'
     findable: ' >= '
     action: ->
       @string ' >= '
-  'posh':
+  'symbol.singleQuotes.surround':
+    spoken: 'posh'
     tags: ['symbol', 'quotes', 'recommended']
     misspellings: ['pash']
     spaceBefore: true
@@ -159,7 +186,8 @@ Commands.createDisabledWithDefaults
     action: ->
       @string "''"
       @left()
-  'coif':
+  'symbol.doubleQuotes.surround':
+    spoken: 'coif'
     tags: ['symbol', 'quotes', 'recommended']
     misspellings: ['coiffed']
     description: 'inserts quotes leaving cursor inside them. If text is selected, will wrap the selected text'
@@ -172,91 +200,110 @@ Commands.createDisabledWithDefaults
       else
         @string '""'
         @left()
-  'shrocket':
+  'symbol.doubleArrow.right.padded':
+    spoken: 'shrocket'
     findable: ' => '
     action: ->
       @string ' => '
-  'swipe':
+  'symbol.comma.padded.right':
+    spoken: 'swipe'
     misspellings: ['swiped', 'swipes']
     findable: ', '
     action: ->
       @string ', '
-  'coalgap':
+  'symbol.colon.padded.right':
+    spoken: 'coalgap'
     findable: ': '
     action: ->
       @string ': '
-  'coalshock':
+  'symbol.colon.enter':
+    spoken: 'coalshock'
     findable: ':\r'
     action: ->
       @key ':'
       @enter()
-  'divy':
+  'symbol.slash.padded':
+    spoken: 'divy'
     findable: ' / '
     action: ->
       @string ' / '
-  'sinker':
+  'symbol.semicolon.position.right':
+    spoken: 'sinker'
     findable: ';'
     action: ->
       @key 'right', 'command'
       @key ';'
-  'sunkshock':
+  'symbol.semicolon.enter':
+    spoken: 'sunkshock'
     misspellings: ['sinkshock'] #TODO remove later
     action: ->
       @key ';'
       @key 'return'
-  'sunk':
+  'symbol.semicolon':
+    spoken: 'sunk'
     misspellings: ['stunk']
     findable: ';'
     action: ->
       @key ';'
-  'clamor':
+  'symbol.exclamation':
+    spoken: 'clamor'
     misspellings: ['clamber', 'clamour']
     findable: '!'
     action: ->
       @key '!'
-  'loco':
+  'symbol.at':
+    spoken: 'loco'
     misspellings: ['@']
     findable: '@'
     spaceBefore: true
     action: ->
       @string '@'
-  'amper':
+  'symbol.ampersand':
+    spoken: 'amper'
     findable: '&'
     action: ->
       @string '&'
-  'damper':
+  'symbol.ampersand.padded':
+    spoken: 'damper'
     findable: ' & '
     action: ->
       @string ' & '
-  'pounder':
+  'symbol.pound':
+    spoken: 'pounder'
     findable: '#'
     repeatable: true
     spaceBefore: true
     action: ->
       @string '#'
-  'questo':
+  'symbol.questionMark':
+    spoken: 'questo'
     findable: '?'
     misspellings: ["?"]
     action: ->
       @string '?'
-  'bartrap':
+  'symbol.verticalBar.twice':
+    spoken: 'bartrap'
     findable: '||'
     action: ->
       @string '||'
       @left()
-  'goalpost':
+  'symbol.verticalBar.twice.padded':
+    spoken: 'goalpost'
     findable: ' || '
     action: ->
       @string ' || '
-  'orquals':
+  'symbol.orEqual.padded':
+    spoken: 'orquals'
     findable: ' ||= '
     action: ->
       @string ' ||= '
-  'spike':
+  'symbol.verticalBar':
+    spoken: 'spike'
     findable: '|'
     action: ->
       @string '|'
-  'angler':
+  'symbol.angles.surround':
+    spoken: 'angler'
     description: 'inserts angle brackets leaving cursor inside them. If text is selected, will wrap the selected text'
     findable: '<>'
     action: ->
@@ -266,16 +313,19 @@ Commands.createDisabledWithDefaults
       else
         @string '<>'
         @left()
-  'plus':
+  'symbols.plus':
+    spoken: 'plus'
     findable: '+'
     spaceBefore: true
     action: ->
       @string '+'
-  'deplush':
+  'symbols.plus.padded':
+    spoken: 'deplush'
     findable: ' + '
     action: ->
       @string ' + '
-  'minus':
+  'symbol.minus':
+    spoken: 'minus'
     tags: ['symbol', 'minus', 'recommended']
     misspellings: ['minas']
     repeatable: true
@@ -283,116 +333,141 @@ Commands.createDisabledWithDefaults
     spaceBefore: true
     action: ->
       @string '-'
-  'deminus':
+  'symbol.minus.padded':
+    spoken: 'deminus'
     tags: ['symbol', 'minus', 'recommended']
     findable: ' - '
     action: ->
       @string ' - '
-  'lambo':
+  'symbol.singleArrow.right':
+    spoken: 'lambo'
     misspellings: ['limbo']
     findable: '->'
     spaceBefore: true
     action: ->
       @string '->'
-  'quatches':
+  'symbol.doubleQuote':
+    spoken: 'quatches'
     tags: ['symbol', 'quotes', 'recommended']
     findable: '"'
     action: ->
       @string '"'
-  'quatchet':
+  'symbol.singleQuote':
+    spoken: 'quatchet'
     tags: ['symbol', 'quotes', 'recommended']
     findable: "'"
     action: ->
       @string "'"
-  'percy':
+  'symbol.percent':
+    spoken: 'percy'
     findable: '%'
     spaceBefore: true
     action: ->
       @string '%'
-  'depercy':
+  'symbol.percent.padded':
+    spoken: 'depercy'
     findable: ' % '
     action: ->
       @string ' % '
-  'dolly':
+  'symbol.dollar':
+    spoken: 'dolly'
     misspellings: ['dalai', 'dawley', 'donnelly', 'donley', 'dali', 'dollies']
     findable: '$'
     spaceBefore: true
     action: ->
       @string '$'
-  'clangle':
+  'symbol.angles.left':
+    spoken: 'clangle'
     findable: '<'
     action: ->
       @string '<'
-  'declangle':
+  'symbol.angles.left.padded':
+    spoken: 'declangle'
     findable: ' < '
     action: ->
       @string ' < '
-  'langlang':
+  'symbol.angles.left.twice':
+    spoken: 'langlang'
     pronunciation: 'lang glang'
     findable: '<<'
     action: ->
       @string '<<'
-  'wrangle':
+  'symbol.angles.right':
+    spoken: 'wrangle'
     findable: '>'
     action: ->
       @string '>'
-  'derangle':
+  'symbol.angles.right.padded':
+    spoken: 'derangle'
     findable: ' > '
     action: ->
       @string ' > '
-  'rangrang':
+  'symbol.angles.right.twice':
+    spoken: 'rangrang'
     pronunciation: 'rang grang'
     findable: '>>'
     action: ->
       @string '>>'
-  'precorp':
+  'symbol.parentheses.left':
+    spoken: 'precorp'
     findable: '('
     action: ->
       @string '('
-  'prekose':
+  'symbol.parentheses.right':
+    spoken: 'prekose'
     findable: ')'
     action: ->
       @string ')'
-  'brackorp':
+  'symbol.brackets.left':
+    spoken: 'brackorp'
     findable: '['
     action: ->
       @string '['
-  'brackose':
+  'symbol.brackets.right':
+    spoken: 'brackose'
     findable: ']'
     action: ->
       @string ']'
-  'crunder':
+  'symbol.underscore':
+    spoken: 'crunder'
     findable: '_'
     action: ->
       @string '_'
-  'coaltwice':
+  'symbol.colon.twice':
+    spoken: 'coaltwice'
     findable: '::'
     action: ->
       @string '::'
-  'mintwice':
+  'symbol.minus.twice':
+    spoken: 'mintwice'
     tags: ['symbol', 'minus', 'recommended']
     findable: '--'
     action: ->
       @string '--'
-  'tinker':
+  'symbol.backtick':
+    spoken: 'tinker'
     findable: '`'
     action: ->
       @string '`'
-  'caret':
+  'symbol.caret':
+    spoken: 'caret'
     findable: '^'
     action: ->
       @string '^'
-  'pixel':
+  'symbol.pixel':
+    spoken: 'pixel'
     tags: ['symbol']
     findable: 'px'
     action: ->
       @string 'px '
-  'quesquall':
+  'symbol.question.equal.padded':
+    spoken: 'quesquall'
     tags: ['symbol']
     findable: ' ?= '
     action: ->
       @string ' ?= '
-  'ellipsis':
+  'symbol.ellipsis':
+    spoken: 'ellipsis'
     findable: '...'
     action: ->
       @string '...'
