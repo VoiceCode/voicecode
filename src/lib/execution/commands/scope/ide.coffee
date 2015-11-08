@@ -1,64 +1,48 @@
 Commands.createDisabled
-  'spring':
+  'cursor.lineNumber':
+    spoken: 'spring'
     grammarType: 'numberCapture'
     description: 'go to line number.'
-    tags: ['sublime', 'xcode']
-    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    tags: ['cursor']
     inputRequired: false
-    action: (input) ->
-      switch @currentApplication()
-        when 'Sublime Text'
-          if input
-            @sublime().goToLine(input).execute()
-          else
-            @key 'g', 'control'
-        when 'Atom'
-          if input
-            @runAtomCommand 'goToLine', input
-          else
-            @key 'g', 'control'
-        when 'Xcode'
-          @key 'l', 'command'
-          if input?
-            @delay 200
-            @string input
-            @delay 100
-            @enter()
+    action: (input) -> null
 
-  'sprinkler':
+  'combo.cursorMoveLineNumberAndWayRight':
+    spoken: 'sprinkler'
     grammarType: 'numberCapture'
     description: 'go to line number then position cursor at end of line.'
-    tags: ['sublime', 'xcode']
-    triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
+    tags: ['cursor']
     inputRequired: false
     action: (input) ->
-      @do 'spring', input
+      @do 'cursor.lineNumber', input
       if input?
-        @do 'ricky'
+        @do 'select.way.right'
 
-  'sprinkle':
+  'combo.cursorMoveLineNumberAndWayLeft':
+    spoken: 'sprinkle'
     grammarType: 'numberCapture'
     description: 'go to line number then position cursor at beginning of line.'
     tags: ['xcode']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     inputRequired: false
     action: (input) ->
-      @do 'spring', input
+      @do 'cursor.lineNumber', input
       if input?
-        @do 'lefty'
+        @do 'cursor.way.left'
 
-  'sprinkoon':
+  'combo.cursorMoveLineNumberThenNewLine':
+    spoken: 'sprinkoon'
     grammarType: 'numberCapture'
     description: 'go to line number then insert a new line below.'
     tags: ['sublime', 'xcode']
     triggerScopes: ['Sublime Text', 'Xcode', 'Atom']
     inputRequired: false
     action: (input) ->
-      @do 'spring', input
+      @do 'cursor.lineNumber', input
       if input?
-        @do 'shockoon'
-
-  'spackle':
+        @do 'common.newLineBelow'
+  '':
+    spoken: 'spackle'
     grammarType: 'numberCapture'
     description: 'go to line number then select entire line.'
     tags: ['sublime']
@@ -69,7 +53,8 @@ Commands.createDisabled
       if input?
         @do 'shackle'
 
-  'bracken':
+  '':
+    spoken: 'bracken'
     description: 'expand selection to quotes, parens, braces, or brackets. (Sublime requires "bracket highlighter" package)'
     tags: ['sublime', 'atom']
     triggerScopes: ['Atom', 'Sublime Text']
@@ -81,7 +66,8 @@ Commands.createDisabled
           # @runAtomCommand 'trigger', 'expand-selection-to-quotes:toggle'
           @key "'", 'control'
 
-  'selrang':
+  '':
+    spoken: 'selrang'
     grammarType: 'numberCapture'
     description: 'selects text in a line range: selrang ten twenty.'
     tags: ['atom', 'sublime']
@@ -107,7 +93,8 @@ Commands.createDisabled
               from: first
               to: last
 
-  'seltil':
+  '':
+    spoken: 'seltil'
     grammarType: 'numberCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'
     # TODO remove this misspelling after a few more releases because of command name change
@@ -128,7 +115,8 @@ Commands.createDisabled
           when 'Atom'
             @runAtomCommand 'extendSelectionToLine', input
 
-  'clonesert':
+  '':
+    spoken: 'clonesert'
     grammarType: 'numberCapture'
     description: 'Insert the text from another line at the current cursor position'
     tags: ['atom']
@@ -140,7 +128,8 @@ Commands.createDisabled
           when 'Atom'
             @runAtomCommand 'insertContentFromLine', input
 
-  'trundle':
+  '':
+    spoken: 'trundle'
     grammarType: 'numberRange'
     tags: ['editing', 'atom', 'sublime']
     description: 'toggle comments on the line or range'

@@ -6,20 +6,44 @@ packageInfo = {
   name: 'atom'
   description: 'Atom IDE integration'
   triggerScopes: ['Atom']
+  tags: ['atom']
 }
 
+Commands.before 'line.move.up', packageInfo, (input, context) ->
+  @key 'up', 'control command'
+  @stop()
+
+Commands.before 'line.move.down', packageInfo, (input, context) ->
+  @key 'down', 'control command'
+  @stop()
+
+Commands.before 'select.word.next', packageInfo, (input, context) ->
+  @runAtomCommand 'selectNextWord', input or 1
+  @stop()
+
+Commands.before 'select.word.previous', packageInfo, (input, context) ->
+  @runAtomCommand 'selectPreviousWord', input or 1
+  @stop()
+
+Commands.before 'cursor.move.lineNumber', packageInfo, (input, context) ->
+  if input
+    @runAtomCommand 'goToLine', input
+  else
+    @key 'g', 'control'
+  @stop()
+
 # thank you very much, I tried it while rewriting this.../facepalm
-Commands.before 'core.object.refresh', packageInfo, (index, context) ->
+Commands.before 'object.refresh', packageInfo, (input, context) ->
   @key 'L', 'control option command'
   @stop()
 
-Commands.before 'core.object.duplicate', packageInfo, ({first, last} = {}) ->
+Commands.before 'object.duplicate', packageInfo, ({first, last} = {}) ->
   # TODO: steal implementation from package
   # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
   @key 'D', 'shift command'
   @stop()
 
-Commands.before 'core.delete.all.line', packageInfo, ({first, last} = {}) ->
+Commands.before 'delete.all.line', packageInfo, ({first, last} = {}) ->
   if last?
     @runAtomCommand 'selectLineRange',
       from: first
@@ -30,7 +54,7 @@ Commands.before 'core.delete.all.line', packageInfo, ({first, last} = {}) ->
   @key 'k', 'control shift'
   @stop()
 
-Commands.before 'core.search.previous.wordOccurrence', packageInfo, (input, context) ->
+Commands.before 'search.previous.wordOccurrence', packageInfo, (input, context) ->
   term = input?.value or @storage.previousSearchTerm
   if term?.length
     @storage.previousSearchTerm = term
@@ -39,7 +63,7 @@ Commands.before 'core.search.previous.wordOccurrence', packageInfo, (input, cont
       distance: input.distance or 1
     @stop()
 
-Commands.before 'core.search.next.wordOccurrence', packageInfo, (input, context) ->
+Commands.before 'search.next.wordOccurrence', packageInfo, (input, context) ->
   term = input?.value or @storage.nextTrapSearchTerm
   if term?.length
     @storage.previousTrapSearchTerm = term
@@ -48,7 +72,7 @@ Commands.before 'core.search.next.wordOccurrence', packageInfo, (input, context)
       distance: input.distance or 1
     @stop()
 
-Commands.before 'core.search.extendSelection.next.wordOccurrence', packageInfo, (input, context) ->
+Commands.before 'search.extendSelection.next.wordOccurrence', packageInfo, (input, context) ->
   term = input?.value or @storage.previousSearchTerm
   if term?.length
     @storage.previousSearchTerm = term
@@ -57,7 +81,7 @@ Commands.before 'core.search.extendSelection.next.wordOccurrence', packageInfo, 
       distance: input.distance or 1
     @stop()
 
-Commands.before 'core.search.extendSelection.previous.wordOccurrence', packageInfo, (input, context) ->
+Commands.before 'search.extendSelection.previous.wordOccurrence', packageInfo, (input, context) ->
   term = input?.value or @storage.previousSearchTerm
   if term?.length
     @storage.previousSearchTerm = term
@@ -66,19 +90,19 @@ Commands.before 'core.search.extendSelection.previous.wordOccurrence', packageIn
       distance: input.distance or 1
     @stop()
 
-Commands.before 'core.search.previous.selectionOccurrence', packageInfo, (input, context) ->
+Commands.before 'search.previous.selectionOccurrence', packageInfo, (input, context) ->
   @runAtomCommand "selectPreviousOccurrence",
     value: null
     distance: 1
   @stop()
 
-Commands.before 'core.search.next.selectionOccurrence', packageInfo, (input, context) ->
+Commands.before 'search.next.selectionOccurrence', packageInfo, (input, context) ->
   @runAtomCommand "selectNextOccurrence",
     value: null
     distance: 1
   @stop()
 
-Commands.before 'core.search.previous.wordBySurroundingCharacters', packageInfo, (input, context) ->
+Commands.before 'search.previous.wordBySurroundingCharacters', packageInfo, (input, context) ->
   term = input?.value or @storage.previousTrapSearchTerm
   if term?.length
     @storage.previousTrapSearchTerm = term
@@ -88,7 +112,7 @@ Commands.before 'core.search.previous.wordBySurroundingCharacters', packageInfo,
       direction: -1
     @stop()
 
-Commands.before 'core.search.next.wordBySurroundingCharacters', packageInfo, (input, context) ->
+Commands.before 'search.next.wordBySurroundingCharacters', packageInfo, (input, context) ->
   term = input?.value or @storage.previousTrapSearchTerm
   if term?.length
     @storage.previousTrapSearchTerm = term
@@ -97,3 +121,33 @@ Commands.before 'core.search.next.wordBySurroundingCharacters', packageInfo, (in
       distance: input.distance or 1
       direction: 1
     @stop()
+
+
+Commands.createDisabledWithDefaults packageInfo,
+  'atom.connect': # TODO: deprecated?
+    spoken: 'connector'
+    description: 'connect voicecode to atom'
+    action: (input) ->
+      # can't use runAtomCommand here because it isn't connected yet :)
+      @openMenuBarPath(['Packages', 'VoiceCode', 'Connect'])
+  'atom.projects.list':
+    spoken: 'projector'
+    description: 'switch projects in Atom'
+    action: (input) ->
+      @runAtomCommand 'trigger', 'project-manager:list-projects'
+  'atom.jump-to-symbol.dialogue':
+    spoken: 'jumpy'
+    description: 'open jump-to-symbol dialogue'
+    action: (input) ->
+      @runAtomCommand 'trigger', 'symbols-view:toggle-file-symbols'
+  'atom.search-selection':
+    spoken: 'marthis'
+    description: 'Use the currently selected text as a search term'
+    action: ->
+      @key 'e', 'command'
+
+Commands.createDisabled 'application.open.atom',
+    spoken: 'tradam' # TODO: deprecated?
+    description: 'open Atom. (this is needed because the regular "fox Atom" always opens a new window)'
+    tags: ['atom']
+    action: -> @openApplication "Atom"

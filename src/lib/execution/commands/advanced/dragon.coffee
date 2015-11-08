@@ -8,7 +8,7 @@ Chain.preprocess (chain) ->
   newChain
 
 Commands.createDisabled
-  "dragon.microphone.mute":
+  "dragon.microphone.sleep":
     spoken: 'snore'
     grammarType: 'textCapture'
     description: "put dragon into sleep mode"

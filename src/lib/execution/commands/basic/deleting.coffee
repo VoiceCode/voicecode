@@ -1,12 +1,14 @@
 Commands.createDisabled
-  'trough':
-    description: 'delete a word at a time (press option-delete)'
+  'delete.word.backward':
+    spoken: 'trough'
+    description: 'Delete a word at a time (press option-delete)'
     tags: ['deleting', 'recommended']
     repeatable: true
     action: ->
       @key 'delete', 'option'
-  'steffi':
-    description: 'delete a partial word at a time'
+  'delete.wordpartial.backward':
+    spoken: 'steffi'
+    description: 'Delete a partial word at a time'
     tags: ['deleting']
     repeatable: true
     misspellings: ['steffy']
@@ -20,8 +22,9 @@ Commands.createDisabled
         @key 'delete', 'option'
       else
         @deletePartialWord('left')
-  'stippy':
-    description: 'forward delete a partial word at a time'
+  'delete.wordpartial.forward':
+    spoken: 'stippy'
+    description: 'Forward delete a partial word at a time'
     tags: ['deleting']
     repeatable: true
     action: ->
@@ -29,7 +32,8 @@ Commands.createDisabled
         @key 'forwarddelete', 'control'
       else
         @deletePartialWord('right')
-  'kite':
+  'delete.word.forward':
+    spoken: 'kite'
     description: 'forward delete a word at a time'
     tags: ['deleting', 'recommended']
     repeatable: true

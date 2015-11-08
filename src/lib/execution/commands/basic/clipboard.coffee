@@ -1,5 +1,5 @@
 Commands.createDisabled
-  'core.clipboard.paste':
+  'clipboard.paste':
     spoken: 'spark'
     grammarType: 'oneArgument'
     description: 'paste the clipboard (or named item from {stoosh} command)'
@@ -16,20 +16,20 @@ Commands.createDisabled
           @paste()
       else
         @paste()
-  'core.combo[select.all,clipboard.paste]':
+  'combo.selectAllThenPaste':
     spoken: 'allspark'
     description: 'select all then paste the clipboard'
     tags: ['clipboard', 'selection', 'recommended']
     action: ->
       @selectAll()
       @paste()
-  'core.clipboard.paste.alternate':
+  'clipboard.paste.alternate':
     spoken: 'sparky'
     description: 'paste the alternate clipboard'
     tags: ['clipboard']
     action: ->
       @key 'V', 'command shift'
-  'core.combo[symbol.space,clipboard.paste]':
+  'combo.spaceThenPaste':
     spoken: 'skoopark'
     grammarType: 'oneArgument'
     description: 'insert space then paste the clipboard (or named item from {stoosh} command)'
@@ -38,7 +38,7 @@ Commands.createDisabled
     action: (input) ->
       @space()
       @paste input
-  'core.combo[clipboard.copy,appControl.switchToPrevious]':
+  'combo.copySelectionAndSwitchApp':
     spoken: 'stooshwick'
     description: 'copy whatever is selected then switch applications'
     tags: ['clipboard', 'application', 'system', 'combo', 'recommended']
@@ -46,7 +46,7 @@ Commands.createDisabled
       @copy()
       @switchApplication()
       @delay 250
-  'core.clipboard.copy':
+  'clipboard.copy':
     spoken: 'stoosh'
     grammarType: 'oneArgument'
     description: 'copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via {spark [name]})'
@@ -57,14 +57,14 @@ Commands.createDisabled
       if input?
         @waitForClipboard()
         @storeItem 'clipboard', input, @getClipboard()
-  'core.combo[select.all,clipboard.copy]':
+  'combo.crownSelectAllThenCopy':
     spoken: 'allstoosh'
     description: 'Select all then copy whatever is selected'
     tags: ['clipboard', 'selection', 'recommended']
     action: ->
       @selectAll()
       @copy()
-  'core.clipboard.cut':
+  'clipboard.cut':
     spoken: 'snatch'
     description: 'Cut whatever is selected'
     tags: ['clipboard', 'recommended']

@@ -1,42 +1,42 @@
 Commands.createDisabled
-  'core.object.next':
+  'object.next':
     spoken: 'goneck'
-    description: 'go to next thing (application-specific), tab, message, etc.'
+    description: 'Go to next thing (application-specific), tab, message, etc.'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
       @key ']', 'command shift'
-  'core.object.previous':
+  'object.previous':
     spoken: 'gopreev'
-    description: 'go to previous thing (application-specific), tab, message, etc.'
+    description: 'Go to previous thing (application-specific), tab, message, etc.'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
       @key '[', 'command shift'
-  'core.object.backwards':
+  'object.backward':
     spoken: 'baxley'
-    description: 'go "back" - whatever that might mean in context'
+    description: 'Go "back" - whatever that might mean in context'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
       null
-  'core.object.forwards':
+  'object.forward':
     spoken: 'fourthly'
-    description: 'go "forward" - whatever that might mean in context'
+    description: 'Go "forward" - whatever that might mean in context'
     tags: ['recommended', 'navigation']
     repeatable: true
     action: ->
       null
 
-  'core.object.refresh':
+  'object.refresh':
     spoken: 'freshly'
-    description: 'reload or refresh depending on context'
+    description: 'Reload or refresh depending on context'
     tags: ['recommended', 'navigation']
     action: ->
       null
-  'core.combo.downArrowsAndEnter':
+  'combo.downArrowsAndEnter':
     spoken: 'cheese'
-    description: 'presses the down arrow [x] times then presses return (for choosing items from lists that don\'t have direct shortcuts)'
+    description: 'Presses the down arrow [x] times then presses return (for choosing items from lists that don\'t have direct shortcuts)'
     tags: ['navigation']
     grammarType: 'numberCapture'
     inputRequired: false

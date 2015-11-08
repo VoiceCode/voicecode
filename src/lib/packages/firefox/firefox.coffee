@@ -4,14 +4,14 @@ packageInfo = {
   triggerScopes: ['Firefox']
 }
 
-Commands.before 'core.object.forwards', packageInfo, (index, context) ->
+Commands.before 'object.forwards', packageInfo, (input, context) ->
   @key ']', 'command'
   @stop()
 
-Commands.before 'core.object.backwards', packageInfo, (index, context) ->
+Commands.before 'object.backwards', packageInfo, (input, context) ->
   @key '[', 'command'
   @stop()
 
-Commands.before 'core.object.refresh', packageInfo, (index, context) ->
+Commands.before 'object.refresh', packageInfo, (input, context) ->
   @key 'R', 'command'
   @stop()

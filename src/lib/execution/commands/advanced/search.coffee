@@ -3,7 +3,7 @@ Commands.createDisabledWithDefaults
   tags: ["search", "voicecode", "selection"]
   inputRequired: true
 ,
-  "core.search.previous.wordOccurrence":
+  'search.previous.wordOccurrence':
     spoken: 'trail'
     description: "Search backward for the next thing you say, then select it"
     misspellings: ["trailed"]
@@ -12,7 +12,7 @@ Commands.createDisabledWithDefaults
       if term?.length
         @storage.previousSearchTerm = term
         @selectPreviousOccurrenceWithDistance term, input.distance
-  "core.search.next.wordOccurrence":
+  'search.next.wordOccurrence':
     spoken: 'crew'
     description: "Search forward for the next thing you say, then select it"
     misspellings: ["crews", "cruise"]
@@ -22,7 +22,7 @@ Commands.createDisabledWithDefaults
         @storage.previousSearchTerm = term
         @selectNextOccurrenceWithDistance term, input.distance
 
-  "core.search.extendSelection.previous.wordOccurrence":
+  'search.extendSelection.previous.wordOccurrence':
     spoken: 'seltrail'
     tags: ["search", "voicecode", "selection"]
     description: "Extend the selection backward until the next occurrence of the spoken argument"
@@ -32,7 +32,7 @@ Commands.createDisabledWithDefaults
         @storage.previousSearchTerm = term
         @extendSelectionToPreviousOccurrenceWithDistance term, input.distance
 
-  "core.search.extendSelection.next.wordOccurrence":
+  'search.extendSelection.next.wordOccurrence':
     spoken: 'selcrew'
     tags: ["search", "voicecode", "selection"]
     description: "Extend the selection forward until the next occurrence of the spoken argument"
@@ -42,7 +42,7 @@ Commands.createDisabledWithDefaults
         @storage.previousSearchTerm = term
         @extendSelectionToFollowingOccurrenceWithDistance term, input.distance
 
-  "core.search.previous.wordBySurroundingCharacters":
+  'search.previous.wordBySurroundingCharacters':
     spoken: 'trapreev'
     tags: ["search", "voicecode", "selection"]
     description: "Select the previous word by its surrounding characters, so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell' - useful for unpronounceable or long words"
@@ -55,7 +55,7 @@ Commands.createDisabledWithDefaults
           distance: input.distance or 1
           direction: -1
 
-  "core.search.next.wordBySurroundingCharacters":
+  'search.next.wordBySurroundingCharacters':
     spoken: "trapneck"
     tags: ["search", "voicecode", "selection"]
     description: "select the next word by its surrounding characters, so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell' - useful for unpronounceable or long words"
@@ -67,7 +67,7 @@ Commands.createDisabledWithDefaults
           expression: term
           distance: input.distance
           direction: 1
-  "core.search.next.selectionOccurrence":
+  'search.next.selectionOccurrence':
     spoken: "nexok"
     kind : "action"
     grammarType : "individual"
@@ -85,7 +85,7 @@ Commands.createDisabledWithDefaults
           else
             return
           @selectNextOccurrenceWithDistance term, 1
-  "core.search.previous.selectionOccurrence"
+  "core.search.previous.selectionOccurrence":
     spoken: "privok"
     kind : "action"
     grammarType : "individual"

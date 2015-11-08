@@ -1,5 +1,6 @@
 Commands.createDisabled
-  'swash':
+  'open.drop-down':
+    spoken: 'swash'
     grammarType: 'oneArgument'
     description: 'opens drop-down menu by name. A few special arguments are also allowed: [bluetooth, wi-fi, clock, battery]'
     tags: ['application', 'system', 'recommended']
@@ -23,13 +24,15 @@ Commands.createDisabled
         menuItem = Settings.menuItemAliases[input] or input
         @openMenuBarItem menuItem
 
-  'blerch':
+  'open.help-drop-down':
+    spoken: 'blerch'
     description: 'search the menubar items (opens help menu)'
     tags: ['application', 'system', 'recommended']
     action: ->
       @openMenuBarItem 'help'
 
-  'volume':
+  'volume.set':
+    spoken: 'volume'
     grammarType: 'numberCapture'
     description: 'adjust the system volume [0-100]'
     tags: ['system', 'recommended']
@@ -38,7 +41,8 @@ Commands.createDisabled
     action: (input) ->
       @setVolume(input)
 
-  'volume plus':
+  'volume.increase':
+    spoken: 'volume plus'
     grammarType: 'numberCapture'
     description: 'increase the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
@@ -48,7 +52,8 @@ Commands.createDisabled
       currentVolume = @getCurrentVolume() or 0
       @setVolume currentVolume + (input or 10)
 
-  'volume minus':
+  'volume.decrease':
+    spoken: 'volume minus'
     grammarType: 'numberCapture'
     description: 'decrease the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
@@ -59,7 +64,8 @@ Commands.createDisabled
       @setVolume currentVolume - (input or 10)
 
 
-  'windy':
+  'window.changeProperties':
+    spoken: 'windy'
     grammarType: 'custom'
     rule: '<name> (digit)* (windowPosition)*'
     description: 'set the size/position of the frontmost window to one of the preset sizes/positions'
