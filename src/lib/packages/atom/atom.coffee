@@ -2,12 +2,11 @@
 # TODO: implement synchronicity. We need to wait for success/failure call back.
 #       The chain must break if something like core.search.next.wordOccurrence fails
 #       Actions.breakChain: -> emit 'chainLinkBroken', ...
-packageInfo = {
+packageInfo =
   name: 'atom'
   description: 'Atom IDE integration'
   triggerScopes: ['Atom']
   tags: ['atom']
-}
 
 Commands.before 'line.move.up', packageInfo, (input, context) ->
   @key 'up', 'control command'

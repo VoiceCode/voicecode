@@ -1,5 +1,6 @@
 Commands.createDisabled
-  'please dial':
+  'communication.place-phone-call':
+    spoken: 'please dial'
     description: 'place a phone call to the given person (uses Settings.phoneNumbers). Requires an iPhone connected to the same wi-fi network as the computer'
     tags: ['messaging', 'phone']
     grammarType: 'textCapture'
@@ -21,7 +22,8 @@ Commands.createDisabled
           """
           @microphoneOff()
 
-  'please facetime':
+  'communication.place-facetime-call':
+    spoken: 'please facetime'
     description: 'place a facetime call to the given person (uses Settings.phoneNumbers)'
     tags: ['messaging', 'phone']
     grammarType: 'textCapture'

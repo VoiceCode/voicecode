@@ -1,8 +1,7 @@
-packageInfo = {
+packageInfo =
   name: 'firefox'
   description: 'Firefox integration'
   triggerScopes: ['Firefox']
-}
 
 Commands.before 'object.forwards', packageInfo, (input, context) ->
   @key ']', 'command'

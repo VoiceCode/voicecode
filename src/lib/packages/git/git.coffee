@@ -28,7 +28,7 @@ git =
     spoken: 'jet bisect'
   'git.branch':
     spoken: 'jet branch'
-  'git.check out':
+  'git.checkout':
     spoken: 'jet check out'
     output: 'git checkout'
   'git.clone':

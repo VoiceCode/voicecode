@@ -41,7 +41,7 @@ Commands.createDisabled
       @do 'cursor.lineNumber', input
       if input?
         @do 'common.newLineBelow'
-  '':
+  'combo.cursorMoveLineAndSelect':
     spoken: 'spackle'
     grammarType: 'numberCapture'
     description: 'go to line number then select entire line.'
@@ -53,7 +53,7 @@ Commands.createDisabled
       if input?
         @do 'shackle'
 
-  '':
+  'selection.expandToScope':
     spoken: 'bracken'
     description: 'expand selection to quotes, parens, braces, or brackets. (Sublime requires "bracket highlighter" package)'
     tags: ['sublime', 'atom']
@@ -66,7 +66,7 @@ Commands.createDisabled
           # @runAtomCommand 'trigger', 'expand-selection-to-quotes:toggle'
           @key "'", 'control'
 
-  '':
+  'selection.lineNumberRange':
     spoken: 'selrang'
     grammarType: 'numberCapture'
     description: 'selects text in a line range: selrang ten twenty.'
@@ -93,7 +93,7 @@ Commands.createDisabled
               from: first
               to: last
 
-  '':
+  'selection.extendToLineNumber':
     spoken: 'seltil'
     grammarType: 'numberCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'
@@ -115,7 +115,7 @@ Commands.createDisabled
           when 'Atom'
             @runAtomCommand 'extendSelectionToLine', input
 
-  '':
+  'insert.fromLineNumber':
     spoken: 'clonesert'
     grammarType: 'numberCapture'
     description: 'Insert the text from another line at the current cursor position'
@@ -128,7 +128,7 @@ Commands.createDisabled
           when 'Atom'
             @runAtomCommand 'insertContentFromLine', input
 
-  '':
+  'comments.toggle':
     spoken: 'trundle'
     grammarType: 'numberRange'
     tags: ['editing', 'atom', 'sublime']

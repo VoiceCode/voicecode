@@ -1,8 +1,7 @@
-packageInfo = {
+packageInfo =
   name: 'skype'
   description: 'Skype integration'
   triggerScopes: ['Skype']
-}
 
 Commands.before 'object.next', packageInfo, (input, context) ->
   @key 'right', 'command option'

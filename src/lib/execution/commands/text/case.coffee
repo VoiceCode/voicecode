@@ -1,10 +1,9 @@
 Commands.createDisabledWithDefaults {inputRequired: false},
-  'vc-literal':
+  'core.free-text':
     grammarType: 'none'
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
     tags: ['text', 'recommended']
     needsCommand: false
-    isSpoken: false
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: (input) ->
       left = 'normal'
@@ -22,7 +21,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
-  'champ':
+  'format.capitalize-next-word':
+    spoken: 'champ'
     grammarType: 'textCapture'
     description: 'capitalize next individual word'
     tags: ['text', 'recommended']
@@ -34,7 +34,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.titleFirstSentance(input)
       else
         @transformSelectedText('titleFirstSentance')
-  'cram':
+  'format.camel':
+    spoken: 'cram'
     grammarType: 'textCapture'
     description: 'camelCaseText'
     tags: ['text', 'recommended']
@@ -49,7 +50,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.camel(input)
       else
         @transformSelectedText('camel')
-  'dockram':
+  'format.dot-camel':
+    spoken: 'dockram'
     grammarType: 'textCapture'
     description: 'space camelCaseText'
     tags: ['text', 'combo']
@@ -58,7 +60,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string '.' + Transforms.camel(input)
-  'snake':
+  'format.snake':
+    spoken: 'snake'
     grammarType: 'textCapture'
     description: 'snake_case_text'
     tags: ['text', 'recommended']
@@ -72,14 +75,16 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.snake(input)
       else
         @transformSelectedText('snake')
-  'coalsnik':
+  'format.colon.snake':
+    spoken: 'coalsnik'
     grammarType: 'textCapture'
     description: ':snake_case_with_a_colon_at_the_front'
     tags: ['text', 'combo']
     action: (input) ->
       if input
         @string ':' + Transforms.snake(input)
-  'lowcram':
+  'format.at-sign.camel':
+    spoken: 'lowcram'
     grammarType: 'textCapture'
     description: '@camelCaseWithAtSign'
     tags: ['text', 'combo']
@@ -89,7 +94,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string '@' + Transforms.camel(input)
       else
         @string '@'
-  'dollcram':
+  'format.dollar.camel':
+    spoken: 'dollcram'
     grammarType: 'textCapture'
     description: '$camelCaseWithDollarSign'
     tags: ['text']
@@ -99,7 +105,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string '$' + Transforms.camel(input)
       else
         @string '$'
-  'spine':
+  'format.dashes':
+    spoken: 'spine'
     grammarType: 'textCapture'
     description: 'spinal-case-text'
     misspellings: ['spying']
@@ -114,7 +121,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.spine(input)
       else
         @transformSelectedText('spine')
-  'criffed':
+  'format.upper-camel':
+    spoken: 'criffed'
     description: 'StudCaseText'
     tags: ['text', 'recommended']
     misspellings: ['chaffed', 'crisped']
@@ -129,14 +137,16 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.stud(input)
       else
         @transformSelectedText('stud')
-  'dockriffed':
+  'format.dot-upper-camel':
+    spoken: 'dockriffed'
     description: 'space StudCaseText'
     tags: ['text', 'combo']
     grammarType: 'textCapture'
     action: (input) ->
       if input
         @string '.' + Transforms.stud(input)
-  'dollkriffed':
+  'format.dollar-upper-camel':
+    spoken: 'dollkriffed'
     description: 'space StudCaseText'
     tags: ['text', 'combo']
     grammarType: 'textCapture'
@@ -144,7 +154,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string '$' + Transforms.stud(input)
-  'smash':
+  'format.smash':
+    spoken: 'smash'
     grammarType: 'textCapture'
     description: 'lowercasewithnospaces'
     tags: ['text', 'recommended']
@@ -154,7 +165,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.lowerSlam(input)
       else
         @transformSelectedText('lowerSlam')
-  'yellsmash':
+  'format.upper-smash':
+    spoken: 'yellsmash'
     grammarType: 'textCapture'
     description: 'UPPERCASEWITHNOSPACES'
     tags: ['text']
@@ -164,7 +176,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.upperSlam(input)
       else
         @transformSelectedText('upperSlam')
-  'yeller':
+  'format.upper':
+    spoken: 'yeller'
     grammarType: 'textCapture'
     description: 'UPPER CASE WITH SPACES'
     tags: ['text', 'recommended']
@@ -176,7 +189,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.upperCase(input)
       else
         @transformSelectedText('upperCase')
-  'yellsnik':
+  'format.upper-snake':
+    spoken: 'yellsnik'
     grammarType: 'textCapture'
     description: 'UPPER_CASE_SNAKE'
     tags: ['text']
@@ -186,7 +200,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.upperSnake(input)
       else
         @transformSelectedText('upperSnake')
-  'yellspin':
+  'format.upper-dashes':
+    spoken: 'yellspin'
     grammarType: 'textCapture'
     description: 'UPPER-CASE-SPINE'
     tags: ['text']
@@ -195,7 +210,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.upperSpine(input)
       else
         @transformSelectedText('upperSpine')
-  'pathway':
+  'format.slashes':
+    spoken: 'pathway'
     grammarType: 'textCapture'
     description: 'separated/by/slashes'
     tags: ['text']
@@ -204,7 +220,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.slashes(input)
       else
         @transformSelectedText('slashes')
-  'dotsway':
+  'format.dots':
+    spoken: 'dotsway'
     grammarType: 'textCapture'
     description: 'separated.by.dots'
     tags: ['text']
@@ -213,7 +230,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.dots(input)
       else
         @transformSelectedText('dots')
-  'tridal':
+  'format.title':
+    spoken: 'tridal'
     grammarType: 'textCapture'
     description: 'Title Words With Spaces'
     tags: ['text', 'recommended']
@@ -225,7 +243,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.titleSentance(input)
       else
         @transformSelectedText('titleSentance')
-  'senchen':
+  'format.sentance':
+    spoken: 'senchen'
     grammarType: 'textCapture'
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']
@@ -237,7 +256,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.titleFirstSentance(input)
       else
         @transformSelectedText('titleFirstSentance')
-  'trench':
+  'format.space-sentance':
+    spoken: 'trench'
     grammarType: 'textCapture'
     description: 'space then Sentence case with spaces'
     tags: ['text', 'recommended']
@@ -246,7 +266,8 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string ' ' + Transforms.titleFirstSentance(input)
-  'datsun':
+  'format.dot-sentance':
+    spoken: 'datsun'
     grammarType: 'textCapture'
     description: 'Sentence case with spaces'
     tags: ['text', 'recommended']

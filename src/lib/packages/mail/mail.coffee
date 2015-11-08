@@ -1,8 +1,7 @@
-packageInfo = {
+packageInfo =
   name: 'mail'
   description: 'Mail integration'
   triggerScopes: ['Mail']
-}
 
 Commands.before 'object.next', packageInfo, (input, context) ->
   @key 'down', 'command'

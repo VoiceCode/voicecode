@@ -1,9 +1,8 @@
-packageInfo = {
+packageInfo =
   name: 'xcode'
   description: 'Xcode IDE integration'
   triggerScopes: ['Xcode']
   tags: ['xcode']
-}
 
 Commands.before 'cursor.move.lineNumber', packageInfo, (input, context) ->
   @key 'l', 'command'

@@ -1,5 +1,6 @@
 Commands.createDisabled
-  'cd':
+  'shell.cd':
+    'cd'
     description: 'change directory'
     tags: ['domain-specific', 'shell']
     triggerScopes: ['iTerm', 'Terminal']
@@ -7,7 +8,8 @@ Commands.createDisabled
     action: ->
       @string 'cd ; ls'
       @left 4
-  'engage':
+  'shell.enter-folder-under-mouse':
+    'engage'
     description: 'hover your mouse over a directory name output from a "ls" command in the terminal, and this command will "cd" to that directory'
     tags: ['domain-specific', 'shell']
     triggerScope: 'iTerm'
@@ -19,7 +21,8 @@ Commands.createDisabled
       @paste()
       @string '; ls'
       @enter()
-  'shell list':
+  'shell.ls':
+    'shell list'
     grammarType: 'textCapture'
     description: 'list directory contents (takes dynamic arguments)'
     tags: ['domain-specific', 'shell']
@@ -33,7 +36,8 @@ Commands.createDisabled
       @string "ls #{options}"
       @enter()
 
-  'shell history':
+  'shell.history.display':
+    'shell history'
     grammarType: 'numberCapture'
     description: 'display the last [n](default all) shell commands executed'
     tags: ['domain-specific', 'shell']
@@ -43,7 +47,8 @@ Commands.createDisabled
     action: (input) ->
       @string "history #{input or ''}"
       @enter()
-  'shell recall':
+  'shell.history.execute-item-under-mouse':
+    'shell recall'
     description: 'hovering the mouse over the left-hand number of a result from the history output, this will re-execute the command'
     tags: ['domain-specific', 'shell']
     triggerScope: 'iTerm'
@@ -54,7 +59,8 @@ Commands.createDisabled
       @key '!'
       @paste()
       @enter()
-  'shell edit':
+  'shell.edit-file-under-mouse':
+    'shell edit'
     description: 'open file in editor'
     tags: ['domain-specific', 'shell']
     triggerScope: 'iTerm'
@@ -65,14 +71,16 @@ Commands.createDisabled
       @key '$EDITOR '
       @paste()
       @enter()
-  'durrup':
+  'shell.navigation.parent-directory':
+    'durrup'
     description: 'navigate to the parent directory'
     tags: ['domain-specific', 'shell']
     triggerScopes: ['iTerm', 'Terminal']
     action: ->
       @string 'cd ..; ls'
       @enter()
-  'direct':
+  'shell.global.open-directory':
+    'direct'
     grammarType: 'textCapture'
     description: 'changes directory to any directory in the predefined list'
     tags: ['text', 'domain-specific', 'shell']
@@ -90,7 +98,8 @@ Commands.createDisabled
           @delay 200
           @string "cd #{directory} ; ls"
           @enter()
-  'shell':
+  'shell.insert-common-command':
+    'shell'
     grammarType: 'custom'
     description: 'insert a shell command from the predefined shell commands list'
     tags: ['text', 'shell']

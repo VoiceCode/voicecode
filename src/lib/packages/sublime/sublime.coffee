@@ -1,13 +1,12 @@
-packageInfo = {
+packageInfo =
   name: 'sublime'
   description: 'Sublime Text integration'
   triggerScopes: ['Sublime Text']
-}
 
 Commands.before 'select.block', packageInfo, (input, context) ->
   @key 'l', ['command']
   @stop()
-  
+
 Commands.before 'line.move.down', packageInfo, (input, context) ->
   @key 'down', 'control command'
   @stop()

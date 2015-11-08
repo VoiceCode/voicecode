@@ -1,8 +1,7 @@
-packageInfo = {
+packageInfo =
   name: 'iterm'
   description: 'iTerm integration'
   triggerScopes: ['iTerm']
-}
 
 Commands.after 'git.status', packageInfo, (input, context) ->
   @enter()
