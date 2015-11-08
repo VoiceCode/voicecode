@@ -5,7 +5,7 @@ class Package
 
   createCommands: (commands) ->
     packageOptions = @defaultCommandOptions
-    _.each commands, (options, id) ->2
+    _.each commands, (options, id) ->
       Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, options)
 
   beforeCommands: (options) ->
