@@ -1,5 +1,5 @@
 Commands.createDisabled
-  'daitler':
+  'format.date':
     grammarType: 'custom'
     rule: '<name> (dateFormats)*'
     tags: ['snippet']

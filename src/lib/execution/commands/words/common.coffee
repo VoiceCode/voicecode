@@ -22,7 +22,8 @@ wordsWithTriggerPhrase =
   'id': 'ID'
 
 _.each singleWords, (word) ->
-  Commands.createDisabled word,
+  Commands.createDisabled "word.#{word}",
+    spoken: word
     kind: 'word'
     grammarType: 'none'
     description: "insert the word {#{word}}"
@@ -30,7 +31,8 @@ _.each singleWords, (word) ->
     continuous: false
 
 _.each wordsWithTriggerPhrase, (trigger, word) ->
-  Commands.createDisabled word,
+  Commands.createDisabled "word.#{word}",
+    spoken: word
     kind: 'word'
     grammarType: 'none'
     description: "insert the word {#{word}}"
