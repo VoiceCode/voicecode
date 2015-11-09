@@ -1,5 +1,5 @@
 Commands.createDisabled
-  'shell.cd':
+  'shell.directory.change':
     spoken: 'cd'
     description: 'change directory'
     tags: ['domain-specific', 'shell']
@@ -8,9 +8,10 @@ Commands.createDisabled
     action: ->
       @string 'cd ; ls'
       @left 4
-  'shell.enter-folder-under-mouse':
+  'shell.directory.changeUnderMouse':
     spoken: 'engage'
-    description: 'hover your mouse over a directory name output from a "ls" command in the terminal, and this command will "cd" to that directory'
+    description: 'hover your mouse over a directory name output from a "ls"
+    command in the terminal, and this command will "cd" to that directory'
     tags: ['domain-specific', 'shell']
     triggerScope: 'iTerm'
     continuous: false
@@ -21,7 +22,7 @@ Commands.createDisabled
       @paste()
       @string '; ls'
       @enter()
-  'shell.ls':
+  'shell.directory.list':
     spoken: 'shell list'
     grammarType: 'textCapture'
     description: 'list directory contents (takes dynamic arguments)'
@@ -49,7 +50,8 @@ Commands.createDisabled
       @enter()
   'shell.history.execute-item-under-mouse':
     spoken: 'shell recall'
-    description: 'hovering the mouse over the left-hand number of a result from the history output, this will re-execute the command'
+    description: 'hovering the mouse over the left-hand number of a result
+    from the history output, this will re-execute the command'
     tags: ['domain-specific', 'shell']
     triggerScope: 'iTerm'
     continuous: false
@@ -59,7 +61,7 @@ Commands.createDisabled
       @key '!'
       @paste()
       @enter()
-  'shell.edit-file-under-mouse':
+  'shell.open-with-editor':
     spoken: 'shell edit'
     description: 'open file in editor'
     tags: ['domain-specific', 'shell']
@@ -71,7 +73,7 @@ Commands.createDisabled
       @key '$EDITOR '
       @paste()
       @enter()
-  'shell.navigation.parent-directory':
+  'shell.directory.parent':
     spoken: 'durrup'
     description: 'navigate to the parent directory'
     tags: ['domain-specific', 'shell']
@@ -105,7 +107,6 @@ Commands.createDisabled
     tags: ['text', 'shell']
     misspellings: ['shall', 'chell']
     rule: '<name> (shellcommands)'
-    triggerScopes: ['iTerm', 'Terminal']
     variables:
       shellcommands: -> _.keys Settings.shellCommands
     continuous: false

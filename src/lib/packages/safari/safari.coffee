@@ -16,7 +16,8 @@ Commands.before 'object.refresh', packageInfo, (input, context) ->
   @stop()
 
 Commands.createDisabled
-  'show tabs':
+  'safari.show.tabs':
+    spoken: 'show tabs'
     description: 'show all the tabs open in safari'
     tags: ['safari']
     triggerScopes: ['Safari']

@@ -158,7 +158,7 @@ Commands.createDisabled
     tags: ['text-manipulation', 'recommended']
     misspellings: ['joel']
     action: ->
-      @do 'select.all.lineText'
+      @do 'select.line.text'
       @copy()
       @do 'common.newLineBelow'
       @paste()

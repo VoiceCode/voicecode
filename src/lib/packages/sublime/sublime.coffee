@@ -3,6 +3,28 @@ packageInfo =
   description: 'Sublime Text integration'
   triggerScopes: ['Sublime Text']
 
+customDescription = ((_.clone packageInfo).description = 'Requires "bracket highlighter" package')
+Commands.before 'combo.expandSelectionToScope', customDescription,
+  (input, context) ->
+    @key 's', 'control command option'
+    @stop()
+
+Commands.before 'select.line.range', packageInfo, (input, context) ->
+  if input?
+    number = input.toString()
+    length = Math.floor(number.length / 2)
+    first = number.substr(0, length)
+    last = number.substr(length, length + 1)
+    first = parseInt(first)
+    last = parseInt(last)
+    if last < first
+      temp = last
+      last = first
+      first = temp
+
+  @sublime().selectRange(first, last).execute()
+  @stop()
+
 Commands.before 'select.block', packageInfo, (input, context) ->
   @key 'l', ['command']
   @stop()
@@ -34,6 +56,14 @@ Commands.before 'delete.all.right', packageInfo, (input, context) ->
   @key 'k', 'control'
   @stop()
 
+Commands.before 'ide.toggleComment', packageInfo, ({first, last} = {}) ->
+  if last?
+    @sublime().selectRange(first, last).execute()
+  else if first?
+    @sublime().goToLine(first).execute()
+  @key '/', 'command'
+  @stop()
+
 Commands.before 'delete.all.line', packageInfo, ({first, last} = {}) ->
   if last?
     @sublime().selectRange(first, last).execute()
@@ -58,6 +88,15 @@ Commands.before 'select.word.previous', packageInfo, (input, context) ->
   @repeat input or 1, ->
     s.selectPreviousWord()
   s.execute()
+  @stop()
+
+Commands.before 'select.untilLineNumber', packageInfo, (input, context) ->
+  @sublime()
+  .setMark()
+  .goToLine(input)
+  .selectToMark()
+  .clearMark()
+  .execute()
   @stop()
 
 Commands.before 'object.backwards', packageInfo, (input, context) ->
