@@ -62,14 +62,15 @@ class Commands
       @commandEditsFrom = 'settings'
       @performCommandEdits()
 
-  getCurrentNameFor: (commandName) ->
-    (_.pluck @renamings, {from: commandName})?.to || commandName
+  # getCurrentNameFor: (commandName) ->
+  #   (_.pluck @renamings, {from: commandName})?.to || commandName
 
   validate: (command, options, editType) ->
     validated = true
     switch editType
       when 'commandCreated'
-        if @mapping[command]?
+        @validate command, options, 'commandNameChanged'
+        if Commands.mapping[command]?
           if options.action?
             if options.action.toString() is @mapping[command].action.toString()
               validated = false # action is the same
@@ -77,7 +78,8 @@ class Commands
           # else
           #   error 'commandHasNoAction', command, "Command #{command} has no action."
           #   validated = false
-          warning 'commandOverwritten', command, "Command '#{command}' overwritten by command with a same name"
+          warning 'commandOverwritten', command,
+          "Command '#{command}' overwritten by a command with a same name"
         if options.rule?.match(/\(.*?\d+.*?\)/g)?
           error 'commandValidationError', command, 'Please don\'t use integers in list names'
           validated = false
@@ -105,8 +107,10 @@ class Commands
         if command.enabled is true
           validated = false
       when 'commandNameChanged'
-        if _.findWhere(@renamings, {to: options})?
-          validated = false
+        if _.findWhere(Commands.mapping, {spoken: options})?
+          warning 'commandSpokenOverwritten', command,
+          "Command #{options}`s spoken parameter overwritten by command with a same name"
+
 
     if not validated and @shouldEmitValidationFailed(editType, command)
       emit 'commandValidationFailed', {command, options, editType}
@@ -255,21 +259,8 @@ class Commands
 
   changeName: (name, newName) ->
     @edit name, 'commandNameChanged', newName, (command) ->
-      if _.findWhere(@renamings, {to: name})?
-        # renaming something that has already been renamed
-        # removing previous renaming reference, allowing swapping command names
-        warning 'commandOverwritten', name, "Command #{name} overwritten by renaming twice"
-        @renamings = _.reject @renamings, ({to}) -> to is name
-
-      if @mapping[newName]?
-        warning 'commandOverwritten', newName, "Command #{newName} overridden by renaming"
-
-      command.namespace = newName
-      command.misspellings = []
-      @mapping[newName] = command
-      @renamings.push {from: name, to: newName}
-      delete @mapping[name]
-      true
+      command.spoken = newName
+      command
 
   normalizeOptions: (name, options) ->
     options.namespace = name
