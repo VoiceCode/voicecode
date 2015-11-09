@@ -1,5 +1,7 @@
 Commands.createDisabledWithDefaults {inputRequired: false},
+<<<<<<< HEAD
   'core.free-text':
+    spoken: 'vc-literal'
     grammarType: 'none'
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
     tags: ['text', 'recommended']
@@ -83,7 +85,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string ':' + Transforms.snake(input)
-  'format.at-sign.camel':
+  'format.at-sign-camel':
     spoken: 'lowcram'
     grammarType: 'textCapture'
     description: '@camelCaseWithAtSign'
@@ -94,7 +96,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string '@' + Transforms.camel(input)
       else
         @string '@'
-  'format.dollar.camel':
+  'format.dollar-camel':
     spoken: 'dollcram'
     grammarType: 'textCapture'
     description: '$camelCaseWithDollarSign'
@@ -154,7 +156,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string '$' + Transforms.stud(input)
-  'format.smash':
+  'format.lower-no-space':
     spoken: 'smash'
     grammarType: 'textCapture'
     description: 'lowercasewithnospaces'
@@ -165,7 +167,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.lowerSlam(input)
       else
         @transformSelectedText('lowerSlam')
-  'format.upper-smash':
+  'format.upper-no-space':
     spoken: 'yellsmash'
     grammarType: 'textCapture'
     description: 'UPPERCASEWITHNOSPACES'
@@ -243,19 +245,19 @@ Commands.createDisabledWithDefaults {inputRequired: false},
         @string Transforms.titleSentance(input)
       else
         @transformSelectedText('titleSentance')
-  'format.sentance':
-    spoken: 'senchen'
-    grammarType: 'textCapture'
-    description: 'Sentence case with spaces'
-    tags: ['text', 'recommended']
-    spaceBefore: true
-    autoSpacing: 'never normal'
-    multiPhraseAutoSpacing: 'never normal'
-    action: (input) ->
-      if input
-        @string Transforms.titleFirstSentance(input)
-      else
-        @transformSelectedText('titleFirstSentance')
+  # '':
+  #   spoken: 'senchen'
+  #   grammarType: 'textCapture'
+  #   description: 'Sentence case with spaces'
+  #   tags: ['text', 'recommended']
+  #   spaceBefore: true
+  #   autoSpacing: 'never normal'
+  #   multiPhraseAutoSpacing: 'never normal'
+  #   action: (input) ->
+  #     if input
+  #       @string Transforms.titleFirstSentance(input)
+  #     else
+  #       @transformSelectedText('titleFirstSentance')
   'format.space-sentance':
     spoken: 'trench'
     grammarType: 'textCapture'
@@ -269,7 +271,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
   'format.dot-sentance':
     spoken: 'datsun'
     grammarType: 'textCapture'
-    description: 'Sentence case with spaces'
+    description: 'Period, then space, then sentence case'
     tags: ['text', 'recommended']
     autoSpacing: (input) ->
       if input

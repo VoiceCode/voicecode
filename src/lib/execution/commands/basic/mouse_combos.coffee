@@ -44,7 +44,7 @@ Commands.createDisabled
     tags: ['selection', 'combo', 'clipboard']
     inputRequired: false
     action: (input) ->
-      @do 'select.all.lineText'
+      @do 'select.line.text'
       @do 'clipboard.copy', input
   'combo.selectLineThenPaste':
     spoken: 'shacklark'
@@ -53,7 +53,7 @@ Commands.createDisabled
     tags: ['selection', 'combo', 'clipboard']
     inputRequired: false
     action: (input) ->
-      @do 'select.all.lineText'
+      @do 'select.line.text'
       @do 'clipboard.paste', input
   'combo.selectLineUnderMouseThenCopy':
     spoken: 'chibloosh'

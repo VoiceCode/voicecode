@@ -1,5 +1,6 @@
 Commands.createDisabled
-  'tennis':
+  'text.format.objective-cNS':
+    spoken: 'tennis'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in NSUpperCamelCase (automatically inserts the "NS" part)'
     tags: ['text', 'objective-c', 'domain-specific']
@@ -9,7 +10,8 @@ Commands.createDisabled
         @string 'NS' + Transforms.stud(input)
       else
         @string 'NS'
-  'youey':
+  'text.format.objective-cUI':
+    spoken: 'youey'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in UIUpperCamelCase - automatically inserts the "UI" part. (pronounced like U-turn)'
     tags: ['text', 'objective-c', 'domain-specific']
@@ -19,7 +21,8 @@ Commands.createDisabled
         @string 'UI' + Transforms.stud(input)
       else
         @string 'UI'
-  'craggle':
+  'text.format.objective-cCG':
+    spoken: 'craggle'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in CGUpperCamelCase (automatically inserts the "CG" part)'
     tags: ['text', 'objective-c', 'domain-specific']
@@ -29,7 +32,8 @@ Commands.createDisabled
         @string 'CG' + Transforms.stud(input)
       else
         @string 'CG'
-  'lowcoif':
+  'text.format.objective-cAtQuotes':
+    spoken: 'lowcoif'
     kind: 'action'
     grammarType: 'individual'
     tags: ['symbol', 'quotes', 'objective-c', 'domain-specific']

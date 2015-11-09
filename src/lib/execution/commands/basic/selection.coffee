@@ -142,7 +142,7 @@ Commands.createDisabled
           @key 'home', 'shift'
         else
           @key 'left', 'command shift'
-  'select.all.lineText':
+  'select.line.text':
     spoken: 'shackle'
     description: 'selects the entire line text'
     tags: ['selection', 'recommended']

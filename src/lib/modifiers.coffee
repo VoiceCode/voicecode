@@ -19,7 +19,8 @@ class Modifiers
     suffixes = @suffixes()
     _.each Settings.modifierPrefixes, (mods, name) ->
       _.each suffixes, (value, key) ->
-        Commands.createDisabled "#{name} #{value}",
+        Commands.createDisabled "modifiers.#{mods}.#{key}",
+          spoken: "#{name} #{value}"
           description: "#{mods} #{key}"
           grammarType: "none"
           tags: ["modifiers"]
