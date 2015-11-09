@@ -38,6 +38,7 @@ _.extend Settings,
   autoSpacingEnabled: ->
     true
   defaultBrowser: "Safari"
+  defaultTerminal: 'Terminal'
   websites:
     "amazon": "http://www.amazon.com"
     "google docs": "http://docs.google.com"

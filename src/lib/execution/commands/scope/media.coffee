@@ -3,12 +3,15 @@ Commands.createDisabledWithDefaults
   continuous: false
   needsCommand: false
 ,
-  'play pause':
+  'media.play.toggle':
+    spoken: 'play pause'
     description: 'play or pause the current song in iTunes'
     action: -> @applescript 'tell app "iTunes" to playpause'
-  'next track':
+  'media.play.next':
+    spoken: 'next track'
     description: 'play or pause the current song in iTunes'
     action: -> @applescript 'tell app "iTunes" to play next track'
-  'previous track':
+  'media.play.previous':
+    spoken: 'previous track'
     description: 'play or pause the current song in iTunes'
     action: -> @applescript 'tell app "iTunes" to play previous track'

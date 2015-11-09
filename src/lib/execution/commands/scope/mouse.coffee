@@ -1,5 +1,6 @@
 Commands.createDisabled
-  'mousy':
+  'mouse.grid.move':
+    spoken: 'mousy'
     grammarType: 'numberCapture'
     description: """moves the mouse by grid coordinates
       [1-9] => grid on current monitor;

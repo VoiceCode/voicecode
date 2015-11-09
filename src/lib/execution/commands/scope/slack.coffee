@@ -2,7 +2,8 @@ Commands.createDisabledWithDefaults
   triggerScopes: ['Slack']
   tags: ['slack']
 ,
-  'channel':
+  'slack.channel.change':
+    spoken: 'channel'
     description: 'open a channel / conversation'
     grammarType: 'textCapture'
     continuous: false

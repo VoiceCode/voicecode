@@ -4,6 +4,7 @@ Commands.createDisabledWithDefaults
   continuous: false
   tags: ['gmail']
 ,
-  'go inbox':
+  'gmail.open.inbox':
+    spoken: 'go inbox'
     description: 'go back to inbox in gmail'
     action: -> @string 'gi'

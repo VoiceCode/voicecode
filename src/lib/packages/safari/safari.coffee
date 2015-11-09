@@ -15,3 +15,12 @@ Commands.before 'object.backwards', packageInfo, (input, context) ->
 Commands.before 'object.refresh', packageInfo, (input, context) ->
   @key 'R', 'command'
   @stop()
+
+Commands.createDisabled
+  'safari.show.tabs':
+    spoken: 'show tabs'
+    description: 'show all the tabs open in safari'
+    tags: ['safari']
+    triggerScopes: ['Safari']
+    action: (input) ->
+      @key '\\', 'command shift'
