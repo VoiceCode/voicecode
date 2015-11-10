@@ -1,12 +1,12 @@
 module.exports = (function() {
-
-  function cgp$subclass(child, parent) {
+  "use strict";
+  function cg$subclass(child, parent) {
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
     child.prototype = new ctor();
   }
 
-  function cgp$SyntaxError(message, expected, found, location) {
+  function cg$SyntaxError(message, expected, found, location) {
     this.message  = message;
     this.expected = expected;
     this.found    = found;
@@ -14,98 +14,98 @@ module.exports = (function() {
     this.name     = "SyntaxError";
 
     if (typeof Error.captureStackTrace === "function") {
-      Error.captureStackTrace(this, cgp$SyntaxError);
+      Error.captureStackTrace(this, cg$SyntaxError);
     }
   }
 
-  cgp$subclass(cgp$SyntaxError, Error);
+  cg$subclass(cg$SyntaxError, Error);
 
-  function cgp$parse(input) {
+  function cg$parse(input) {
     var options = arguments.length > 1 ? arguments[1] : {},
         parser  = this,
 
-        cgp$FAILED = {},
+        cg$FAILED = {},
 
-        cgp$startRuleFunctions = { start: cgp$parsestart },
-        cgp$startRuleFunction  = cgp$parsestart,
+        cg$startRuleFunctions = { start: cg$parsestart },
+        cg$startRuleFunction  = cg$parsestart,
 
-        cgp$c0 = function(includeName, tokens) {return {includeName: includeName, tokens: tokens};},
-        cgp$c1 = "<name>",
-        cgp$c2 = { type: "literal", value: "<name>", description: "\"<name>\"" },
-        cgp$c3 = function() {return true;},
-        cgp$c4 = "(",
-        cgp$c5 = { type: "literal", value: "(", description: "\"(\"" },
-        cgp$c6 = ")",
-        cgp$c7 = { type: "literal", value: ")", description: "\")\"" },
-        cgp$c8 = "*",
-        cgp$c9 = { type: "literal", value: "*", description: "\"*\"" },
-        cgp$c10 = function(listTokens, optional) {return {name: listTokens.join('').replace(/ /g, ''), list: listTokens, optional: !!optional};},
-        cgp$c11 = "/",
-        cgp$c12 = { type: "literal", value: "/", description: "\"/\"" },
-        cgp$c13 = function(name, separator) {return name.join(' ')},
-        cgp$c14 = function(words) {return {text: words.join(' ')};},
-        cgp$c15 = " ",
-        cgp$c16 = { type: "literal", value: " ", description: "\" \"" },
-        cgp$c17 = /^[a-z]/i,
-        cgp$c18 = { type: "class", value: "[a-z]i", description: "[a-z]i" },
-        cgp$c19 = function(letters) {return letters.join('');},
+        cg$c0 = function(includeName, tokens) {return {includeName: includeName, tokens: tokens};},
+        cg$c1 = "<spoken>",
+        cg$c2 = { type: "literal", value: "<spoken>", description: "\"<spoken>\"" },
+        cg$c3 = function() {return true;},
+        cg$c4 = "(",
+        cg$c5 = { type: "literal", value: "(", description: "\"(\"" },
+        cg$c6 = ")",
+        cg$c7 = { type: "literal", value: ")", description: "\")\"" },
+        cg$c8 = "*",
+        cg$c9 = { type: "literal", value: "*", description: "\"*\"" },
+        cg$c10 = function(listTokens, optional) {return {name: listTokens.join('').replace(/ /g, ''), list: listTokens, optional: !!optional};},
+        cg$c11 = "/",
+        cg$c12 = { type: "literal", value: "/", description: "\"/\"" },
+        cg$c13 = function(name, separator) {return name.join(' ')},
+        cg$c14 = function(words) {return {text: words.join(' ')};},
+        cg$c15 = " ",
+        cg$c16 = { type: "literal", value: " ", description: "\" \"" },
+        cg$c17 = /^[a-z]/i,
+        cg$c18 = { type: "class", value: "[a-z]i", description: "[a-z]i" },
+        cg$c19 = function(letters) {return letters.join('');},
 
-        cgp$currPos          = 0,
-        cgp$savedPos         = 0,
-        cgp$posDetailsCache  = [{ line: 1, column: 1, seenCR: false }],
-        cgp$maxFailPos       = 0,
-        cgp$maxFailExpected  = [],
-        cgp$silentFails      = 0,
+        cg$currPos          = 0,
+        cg$savedPos         = 0,
+        cg$posDetailsCache  = [{ line: 1, column: 1, seenCR: false }],
+        cg$maxFailPos       = 0,
+        cg$maxFailExpected  = [],
+        cg$silentFails      = 0,
 
-        cgp$result;
+        cg$result;
 
     if ("startRule" in options) {
-      if (!(options.startRule in cgp$startRuleFunctions)) {
+      if (!(options.startRule in cg$startRuleFunctions)) {
         throw new Error("Can't start parsing from rule \"" + options.startRule + "\".");
       }
 
-      cgp$startRuleFunction = cgp$startRuleFunctions[options.startRule];
+      cg$startRuleFunction = cg$startRuleFunctions[options.startRule];
     }
 
     function text() {
-      return input.substring(cgp$savedPos, cgp$currPos);
+      return input.substring(cg$savedPos, cg$currPos);
     }
 
     function location() {
-      return cgp$computeLocation(cgp$savedPos, cgp$currPos);
+      return cg$computeLocation(cg$savedPos, cg$currPos);
     }
 
     function expected(description) {
-      throw cgp$buildException(
+      throw cg$buildException(
         null,
         [{ type: "other", description: description }],
-        input.substring(cgp$savedPos, cgp$currPos),
-        cgp$computeLocation(cgp$savedPos, cgp$currPos)
+        input.substring(cg$savedPos, cg$currPos),
+        cg$computeLocation(cg$savedPos, cg$currPos)
       );
     }
 
     function error(message) {
-      throw cgp$buildException(
+      throw cg$buildException(
         message,
         null,
-        input.substring(cgp$savedPos, cgp$currPos),
-        cgp$computeLocation(cgp$savedPos, cgp$currPos)
+        input.substring(cg$savedPos, cg$currPos),
+        cg$computeLocation(cg$savedPos, cg$currPos)
       );
     }
 
-    function cgp$computePosDetails(pos) {
-      var details = cgp$posDetailsCache[pos],
+    function cg$computePosDetails(pos) {
+      var details = cg$posDetailsCache[pos],
           p, ch;
 
       if (details) {
         return details;
       } else {
         p = pos - 1;
-        while (!cgp$posDetailsCache[p]) {
+        while (!cg$posDetailsCache[p]) {
           p--;
         }
 
-        details = cgp$posDetailsCache[p];
+        details = cg$posDetailsCache[p];
         details = {
           line:   details.line,
           column: details.column,
@@ -130,14 +130,14 @@ module.exports = (function() {
           p++;
         }
 
-        cgp$posDetailsCache[pos] = details;
+        cg$posDetailsCache[pos] = details;
         return details;
       }
     }
 
-    function cgp$computeLocation(startPos, endPos) {
-      var startPosDetails = cgp$computePosDetails(startPos),
-          endPosDetails   = cgp$computePosDetails(endPos);
+    function cg$computeLocation(startPos, endPos) {
+      var startPosDetails = cg$computePosDetails(startPos),
+          endPosDetails   = cg$computePosDetails(endPos);
 
       return {
         start: {
@@ -153,18 +153,18 @@ module.exports = (function() {
       };
     }
 
-    function cgp$fail(expected) {
-      if (cgp$currPos < cgp$maxFailPos) { return; }
+    function cg$fail(expected) {
+      if (cg$currPos < cg$maxFailPos) { return; }
 
-      if (cgp$currPos > cgp$maxFailPos) {
-        cgp$maxFailPos = cgp$currPos;
-        cgp$maxFailExpected = [];
+      if (cg$currPos > cg$maxFailPos) {
+        cg$maxFailPos = cg$currPos;
+        cg$maxFailExpected = [];
       }
 
-      cgp$maxFailExpected.push(expected);
+      cg$maxFailExpected.push(expected);
     }
 
-    function cgp$buildException(message, expected, found, location) {
+    function cg$buildException(message, expected, found, location) {
       function cleanupExpected(expected) {
         var i = 1;
 
@@ -227,7 +227,7 @@ module.exports = (function() {
         cleanupExpected(expected);
       }
 
-      return new cgp$SyntaxError(
+      return new cg$SyntaxError(
         message !== null ? message : buildMessage(expected, found),
         expected,
         found,
@@ -235,327 +235,327 @@ module.exports = (function() {
       );
     }
 
-    function cgp$parsestart() {
+    function cg$parsestart() {
       var s0, s1, s2, s3;
 
-      s0 = cgp$currPos;
-      s1 = cgp$parseincludeName();
-      if (s1 === cgp$FAILED) {
+      s0 = cg$currPos;
+      s1 = cg$parseincludeName();
+      if (s1 === cg$FAILED) {
         s1 = null;
       }
-      if (s1 !== cgp$FAILED) {
+      if (s1 !== cg$FAILED) {
         s2 = [];
-        s3 = cgp$parsetoken();
-        if (s3 !== cgp$FAILED) {
-          while (s3 !== cgp$FAILED) {
+        s3 = cg$parsetoken();
+        if (s3 !== cg$FAILED) {
+          while (s3 !== cg$FAILED) {
             s2.push(s3);
-            s3 = cgp$parsetoken();
+            s3 = cg$parsetoken();
           }
         } else {
-          s2 = cgp$FAILED;
+          s2 = cg$FAILED;
         }
-        if (s2 !== cgp$FAILED) {
-          cgp$savedPos = s0;
-          s1 = cgp$c0(s1, s2);
+        if (s2 !== cg$FAILED) {
+          cg$savedPos = s0;
+          s1 = cg$c0(s1, s2);
           s0 = s1;
         } else {
-          cgp$currPos = s0;
-          s0 = cgp$FAILED;
+          cg$currPos = s0;
+          s0 = cg$FAILED;
         }
       } else {
-        cgp$currPos = s0;
-        s0 = cgp$FAILED;
+        cg$currPos = s0;
+        s0 = cg$FAILED;
       }
 
       return s0;
     }
 
-    function cgp$parseincludeName() {
+    function cg$parseincludeName() {
       var s0, s1, s2;
 
-      s0 = cgp$currPos;
-      if (input.substr(cgp$currPos, 6) === cgp$c1) {
-        s1 = cgp$c1;
-        cgp$currPos += 6;
+      s0 = cg$currPos;
+      if (input.substr(cg$currPos, 8) === cg$c1) {
+        s1 = cg$c1;
+        cg$currPos += 8;
       } else {
-        s1 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c2); }
+        s1 = cg$FAILED;
+        if (cg$silentFails === 0) { cg$fail(cg$c2); }
       }
-      if (s1 !== cgp$FAILED) {
-        s2 = cgp$parses();
-        if (s2 !== cgp$FAILED) {
-          cgp$savedPos = s0;
-          s1 = cgp$c3();
+      if (s1 !== cg$FAILED) {
+        s2 = cg$parses();
+        if (s2 !== cg$FAILED) {
+          cg$savedPos = s0;
+          s1 = cg$c3();
           s0 = s1;
         } else {
-          cgp$currPos = s0;
-          s0 = cgp$FAILED;
+          cg$currPos = s0;
+          s0 = cg$FAILED;
         }
       } else {
-        cgp$currPos = s0;
-        s0 = cgp$FAILED;
+        cg$currPos = s0;
+        s0 = cg$FAILED;
       }
 
       return s0;
     }
 
-    function cgp$parsetoken() {
+    function cg$parsetoken() {
       var s0;
 
-      s0 = cgp$parselist();
-      if (s0 === cgp$FAILED) {
-        s0 = cgp$parsetext();
+      s0 = cg$parselist();
+      if (s0 === cg$FAILED) {
+        s0 = cg$parsetext();
       }
 
       return s0;
     }
 
-    function cgp$parselist() {
+    function cg$parselist() {
       var s0, s1, s2, s3, s4, s5;
 
-      s0 = cgp$currPos;
-      if (input.charCodeAt(cgp$currPos) === 40) {
-        s1 = cgp$c4;
-        cgp$currPos++;
+      s0 = cg$currPos;
+      if (input.charCodeAt(cg$currPos) === 40) {
+        s1 = cg$c4;
+        cg$currPos++;
       } else {
-        s1 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c5); }
+        s1 = cg$FAILED;
+        if (cg$silentFails === 0) { cg$fail(cg$c5); }
       }
-      if (s1 !== cgp$FAILED) {
+      if (s1 !== cg$FAILED) {
         s2 = [];
-        s3 = cgp$parselistToken();
-        if (s3 !== cgp$FAILED) {
-          while (s3 !== cgp$FAILED) {
+        s3 = cg$parselistToken();
+        if (s3 !== cg$FAILED) {
+          while (s3 !== cg$FAILED) {
             s2.push(s3);
-            s3 = cgp$parselistToken();
+            s3 = cg$parselistToken();
           }
         } else {
-          s2 = cgp$FAILED;
+          s2 = cg$FAILED;
         }
-        if (s2 !== cgp$FAILED) {
-          if (input.charCodeAt(cgp$currPos) === 41) {
-            s3 = cgp$c6;
-            cgp$currPos++;
+        if (s2 !== cg$FAILED) {
+          if (input.charCodeAt(cg$currPos) === 41) {
+            s3 = cg$c6;
+            cg$currPos++;
           } else {
-            s3 = cgp$FAILED;
-            if (cgp$silentFails === 0) { cgp$fail(cgp$c7); }
+            s3 = cg$FAILED;
+            if (cg$silentFails === 0) { cg$fail(cg$c7); }
           }
-          if (s3 !== cgp$FAILED) {
-            if (input.charCodeAt(cgp$currPos) === 42) {
-              s4 = cgp$c8;
-              cgp$currPos++;
+          if (s3 !== cg$FAILED) {
+            if (input.charCodeAt(cg$currPos) === 42) {
+              s4 = cg$c8;
+              cg$currPos++;
             } else {
-              s4 = cgp$FAILED;
-              if (cgp$silentFails === 0) { cgp$fail(cgp$c9); }
+              s4 = cg$FAILED;
+              if (cg$silentFails === 0) { cg$fail(cg$c9); }
             }
-            if (s4 === cgp$FAILED) {
+            if (s4 === cg$FAILED) {
               s4 = null;
             }
-            if (s4 !== cgp$FAILED) {
-              s5 = cgp$parses();
-              if (s5 !== cgp$FAILED) {
-                cgp$savedPos = s0;
-                s1 = cgp$c10(s2, s4);
+            if (s4 !== cg$FAILED) {
+              s5 = cg$parses();
+              if (s5 !== cg$FAILED) {
+                cg$savedPos = s0;
+                s1 = cg$c10(s2, s4);
                 s0 = s1;
               } else {
-                cgp$currPos = s0;
-                s0 = cgp$FAILED;
+                cg$currPos = s0;
+                s0 = cg$FAILED;
               }
             } else {
-              cgp$currPos = s0;
-              s0 = cgp$FAILED;
+              cg$currPos = s0;
+              s0 = cg$FAILED;
             }
           } else {
-            cgp$currPos = s0;
-            s0 = cgp$FAILED;
+            cg$currPos = s0;
+            s0 = cg$FAILED;
           }
         } else {
-          cgp$currPos = s0;
-          s0 = cgp$FAILED;
+          cg$currPos = s0;
+          s0 = cg$FAILED;
         }
       } else {
-        cgp$currPos = s0;
-        s0 = cgp$FAILED;
+        cg$currPos = s0;
+        s0 = cg$FAILED;
       }
 
       return s0;
     }
 
-    function cgp$parselistToken() {
+    function cg$parselistToken() {
       var s0, s1, s2, s3, s4, s5;
 
-      s0 = cgp$currPos;
+      s0 = cg$currPos;
       s1 = [];
-      s2 = cgp$parseword();
-      if (s2 !== cgp$FAILED) {
-        while (s2 !== cgp$FAILED) {
+      s2 = cg$parseword();
+      if (s2 !== cg$FAILED) {
+        while (s2 !== cg$FAILED) {
           s1.push(s2);
-          s2 = cgp$parseword();
+          s2 = cg$parseword();
         }
       } else {
-        s1 = cgp$FAILED;
+        s1 = cg$FAILED;
       }
-      if (s1 !== cgp$FAILED) {
-        s2 = cgp$currPos;
-        s3 = cgp$parses();
-        if (s3 !== cgp$FAILED) {
-          if (input.charCodeAt(cgp$currPos) === 47) {
-            s4 = cgp$c11;
-            cgp$currPos++;
+      if (s1 !== cg$FAILED) {
+        s2 = cg$currPos;
+        s3 = cg$parses();
+        if (s3 !== cg$FAILED) {
+          if (input.charCodeAt(cg$currPos) === 47) {
+            s4 = cg$c11;
+            cg$currPos++;
           } else {
-            s4 = cgp$FAILED;
-            if (cgp$silentFails === 0) { cgp$fail(cgp$c12); }
+            s4 = cg$FAILED;
+            if (cg$silentFails === 0) { cg$fail(cg$c12); }
           }
-          if (s4 !== cgp$FAILED) {
-            s5 = cgp$parses();
-            if (s5 !== cgp$FAILED) {
+          if (s4 !== cg$FAILED) {
+            s5 = cg$parses();
+            if (s5 !== cg$FAILED) {
               s3 = [s3, s4, s5];
               s2 = s3;
             } else {
-              cgp$currPos = s2;
-              s2 = cgp$FAILED;
+              cg$currPos = s2;
+              s2 = cg$FAILED;
             }
           } else {
-            cgp$currPos = s2;
-            s2 = cgp$FAILED;
+            cg$currPos = s2;
+            s2 = cg$FAILED;
           }
         } else {
-          cgp$currPos = s2;
-          s2 = cgp$FAILED;
+          cg$currPos = s2;
+          s2 = cg$FAILED;
         }
-        if (s2 === cgp$FAILED) {
+        if (s2 === cg$FAILED) {
           s2 = null;
         }
-        if (s2 !== cgp$FAILED) {
-          cgp$savedPos = s0;
-          s1 = cgp$c13(s1, s2);
+        if (s2 !== cg$FAILED) {
+          cg$savedPos = s0;
+          s1 = cg$c13(s1, s2);
           s0 = s1;
         } else {
-          cgp$currPos = s0;
-          s0 = cgp$FAILED;
+          cg$currPos = s0;
+          s0 = cg$FAILED;
         }
       } else {
-        cgp$currPos = s0;
-        s0 = cgp$FAILED;
+        cg$currPos = s0;
+        s0 = cg$FAILED;
       }
 
       return s0;
     }
 
-    function cgp$parsetext() {
+    function cg$parsetext() {
       var s0, s1, s2;
 
-      s0 = cgp$currPos;
+      s0 = cg$currPos;
       s1 = [];
-      s2 = cgp$parseword();
-      if (s2 !== cgp$FAILED) {
-        while (s2 !== cgp$FAILED) {
+      s2 = cg$parseword();
+      if (s2 !== cg$FAILED) {
+        while (s2 !== cg$FAILED) {
           s1.push(s2);
-          s2 = cgp$parseword();
+          s2 = cg$parseword();
         }
       } else {
-        s1 = cgp$FAILED;
+        s1 = cg$FAILED;
       }
-      if (s1 !== cgp$FAILED) {
-        cgp$savedPos = s0;
-        s1 = cgp$c14(s1);
+      if (s1 !== cg$FAILED) {
+        cg$savedPos = s0;
+        s1 = cg$c14(s1);
       }
       s0 = s1;
 
       return s0;
     }
 
-    function cgp$parses() {
+    function cg$parses() {
       var s0, s1;
 
       s0 = [];
-      if (input.charCodeAt(cgp$currPos) === 32) {
-        s1 = cgp$c15;
-        cgp$currPos++;
+      if (input.charCodeAt(cg$currPos) === 32) {
+        s1 = cg$c15;
+        cg$currPos++;
       } else {
-        s1 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c16); }
+        s1 = cg$FAILED;
+        if (cg$silentFails === 0) { cg$fail(cg$c16); }
       }
-      while (s1 !== cgp$FAILED) {
+      while (s1 !== cg$FAILED) {
         s0.push(s1);
-        if (input.charCodeAt(cgp$currPos) === 32) {
-          s1 = cgp$c15;
-          cgp$currPos++;
+        if (input.charCodeAt(cg$currPos) === 32) {
+          s1 = cg$c15;
+          cg$currPos++;
         } else {
-          s1 = cgp$FAILED;
-          if (cgp$silentFails === 0) { cgp$fail(cgp$c16); }
+          s1 = cg$FAILED;
+          if (cg$silentFails === 0) { cg$fail(cg$c16); }
         }
       }
 
       return s0;
     }
 
-    function cgp$parseword() {
+    function cg$parseword() {
       var s0, s1, s2;
 
-      s0 = cgp$currPos;
+      s0 = cg$currPos;
       s1 = [];
-      if (cgp$c17.test(input.charAt(cgp$currPos))) {
-        s2 = input.charAt(cgp$currPos);
-        cgp$currPos++;
+      if (cg$c17.test(input.charAt(cg$currPos))) {
+        s2 = input.charAt(cg$currPos);
+        cg$currPos++;
       } else {
-        s2 = cgp$FAILED;
-        if (cgp$silentFails === 0) { cgp$fail(cgp$c18); }
+        s2 = cg$FAILED;
+        if (cg$silentFails === 0) { cg$fail(cg$c18); }
       }
-      if (s2 !== cgp$FAILED) {
-        while (s2 !== cgp$FAILED) {
+      if (s2 !== cg$FAILED) {
+        while (s2 !== cg$FAILED) {
           s1.push(s2);
-          if (cgp$c17.test(input.charAt(cgp$currPos))) {
-            s2 = input.charAt(cgp$currPos);
-            cgp$currPos++;
+          if (cg$c17.test(input.charAt(cg$currPos))) {
+            s2 = input.charAt(cg$currPos);
+            cg$currPos++;
           } else {
-            s2 = cgp$FAILED;
-            if (cgp$silentFails === 0) { cgp$fail(cgp$c18); }
+            s2 = cg$FAILED;
+            if (cg$silentFails === 0) { cg$fail(cg$c18); }
           }
         }
       } else {
-        s1 = cgp$FAILED;
+        s1 = cg$FAILED;
       }
-      if (s1 !== cgp$FAILED) {
-        s2 = cgp$parses();
-        if (s2 !== cgp$FAILED) {
-          cgp$savedPos = s0;
-          s1 = cgp$c19(s1);
+      if (s1 !== cg$FAILED) {
+        s2 = cg$parses();
+        if (s2 !== cg$FAILED) {
+          cg$savedPos = s0;
+          s1 = cg$c19(s1);
           s0 = s1;
         } else {
-          cgp$currPos = s0;
-          s0 = cgp$FAILED;
+          cg$currPos = s0;
+          s0 = cg$FAILED;
         }
       } else {
-        cgp$currPos = s0;
-        s0 = cgp$FAILED;
+        cg$currPos = s0;
+        s0 = cg$FAILED;
       }
 
       return s0;
     }
 
-    cgp$result = cgp$startRuleFunction();
+    cg$result = cg$startRuleFunction();
 
-    if (cgp$result !== cgp$FAILED && cgp$currPos === input.length) {
-      return cgp$result;
+    if (cg$result !== cg$FAILED && cg$currPos === input.length) {
+      return cg$result;
     } else {
-      if (cgp$result !== cgp$FAILED && cgp$currPos < input.length) {
-        cgp$fail({ type: "end", description: "end of input" });
+      if (cg$result !== cg$FAILED && cg$currPos < input.length) {
+        cg$fail({ type: "end", description: "end of input" });
       }
 
-      throw cgp$buildException(
+      throw cg$buildException(
         null,
-        cgp$maxFailExpected,
-        cgp$maxFailPos < input.length ? input.charAt(cgp$maxFailPos) : null,
-        cgp$maxFailPos < input.length
-          ? cgp$computeLocation(cgp$maxFailPos, cgp$maxFailPos + 1)
-          : cgp$computeLocation(cgp$maxFailPos, cgp$maxFailPos)
+        cg$maxFailExpected,
+        cg$maxFailPos < input.length ? input.charAt(cg$maxFailPos) : null,
+        cg$maxFailPos < input.length
+          ? cg$computeLocation(cg$maxFailPos, cg$maxFailPos + 1)
+          : cg$computeLocation(cg$maxFailPos, cg$maxFailPos)
       );
     }
   }
 
   return {
-    SyntaxError: cgp$SyntaxError,
-    parse:       cgp$parse
+    SyntaxError: cg$SyntaxError,
+    parse:       cg$parse
   };
 })();

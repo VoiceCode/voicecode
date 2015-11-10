@@ -16,7 +16,7 @@ Chain.preprocess (chain) ->
 Commands.createDisabled
   'repetition.chain':
     spoken: 'creek'
-    grammarType: "numberCapture"
+    grammarType: "integerCapture"
     description: "repeat last complete spoken phrase [n] times (default 1)"
     tags: ["voicecode", "repetition", "recommended"]
     repeatable: true
@@ -30,7 +30,7 @@ Commands.createDisabled
             command.call(@)
   'repetition.command':
     spoken: 'repple'
-    grammarType: "numberCapture"
+    grammarType: "integerCapture"
     repeater: "variable"
     description: "Repeats an individual command component.
     Right after any command say [repple X] to repeat it X times"

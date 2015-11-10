@@ -38,7 +38,7 @@ Commands.createDisabled
     spoken: 'cheese'
     description: 'Presses the down arrow [x] times then presses return (for choosing items from lists that don\'t have direct shortcuts)'
     tags: ['navigation']
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     inputRequired: false
     action: (input) ->
       @down input or 1

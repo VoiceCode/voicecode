@@ -35,7 +35,7 @@ class DragonCommand extends Command
   generateCustomCommandName: ->
     trigger = @rule
     if @grammar.includeName?
-      trigger = trigger.replace /<name>/, @getTriggerPhrase()
+      trigger = trigger.replace /<spoken>/, @getTriggerPhrase()
     trigger = trigger.replace /[(/](\w*?\s)/g, -> arguments[0][...-1]
     trigger = trigger.replace /\//g, ''
     # console.error trigger

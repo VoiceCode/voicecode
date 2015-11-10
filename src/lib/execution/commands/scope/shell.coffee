@@ -103,10 +103,10 @@ Commands.createDisabled
   'shell.insert-common-command':
     spoken: 'shell'
     grammarType: 'custom'
+    rule: '<spoken> (shellcommands)'
     description: 'insert a shell command from the predefined shell commands list'
     tags: ['text', 'shell']
     misspellings: ['shall', 'chell']
-    rule: '<name> (shellcommands)'
     variables:
       shellcommands: -> _.keys Settings.shellCommands
     continuous: false

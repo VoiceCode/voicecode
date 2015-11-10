@@ -21,7 +21,7 @@ class Commands
     @aggregateUndoByDeletingCount = 0
     @previousUndoByDeletingCount = 0
     @primaryGrammarTypes = [
-      "numberCapture"
+      "integerCapture"
       "numberRange"
       "textCapture"
       "individual"
@@ -36,8 +36,8 @@ class Commands
       singleSearchContinuous: []
       individual: []
       individualContinuous: []
-      numberCapture: []
-      numberCaptureContinuous: []
+      integerCapture: []
+      integerCaptureContinuous: []
       numberRange: []
       numberRangeContinuous: []
       textCapture: []
@@ -70,7 +70,7 @@ class Commands
     switch editType
       when 'commandCreated'
         @validate command, options, 'commandNameChanged'
-        if Commands.mapping[command]?
+        if @mapping[command]?
           if options.action?
             if options.action.toString() is @mapping[command].action.toString()
               validated = false # action is the same
@@ -284,6 +284,7 @@ class Commands
 
     if options.rule?
       # try
+      console.log "custom", name
       options.grammar = new CustomGrammar(options.rule, options.variables)
       # catch e
       #   console.log "error parsing custom grammar for command: #{key}"

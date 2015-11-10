@@ -1,7 +1,7 @@
 Commands.createDisabled
   'cursor.lineNumber':
     spoken: 'spring'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'go to line number.'
     tags: ['cursor']
     inputRequired: false
@@ -9,7 +9,7 @@ Commands.createDisabled
 
   'combo.cursorMoveLineNumberAndWayRight':
     spoken: 'sprinkler'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'go to line number then position cursor at end of line.'
     tags: ['cursor']
     inputRequired: false
@@ -20,7 +20,7 @@ Commands.createDisabled
 
   'combo.cursorMoveLineNumberAndWayLeft':
     spoken: 'sprinkle'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'Go to line number then position cursor at beginning of line.'
     tags: ['selection', 'IDE', 'cursor']
     inputRequired: false
@@ -31,7 +31,7 @@ Commands.createDisabled
 
   'combo.cursorMoveLineNumberThenNewLine':
     spoken: 'sprinkoon'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'Go to line number then insert a new line below.'
     tags: ['selection', 'IDE', 'cursor']
     inputRequired: false
@@ -41,7 +41,7 @@ Commands.createDisabled
         @do 'common.newLineBelow'
   'combo.cursorMoveLineNumberThenSelectLineText':
     spoken: 'spackle'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'Go to line number then select entire line.'
     tags: ['selection', 'IDE', 'cursor']
     inputRequired: false
@@ -59,7 +59,7 @@ Commands.createDisabled
 
   'select.lineNumberRange':
     spoken: 'selrang'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'Selects text in a line range: selrang ten twenty.'
     tags: ['selection', 'IDE']
     inputRequired: true
@@ -68,7 +68,7 @@ Commands.createDisabled
 
   'selection.extendToLineNumber':
     spoken: 'seltil'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'
     tags: ['selection', 'IDE']
     inputRequired: true
@@ -77,7 +77,7 @@ Commands.createDisabled
 
   'insert.fromLineNumber':
     spoken: 'clonesert'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'Insert the text from another line at the current cursor position'
     tags: ['atom']
     inputRequired: true

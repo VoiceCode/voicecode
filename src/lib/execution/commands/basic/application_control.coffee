@@ -44,7 +44,7 @@ Commands.createDisabled
     description: 'open application'
     tags: ['application', 'system', 'launching', 'recommended']
     grammarType: 'custom'
-    rule: '<name> (applications)'
+    rule: '<spoken> (applications)'
     variables:
       applications: -> Settings.applications
     action: ({applications}) ->

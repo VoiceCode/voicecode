@@ -2,7 +2,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
   'scroll.up.page':
     spoken: 'page up'
     description: 'press PageUp key [N] times'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['scroll', 'up', 'recommended']
     continuous: false
     action: (input) ->
@@ -12,7 +12,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
   'scroll.down.page':
     spoken: 'page down'
     description: 'press PageDown key [N] times'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['scroll', 'down', 'recommended']
     continuous: false
     action: (input) ->
@@ -22,14 +22,14 @@ Commands.createDisabledWithDefaults {inputRequired: false},
   'scroll.down':
     spoken: 'scrodge'
     description: 'scroll down'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['scroll', 'down', 'recommended']
     action: (input) ->
       @scrollDown(input or 10)
   'scroll.up':
     spoken: 'scroop'
     description: 'scroll up'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['scroll', 'up', 'recommended']
     action: (input) ->
       @scrollUp(input or 10)
@@ -50,14 +50,14 @@ Commands.createDisabledWithDefaults {inputRequired: false},
   'scroll.right':
     spoken: 'sweeper'
     description: 'scroll right'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['scroll', 'right']
     action: (input) ->
       @scrollRight(input or 1)
   'scroll.left':
     spoken: 'sweeple'
     description: 'scroll left'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['scroll', 'left']
     action: (input) ->
       @scrollLeft(input or 1)

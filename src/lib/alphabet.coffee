@@ -15,12 +15,12 @@ class Alphabet
       @roots[letter]
     .join('')
   createCommand: ->
+      # spoken: '(alphabet) (alphabet)* (alphabet)* (alphabet)* (alphabet)* (alphabet)*'
     Commands.create 'spelling',
-      kind: 'recognition'
       description: 'phonetic alphabet'
       grammarType: 'custom'
-      # rule: '(alphabet) (alphabet)* (alphabet)* (alphabet)* (alphabet)* (alphabet)*'
       rule: '(alphabet) (alphabet)*'
+      needsParsing: false
       variables:
         alphabet: @possibleAlphabetValues()
   possibleAlphabetValues: ->

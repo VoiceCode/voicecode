@@ -67,7 +67,7 @@ Commands.createDisabled
   'window.changeProperties':
     spoken: 'windy'
     grammarType: 'custom'
-    rule: '<name> (digit)* (windowPosition)*'
+    rule: '<spoken> (digit)* (windowPosition)*'
     description: 'set the size/position of the frontmost window to one of the preset sizes/positions'
     misspellings: ['wendy']
     tags: ['system', 'window', 'recommended']

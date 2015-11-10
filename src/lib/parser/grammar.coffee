@@ -7,10 +7,10 @@ class Grammar
     @buildCommandList Commands.Utility.sortedCommandKeys("textCapture")
   textCaptureCommandsContinuous: ->
     @buildCommandList Commands.Utility.sortedCommandKeys("textCapture", true)
-  numberCaptureCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("numberCapture")
-  numberCaptureCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("numberCapture", true)
+  integerCaptureCommands: ->
+    @buildCommandList Commands.Utility.sortedCommandKeys("integerCapture")
+  integerCaptureCommandsContinuous: ->
+    @buildCommandList Commands.Utility.sortedCommandKeys("integerCapture", true)
   numberRangeCommands: ->
     @buildCommandList Commands.Utility.sortedCommandKeys("numberRange")
   numberRangeCommandsContinuous: ->
@@ -37,9 +37,10 @@ class Grammar
     @buildCommandList Commands.Utility.sortedCommandKeys("repeater")
   buildCommandList: (keys) ->
     results = []
-    for name in keys
-      command = Commands.mapping[name]
+    for id in keys
+      command = Commands.mapping[id]
       continue unless command?
+      name = command.spoken
       if command.enabled
         if command.misspellings?.length
           if name is "."
@@ -51,7 +52,8 @@ class Grammar
     results.join(' / ')
   misspellings: ->
     results = []
-    for name, command of Commands.mapping
+    for id, command of Commands.mapping
+      name = command.spoken
       if command.misspellings?.length
         alternates = _.map command.misspellings, (alt) ->
           "'#{alt}'"
@@ -117,7 +119,7 @@ class Grammar
       = customCommand /
         textCaptureCommand /
         singleSearchCommand /
-        numberCaptureCommand /
+        integerCaptureCommand /
         numberRangeCommand /
         individualCommand /
         oneArgumentCommand /
@@ -128,7 +130,7 @@ class Grammar
       = customCommand /
         textCaptureCommandContinuous /
         singleSearchCommandContinuous /
-        numberCaptureCommandContinuous /
+        integerCaptureCommandContinuous /
         numberRangeCommandContinuous /
         individualCommandContinuous /
         oneArgumentCommandContinuous /
@@ -188,20 +190,20 @@ class Grammar
     findableIdentifier
       = identifier:(#{@findableCommands()}) ss {return Commands.mapping[identifier].findable;}
 
-    numberCaptureCommand
-      = left:numberCaptureIdentifier right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
-    numberCaptureCommandContinuous
-      = left:numberCaptureIdentifierContinuous right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
+    integerCaptureCommand
+      = left:integerCaptureIdentifier right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
+    integerCaptureCommandContinuous
+      = left:integerCaptureIdentifierContinuous right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
 
     numberRangeCommand
       = left:numberRangeIdentifier right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
     numberRangeCommandContinuous
       = left:numberRangeIdentifierContinuous right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
 
-    numberCaptureIdentifier
-      = identifier:(#{@numberCaptureCommands()}) ss {return identifier;}
-    numberCaptureIdentifierContinuous
-      = identifier:(#{@numberCaptureCommandsContinuous()}) ss {return identifier;}
+    integerCaptureIdentifier
+      = identifier:(#{@integerCaptureCommands()}) ss {return identifier;}
+    integerCaptureIdentifierContinuous
+      = identifier:(#{@integerCaptureCommandsContinuous()}) ss {return identifier;}
 
     numberRangeIdentifier
       = identifier:(#{@numberRangeCommands()}) ss {return identifier;}
@@ -254,11 +256,11 @@ class Grammar
 
     ss = " "+
 
-    // identifier = id:(textCaptureIdentifier / numberCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
+    // identifier = id:(textCaptureIdentifier / integerCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
 
     identifier = id:(
       textCaptureIdentifierContinuous /
-      numberCaptureIdentifierContinuous /
+      integerCaptureIdentifierContinuous /
       numberRangeIdentifierContinuous /
       individualIdentifierContinuous /
       oneArgumentIdentifierContinuous /
@@ -355,21 +357,17 @@ class Grammar
     modifierSuffix = #{@modifierSuffixes()}
     """
   customCommandsContent: ->
-    cc = _.map Commands.Utility.sortedCommandKeys("custom"), (name) =>
-      command = new Command(name, null)
-      unless command.kind is "recognition"
+    cc = _.map Commands.Utility.sortedCommandKeys("custom"), (id) =>
+      command = new Command(id, null)
+      unless command.needsParsing is false
         "(" + @buildCustomCommand(command) + ")"
     result = _.compact(cc).join(" / ")
-
-    # ccc = _.map Commands.Utility.sortedCommandKeys("custom", true), (name) =>
-    #   "(" + @buildCustomCommand(name) + ")"
-    # .join(" / ")
 
     """
     customCommand = #{result}
     """
   buildCustomCommand: (command) ->
-    name = command.namespace
+    name = command.spoken
     first = if command.grammar.includeName
       token = if command.misspellings?.length
         name.split(" ").join('_')

@@ -63,7 +63,7 @@ Commands.createDisabled
   'select.expand.horizontal':
     spoken: 'spando'
     description: 'expand selection symmetrically (horizontally)'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['text-manipulation']
     inputRequired: false
     action: (input) ->
@@ -71,7 +71,7 @@ Commands.createDisabled
   'select.expand.vertical':
     spoken: 'bloxy'
     description: 'expand selection vertically, symmetrically'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['text-manipulation']
     inputRequired: true
     action: (input) ->
@@ -112,7 +112,7 @@ Commands.createDisabled
   'select.word.next':
     spoken: 'wordneck'
     description: 'select the following whole word'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     inputRequired: false
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
@@ -123,7 +123,7 @@ Commands.createDisabled
   'select.word.previous':
     spoken: 'wordpreev'
     description: 'select the previous whole word'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     tags: ['text-manipulation', 'cursor', 'selection']
     inputRequired: false
     action: (input) ->

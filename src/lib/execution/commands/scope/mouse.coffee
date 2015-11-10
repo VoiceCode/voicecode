@@ -1,7 +1,7 @@
 Commands.createDisabled
   'mouse.relocate':
     spoken: 'mousy'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: """moves the mouse by grid coordinates
       [1-9] => grid on current monitor;
       10 => center of monitor 1;
