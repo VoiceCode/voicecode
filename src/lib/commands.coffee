@@ -48,6 +48,22 @@ class Commands
       findable: []
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
+    @spokenToCommandLookupTable = {}
+    Events.on 'commandNameChanged', (properties, name) =>
+      target = null
+      _.each @spokenToCommandLookupTable, (commandName, spoken) ->
+        if commandName is name
+          target = spoken
+          return false
+        return true
+      unless target?
+        debug '!!!!!'
+      delete @spokenToCommandLookupTable[target]
+      @spokenToCommandLookupTable[properties.spoken] = name
+
+    Events.on 'commandCreated', ({name, properties}) =>
+      @spokenToCommandLookupTable[properties.spoken] = name
+
 
   initialize: () ->
     @performCommandEdits()
@@ -62,14 +78,14 @@ class Commands
       @commandEditsFrom = 'settings'
       @performCommandEdits()
 
-  # getCurrentNameFor: (commandName) ->
-  #   (_.pluck @renamings, {from: commandName})?.to || commandName
-
   validate: (command, options, editType) ->
     validated = true
     switch editType
       when 'commandCreated'
         @validate command, options, 'commandNameChanged'
+        unless options.spoken?
+          error 'commandValidationError', command, "Please provide a 'spoken' parameter for command '#{command}'"
+          # validated = false
         if @mapping[command]?
           if options.action?
             if options.action.toString() is @mapping[command].action.toString()
@@ -137,6 +153,7 @@ class Commands
     validated = @validate name, options, 'commandCreated'
     return if not validated
     @mapping[name] = @normalizeOptions name, options
+    emit 'commandCreated', {name, properties: options}
     if options.enabled is true
       @enable name
 
@@ -163,14 +180,12 @@ class Commands
   edit: (name, editType, edition, callback) ->
     @delayedEditFunctions.push {name, editType, callback, edition}
 
+  getBySpoken: (spoken) ->
+    @spokenToCommandLookupTable[spoken]
+
   get: (name) ->
-    isRenamed = _.findWhere @renamings, {from: name}
-    if isRenamed?
-      log 'commandRenamedReference', isRenamed, "#{isRenamed.from} => #{isRenamed.to}"
-      return @mapping[isRenamed.to]
     @mapping[name]
 
-  # 4 debugging
   shouldEmitValidationFailed: (editType, command) ->
     if editType is 'commandEnabled'
       return false
@@ -181,21 +196,15 @@ class Commands
     @delayedEditFunctions = []
     _.each @delayedEditFunctions, ({name, callback, editType, edition}) =>
       command = @get name
-
-      isRenamed = _.findWhere @renamings, {from: name}
-      if isRenamed?
-        name = isRenamed.to
-
       if command?
         return if not @validate command, edition, editType
         try
-          result = callback command
+          resultingCommand = callback command
         catch e
           debug {command, editType, edition, e}
-        if _.isObject result
-          @mapping[name] = @normalizeOptions name, result
-        emit editType, result, name
-        true
+        if _.isObject resultingCommand
+          @mapping[name] = @normalizeOptions name, resultingCommand
+        emit editType, resultingCommand, name
       else
         ###
           Allow addressing nonexistent commands while loading from settings
@@ -206,12 +215,12 @@ class Commands
           command from the package. Next time we performCommandEdits,
           those commands will exist
         ###
-        if not isRenamed?
-          if @commandEditsFrom is 'settings'
-            # let us try again in the next performCommandEdits()
-            @edit name, editType, callback
-          else
-            error 'commandNotFound', name
+        if @commandEditsFrom is 'settings'
+          # let us try again in the next performCommandEdits()
+          @edit name, editType, callback
+        else
+          error 'commandNotFound', name
+      true
 
   override: (name, action) ->
     error 'deprecation', "Failed overriding '#{name}'.
@@ -284,7 +293,6 @@ class Commands
 
     if options.rule?
       # try
-      console.log "custom", name
       options.grammar = new CustomGrammar(options.rule, options.variables)
       # catch e
       #   console.log "error parsing custom grammar for command: #{key}"

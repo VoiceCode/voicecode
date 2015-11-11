@@ -1,7 +1,6 @@
 Chain.preprocess (chain) ->
   newChain = []
   repetitionWords = _.map Settings.repetitionWords, (howMany, name) ->
-    name = Commands.getCurrentNameFor name
     name = "#{name} way" #TODO: make way a variable
     {name, howMany}
   _.each chain, (command) ->

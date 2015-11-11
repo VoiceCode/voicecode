@@ -298,7 +298,7 @@ class ChromeBrowserController extends Meteor.npmRequire('events')
 if Settings.smartBrowsersUsed
   @browserController = new ChromeBrowserController
 
-Commands.extend 'crew', (input, context) ->
+Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
   if @currentApplication() in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?
@@ -314,7 +314,7 @@ Commands.extend 'crew', (input, context) ->
           type: 'invokeBound'
     @stop()
 
-Commands.extend 'trail', (input, context) ->
+Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
   if @currentApplication() in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?
@@ -331,7 +331,7 @@ Commands.extend 'trail', (input, context) ->
           type: 'invokeBound'
     @stop()
 
-Commands.extend 'selcrew', (input, context) ->
+Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
   console.log @currentApplication()
   if @currentApplication() in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
@@ -349,7 +349,7 @@ Commands.extend 'selcrew', (input, context) ->
           type: 'invokeBound'
     @stop()
 
-Commands.extend 'seltrail', (input, context) ->
+Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
   if @currentApplication() in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?

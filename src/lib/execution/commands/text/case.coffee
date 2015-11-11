@@ -1,5 +1,6 @@
 Commands.createDisabledWithDefaults {inputRequired: false},
-  'core.free-text':
+  'vc-literal':
+    spoken: 'vc-literal'
     grammarType: 'none'
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
     tags: ['text', 'recommended']
