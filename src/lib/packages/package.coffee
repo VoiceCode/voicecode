@@ -11,9 +11,12 @@ class Package
   before: (options) ->
     packageOptions = @defaultCommandOptions
     _.each commands, (extension, id) ->
-      Commands.before id, packageOptions, extensions
+      Commands.before id, packageOptions, extension
 
-  afterCommands: (commands) ->
+  after: (commands) ->
+    packageOptions = @defaultCommandOptions
+    _.each commands, (extension, id) ->
+      Commands.after id, packageOptions, extension
 
   # the instance should automatically add its package name at the beginning of all commands it creates
   @normalizeId: (id) ->
