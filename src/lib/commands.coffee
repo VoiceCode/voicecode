@@ -48,6 +48,22 @@ class Commands
       findable: []
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
+    @spokenToCommandLookupTable = {}
+    Events.on 'commandNameChanged', (properties, name) =>
+      target = null
+      _.each @spokenToCommandLookupTable, (commandName, spoken) ->
+        if commandName is name
+          target = spoken
+          return false
+        return true
+      unless target?
+        debug '!!!!!'
+      delete @spokenToCommandLookupTable[target]
+      @spokenToCommandLookupTable[properties.spoken] = name
+
+    Events.on 'commandCreated', ({name, properties}) =>
+      @spokenToCommandLookupTable[properties.spoken] = name
+
 
   initialize: () ->
     @performCommandEdits()
@@ -56,20 +72,21 @@ class Commands
 
     Events.on 'userAssetsLoaded', =>
       @commandEditsFrom = 'user'
-      # @performCommandEdits()
+      @performCommandEdits()
 
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
       @commandEditsFrom = 'settings'
       @performCommandEdits()
-
-  # getCurrentNameFor: (commandName) ->
-  #   (_.pluck @renamings, {from: commandName})?.to || commandName
 
   validate: (command, options, editType) ->
     validated = true
     switch editType
       when 'commandCreated'
         @validate command, options, 'commandNameChanged'
+        unless options.spoken? and (options.needsParser != false)
+          error 'commandValidationError', command, "Please provide a 'spoken' parameter for command '#{command}'"
+          validated = false
+          # validated = false
         if @mapping[command]?
           if options.action?
             if options.action.toString() is @mapping[command].action.toString()
@@ -87,8 +104,8 @@ class Commands
         if _.isEmpty _.difference options, command.misspellings
           validated = false
       when 'commandBeforeAdded'
-        if @mapping[command.namespace]?.before?
-          unless @mapping[command.namespace].before[options.name]?
+        if @mapping[command.id]?.before?
+          unless @mapping[command.id].before[options.name]?
             # everything is good if such 'before' does not exist yet
             break
           options.action = options.action.toString()
@@ -96,8 +113,8 @@ class Commands
             action.toString() isnt options.action
           validated = not _.isEmpty _.compact aggregate
       when 'commandAfterAdded'
-        if @mapping[command.namespace]?.after?
-          unless @mapping[command.namespace].before[options.name]?
+        if @mapping[command.id]?.after?
+          unless @mapping[command.id].before[options.name]?
             break
           options = options.toString()
           aggregate = _.map command.after, (action) ->
@@ -137,6 +154,7 @@ class Commands
     validated = @validate name, options, 'commandCreated'
     return if not validated
     @mapping[name] = @normalizeOptions name, options
+    emit 'commandCreated', {name, properties: options}
     if options.enabled is true
       @enable name
 
@@ -163,14 +181,18 @@ class Commands
   edit: (name, editType, edition, callback) ->
     @delayedEditFunctions.push {name, editType, callback, edition}
 
-  get: (name) ->
-    isRenamed = _.findWhere @renamings, {from: name}
-    if isRenamed?
-      log 'commandRenamedReference', isRenamed, "#{isRenamed.from} => #{isRenamed.to}"
-      return @mapping[isRenamed.to]
-    @mapping[name]
+  getBySpoken: (spoken) ->
+    @spokenToCommandLookupTable[spoken]
 
-  # 4 debugging
+  get: (name) ->
+    command = @mapping[name]
+    unless command?
+      debug name
+    command
+
+  getEnabled: ->
+    _.where @mapping, {enabled: true}
+
   shouldEmitValidationFailed: (editType, command) ->
     if editType is 'commandEnabled'
       return false
@@ -179,23 +201,17 @@ class Commands
   performCommandEdits: ->
     delayedEditFunctions = _.clone @delayedEditFunctions
     @delayedEditFunctions = []
-    _.each @delayedEditFunctions, ({name, callback, editType, edition}) =>
+    _.each delayedEditFunctions, ({name, callback, editType, edition}) =>
       command = @get name
-
-      isRenamed = _.findWhere @renamings, {from: name}
-      if isRenamed?
-        name = isRenamed.to
-
       if command?
         return if not @validate command, edition, editType
         try
-          result = callback command
+          resultingCommand = callback command
         catch e
           debug {command, editType, edition, e}
-        if _.isObject result
-          @mapping[name] = @normalizeOptions name, result
-        emit editType, result, name
-        true
+        if _.isObject resultingCommand
+          @mapping[name] = @normalizeOptions name, resultingCommand
+        emit editType, resultingCommand, name
       else
         ###
           Allow addressing nonexistent commands while loading from settings
@@ -206,12 +222,12 @@ class Commands
           command from the package. Next time we performCommandEdits,
           those commands will exist
         ###
-        if not isRenamed?
-          if @commandEditsFrom is 'settings'
-            # let us try again in the next performCommandEdits()
-            @edit name, editType, callback
-          else
-            error 'commandNotFound', name
+        if @commandEditsFrom is 'settings'
+          # let us try again in the next performCommandEdits()
+          @edit name, editType, callback
+        else
+          error 'commandNotFound', name
+      return true
 
   override: (name, action) ->
     error 'deprecation', "Failed overriding '#{name}'.
@@ -263,7 +279,7 @@ class Commands
       command
 
   normalizeOptions: (name, options) ->
-    options.namespace = name
+    options.id = name
     options.enabled ?= true
     options.grammarType ?= 'individual'
     options.kind ?= 'action'
@@ -284,7 +300,6 @@ class Commands
 
     if options.rule?
       # try
-      console.log "custom", name
       options.grammar = new CustomGrammar(options.rule, options.variables)
       # catch e
       #   console.log "error parsing custom grammar for command: #{key}"

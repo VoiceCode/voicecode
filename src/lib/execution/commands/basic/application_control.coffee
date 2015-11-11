@@ -51,7 +51,7 @@ Commands.createDisabled
       if application?
         @openApplication application
       else
-        @do 'launcher'
+        @do 'applicationControl.openLauncher'
   'applicationControl.nextWindow':
     spoken: 'gibby'
     description: 'Switch to next window in same application'

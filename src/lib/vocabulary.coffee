@@ -16,13 +16,13 @@ class @Vocabulary
   loadCommandVocabulary: ->
     for key, value of Commands.mapping
       if value.vocabulary is true
-        @standard.push key
+        @standard.push value.spoken
       else if value.vocabulary?
-        @alternate[value.vocabulary] = key
+        @alternate[value.vocabulary] = value.spoken
       else if value.repeatable
-        @repeatable.push key
+        @repeatable.push value.spoken
       else if value.spaceBefore
-        @spaceBefore.push key
+        @spaceBefore.push value.spoken
   loadVocabulary: ->
     # from vocab list
 
@@ -42,8 +42,16 @@ class @Vocabulary
           @standard.push [prefix, itemName].join(' ')
 
   checkVocabulary: ->
-    @createVocabFile()
-  createVocabFile: ->
+    contentGenerators = [
+      standard: @createStandardContent
+      alternate: @createAlternateContent
+      repeatable: @createRepeatableContent
+      spaced: @createSpaceContent
+      sequence: @createSequenceContent
+    ]
+    _.each contentGenerators, (generator, filename) => @createVocabFile filename, generator()
+
+  createVocabFile: (filename, content) ->
     content = """
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -53,17 +61,13 @@ class @Vocabulary
       <string>3.0/1</string>
       <key>Words</key>
       <array>
-      #{@createStandardContent()}
-      #{@createAlternateContent()}
-      #{@createRepeatableContent()}
-      #{@createSpaceContent()}
-      #{@createSequenceContent()}
+      #{content}
       </array>
     </dict>
     </plist>
     """
     path = require('path')
-    file = path.resolve(userAssetsController.assetsPath, "vocabulary.xml")
+    file = path.resolve(userAssetsController.assetsPath, "#{filename}.xml")
     fs = require('fs')
     fs.writeFileSync file, content, 'utf8'
   createStandardContent: ->
@@ -83,8 +87,9 @@ class @Vocabulary
     items.join("\n")
   createSpaceContent: ->
     items = []
+    spokenForSpace = Commands.get('symbol.space').spoken
     for name in @spaceBefore
-      items.push @buildWord ["skoo", name].join(' ')
+      items.push @buildWord [spokenForSpace, name].join(' ')
     items.join("\n")
   createSequenceContent: ->
     items = []

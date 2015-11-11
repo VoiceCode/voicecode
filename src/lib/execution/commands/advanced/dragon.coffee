@@ -2,7 +2,7 @@ Chain.preprocess (chain) ->
   newChain = []
   _.find chain, (command) ->
     newChain.push command
-    if command.command is Commands.getCurrentNameFor 'snore'
+    if command.command is Commands.getBySpoken 'snore' # TODO: fix
       return true
     return false
   newChain

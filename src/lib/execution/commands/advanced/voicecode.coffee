@@ -1,11 +1,10 @@
 Commands.createDisabled
-  "core.modes.catchAll":
-    kind: "recognition"
-    grammarType: "none"
+  "dragon.catch-all":
     description: "catches all text - just for creation in Dragon"
     tags: ["voicecode", "recommended", 'modes']
-    triggerPhrase: ""
-  "core.showHistory":
+    triggerPhrase: ''
+    needsParsing: false
+  "show.history":
     spoken: 'recon'
     description: "Show command history"
     tags: ["voicecode"]
@@ -33,7 +32,7 @@ Commands.createDisabled
     action: (input) ->
       if input?.length
         @string input.join(" ")
-  'setMode'
+  'mode.set'
     spoken: "set mode"
     grammarType: "textCapture"
     description: "change voicecode command execution mode"

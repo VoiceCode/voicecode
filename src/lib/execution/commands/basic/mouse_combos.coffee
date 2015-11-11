@@ -90,7 +90,7 @@ Commands.createDisabled
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse.click', input, context
-      @do 'common.space'
+      @do 'symbol.space'
   'combo.clickThenDeleteLine':
     spoken: 'sappy'
     misspellings: ['sapi']

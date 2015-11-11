@@ -36,6 +36,5 @@ _.each numbers, (value, key) ->
     spoken: key
     grammarType: 'none'
     description: "Enters the number: #{value}"
-    # namespace: '#{value}'
     tags: ['number', 'recommended']
     module: 'number'
