@@ -44,12 +44,12 @@ Commands.createDisabled
     description: 'open application'
     tags: ['application', 'system', 'launching', 'recommended']
     grammarType: 'custom'
-    rule: '<spoken> (applications)'
+    rule: '<spoken> (application)'
     variables:
-      applications: -> Settings.applications
-    action: ({applications}) ->
-      if applications?
-        @openApplication applications
+      application: -> Settings.applications
+    action: ({application}) ->
+      if application?
+        @openApplication application
       else
         @do 'launcher'
   'applicationControl.nextWindow':

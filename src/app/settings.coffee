@@ -578,12 +578,6 @@ _.extend Settings,
   ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000
-  emoticons:
-    chagrin: ":P"
-    frown: ":("
-    sheep: ":}"
-    smile: ":)"
-    winkle: ";)"
   notificationProvider: "applescript"
   dateFormats:
     yammer: "YYYYMMDD"
