@@ -72,7 +72,7 @@ Events.on 'applicationStart', ->
 
 
     # DEVELOPER MODE ONLY
-    Settings.slaveMode = false
+    Settings.slaveMode = true
     Settings.dontMessWithMyDragon = true
 
     switch platform
@@ -91,24 +91,14 @@ Events.on 'applicationStart', ->
       _.each Commands.mapping, (command, name) ->
         Commands.enable name
 
-    # now I'm just being silly :-)
-    # globalState = Fiber ->
-    #   asyncblock (flow) ->
-    #     flow.errorCallback = ->
-    #       notify null, null, 'Something went wrong ;('
-    #     flow.firstArgIsError = false
-    #     flow.taskTimeout = 3000
-    #     flow.timeoutIsError = false
-    #
-    #     Events.once 'dragonSynchronizingEnded', flow.add()
-    #     Events.once 'dragonStarted', flow.add()
-    #     flow.wait()
-    #     notify null, null, 'Operational!'
 
 
     p = Fiber ->
       ParserController.generateParser()
     p.run()
+    s = Fiber ->
+      Synchronizer.synchronize()
+    s.run()
 
     mainWindow = null
     application.on 'ready', ->
