@@ -35,10 +35,6 @@ module.exports =
     _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), tag
     )
-  enabledCommandNames: ->
-    _.filter(_.keys(Commands.mapping), (key) ->
-      Commands.mapping[key].enabled is true
-    )
   scopedCommandsWithToggle: (tag, toggle) ->
     enabled = switch toggle
       when "enabled"

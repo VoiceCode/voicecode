@@ -263,17 +263,16 @@ class DragonSynchronizer
     if Settings.dragonVersion is 5
       chainedYesNo = [yes, no]
     DragonCommand = require './dragon_command'
-    for name in Commands.Utility.enabledCommandNames()
-      # console.error name
-      command = new DragonCommand(name, null)
+    for id in Commands.getEnabled()
+      command = new DragonCommand(id, null)
       continue unless command.needsDragonCommand()
-      @commands[name] = command
-      @lists[name] = command.dragonLists if command.dragonLists?
+      @commands[id] = command
+      @lists[id] = command.dragonLists if command.dragonLists?
       if Settings.dragonCommandMode is 'pure-vocab'
-        continue if name isnt 'vc-catch-all'
-      if Settings.dragonCommandMode is 'new-school'
-        continue unless command.grammarType in ['custom', 'textCapture', 'oneArgument'] or
-        command.kind is 'recognition'
+        continue if id isnt 'dragon.catch-all'
+      # if Settings.dragonCommandMode is 'new-school'
+      #   continue unless command.grammarType in ['custom', 'textCapture', 'oneArgument'] or
+      #   command.kind is 'recognition'
       for hasChain in chainedYesNo
         # assume input always required for textCapture
         # exceptions will be handled by new school recognition command
@@ -282,7 +281,7 @@ class DragonSynchronizer
         hasChain is no
           continue
 
-        continue if name is 'vc-catch-all' and hasChain is no
+        continue if id is 'dragon.catch-all' and hasChain is no
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         scopes = command.getTriggerScopes()

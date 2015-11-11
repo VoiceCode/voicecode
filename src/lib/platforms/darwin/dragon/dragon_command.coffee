@@ -27,6 +27,8 @@ class DragonCommand extends Command
     if @rule?
       trigger = @generateCustomCommandName hasChain
     trigger = "#{trigger} /!Text!/" if hasChain
+    unless trigger?
+      debug @
     trigger = trigger.replace /\s+/g, ' '
     trigger = trigger.replace /^\s/, ''
     trigger = trigger.replace /\s$/, ''

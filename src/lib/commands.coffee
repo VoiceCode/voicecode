@@ -72,7 +72,7 @@ class Commands
 
     Events.on 'userAssetsLoaded', =>
       @commandEditsFrom = 'user'
-      # @performCommandEdits()
+      @performCommandEdits()
 
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
       @commandEditsFrom = 'settings'
@@ -83,8 +83,9 @@ class Commands
     switch editType
       when 'commandCreated'
         @validate command, options, 'commandNameChanged'
-        unless options.spoken?
+        unless options.spoken? and (options.needsParser != false)
           error 'commandValidationError', command, "Please provide a 'spoken' parameter for command '#{command}'"
+          validated = false
           # validated = false
         if @mapping[command]?
           if options.action?
@@ -103,8 +104,8 @@ class Commands
         if _.isEmpty _.difference options, command.misspellings
           validated = false
       when 'commandBeforeAdded'
-        if @mapping[command.namespace]?.before?
-          unless @mapping[command.namespace].before[options.name]?
+        if @mapping[command.id]?.before?
+          unless @mapping[command.id].before[options.name]?
             # everything is good if such 'before' does not exist yet
             break
           options.action = options.action.toString()
@@ -112,8 +113,8 @@ class Commands
             action.toString() isnt options.action
           validated = not _.isEmpty _.compact aggregate
       when 'commandAfterAdded'
-        if @mapping[command.namespace]?.after?
-          unless @mapping[command.namespace].before[options.name]?
+        if @mapping[command.id]?.after?
+          unless @mapping[command.id].before[options.name]?
             break
           options = options.toString()
           aggregate = _.map command.after, (action) ->
@@ -184,7 +185,13 @@ class Commands
     @spokenToCommandLookupTable[spoken]
 
   get: (name) ->
-    @mapping[name]
+    command = @mapping[name]
+    unless command?
+      debug name
+    command
+
+  getEnabled: ->
+    _.where @mapping, {enabled: true}
 
   shouldEmitValidationFailed: (editType, command) ->
     if editType is 'commandEnabled'
@@ -194,7 +201,7 @@ class Commands
   performCommandEdits: ->
     delayedEditFunctions = _.clone @delayedEditFunctions
     @delayedEditFunctions = []
-    _.each @delayedEditFunctions, ({name, callback, editType, edition}) =>
+    _.each delayedEditFunctions, ({name, callback, editType, edition}) =>
       command = @get name
       if command?
         return if not @validate command, edition, editType
@@ -220,7 +227,7 @@ class Commands
           @edit name, editType, callback
         else
           error 'commandNotFound', name
-      true
+      return true
 
   override: (name, action) ->
     error 'deprecation', "Failed overriding '#{name}'.
@@ -272,7 +279,7 @@ class Commands
       command
 
   normalizeOptions: (name, options) ->
-    options.namespace = name
+    options.id = name
     options.enabled ?= true
     options.grammarType ?= 'individual'
     options.kind ?= 'action'

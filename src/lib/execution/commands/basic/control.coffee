@@ -6,7 +6,7 @@ Commands.createDisabled
     tags: ["text", "recommended"]
     action: ->
       null
-  'common.space':
+  'symbol.space':
     spoken: 'skoosh'
     description: "insert a space"
     findable: " "

@@ -216,13 +216,13 @@ class Chain
     if combined.indexOf('never') != -1
       null
     else if combined.indexOf('always') != -1
-      'skoosh'
+      'symbol.space'
     else
       switch combined
         when 'normal normal'
-          'skoosh'
+          'symbol.space'
         when 'soft normal', 'normal soft'
-          'skoosh'
+          'symbol.space'
 
   getAutoSpacingFromCommand: (command, multiPhrase) ->
     info = Commands.get command.command
