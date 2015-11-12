@@ -57,7 +57,7 @@ Commands.createDisabled
       if input?
         @waitForClipboard()
         @storeItem 'clipboard', input, @getClipboard()
-  'combo.crownSelectAllThenCopy':
+  'combo.selectAllThenCopy':
     spoken: 'allstoosh'
     description: 'Select all then copy whatever is selected'
     tags: ['clipboard', 'selection', 'recommended']

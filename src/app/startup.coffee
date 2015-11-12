@@ -7,6 +7,11 @@ global.platform =
       "windows"
     when "linux"
       "linux"
+# DEVELOPMENT
+replify = require('replify')
+repl = require('http').createServer()
+replify 'vc', repl
+# DEVELOPMENT
 
 global._ = require 'lodash'
 global.chalk = require 'chalk'
@@ -14,11 +19,6 @@ global.debug = ->
   console.log chalk.white.bold.bgRed('   DEBUG   ')
   console.log _.toArray arguments
 
-# DEVELOPMENT
-replify = require('replify')
-repl = require('http').createServer()
-replify 'vc', repl
-# DEVELOPMENT
 
 application = require 'app'
 BrowserWindow = require 'browser-window'
@@ -45,13 +45,14 @@ Events.on 'applicationStart', ->
     global.Settings = require './settings'
     Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
     global.Homonyms = require '../lib/utility/homonyms'
+    global.Packages = require '../lib/packages/packages'
+    global.Commands = require '../lib/commands'
     global.UserAssetsController = require './user_assets_controller'
     Events.once 'userAssetsLoaded', startupFlow.add 'user_settings'
     UserAssetsController.getAssets 'user_settings.coffee'
     startupFlow.wait 'user_settings'
     global.Command = require '../lib/command'
     global.Grammar = require '../lib/parser/grammar'
-    global.Commands = require '../lib/commands'
     global.Chain = require '../lib/chain'
     requireDirectory = require 'require-directory'
     requireDirectory module, '../lib/execution/',
@@ -96,9 +97,6 @@ Events.on 'applicationStart', ->
     p = Fiber ->
       ParserController.generateParser()
     p.run()
-    s = Fiber ->
-      Synchronizer.synchronize()
-    s.run()
 
     mainWindow = null
     application.on 'ready', ->

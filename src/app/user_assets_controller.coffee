@@ -55,7 +55,6 @@ _.extend Settings,
       log 'assetSettingsFileCreated', "#{@assetsPath}/user_settings.coffee",
       "User settings file created #{@assetsPath}/user_settings.coffee"
 
-
   getAssets: (assetsMask, ignoreMask = false) ->
     return if @state is "error"
     emit 'userAssetsLoading'
@@ -71,7 +70,8 @@ _.extend Settings,
     ).on 'ready', ->
 
   handleFile: (event, fileName) ->
-    if fileName.indexOf(".coffee", fileName.length - ".coffee".length) >= 0
+    if fileName.match(/.coffee$/)?
+      cleanFileName = fileName.split('/')[-1..].pop().replace /\.coffee$/, ''
       log 'userAssetEvent', {event, fileName},
       "User asset #{event}: #{fileName}"
       asyncblock (flow) =>
@@ -79,10 +79,36 @@ _.extend Settings,
         data = flow.sync @readFile fileName, flow.callback()
         try
           data = flow.sync @compileCoffeeScript data, flow.callback()
+          pack = Packages.get("user:#{cleanFileName}") or
+          Packages.register
+            name: "user:#{cleanFileName}"
+            description: "User commands and stuff in #{fileName}"
+            tags: ['user', "#{cleanFileName}.coffee"]
+
+          Commands = {}
+          # _.extend Commands, global.Commands <- does not work, prototypes or whatnot
+          Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
+          Commands.changeName = global.Commands.changeName.bind global.Commands
+          Commands.edit = global.Commands.edit.bind global.Commands
+          Commands.create = (name, options) =>
+            if _.isObject name
+              pack.commands.call pack, name
+            else
+              pack.commands.call pack, {"#{name}": options}
+          Commands.before = (name, options) =>
+            if _.isObject name
+              pack.before.call pack, name
+            else
+              pack.before.call pack, {"#{name}": options}
+          Commands.after = (name, options) =>
+            if _.isObject name
+              pack.after.call pack, name
+            else
+              pack.after.call pack, {"#{name}": options}
+
           eval data
         catch err
-          warning 'userAssetEvaluationError', fileName, "fileName: #{fileName}"
-          warning 'userAssetEvaluationError', err, err
+          warning 'userAssetEvaluationError', {err, fileName}, "#{fileName}:\n#{err}"
         log 'userAssetEvaluated', {event, fileName},
         "User asset evaluated: #{fileName}"
         @debouncedFinish ?= _.debounce =>

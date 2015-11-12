@@ -32,9 +32,11 @@ class Chain
     if ParserController.isInitialized()
       # try
       parsed = ParserController.parse(@phrase)
+      debug parsed
       parsed = _.map parsed, (parsedCommand) ->
         _.extend parsedCommand,
-          command: Commands.getBySpoken parsedCommand.command
+          command: Commands.getBySpoken(parsedCommand.command)?.id
+      debug parsed
       commands = @normalizeStructure parsed
       @applyMouseLatency commands
       commands

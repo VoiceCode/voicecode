@@ -104,7 +104,7 @@ Commands.createDisabled
     action: ->
       @key 'left', 'option'
       @key 'delete'
-  'select.way.right':
+  'select.all.right':
     spoken: 'ricksy'
     description: 'selects all text to the right'
     tags: ['selection', 'right', 'recommended']

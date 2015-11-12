@@ -56,13 +56,12 @@ class Commands
           target = spoken
           return false
         return true
-      unless target?
-        debug '!!!!!'
-      delete @spokenToCommandLookupTable[target]
+      if target?
+        delete @spokenToCommandLookupTable[target]
       @spokenToCommandLookupTable[properties.spoken] = name
 
-    Events.on 'commandCreated', ({name, properties}) =>
-      @spokenToCommandLookupTable[properties.spoken] = name
+    Events.on 'commandEnabled', (command, name) =>
+      @spokenToCommandLookupTable[command.spoken] = name
 
 
   initialize: () ->
@@ -82,18 +81,18 @@ class Commands
     validated = true
     switch editType
       when 'commandCreated'
-        @validate command, options, 'commandNameChanged'
-        unless options.spoken? and (options.needsParser != false)
-          error 'commandValidationError', command, "Please provide a 'spoken' parameter for command '#{command}'"
+        validated = @validate command, options, 'commandNameChanged'
+        if not options.spoken? and options.needsParser isnt false and not options.rule?
+          error 'commandValidationError', command,
+          "Please provide a 'spoken' parameter for command '#{command}'"
           validated = false
-          # validated = false
         if @mapping[command]?
           if options.action?
             if options.action.toString() is @mapping[command].action.toString()
               validated = false # action is the same
               break
-          # else
-          #   error 'commandHasNoAction', command, "Command #{command} has no action."
+          else
+            warning 'commandHasNoAction', command, "Command #{command} has no action."
           #   validated = false
           warning 'commandOverwritten', command,
           "Command '#{command}' overwritten by a command with a same name"
@@ -103,23 +102,8 @@ class Commands
       when 'commandMisspellingsAdded'
         if _.isEmpty _.difference options, command.misspellings
           validated = false
-      when 'commandBeforeAdded'
-        if @mapping[command.id]?.before?
-          unless @mapping[command.id].before[options.name]?
-            # everything is good if such 'before' does not exist yet
-            break
-          options.action = options.action.toString()
-          aggregate = _.map command.before, (action) ->
-            action.toString() isnt options.action
-          validated = not _.isEmpty _.compact aggregate
-      when 'commandAfterAdded'
-        if @mapping[command.id]?.after?
-          unless @mapping[command.id].before[options.name]?
-            break
-          options = options.toString()
-          aggregate = _.map command.after, (action) ->
-            action.toString() isnt options
-          validated = not _.isEmpty _.compact aggregate
+      # when 'commandBeforeAdded'
+      # when 'commandAfterAdded'
       when 'commandEnabled'
         if command.enabled is true
           validated = false
@@ -127,7 +111,6 @@ class Commands
         if _.findWhere(Commands.mapping, {spoken: options})?
           warning 'commandSpokenOverwritten', command,
           "Command #{options}`s spoken parameter overwritten by command with a same name"
-
 
     if not validated and @shouldEmitValidationFailed(editType, command)
       emit 'commandValidationFailed', {command, options, editType}
@@ -154,7 +137,7 @@ class Commands
     validated = @validate name, options, 'commandCreated'
     return if not validated
     @mapping[name] = @normalizeOptions name, options
-    emit 'commandCreated', {name, properties: options}
+    emit 'commandCreated', options, name
     if options.enabled is true
       @enable name
 
@@ -182,16 +165,17 @@ class Commands
     @delayedEditFunctions.push {name, editType, callback, edition}
 
   getBySpoken: (spoken) ->
-    @spokenToCommandLookupTable[spoken]
+    # @spokenToCommandLookupTable[spoken]
+    _.findWhere @mapping, {spoken}
 
   get: (name) ->
     command = @mapping[name]
     unless command?
-      debug name
+      error 'commandNotFound', name
     command
 
   getEnabled: ->
-    _.where @mapping, {enabled: true}
+    _.pluck (_.where @mapping, {enabled: true}), 'id'
 
   shouldEmitValidationFailed: (editType, command) ->
     if editType is 'commandEnabled'
@@ -226,7 +210,7 @@ class Commands
           # let us try again in the next performCommandEdits()
           @edit name, editType, callback
         else
-          error 'commandNotFound', name
+          error 'commandNotFound', name, editType
       return true
 
   override: (name, action) ->
@@ -238,28 +222,28 @@ class Commands
     Commands.extend is deprecated. Use Commands.before"
     @before name, edition
 
-  before: (commandName, beforeName, edition) ->
-    if _.isFunction beforeName
+  before: (commandName, info, action) ->
+    if _.isFunction info
       error 'commandValidationFailed', commandName,
       "Commands.before API changed.\n
       Please provide a unique identifier for your method as the second parameter: \n
       Commands.before '#{commandName}', 'my-#{commandName}-before', (input, context) -> doMagic()"
       return
-    @edit commandName, 'commandBeforeAdded', {name: beforeName, action: edition}, (command) ->
+    @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
       command.before ?= {}
-      command.before[beforeName] = edition
+      command.before["#{info.package}"] = {info, action}
       command
 
-  after: (commandName, afterName, edition) ->
-    if _.isFunction afterName
+  after: (commandName, info, action) ->
+    if _.isFunction info
       error 'commandValidationFailed', commandName,
       "Commands.after API changed.\n
       Please provide a unique identifier for your method as the second parameter: \n
       Commands.after '#{commandName}', 'my-#{commandName}-after', (input, context) -> doMagic()"
       return
-    @edit commandName, 'commandAfterAdded', {name: afterName, action: edition}, (command) ->
+    @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
       command.after ?= {}
-      command.after[afterName] = edition
+      command.after["#{info.package}"] = {info, action}
       command
 
   addMisspellings: (name, edition) ->
@@ -283,6 +267,9 @@ class Commands
     options.enabled ?= true
     options.grammarType ?= 'individual'
     options.kind ?= 'action'
+
+    if options.rule? and not options.spoken?
+      options.spoken = options.id
 
     type = options.grammarType
     if type in @primaryGrammarTypes

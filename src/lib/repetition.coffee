@@ -56,7 +56,11 @@ class Repetition
     @build()
   build: ->
     _.each @words, (value, key) ->
-      Commands.createDisabled key,
+      suffix = ''
+      if key.match(/way/)?
+        suffix = '.inline'
+      Commands.createDisabled "repetition.#{value}#{suffix}",
+        spoken: key
         repeater: value
         repeatable: true
         description: "repeat last individual command times [#{value}]"
