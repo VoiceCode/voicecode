@@ -11,6 +11,15 @@ class SettingsManager
   needsCreating: ->
     not @fileExists()
   create: ->
+    try
+      fs.mkdirSync path.dirname(@file),
+    catch error
+      if error.code is 'EEXIST'
+        # this is good
+      else
+        error 'assetDirectoryError', @file,
+         "Could not create user assets directory: #{@file}"
+        @state = "error"
     fs.writeFileSync @file, '{}', 'utf8'
   fileExists: ->
     fs.existsSync(@file)
@@ -36,7 +45,7 @@ class EnabledCommandsManager extends SettingsManager
     if instance
       return instance
     else
-      instance = super("enabled_commands")
+      instance = super("generated/enabled_commands")
       Events.once 'userAssetsLoading', =>
         @subscribeToEvents()
       @processSettings()
@@ -69,7 +78,7 @@ class EnabledCommandsManager extends SettingsManager
 
   disable: (names) ->
     for name in names
-      @settings[name] = false
+      delete @settings[name]
     @save()
 
 module.exports = {SettingsManager, EnabledCommandsManager: new EnabledCommandsManager}

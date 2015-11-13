@@ -6,19 +6,23 @@ class Packages
     return instance if instance?
     instance = @
     @packages = {}
-    @_package = require './package'
   register: (options) ->
     # validate the options
     # instantiate the package, add it to our internal list of packages
     # I'm sure we will think of more things to be done here
-    return unless @validatePackage options
+    return false unless @validatePackage options
 
-    instantiated = new @_package options
+    instantiated = new Package options
     @packages[options.name] = instantiated
     instantiated
 
   get: (name) ->
     @packages[name]
+
+  resetAll: ->
+    _.each @packages, (pack, name) ->
+      pack.remove()
+    @packages = {}
 
   validatePackage: (options) ->
     invalid = unless options.name?.length
@@ -33,6 +37,10 @@ class Packages
       false
     else
       true
+
+  remove: (name) ->
+    delete @packages[name]
+
 
 
 module.exports = new Packages

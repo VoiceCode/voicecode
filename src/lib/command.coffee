@@ -17,6 +17,10 @@ class Command
   transform: ->
     Transforms[@transform]
 
+  package: ->
+    if @packageId?
+      Packages.get @packageId
+
   generate: ->
     input = @input
     context = @generateContext()

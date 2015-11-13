@@ -1,10 +1,14 @@
-
 # base actions shared by each platform
+# Actions is the context that every command is called with
+# - so anything that should be available on 'this' within a command should be defined in the actions class
+
 module.exports = class Actions
   constructor: () ->
     @storage = {}
   stop: () ->
     @extensionsStopped = true
+  packageSettings: (packageId) ->
+    Packages.get(packageId)?.settings
   setUndoByDeleting: (amount) ->
     Commands.currentUndoByDeletingCount = amount
   notUndoable: ->

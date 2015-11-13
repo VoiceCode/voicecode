@@ -67,7 +67,7 @@ class @Vocabulary
     </plist>
     """
     path = require('path')
-    file = path.resolve(userAssetsController.assetsPath, "#{filename}.xml")
+    file = path.resolve(userAssetsController.assetsPath, "generated/#{filename}.xml")
     fs = require('fs')
     fs.writeFileSync file, content, 'utf8'
   createStandardContent: ->

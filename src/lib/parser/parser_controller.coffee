@@ -53,11 +53,11 @@ class ParserController
     @parser.parse input
 
   writeToDisk: (data) ->
-    @settingsManager ?= new SettingsManager("parser")
+    @settingsManager ?= new SettingsManager("generated/parser")
     @settingsManager.update data
 
   loadFromDisk: ->
-    @settingsManager ?= new SettingsManager("parser")
+    @settingsManager ?= new SettingsManager("generated/parser")
     @settingsManager.settings
 
   generateFingerprint: ->

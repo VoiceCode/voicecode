@@ -1,5 +1,5 @@
+Actions = require '../base/actions'
 
-Actions = require '../_base/_platforms'
 class DarwinActions extends Actions
   constructor: ->
     super

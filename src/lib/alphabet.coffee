@@ -60,7 +60,7 @@ class Alphabet
       suffix: Settings.singleLetterSuffix
     CryptoJS.MD5(JSON.stringify(data)).toString()
   checkVocabulary: ->
-    manager = new SettingsManager("versions")
+    manager = new SettingsManager("generated/versions")
     fingerprint = manager.settings.alphabet
     unless fingerprint is @fingerprint()
       @createVocabFile()
@@ -85,7 +85,7 @@ class Alphabet
     """
     fs = require('fs')
     path = require('path')
-    file = path.resolve(userAssetsController.assetsPath, 'alphabet.xml')
+    file = path.resolve(userAssetsController.assetsPath, 'generated/alphabet.xml')
     fs.writeFileSync file, content, 'utf8'
   createVocabComboContent: ->
     _.map Settings.letters, (value, key) =>

@@ -1,5 +1,6 @@
-Platforms.base.actions = require '../_base/_platforms'
-class Platforms.windows.actions extends Platforms.base.actions
+Actions = require '../base/actions'
+
+class Platforms.windows.actions extends Actions
   resolveSuperModifier: ->
     "control"
   key: (key, modifiers) ->

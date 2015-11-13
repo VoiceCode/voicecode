@@ -164,6 +164,17 @@ class Commands
   edit: (name, editType, edition, callback) ->
     @delayedEditFunctions.push {name, editType, callback, edition}
 
+  remove: (name) ->
+    # TODO what else needs to be done to clean up?
+    @edit name, 'commandDisabled', null, (command) =>
+      delete @mapping[name]
+
+  removeBefore: (name, edition) ->
+    # TODO
+
+  removeAfter: (name, edition) ->
+    # TODO
+
   getBySpoken: (spoken) ->
     # @spokenToCommandLookupTable[spoken]
     _.findWhere @mapping, {spoken}

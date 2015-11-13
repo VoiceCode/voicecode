@@ -50,7 +50,7 @@ class Modifiers
     </plist>
     """
     path = require('path')
-    file = path.resolve(userAssetsController.assetsPath, "modifiers.xml")
+    file = path.resolve(userAssetsController.assetsPath, "generated/modifiers.xml")
     fs = require('fs')
     fs.writeFileSync file, content, 'utf8'
   createVocabContent: ->
