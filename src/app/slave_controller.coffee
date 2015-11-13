@@ -82,7 +82,6 @@ unless Settings.slaveMode
 
   Commands[invokeWith] "slaver",
     grammarType: "textCapture"
-    kind: "action"
     continuous: false
     description: "Sets slave target if a parameter is given, otherwise returns to master"
     tags: ['voicecode']

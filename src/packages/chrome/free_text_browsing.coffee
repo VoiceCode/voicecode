@@ -266,9 +266,8 @@ class @FreeTextBrowsing
 
 
 
-Commands.create 'marquis',
-  kind: 'action'
-  grammarType: 'individual'
+Commands.create 'browser.toggle-markers',
+  spoken: 'marquis'
   description: ''
   tags: ['Chrome']
   action: (input) ->

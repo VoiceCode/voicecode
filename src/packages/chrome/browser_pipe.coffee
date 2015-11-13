@@ -367,8 +367,6 @@ Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
     @stop()
 
 Commands.create "webneck",
-  kind: "action"
-  grammarType: "individual"
   description: ""
   continuous: false
   aliases: []

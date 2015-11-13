@@ -1,10 +1,9 @@
 Commands.createDisabledWithDefaults {inputRequired: false},
   'vc-literal':
-    spoken: 'vc-literal'
-    grammarType: 'none'
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
     tags: ['text', 'recommended']
     needsCommand: false
+    needsParsing: false
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: (input) ->
       left = 'normal'

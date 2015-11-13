@@ -34,8 +34,6 @@ Commands.createDisabled
         @string 'CG'
   'text.format.objective-cAtQuotes':
     spoken: 'lowcoif'
-    kind: 'action'
-    grammarType: 'individual'
     tags: ['symbol', 'quotes', 'objective-c', 'domain-specific']
     description: "inserts objective-c quotes (@\"\") leaving cursor inside them. If text is selected, will wrap the selected text"
     action: ->

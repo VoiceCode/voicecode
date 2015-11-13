@@ -1,3 +1,5 @@
+Package = require './package'
+
 class Packages
   instance = null
   constructor: ->

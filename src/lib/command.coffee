@@ -82,9 +82,9 @@ class Command
         {first: null, last: null}
 
   getTriggerPhrase: ->
-    triggerPhrase = @namespace or @namespace
     if @triggerPhrase?
-      triggerPhrase = @triggerPhrase
-    triggerPhrase
+      @triggerPhrase
+    else
+      @spoken
 
 module.exports = Command

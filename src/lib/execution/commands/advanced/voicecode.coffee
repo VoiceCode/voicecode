@@ -80,7 +80,6 @@ Commands.createDisabled
       @enableStrictMode mode
   'modes.strict.disable'
     spoken: "strict off"
-    grammarType: "individual"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
     action: (input) ->

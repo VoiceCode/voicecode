@@ -37,14 +37,12 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     spoken: 'scrodgeway'
     description: 'scroll way down'
     tags: ['scroll', 'down', 'recommended']
-    grammarType: 'individual'
     action: (input) ->
       @scrollDown(999)
   'scroll.away.up':
     spoken: 'scroopway'
     description: 'scroll way up'
     tags: ['scroll', 'up', 'recommended']
-    grammarType: 'individual'
     action: (input) ->
       @scrollUp(999)
   'scroll.right':
