@@ -6,13 +6,14 @@ class Packages
     return instance if instance?
     instance = @
     @packages = {}
+    @_package = require './package'
   register: (options) ->
     # validate the options
     # instantiate the package, add it to our internal list of packages
     # I'm sure we will think of more things to be done here
     return unless @validatePackage options
 
-    instantiated = new Package options
+    instantiated = new @_package options
     @packages[options.name] = instantiated
     instantiated
 

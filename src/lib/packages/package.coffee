@@ -1,14 +1,14 @@
 class Package
   constructor: (@options) ->
-    {@name, @description} =  @options
+    {@name, @description} = @options
     @setDefaultCommandOptions()
 
   commands: (commands) ->
     packageOptions = @defaultCommandOptions
-    _.each commands, (options, id) ->
+    _.each commands, (options, id) =>
       Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, options)
 
-  before: (options) ->
+  before: (commands) ->
     packageOptions = @defaultCommandOptions
     _.each commands, (extension, id) ->
       Commands.before id, packageOptions, extension
@@ -19,10 +19,10 @@ class Package
       Commands.after id, packageOptions, extension
 
   # the instance should automatically add its package name at the beginning of all commands it creates
-  @normalizeId: (id) ->
+  normalizeId: (id) ->
     [@name, ':', id].join('')
 
-  @setDefaultCommandOptions: ->
+  setDefaultCommandOptions: ->
     @defaultCommandOptions = _.pick @options, [
       'triggerScopes'
       'triggerScope'

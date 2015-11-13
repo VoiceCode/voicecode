@@ -10,7 +10,7 @@ class EventEmitter extends require('events').EventEmitter
     @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'
-      'commandNameChanged'
+      # 'commandNameChanged'
       'commandNotFound'
       'commandAfterAdded'
       'commandBeforeAdded'
@@ -34,15 +34,19 @@ class EventEmitter extends require('events').EventEmitter
     ]
     @suppressedDebugEntries = [
       # 'deprecation'
-      # # 'enableCommand'
-      # 'commandEnabled'
+      'enableCommand'
+      'commandCreated'
+      'commandEnabled'
       # 'commandOverwritten'
-      # 'commandAfterAdded'
-      # 'commandBeforeAdded'
-      # 'commandMisspellingsAdded'
-      # 'commandNameChanged'
-      # 'userAssetEvent'
-      # 'userAssetEvaluated'
+      'commandAfterAdded'
+      'commandBeforeAdded'
+      'commandNameChanged'
+      'commandMisspellingsAdded'
+      'commandNameChanged'
+      'userAssetEvent'
+      'userAssetEvaluated'
+      'commandValidationFailed'
+      'commandValidationError'
     ]
   on: (event, callback) ->
     super

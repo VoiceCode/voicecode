@@ -39,7 +39,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     tags: ['scroll', 'down', 'recommended']
     action: (input) ->
       @scrollDown(999)
-  'scroll.away.up':
+  'scroll.way.up':
     spoken: 'scroopway'
     description: 'scroll way up'
     tags: ['scroll', 'up', 'recommended']

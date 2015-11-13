@@ -1,7 +1,7 @@
 class Command
   constructor: (name, @input = null, @context={}) ->
     _.extend @, Commands.get name
-    # if @input?
+
     @normalizeInput()
 
   normalizeInput: ->
@@ -29,7 +29,7 @@ class Command
     core = if @before?
       extensions = []
       extensions.push funk
-      _.each @before, (e) ->
+      _.each @before, ({action: e}) ->
         extensions.push ->
           e.call(@, input, context)
       ->
@@ -47,7 +47,7 @@ class Command
     # after actions
     if @after?
       afterList = []
-      _.each @after, (e) ->
+      _.each @after, ({action: e}) ->
         afterList.push ->
           e.call(@, input, context)
       segments.push ->
