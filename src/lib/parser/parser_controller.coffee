@@ -70,7 +70,7 @@ class ParserController
     @fingerprintHash = @cryptojs.MD5(JSON.stringify(fingerprint)).toString()
 
   isInitialized: ->
-    typeof ParserController.parser is 'undefined'
+    typeof @parser isnt 'undefined'
 
   getNewParser: ->
     @fingerprint ?= @generateFingerprint()
