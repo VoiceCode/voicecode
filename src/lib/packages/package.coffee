@@ -16,6 +16,14 @@ class Package
     _.each commands, (options, id) =>
       Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, options)
 
+  commandsWithDefaults: (defaults, commands) ->
+    packageOptions = @defaultCommandOptions
+
+    _.each commands, (options, id) =>
+      command = _.extend {}, packageOptions, defaults, options
+      @_commands[id] = command
+      Commands.createDisabled @normalizeId(id), command
+
   before: (commands) ->
     _.extend @_before, commands
     packageOptions = @defaultCommandOptions

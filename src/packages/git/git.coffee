@@ -1,80 +1,85 @@
-git =
-  'git':
-    spoken: 'jet'
-    description: 'git'
-    autoSpacing: 'normal normal'
-    multiPhraseAutoSpacing: 'normal normal'
-    action: ->
-      @string 'git'
-  'git.status':
-    spoken: 'jet status'
-    description: 'git status'
-    autoSpacing: 'normal normal'
-    multiPhraseAutoSpacing: 'normal normal'
-    action: ->
-      @string 'git status'
+pack = Packages.register
+  name: 'git'
+  description: 'Basic commands for git'
+  tags: ['git']
 
-  'git.commit':
-    spoken: 'jet commit'
-    description: "git commit -a -m ''"
-    autoSpacing: 'normal none'
-    action: ->
-      @string "git commit -a -m ''"
-      @left()
+pack.settings
+  commands:
+    'git':
+      spoken: 'jet'
+      description: 'git'
+      autoSpacing: 'normal normal'
+      multiPhraseAutoSpacing: 'normal normal'
+      action: ->
+        @string 'git'
+    'status':
+      spoken: 'jet status'
+      description: 'git status'
+      autoSpacing: 'normal normal'
+      multiPhraseAutoSpacing: 'normal normal'
+      action: ->
+        @string 'git status'
 
-  'git.add':
-    spoken: 'jet add'
-  'git.bisect':
-    spoken: 'jet bisect'
-  'git.branch':
-    spoken: 'jet branch'
-  'git.checkout':
-    spoken: 'jet check out'
-    output: 'git checkout'
-  'git.clone':
-    spoken: 'jet clone'
-  'git.cherry pick':
-    spoken: 'jet cherry pick'
-    output: 'git cherry-pick'
-  'git.diff':
-    spoken: 'jet diff'
-  'git.fetch':
-    spoken: 'jet fetch'
-  'git.in it':
-    spoken: 'jet in it'
-    output: 'git init'
-  'git.log':
-    spoken: 'jet log'
-  'git.merge':
-    spoken: 'jet merge'
-  'git.move':
-    spoken: 'jet move'
-    output: 'git mv'
-  'git.pull':
-    spoken: 'jet pull'
-  'git.pull rebase':
-    spoken: 'jet pull rebase'
-    output: 'git pull --rebase'
-  'git.push':
-    spoken: 'jet push'
-  'git.rebase':
-    spoken: 'jet rebase'
-  'git.reset':
-    spoken: 'jet reset'
-  'git.remove':
-    spoken: 'jet remove'
-    output: 'git rm'
-  'git.show':
-    spoken: 'jet show'
-  'git.tag':
-    spoken: 'jet tag'
+    'commit':
+      spoken: 'jet commit'
+      description: "git commit -a -m ''"
+      autoSpacing: 'normal none'
+      action: ->
+        @string "git commit -a -m ''"
+        @left()
 
-_.each git, (value, key) ->
-  output = value.output or key.replace('.', ' ')
+    'add':
+      spoken: 'jet add'
+    'bisect':
+      spoken: 'jet bisect'
+    'branch':
+      spoken: 'jet branch'
+    'checkout':
+      spoken: 'jet check out'
+      output: 'git checkout'
+    'clone':
+      spoken: 'jet clone'
+    'cherry pick':
+      spoken: 'jet cherry pick'
+      output: 'git cherry-pick'
+    'diff':
+      spoken: 'jet diff'
+    'fetch':
+      spoken: 'jet fetch'
+    'in it':
+      spoken: 'jet in it'
+      output: 'git init'
+    'log':
+      spoken: 'jet log'
+    'merge':
+      spoken: 'jet merge'
+    'move':
+      spoken: 'jet move'
+      output: 'git mv'
+    'pull':
+      spoken: 'jet pull'
+    'pull rebase':
+      spoken: 'jet pull rebase'
+      output: 'git pull --rebase'
+    'push':
+      spoken: 'jet push'
+    'rebase':
+      spoken: 'jet rebase'
+    'reset':
+      spoken: 'jet reset'
+    'remove':
+      spoken: 'jet remove'
+      output: 'git rm'
+    'show':
+      spoken: 'jet show'
+    'tag':
+      spoken: 'jet tag'
+
+# pack.ready ->
+_.each pack.settings.commands, (value, key) ->
+  output = value.output or value.spoken
 
   defaults =
-    tags: ['domain-specific', 'git']
-    vocabulary: true
     autoSpacing: 'normal always'
     output: output
     description: output
@@ -82,4 +87,7 @@ _.each git, (value, key) ->
       @string output
 
   # the defaults are overridden if any option is specified
-  Commands.createDisabled key, _.extend(defaults, value)
+
+  options = {}
+  options[key] = _.extend({}, defaults, value)
+  pack.commands options

@@ -1,28 +1,32 @@
-packageInfo =
+pack = Packages.register
   name: 'iterm'
   description: 'iTerm integration'
   triggerScopes: ['iTerm']
+  tags: ['iterm']
 
-Commands.after 'git.status', packageInfo, (input, context) ->
-  @enter()
 
-Commands.before 'combo.copyUnderMouseAndInsertAtCursor', packageInfo, (input, context) ->
-  @rightClick()
-  @rightClick()
-  @paste()
-  @stop()
+pack.after
+  'git.status': (input, context) ->
+    @enter()
 
-Commands.before 'shell.directory.change.predefined', packageInfo, (input, context) ->
-  if input?.length
-    current = @currentApplication()
-    directory = @fuzzyMatch Settings.directories, input.join(' ')
-    if current is 'iTerm'
-      @string "cd #{directory} ; ls \n"
-      @stop()
-    else if Settings.defaultTerminal is 'iTerm'
-      @openApplication('iTerm')
-      @newTab()
-      @delay 200
-      @string "cd #{directory} ; ls"
-      @enter()
-      @stop()
+pack.before
+  'combo.copyUnderMouseAndInsertAtCursor': (input, context) ->
+    @rightClick()
+    @rightClick()
+    @paste()
+    @stop()
+ 'shell.directory.change.predefined': (input, context) ->
+   # TODO figure out how to handle 'before' functions that are global like this
+    if input?.length
+      current = @currentApplication()
+      directory = @fuzzyMatch Settings.directories, input.join(' ')
+      if current is 'iTerm'
+        @string "cd #{directory} ; ls \n"
+        @stop()
+      else if Settings.defaultTerminal is 'iTerm'
+        @openApplication('iTerm')
+        @newTab()
+        @delay 200
+        @string "cd #{directory} ; ls"
+        @enter()
+        @stop()

@@ -1,10 +1,14 @@
-Commands.createDisabledWithDefaults
+pack = Packages.register
+  name: 'gmail'
+  description: 'Commands for gmail'
   triggerScopes: ['Safari', 'Google Chrome']
-  when: -> @urlContains 'mail.google.com'
-  continuous: false
+  when: ->
+    @inBrowser() and @urlContains 'mail.google.com'
   tags: ['gmail']
-,
-  'gmail.go-to-inbox':
+
+pack.commands
+  'go-to-inbox':
     spoken: 'go inbox'
     description: 'go back to inbox in gmail'
+    continuous: false
     action: -> @string 'gi'
