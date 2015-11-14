@@ -1,4 +1,4 @@
-pak = Packages.register
+pack = Packages.register
   name: 'skype'
   description: 'Skype integration'
   triggerScopes: ['Skype']
