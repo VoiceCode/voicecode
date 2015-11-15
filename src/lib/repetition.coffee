@@ -19,21 +19,14 @@ Commands.createDisabled
     description: "Repeat N-th complete spoken phrase in history. Defaults to previous."
     tags: ["voicecode", "repetition", "recommended"]
     repeatable: true
-    bypassHistory: (context) ->
-      # return true if context.chainLinkIndex is 0
-      # return false
-      return true
-
+    bypassHistory: (context) -> true
     action: (offset, context) ->
       offset = offset or 1
-      if offset is 1 and context.chain.length is 1
+      if context.chain.length is 1
         HistoryController.hasAmnesia yes
-      else
-        HistoryController.isGreedy yes
       chain = HistoryController.getChain offset
       chain = new Chain().execute chain
       HistoryController.hasAmnesia no
-      HistoryController.isGreedy no
 
   'repetition.command':
     spoken: 'repple'
@@ -42,19 +35,16 @@ Commands.createDisabled
     description: "Repeats an individual command component.
     Right after any command say [repple X] to repeat it X times"
     tags: ["voicecode", "repetition", "recommended"]
-    bypassHistory: true
-    historic: true
-    inputRequired: false # is it really?
-    action: (input, context) ->
-      times = parseInt(input)
-      if times?
-        times = if context.repetitionIndex is 0
-          times or 1
-        else
-          (times or 1) - 1
-        if times > 0 and times < (Settings.maximumRepetitionCount or 100)
-          @repeat times, =>
-            context.lastIndividualCommand.call(@)
+    bypassHistory: (context) -> true
+    action: (input = null, context) ->
+      times = parseInt(input) or 1
+      if times isnt 1 and context.chainLinkIndex > 1
+        times--
+      if times > 0 and times < (Settings.maximumRepetitionCount or 100)
+        commands = HistoryController.getCommands 0, 0, 1
+        debug commands
+        new Chain().execute _.fill Array(times), commands.pop()
+
 
 class Repetition
   constructor: ->

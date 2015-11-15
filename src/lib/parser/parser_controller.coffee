@@ -49,8 +49,26 @@ class ParserController
     catch e
       error 'generateParserFailed', e, 'Failed evaluating new parser.'
 
-  parse: (input) ->
-    @parser.parse input
+  parse: (phrase) ->
+    result = []
+    phrase = phrase + " "
+    phrase = phrase.replace /\s+/g, ' '
+    parts = phrase.toLowerCase().split('')
+    for c, index in parts
+      item = c
+      # capitalize I's
+      if c is "i" and (index is 0 or parts[index - 1] is " ") and (index is (parts.length - 1) or parts[index + 1] is " ")
+        item = "I"
+      else if c is "…"
+        item = "ellipsis"
+      else if c is "ï"
+        item = "i"
+      else if c is "–"
+        item = "dash"
+      else if c is ","
+        item = "comma"
+      result.push item
+    @parser.parse result.join('')
 
   writeToDisk: (data) ->
     @settingsManager ?= new SettingsManager("generated/parser")

@@ -46,7 +46,7 @@
     "coffee-reactify": "^3.0.0",
     "electron-connect": "^0.3.3",
     "electron-packager": "^5.1.1",
-    "electron-prebuilt": "^0.34.2",
+    "electron-prebuilt": "^0.34.3",
     "electron-rebuild": "^1.0.2",
     "gulp": "^3.9.0",
     "gulp-atom": "^0.1.0",

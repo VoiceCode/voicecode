@@ -44,7 +44,7 @@ module.exports = class Actions
     # sleep.usleep(ms * 1000)
 
   repeat: (times, callback) ->
-    _(times).times callback
+    _.times times, callback
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length

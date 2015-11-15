@@ -1,30 +1,6 @@
 class Chain
   preprocessors = []
-
-  constructor: (phrase = null) ->
-    if phrase?
-      @phrase = @normalizePhrase phrase
-
-  normalizePhrase: (phrase) ->
-    result = []
-    phrase = phrase + " "
-    phrase = phrase.replace /\s+/g, ' '
-    parts = phrase.toLowerCase().split('')
-    for c, index in parts
-      item = c
-      # capitalize I's
-      if c is "i" and (index is 0 or parts[index - 1] is " ") and (index is (parts.length - 1) or parts[index + 1] is " ")
-        item = "I"
-      else if c is "…"
-        item = "ellipsis"
-      else if c is "ï"
-        item = "i"
-      else if c is "–"
-        item = "dash"
-      else if c is ","
-        item = "comma"
-      result.push item
-    result.join('')
+  constructor: (@phrase = null) ->
 
   @preprocess: (name, callback) ->
     preprocessors = _.reject preprocessors, ({name: n}) -> n is name
@@ -32,7 +8,6 @@ class Chain
 
   parse: ->
     if ParserController.isInitialized()
-      # try
       parsed = ParserController.parse(@phrase)
       parsed = _.map parsed, (parsedCommand) ->
         _.extend parsedCommand,
@@ -41,9 +16,6 @@ class Chain
       @applyMouseLatency parsed
       log 'chainParsed', parsed, JSON.stringify parsed
       parsed
-      # catch e
-      #   console.log e
-      #   null
     else
       error 'chainMissingParser', null, "The parser is not initialized -
       probably a problem with the license code, email, or internet connection"
@@ -65,10 +37,10 @@ class Chain
     unless _.isEmpty chain
       Commands.monitoringMouseToCancelSpacing = false
       emit 'chainExecutionStart', chain
-      _.each chain, (link, index) ->
+      _.each chain, (link) ->
         chainLinkIndex = HistoryController.getChainLength()
         link.context =
-          chainLinkIndex: index
+          chainLinkIndex: ++chainLinkIndex
           chain: _.cloneDeep chain
         emit 'chainLinkWillExecute', {link, chain}
         try
@@ -90,7 +62,6 @@ class Chain
       setTimeout ->
         Commands.monitoringMouseToCancelSpacing = true
       , 150
-
 
   generateNestedInterpretation: ->
     results = @parse()

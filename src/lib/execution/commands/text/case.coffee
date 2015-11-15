@@ -21,7 +21,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
-  'format.capitalize-next-word':
+  'format.word.next.capitalize':
     spoken: 'champ'
     grammarType: 'textCapture'
     description: 'capitalize next individual word'
