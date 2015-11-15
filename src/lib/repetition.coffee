@@ -1,32 +1,40 @@
-Chain.preprocess (chain) ->
-  newChain = []
-  repetitionWords = _.map Settings.repetitionWords, (howMany, name) ->
-    name = "#{name} way" #TODO: make way a variable
-    {name, howMany}
-  _.each chain, (command) ->
-    newChain.push command
-    if command.command in _.pluck repetitionWords, 'name'
-      howMany = (_.findWhere repetitionWords, {name: command.command}).howMany
-      newChain.pop()
-      newChain = _.times howMany, -> newChain
-      newChain = _.flatten newChain
-  newChain
+# Chain.preprocess 'inline-repetitors', (chain) ->
+#   newChain = []
+#   repetitionWords = _.map Settings.repetitionWords, (howMany, name) ->
+#     name = "#{name} way" #TODO: make way a variable
+#     {name, howMany}
+#   _.each chain, (command) ->
+#     newChain.push command
+#     if command.command in _.pluck repetitionWords, 'name'
+#       howMany = (_.findWhere repetitionWords, {name: command.command}).howMany
+#       newChain.pop()
+#       newChain = _.times howMany, -> newChain
+#       newChain = _.flatten newChain
+#   newChain
 
 Commands.createDisabled
   'repetition.chain':
     spoken: 'creek'
     grammarType: "integerCapture"
-    description: "repeat last complete spoken phrase [n] times (default 1)"
+    description: "Repeat N-th complete spoken phrase in history. Defaults to previous."
     tags: ["voicecode", "repetition", "recommended"]
     repeatable: true
-    historic: true
-    inputRequired: false
-    action: (input, context) ->
-      previous = context.lastFullCommand
-      if previous
-        @repeat input or 1, =>
-          _.each previous, (command) =>
-            command.call(@)
+    bypassHistory: (context) ->
+      # return true if context.chainLinkIndex is 0
+      # return false
+      return true
+
+    action: (offset, context) ->
+      offset = offset or 1
+      if offset is 1 and context.chain.length is 1
+        HistoryController.hasAmnesia yes
+      else
+        HistoryController.isGreedy yes
+      chain = HistoryController.getChain offset
+      chain = new Chain().execute chain
+      HistoryController.hasAmnesia no
+      HistoryController.isGreedy no
+
   'repetition.command':
     spoken: 'repple'
     grammarType: "integerCapture"
@@ -34,7 +42,7 @@ Commands.createDisabled
     description: "Repeats an individual command component.
     Right after any command say [repple X] to repeat it X times"
     tags: ["voicecode", "repetition", "recommended"]
-    ignoreHistory: true
+    bypassHistory: true
     historic: true
     inputRequired: false # is it really?
     action: (input, context) ->
@@ -64,7 +72,7 @@ class Repetition
         repeater: value
         repeatable: true
         description: "repeat last individual command times [#{value}]"
-        ignoreHistory: true
+        bypassHistory: true
         historic: true
         tags: ["voicecode", "repetition", "recommended"]
         action: (input, context) ->

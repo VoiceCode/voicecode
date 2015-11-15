@@ -425,15 +425,14 @@ class DarwinActions extends Actions
     """, false
 
   currentApplication: ->
-    if @_currentApplication
-      @_currentApplication
-    else
-      w = $.NSWorkspace('sharedWorkspace')
-      app = w('frontmostApplication')
-      result = app('localizedName').toString()
-      @_currentApplication = result
-      console.log result
-      result
+    # if @_currentApplication
+    #   @_currentApplication
+    # else
+    w = $.NSWorkspace('sharedWorkspace')
+    app = w('frontmostApplication')
+    result = app('localizedName').toString()
+    @_currentApplication = result
+    result
 
   _getCurrentBrowserUrl: (cb) ->
     switch @currentApplication()

@@ -54,6 +54,7 @@ Events.on 'applicationStart', ->
     global.Command = require '../lib/command'
     global.Grammar = require '../lib/parser/grammar'
     global.Chain = require '../lib/chain'
+    global.HistoryController = require '../lib/history_controller'
     requireDirectory = require 'require-directory'
     requireDirectory module, '../lib/execution/',
       visit: (required)->
@@ -94,12 +95,10 @@ Events.on 'applicationStart', ->
 
 
 
-    p = Fiber ->
-      ParserController.generateParser()
-    p.run()
+    ParserController.generateParser()
 
     mainWindow = null
-    application.on 'ready', ->
+    # application.on 'ready', ->
       # mainWindow = new BrowserWindow
       #   width: 900
       #   height: 600

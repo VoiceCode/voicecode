@@ -18,6 +18,11 @@ module.exports = class Actions
     _.times(amount) =>
       @key "delete"
 
+  breakChain: (reason = 'Unknown reason...') ->
+    throw
+      name: 'breakChain'
+      message: reason
+
   # run another command
   do: (name, input=null, context={}) ->
     command = new Command(name, input, context)
@@ -56,8 +61,8 @@ module.exports = class Actions
           actual
 
   setCurrentApplication: (application) ->
-    console.log currentApplication: application
     @_currentApplication = application
+    emit 'currentApplicationChanged', application
 
   context: ->
     for item in Settings.contextChain

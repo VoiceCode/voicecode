@@ -1,8 +1,9 @@
 class Chain
   preprocessors = []
 
-  constructor: (phrase) ->
-    @phrase = @normalizePhrase phrase
+  constructor: (phrase = null) ->
+    if phrase?
+      @phrase = @normalizePhrase phrase
 
   normalizePhrase: (phrase) ->
     result = []
@@ -25,21 +26,21 @@ class Chain
       result.push item
     result.join('')
 
-  @preprocess: (callback) ->
-    preprocessors.push callback
+  @preprocess: (name, callback) ->
+    preprocessors = _.reject preprocessors, ({name: n}) -> n is name
+    preprocessors.push {name, callback}
 
   parse: ->
     if ParserController.isInitialized()
       # try
       parsed = ParserController.parse(@phrase)
-      debug parsed
       parsed = _.map parsed, (parsedCommand) ->
         _.extend parsedCommand,
           command: Commands.getBySpoken(parsedCommand.command)?.id
-      debug parsed
-      commands = @normalizeStructure parsed
-      @applyMouseLatency commands
-      commands
+      parsed = @normalizeStructure parsed
+      @applyMouseLatency parsed
+      log 'chainParsed', parsed, JSON.stringify parsed
+      parsed
       # catch e
       #   console.log e
       #   null
@@ -47,57 +48,48 @@ class Chain
       error 'chainMissingParser', null, "The parser is not initialized -
       probably a problem with the license code, email, or internet connection"
 
-  execute: ->
-    Commands.subcommandIndex = 0
-    Commands.repetitionIndex = 0
-    Commands.lastParsing = []
-    results = @parse()
-    log 'chainParsed', results, JSON.stringify results
+  execute: (chain = null) ->
+    unless chain?
+      chain = @parse()
+
     unless _.isEmpty preprocessors
-      results = _.reduce preprocessors, (chain, callback) ->
+      chain = _.reduce preprocessors, (chain, {callback}) ->
         callback chain
-      , results
+      , chain
 
     if Settings.autoSpacingEnabled.call(Actions)
-      results = @applyAutoSpacing results
+      chain = @applyAutoSpacing chain
 
-    log 'chainPreprocessed', results, JSON.stringify results
+    log 'chainPreprocessed', chain, JSON.stringify chain
 
-    if results?
-      Commands.lastCommandOfPreviousPhrase = _.last(results)
+    unless _.isEmpty chain
       Commands.monitoringMouseToCancelSpacing = false
-      Commands.lastParsing = results
-      combined = _.map(results, (result) ->
-        command = new Command(result.command, result.arguments, result.context)
-        individual = command.generate()
-        if command.ignoreHistory
-          Commands.repetitionIndex = 0
-        else
-          Commands.lastIndividualCommand = individual
-          Commands.repetitionIndex += 1
-
-        Commands.subcommandIndex += 1
-        individual
-      )
-      Commands.lastFullCommand = combined
-      Commands.previousUndoByDeletingCount = Commands.aggregateUndoByDeletingCount
-      Commands.aggregateUndoByDeletingCount = 0
-
-      # execute each section
-      _.each combined, (callback) ->
-        if callback?
-          Commands.currentUndoByDeletingCount = 0
-          callback.call(Actions)
-          if Commands.currentUndoByDeletingCount > 0
-            Commands.aggregateUndoByDeletingCount += Commands.currentUndoByDeletingCount
+      emit 'chainExecutionStart', chain
+      _.each chain, (link, index) ->
+        chainLinkIndex = HistoryController.getChainLength()
+        link.context =
+          chainLinkIndex: index
+          chain: _.cloneDeep chain
+        emit 'chainLinkWillExecute', {link, chain}
+        try
+          new Command(
+            link.command
+            link.arguments
+            link.context
+          ).generate().call Actions
+          emit 'chainLinkExecuted', {link, chain}
+          return true
+        catch e
+          if e.name is 'breakChain'
+            log 'chainBroken', chain, "#{link.command} broke the chain: #{e.message}"
           else
-            Commands.aggregateUndoByDeletingCount = 0
+            error 'chainExecutionError', chain, e
+          return false
 
+      emit 'chainExecutionEnd', chain
       setTimeout ->
         Commands.monitoringMouseToCancelSpacing = true
       , 150
-
-      {interpretation: results, generated: combined}
 
 
   generateNestedInterpretation: ->

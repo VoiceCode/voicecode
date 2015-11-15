@@ -3,6 +3,7 @@ Commands.createDisabled
     spoken: 'swick'
     description: 'Switch to most recent application'
     tags: ['application', 'tab', 'recommended']
+    bypassHistory: true
     action: ->
       @switchApplication()
       @delay(250)

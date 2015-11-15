@@ -36,28 +36,29 @@ class DarwinController
     global.fs = require 'fs'
 
   initialize: ->
-    Fiber(=>
-      @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
-      @notificationCenter = @sharedWorkspace('notificationCenter')
-      @mainQueue = $.NSOperationQueue('mainQueue')
-      @app = $.NSApplication('sharedApplication')
+    process.on 'exit', =>
+      @app 'terminate', $('self')
+      delete @
+    @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
+    @notificationCenter = @sharedWorkspace('notificationCenter')
+    @mainQueue = $.NSOperationQueue('mainQueue')
+    @app = $.NSApplication('sharedApplication')
 
-      @delegate = $.NSObject.extend('AppDelegate')
-      @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
-      @delegate.register()
+    @delegate = $.NSObject.extend('AppDelegate')
+    @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
+    @delegate.register()
 
-      @delegateInstance = @delegate('alloc')('init')
-      @app 'setDelegate', @delegateInstance
+    @delegateInstance = @delegate('alloc')('init')
+    @app 'setDelegate', @delegateInstance
 
-      @notificationCenter('addObserver', @delegateInstance, 'selector',
-      'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-      @notificationCenter('addObserver', @delegateInstance, 'selector',
-      'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
+    @notificationCenter('addObserver', @delegateInstance, 'selector',
+    'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
+    @notificationCenter('addObserver', @delegateInstance, 'selector',
+    'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
 
-      $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
+    $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
 
-      # @app 'finishLaunching'
-    ).run()
+    # @app 'finishLaunching'
 
   applicationChanged: (self, _cmd, notification) ->
     current = notification('object')('frontmostApplication')('localizedName').toString()
@@ -142,8 +143,7 @@ class DarwinController
 
   executeChain: (phrase) ->
     Fiber(->
-      chain = new Chain(phrase)
-      results = chain.execute()
+      new Chain(phrase).execute()
     ).run()
 
   setDragonInfo: ->

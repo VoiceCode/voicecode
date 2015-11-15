@@ -82,10 +82,11 @@ class Commands
     switch editType
       when 'commandCreated'
         validated = @validate command, options, 'commandNameChanged'
-        if not options.spoken? and options.needsParser isnt false and not options.rule?
-          error 'commandValidationError', command,
-          "Please provide a 'spoken' parameter for command '#{command}'"
-          validated = false
+        if not options.spoken?
+          unless options.needsParsing is false or options.rule?
+            error 'commandValidationError', command,
+            "Please provide a 'spoken' parameter for command '#{command}'"
+            validated = false
         if @mapping[command]?
           if options.action?
             if options.action.toString() is @mapping[command].action.toString()
@@ -279,7 +280,7 @@ class Commands
     options.grammarType ?= 'individual'
     options.kind ?= 'action'
 
-    if options.rule? and not options.spoken?
+    unless options.spoken?
       options.spoken = options.id
 
     type = options.grammarType

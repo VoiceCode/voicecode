@@ -1,11 +1,8 @@
-Chain.preprocess (chain) ->
-  newChain = []
-  _.find chain, (command) ->
-    newChain.push command
-    if command.command is Commands.getBySpoken 'snore' # TODO: fix
-      return true
-    return false
-  newChain
+Chain.preprocess 'consume-everything-after-microphone-sleep', (chain) ->
+  index = _.findIndex chain, 'command', 'dragon.microphone.sleep'
+  if index isnt -1
+    return _.slice chain, 0, ++index
+  return chain
 
 Commands.createDisabled
   "dragon.microphone.sleep":

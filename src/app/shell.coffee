@@ -17,6 +17,7 @@ Execute = (script, options = null) ->
 Applescript = (content, shouldReturn = true) ->
   script = $.NSAppleScript('alloc')('initWithSource', $(content))
   results = script('executeAndReturnError', null)
+  debug results
   if shouldReturn
     results('stringValue')?.toString()
   else

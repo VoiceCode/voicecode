@@ -1,7 +1,6 @@
 class Command
-  constructor: (name, @input = null, @context={}) ->
+  constructor: (name, @input = null, @context = {}) ->
     _.extend @, Commands.get name
-
     @normalizeInput()
 
   normalizeInput: ->
@@ -65,16 +64,7 @@ class Command
         segment?.call(@)
 
   generateContext: ->
-    context = {}
-    _.extend context, @context
-    context.subcommandIndex = Commands.subcommandIndex
-    context.chain = Commands.lastParsing
-    if @historic
-      _.extend context,
-        lastFullCommand: Commands.lastFullCommand
-        lastIndividualCommand: Commands.lastIndividualCommand
-        repetitionIndex: Commands.repetitionIndex
-    context
+    @context
 
   normalizeNumberRange: (input) ->
     if typeof input is "object"
