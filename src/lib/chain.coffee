@@ -20,19 +20,18 @@ class Chain
       error 'chainMissingParser', null, "The parser is not initialized -
       probably a problem with the license code, email, or internet connection"
 
-  execute: (chain = null) ->
+  execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
     unless chain?
       chain = @parse()
 
-    unless _.isEmpty preprocessors
+    if shouldPreprocess
       chain = _.reduce preprocessors, (chain, {callback}) ->
         callback chain
       , chain
+      log 'chainPreprocessed', chain, JSON.stringify chain
 
-    if Settings.autoSpacingEnabled.call(Actions)
+    if shouldAutoSpace and Settings.autoSpacingEnabled.call(Actions)
       chain = @applyAutoSpacing chain
-
-    log 'chainPreprocessed', chain, JSON.stringify chain
 
     unless _.isEmpty chain
       Commands.monitoringMouseToCancelSpacing = false
@@ -140,7 +139,7 @@ class Chain
     results = []
     for current, index in commands
       if index is 0
-        previous = Commands.lastCommandOfPreviousPhrase
+        previous = HistoryController.getCommands().pop()
         connector = @determineCommandConnector
           previous: previous
           current: current

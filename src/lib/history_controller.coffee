@@ -36,7 +36,10 @@ class HistoryController
     context ?= @getCurrentContext()
     if chainOffset is 0 and @getChainLength() is 0
       chainOffset++
-    @history[context][chainOffset][offset...count]
+    try
+      return @history[context][chainOffset][offset...count]
+    catch
+      return []
 
   getChain: (offset = 0, context = null) ->
     context ?= @getCurrentContext()
@@ -61,6 +64,9 @@ class HistoryController
     Actions.currentApplication()
 
   getChainLength: (offset = 0) ->
-    _.size @history[@getCurrentContext()][offset]
+    try
+      return @history[@getCurrentContext()][offset].length
+    catch
+      return 0
 
 module.exports = new HistoryController

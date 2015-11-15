@@ -25,7 +25,7 @@ Commands.createDisabled
       if context.chain.length is 1
         HistoryController.hasAmnesia yes
       chain = HistoryController.getChain offset
-      chain = new Chain().execute chain
+      chain = new Chain().execute chain, false
       HistoryController.hasAmnesia no
 
   'repetition.command':
@@ -41,9 +41,9 @@ Commands.createDisabled
       if times isnt 1 and context.chainLinkIndex > 1
         times--
       if times > 0 and times < (Settings.maximumRepetitionCount or 100)
-        commands = HistoryController.getCommands 0, 0, 1
+        commands = HistoryController.getCommands()
         debug commands
-        new Chain().execute _.fill Array(times), commands.pop()
+        new Chain().execute (_.fill Array(times), commands.pop()), false
 
 
 class Repetition
@@ -60,20 +60,11 @@ class Repetition
       Commands.createDisabled "repetition.#{value}#{suffix}",
         spoken: key
         repeater: value
-        repeatable: true
+        bypassHistory: (context) -> true
         description: "repeat last individual command times [#{value}]"
-        bypassHistory: true
         historic: true
         tags: ["voicecode", "repetition", "recommended"]
         action: (input, context) ->
-          times = if context.repetitionIndex is 0
-            value
-          else
-            value - 1
-          if times > 0
-            last = context.lastIndividualCommand
-            if last?
-              @repeat times, =>
-                last.call(@)
+          @do 'repetition.command', value, context
 
 module.exports = new Repetition
