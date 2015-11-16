@@ -1,4 +1,5 @@
 fs = require 'fs'
+os = require 'os'
 path = require 'path'
 chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
@@ -9,14 +10,11 @@ class UserAssetsController
   constructor: ->
     return instance if instance?
     instance = @
-    @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
+    @assetsPath = Settings.userAssetsPath.replace /^~/, os.homedir()
     log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
     @init()
     @watchers = {}
     @debouncedFinish = null
-
-  getUserHome: ->
-    process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME']
 
   readFile: (filePath, callback) ->
     callback (fs.readFileSync filePath, {encoding: 'utf8'})

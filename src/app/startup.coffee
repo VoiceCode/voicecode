@@ -57,7 +57,7 @@ Events.on 'applicationStart', ->
     global.HistoryController = require '../lib/history_controller'
     requireDirectory = require 'require-directory'
     requireDirectory module, '../lib/execution/',
-      visit: (required)->
+      visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
     Commands.Utility = require '../lib/utility/utility'

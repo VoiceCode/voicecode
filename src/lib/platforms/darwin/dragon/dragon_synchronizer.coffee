@@ -93,9 +93,6 @@ class DragonSynchronizer
       "Dragon Dictate dynamic commands database was not found at: #{file}"
       @error = true
 
-  home: ->
-    process.env.HOME or process.env.USERPROFILE or "/Users/#{@whoami}"
-
   whoami: ->
     Execute("whoami")?.trim()
 
@@ -214,8 +211,10 @@ class DragonSynchronizer
       @run "COMMIT TRANSACTION;"
 
   databaseFile: (extension) ->
-    # file = [@home(), "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    file = [@home(), "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
+    os = require 'os'
+    home = os.homedir()
+    # file = [home, "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
+    file = [home, "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
     file
 
   deleteAllDynamic: ->
