@@ -9,11 +9,17 @@ Commands.createDisabled
       @delay(250)
   'applicationControl.openLauncher':
     spoken: 'launcher'
-    description: 'open application launcher'
+    description: 'Open application launcher'
     tags: ['application', 'system', 'launching', 'alfred']
     action: ->
       @key 'space', 'option'
       @delay 100
+  'applicationControl.openPreferences':
+    spoken: 'prefies'
+    description: 'Open application preferences'
+    tags: ['application', 'system']
+    action: ->
+      @key ',', 'command'
   'applicationControl.openSearch':
     spoken: 'spotty'
     description: 'open spotlight'

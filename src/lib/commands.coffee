@@ -243,7 +243,7 @@ class Commands
       return
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
       command.before ?= {}
-      command.before["#{info.package}"] = {info, action}
+      command.before["#{info.packageId}"] = {info, action}
       command
 
   after: (commandName, info, action) ->
@@ -255,7 +255,7 @@ class Commands
       return
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
       command.after ?= {}
-      command.after["#{info.package}"] = {info, action}
+      command.after["#{info.packageId}"] = {info, action}
       command
 
   addMisspellings: (name, edition) ->
