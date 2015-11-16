@@ -1,16 +1,9 @@
-# Chain.preprocess 'inline-repetitors', (chain) ->
-#   newChain = []
-#   repetitionWords = _.map Settings.repetitionWords, (howMany, name) ->
-#     name = "#{name} way" #TODO: make way a variable
-#     {name, howMany}
-#   _.each chain, (command) ->
-#     newChain.push command
-#     if command.command in _.pluck repetitionWords, 'name'
-#       howMany = (_.findWhere repetitionWords, {name: command.command}).howMany
-#       newChain.pop()
-#       newChain = _.times howMany, -> newChain
-#       newChain = _.flatten newChain
-#   newChain
+Chain.preprocess 'normalize-chain-repetition', (chain) ->
+  _.each chain, ({command}, index) ->
+    if command is 'repetition.chain'
+      if chain[index+1]?.command.match(/repetition\.\d$/)?
+        chain[index+1].command = chain[index+1].command + '.inline'
+  chain
 
 Commands.createDisabled
   'repetition.chain':
@@ -18,13 +11,16 @@ Commands.createDisabled
     grammarType: "integerCapture"
     description: "Repeat N-th complete spoken phrase in history. Defaults to previous."
     tags: ["voicecode", "repetition", "recommended"]
-    repeatable: true
     bypassHistory: (context) -> true
     action: (offset, context) ->
-      offset = offset or 1
+      if _.isNaN offset
+        offset = 1
       if context.chain.length is 1
         HistoryController.hasAmnesia yes
       chain = HistoryController.getChain offset
+      if context.repeat?
+        chain = _.fill Array(context.repeat), chain
+        chain = _.flatten chain
       chain = new Chain().execute chain, false
       HistoryController.hasAmnesia no
 
@@ -42,9 +38,7 @@ Commands.createDisabled
         times--
       if times > 0 and times < (Settings.maximumRepetitionCount or 100)
         commands = HistoryController.getCommands()
-        debug commands
         new Chain().execute (_.fill Array(times), commands.pop()), false
-
 
 class Repetition
   constructor: ->
@@ -55,16 +49,24 @@ class Repetition
   build: ->
     _.each @words, (value, key) ->
       suffix = ''
+      description = 'command'
       if key.match(/way/)?
+        description = 'chain'
         suffix = '.inline'
+
       Commands.createDisabled "repetition.#{value}#{suffix}",
         spoken: key
         repeater: value
         bypassHistory: (context) -> true
-        description: "repeat last individual command times [#{value}]"
-        historic: true
+        description: "Repeat previous in-line #{description} #{value} times"
         tags: ["voicecode", "repetition", "recommended"]
         action: (input, context) ->
-          @do 'repetition.command', value, context
+          if key.match(/way/)?
+            context.repeat = value
+            if context.chainLinkIndex > 1 and value isnt 1
+              context.repeat = value - 1
+            @do "repetition.chain", 0, context
+          else
+            @do "repetition.command", value, context
 
 module.exports = new Repetition
