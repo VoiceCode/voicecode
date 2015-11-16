@@ -80,7 +80,8 @@ unless Settings.slaveMode
   else
     'create'
 
-  Commands[invokeWith] "slaver",
+  Commands[invokeWith] 'slaveController.target',
+    spoken: "slaver"
     grammarType: "textCapture"
     continuous: false
     description: "Sets slave target if a parameter is given, otherwise returns to master"
