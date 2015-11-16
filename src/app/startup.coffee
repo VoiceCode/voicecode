@@ -63,14 +63,20 @@ Events.on 'applicationStart', ->
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     _.extend global, require './shell' # Execute, Applescript
-    _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
     global.Alphabet = require '../lib/alphabet'
     global.Repetition = require '../lib/repetition'
     global.Modifiers = require '../lib/modifiers'
     global.ParserController = require '../lib/parser/parser_controller'
     global.Synchronizer = require './synchronize'
     Commands.initialize()
+    _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
     UserAssetsController.getAssets '**/*.coffee', '**/user_settings.coffee'
+
+    Events.once 'userCommandEditsPerformed', ->
+      if Settings.slaveMode
+        _.each Commands.mapping, (command, name) ->
+          Commands.enable name
+        Commands.performCommandEdits('slaveModeEnableAllCommands')
 
 
     # DEVELOPER MODE ONLY
@@ -87,12 +93,6 @@ Events.on 'applicationStart', ->
         global.Actions = require '../lib/platforms/windows/actions'
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
-
-    Events.once 'userCommandEditsPerformed', ->
-      if Settings.slaveMode
-        _.each Commands.mapping, (command, name) ->
-          Commands.enable name
-        Commands.performCommandEdits()
 
     ParserController.generateParser()
 

@@ -38,9 +38,10 @@ class Chain
       emit 'chainExecutionStart', chain
       _.each chain, (link) ->
         chainLinkIndex = HistoryController.getChainLength()
-        link.context =
-          chainLinkIndex: ++chainLinkIndex
-          chain: _.cloneDeep chain
+        link.context ?= {}
+        _.extend link.context,
+            chainLinkIndex: ++chainLinkIndex
+            chain: _.cloneDeep chain
         emit 'chainLinkWillExecute', {link, chain}
         try
           new Command(

@@ -11,9 +11,8 @@ class ParserController
 
   initialize: ->
     Events.on 'generateParserFailed', _.bind @regress, @
-    Events.on 'userAssetEvent', ({event})=>
-      if event in  ['added', 'changed']
-        @generateParser()
+    Events.on 'commandEditsPerformed', =>
+      @generateParser()
 
   generateParser: ->
     @debouncedGenerateParser ?= _.debounce @_generateParser.bind(@), 1000

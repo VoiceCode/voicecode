@@ -182,8 +182,8 @@ class Commands
 
   get: (name) ->
     command = @mapping[name]
-    unless command?
-      error 'commandNotFound', name
+    # unless command?
+      # error 'commandNotFound', name
     command
 
   getEnabled: ->
@@ -194,7 +194,8 @@ class Commands
       return false
     return true
 
-  performCommandEdits: ->
+  performCommandEdits: (invokedBy = null) ->
+    invokedBy ?= @commandEditsFrom
     delayedEditFunctions = _.clone @delayedEditFunctions
     @delayedEditFunctions = []
     _.each delayedEditFunctions, ({name, callback, editType, edition}) =>
@@ -205,6 +206,7 @@ class Commands
           resultingCommand = callback command
         catch e
           debug {command, editType, edition, e}
+          return true
         if _.isObject resultingCommand
           @mapping[name] = @normalizeOptions name, resultingCommand
         emit editType, resultingCommand, name
@@ -220,11 +222,12 @@ class Commands
         ###
         if @commandEditsFrom is 'settings'
           # let us try again in the next performCommandEdits()
-          @edit name, editType, callback
+          @edit name, editType, edition, callback
         else
           error 'commandNotFound', name, editType
       return true
-    emit "#{@commandEditsFrom}CommandEditsPerformed"
+    emit "#{invokedBy}CommandEditsPerformed"
+    emit 'commandEditsPerformed', invokedBy
 
 
   override: (name, action) ->
