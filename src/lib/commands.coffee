@@ -65,17 +65,17 @@ class Commands
 
 
   initialize: () ->
-    @performCommandEdits()
-    Events.on 'enableCommand', (commandName) => @enable commandName
-    Events.on 'disableCommand', (commandName) => @disable commandName
+    @performCommandEdits() # codeCommandEditsPerformed
 
     Events.on 'userAssetsLoaded', =>
       @commandEditsFrom = 'user'
-      @performCommandEdits()
+      @performCommandEdits() # userCommandEditsPerformed
 
+    Events.on 'enableCommand', (commandName) => @enable commandName
+    Events.on 'disableCommand', (commandName) => @disable commandName
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
       @commandEditsFrom = 'settings'
-      @performCommandEdits()
+      @performCommandEdits() # settingsCommandEditsPerformed
 
   validate: (command, options, editType) ->
     validated = true
@@ -224,6 +224,8 @@ class Commands
         else
           error 'commandNotFound', name, editType
       return true
+    emit "#{@commandEditsFrom}CommandEditsPerformed"
+
 
   override: (name, action) ->
     error 'deprecation', "Failed overriding '#{name}'.

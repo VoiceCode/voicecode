@@ -88,12 +88,11 @@ Events.on 'applicationStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-
-    if Settings.slaveMode
-      _.each Commands.mapping, (command, name) ->
-        Commands.enable name
-
-
+    Events.once 'userCommandEditsPerformed', ->
+      if Settings.slaveMode
+        _.each Commands.mapping, (command, name) ->
+          Commands.enable name
+        Commands.performCommandEdits()
 
     ParserController.generateParser()
 
