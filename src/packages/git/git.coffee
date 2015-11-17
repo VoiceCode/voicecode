@@ -76,7 +76,7 @@ pack.settings
       spoken: 'jet tag'
 
 # pack.ready ->
-_.each pack.settings.commands, (value, key) ->
+_.each pack.getSettings().commands, (value, key) ->
   output = value.output or value.spoken
 
   defaults =

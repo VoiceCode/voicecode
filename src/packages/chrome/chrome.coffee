@@ -11,9 +11,9 @@ pack.before
   'object.refresh': ->
     @key 'R', 'command'
     @stop()
-  'object.forwards': ->
+  'object.forward': ->
     @key ']', 'command'
     @stop()
-  'object.backwards': ->
+  'object.backward': ->
     @key '[', 'command'
     @stop()

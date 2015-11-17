@@ -30,7 +30,7 @@ instance.before
     @runAtomCommand 'selectPreviousWord', input or 1
     @stop()
 
-  'cursor.move.lineNumber': (input) ->
+  'editor:move-to-line-number': (input) ->
     if input
       @runAtomCommand 'goToLine', input
     else
@@ -42,7 +42,7 @@ instance.before
     @key 'L', 'control option command'
     @stop()
 
-  'object.duplicate': ({first, last} = {}) ->
+  'duplicate-current-line': ({first, last} = {}) ->
     # TODO: steal implementation from package
     # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
     @key 'D', 'shift command'
@@ -127,11 +127,11 @@ instance.before
         direction: 1
       @stop()
 
-  'combo.expandSelectionToScope': ->
+  'editor:expand-selection-to-scope': ->
     @runAtomCommand "trigger", "expand-selection:expand"
     @stop()
 
-  'ide.toggleComment': ({first, last} = {}) ->
+  'editor:toggle-comments': ({first, last} = {}) ->
     if last?
       @runAtomCommand 'selectLineRange',
         from: first
@@ -142,16 +142,16 @@ instance.before
     @key '/', 'command'
     @stop()
 
-  'select.untilLineNumber': (input) ->
+  'editor:extend-selection-to-line-number': (input) ->
     @runAtomCommand 'extendSelectionToLine', input
     @stop()
 
-  'combo.insertContentFromLine': (input) ->
+  'editor:insert-from-line-number': (input) ->
     if input?
       @runAtomCommand 'insertContentFromLine', input
       @stop()
 
-  'select.line.range': (input) ->
+  'editor:select-line-number-range': (input) ->
     if input?
       number = input.toString()
       length = Math.floor(number.length / 2)

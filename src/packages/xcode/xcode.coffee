@@ -9,7 +9,7 @@ pack = Packages.register
   tags: ['xcode']
 
 pack.before
-  'cursor.move.lineNumber': (input) ->
+  'editor:move-to-line-number': (input) ->
     @key 'l', 'command'
     if input?
       @delay 200

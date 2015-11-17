@@ -56,7 +56,7 @@ class Package
       commands = arguments[0]
 
     _.extend @_after, commands
-    
+
     packageOptions = @defaultEditOptions
     _.each commands, (extension, id) ->
       Commands.after id, packageOptions, extension
@@ -64,6 +64,9 @@ class Package
   settings: (options) ->
     _.extend @_settings, options
 
+  getSettings: ->
+    @_settings
+    
   # the instance should automatically add its package name at the beginning of all commands it creates
   normalizeId: (id) ->
     [@name, ':', id].join('')

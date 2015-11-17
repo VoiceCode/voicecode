@@ -8,10 +8,10 @@ pack = Packages.register
   context: 'firefox'
 
 pack.before
-  'object.forwards': (input, context) ->
+  'object.forward': (input, context) ->
     @key ']', 'command'
     @stop()
-  'object.backwards': (input, context) ->
+  'object.backward': (input, context) ->
     @key '[', 'command'
     @stop()
   'object.refresh': (input, context) ->

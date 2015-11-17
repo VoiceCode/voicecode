@@ -152,7 +152,7 @@ Commands.createDisabled
     description: 'Will delete everything to the left'
     action: ->
       @key 'delete', 'command'
-  'object.duplicate':
+  'duplicate-current-line':
     spoken: 'jolt'
     description: 'Will duplicate whichever makes sense in the context'
     tags: ['text-manipulation', 'recommended']

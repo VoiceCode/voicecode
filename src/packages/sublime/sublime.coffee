@@ -8,11 +8,11 @@ pack = Packages.register
   context: 'sublime'
 
 pack.before
- 'combo.expandSelectionToScope': ->
+ 'editor:expand-selection-to-scope': ->
     @key 's', 'control command option'
     @stop()
 
- 'select.line.range': (input) ->
+ 'editor:select-line-number-range': (input) ->
     if input?
       number = input.toString()
       length = Math.floor(number.length / 2)
@@ -40,7 +40,7 @@ pack.before
     @key 'up', 'control command'
     @stop()
 
- 'cursor.move.lineNumber': (input) ->
+ 'editor:move-to-line-number': (input) ->
     if input
       @sublime().goToLine(input).execute()
     else
@@ -51,7 +51,7 @@ pack.before
     @key ';', 'command'
     @stop()
 
- 'duplicate.line': ->
+ 'duplicate-current-line': ->
     @key 'd', 'command shift'
     @stop()
 
@@ -59,7 +59,7 @@ pack.before
     @key 'k', 'control'
     @stop()
 
- 'editor.toggle-comments': ({first, last} = {}) ->
+ 'editor:toggle-comments': ({first, last} = {}) ->
     if last?
       @sublime().selectRange(first, last).execute()
     else if first?
@@ -75,7 +75,7 @@ pack.before
     @key 'k', 'control shift'
     @stop()
 
- 'object.forwards': ->
+ 'object.forward': ->
     @key '-', 'control shift'
     @stop()
 
@@ -93,7 +93,7 @@ pack.before
     s.execute()
     @stop()
 
- 'select.untilLineNumber': (input) ->
+ 'editor:extend-selection-to-line-number': (input) ->
     @sublime()
     .setMark()
     .goToLine(input)
@@ -102,7 +102,7 @@ pack.before
     .execute()
     @stop()
 
- 'object.backwards': ->
+ 'object.backward': ->
     @key '-', 'control'
     @stop()
 

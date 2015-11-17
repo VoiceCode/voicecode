@@ -8,10 +8,10 @@ pack = Packages.register
   context: 'safari'
 
 pack.before
-  'object.forwards': ->
+  'object.forward': ->
     @key ']', 'command'
     @stop()
-  'object.backwards': ->
+  'object.backward': ->
     @key '[', 'command'
     @stop()
   'object.refresh': ->

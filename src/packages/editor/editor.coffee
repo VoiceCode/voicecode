@@ -60,13 +60,13 @@ pack.commands
       if input?
         @do 'select.line.text'
 
-  'selection.expand-to-scope':
+  'expand-selection-to-scope':
     spoken: 'bracken'
     description: 'Expand selection to quotes, parens, braces, or brackets.'
     tags: ['selection', 'IDE']
     action: (input) -> null
 
-  'select.line-number-range':
+  'select-line-number-range':
     spoken: 'selrang'
     grammarType: 'integerCapture'
     description: 'Selects text in a line range: selrang ten twenty.'
@@ -74,7 +74,7 @@ pack.commands
     inputRequired: true
     action: (input) -> null
 
-  'selection.extend-to-line-number':
+  'extend-selection-to-line-number':
     spoken: 'seltil'
     grammarType: 'integerCapture'
     description: 'selects text from current position through spoken line number: seltil five five.'

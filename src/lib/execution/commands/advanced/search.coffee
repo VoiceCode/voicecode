@@ -85,7 +85,7 @@ Commands.createDisabledWithDefaults
           else
             return
           @selectNextOccurrenceWithDistance term, 1
-  "core.search.previous.selectionOccurrence":
+  "search.previous.selectionOccurrence":
     spoken: "privok"
     kind : "action"
     grammarType : "individual"

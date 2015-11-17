@@ -8,7 +8,7 @@ pack = Packages.register
   context: 'shell'
 
 pack.after
-  'git.status': ->
+  'git:status': ->
     @enter()
 
 pack.commands
