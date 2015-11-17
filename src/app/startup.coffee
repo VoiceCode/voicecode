@@ -15,10 +15,11 @@ replify 'vc', repl
 
 global._ = require 'lodash'
 global.chalk = require 'chalk'
+util = require('util')
+
 global.debug = ->
   console.log chalk.white.bold.bgRed('   DEBUG   ')
-  console.log _.toArray arguments
-
+  console.log util.inspect (_.toArray arguments), {showHidden: true, depth: 2, colors: true}
 
 application = require 'app'
 BrowserWindow = require 'browser-window'
