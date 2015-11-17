@@ -55,7 +55,7 @@ _.extend Settings,
 
   getAssets: (assetsMask, ignoreMask = false) ->
     return if @state is "error"
-    emit 'userAssetsLoading'
+    emit 'userAssetsLoading', assetsMask
     @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
       persistent: true
       ignored: ignoreMask
@@ -88,17 +88,17 @@ _.extend Settings,
           Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
           Commands.changeName = global.Commands.changeName.bind global.Commands
           Commands.edit = global.Commands.edit.bind global.Commands
-          Commands.create = (name, options) =>
+          Commands.create = (name, options) ->
             if _.isObject name
               pack.commands.call pack, name
             else
               pack.commands.call pack, {"#{name}": options}
-          Commands.before = (name, options) =>
+          Commands.before = (name, options) ->
             if _.isObject name
               pack.before.call pack, name
             else
               pack.before.call pack, {"#{name}": options}
-          Commands.after = (name, options) =>
+          Commands.after = (name, options) ->
             if _.isObject name
               pack.after.call pack, name
             else

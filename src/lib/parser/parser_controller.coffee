@@ -15,7 +15,7 @@ class ParserController
       @generateParser()
 
   generateParser: ->
-    @debouncedGenerateParser ?= _.debounce @_generateParser.bind(@), 1000
+    @debouncedGenerateParser ?= _.debounce @_generateParser.bind(@), 3000
     @debouncedGenerateParser()
 
   _generateParser: ->

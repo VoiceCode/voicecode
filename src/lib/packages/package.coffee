@@ -29,29 +29,27 @@ class Package
 
   before: () ->
     if arguments[1]?
-      scope = arguments[0]
+      defaults = arguments[0]
       commands = arguments[1]
     else
-      scope = @scope
+      defaults = {}
       commands = arguments[0]
 
     _.extend @_before, commands
 
-    packageOptions = @defaultEditOptions
     _.each commands, (extension, id) ->
       Commands.before id, packageOptions, extension
 
   after: () ->
     if arguments[1]?
-      scope = arguments[0]
+      packageOptions = _.defaultsDeep arguments[0], @defaultEditOptions
       commands = arguments[1]
     else
-      scope = @scope
+      packageOptions = @defaultEditOptions
       commands = arguments[0]
 
     _.extend @_after, commands
 
-    packageOptions = @defaultEditOptions
     _.each commands, (extension, id) ->
       Commands.after id, packageOptions, extension
 
