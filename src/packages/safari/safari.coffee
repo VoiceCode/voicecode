@@ -1,7 +1,11 @@
+Context.register
+  name: 'safari'
+  applications: ['Safari']
+
 pack = Packages.register
   name: 'safari'
   description: 'Safari integration'
-  triggerScopes: ['Safari']
+  context: 'safari'
 
 pack.before
   'object.forwards': ->

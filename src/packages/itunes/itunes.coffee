@@ -1,9 +1,15 @@
+Context.register
+  name: 'itunes'
+  applications: ['iTunes']
+
 pack = Packages.register
-  name: 'iTunes'
+  name: 'itunes'
   description: 'Basic iTunes music control'
   tags: ['itunes']
+  context: 'itunes'
 
-pack.commandsWithDefaults
+pack.commands
+  context: 'global'
   continuous: false
 ,
   'itunes.play-pause':

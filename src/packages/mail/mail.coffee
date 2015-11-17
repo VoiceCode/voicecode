@@ -1,12 +1,16 @@
+Context.register
+  name: 'mail'
+  applications: ['Mail']
+
 pack = Packages.register
   name: 'mail'
-  description: 'Mail integration'
-  triggerScopes: ['Mail']
+  description: 'Apple Mail integration'
+  context: 'mail'
 
 pack.before
-  'object.next': (input, context) ->
+  'object.next': ->
     @key 'down', 'command'
     @stop()
-  'object.previous': (input, context) ->
+  'object.previous': ->
     @key 'up', 'command'
     @stop()

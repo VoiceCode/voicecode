@@ -1,33 +1,31 @@
-Commands.createDisabled
-  'shell.directory.change':
+Context.register
+  name: 'shell'
+  applications: Settings.terminalApplications
+
+pack = Packages.register
+  name: 'shell'
+  description: 'General commands for shell / console usage'
+  context: 'shell'
+
+pack.after
+  'git.status': ->
+    @enter()
+
+pack.commands
+  'change-directory':
     spoken: 'cd'
     description: 'change directory'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
     continuous: false
     action: ->
       @string 'cd ; ls'
       @left 4
-  'shell.directory.changeUnderMouse':
-    spoken: 'engage'
-    description: 'hover your mouse over a directory name output from a "ls"
-    command in the terminal, and this command will "cd" to that directory'
-    tags: ['domain-specific', 'shell']
-    triggerScope: 'iTerm'
-    continuous: false
-    action: ->
-      @rightClick()
-      @delay 50
-      @string 'cd '
-      @paste()
-      @string '; ls'
-      @enter()
-  'shell.directory.list':
+
+  'list-directories':
     spoken: 'shell list'
     grammarType: 'textCapture'
     description: 'list directory contents (takes dynamic arguments)'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
     continuous: false
     inputRequired: false
     action: (input) ->
@@ -37,51 +35,29 @@ Commands.createDisabled
       @string "ls #{options}"
       @enter()
 
-  'shell.history.display':
+  'display-history':
     spoken: 'shell history'
     grammarType: 'numberCapture'
     description: 'display the last [n](default all) shell commands executed'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
     continuous: false
     inputRequired: false
     action: (input) ->
       @string "history #{input or ''}"
       @enter()
-  'shell.history.execute-item-under-mouse':
-    spoken: 'shell recall'
-    description: 'hovering the mouse over the left-hand number of a result
-    from the history output, this will re-execute the command'
-    tags: ['domain-specific', 'shell']
-    triggerScope: 'iTerm'
-    continuous: false
-    action: ->
-      @rightClick()
-      @delay 50
-      @key '!'
-      @paste()
-      @enter()
-  'shell.open-with-editor':
-    spoken: 'shell edit'
-    description: 'open file in editor'
-    tags: ['domain-specific', 'shell']
-    triggerScope: 'iTerm'
-    continuous: false
-    action: ->
-      @rightClick()
-      @delay 50
-      @key '$EDITOR '
-      @paste()
-      @enter()
-  'shell.directory.parent':
+  'parent-directory':
     spoken: 'durrup'
     description: 'navigate to the parent directory'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
     action: ->
       @string 'cd ..; ls'
       @enter()
-  'shell.global.open-directory':
+
+# global
+pack.commands
+  context: 'global'
+,
+  'open-directory':
     spoken: 'direct'
     grammarType: 'textCapture'
     description: 'changes directory to any directory in the predefined list'
@@ -92,15 +68,15 @@ Commands.createDisabled
       if input?.length
         current = @currentApplication()
         directory = @fuzzyMatch Settings.directories, input.join(' ')
-        if current is 'iTerm' or current is 'Terminal'
+        if @inTerminal()
           @string "cd #{directory} ; ls \n"
         else
-          @openApplication('iTerm')
+          @openDefaultTerminal()
           @newTab()
           @delay 200
           @string "cd #{directory} ; ls"
           @enter()
-  'shell.insert-common-command':
+  'insert-common-command':
     spoken: 'shell'
     grammarType: 'custom'
     rule: '<spoken> (shellcommands)'

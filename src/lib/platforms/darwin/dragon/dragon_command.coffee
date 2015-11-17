@@ -24,7 +24,7 @@ class DragonCommand extends Command
 
   generateCommandName: (hasChain = false)->
     trigger = @getTriggerPhrase()
-    
+
     if @rule?
       trigger = @generateCustomCommandName hasChain
     trigger = "#{trigger} /!Text!/" if hasChain
@@ -63,8 +63,10 @@ class DragonCommand extends Command
     # console.error trigger
     trigger
 
-  getTriggerScopes: ->
-    @triggerScopes or [@triggerScope or "global"]
+  getApplications: ->
+    result = if @context?
+      Context.get(@context)?.applications
+    result or ['global']
 
   needsDragonCommand: ->
     @needsCommand != false

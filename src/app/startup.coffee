@@ -47,6 +47,7 @@ Events.on 'applicationStart', ->
     global.Homonyms = require '../lib/utility/homonyms'
     global.Packages = require '../lib/packages/packages'
     global.Commands = require '../lib/commands'
+    global.Context = require '../lib/context'
     global.UserAssetsController = require './user_assets_controller'
     Events.once 'userAssetsLoaded', startupFlow.add 'user_settings'
     UserAssetsController.getAssets 'user_settings.coffee'
@@ -57,6 +58,10 @@ Events.on 'applicationStart', ->
     global.HistoryController = require '../lib/history_controller'
     requireDirectory = require 'require-directory'
     requireDirectory module, '../lib/execution/',
+      visit: (required) ->
+        if (not _.isEmpty required) and _.isObject required
+          _.each required, (value, key) -> global[key] = value
+    requireDirectory module, '../packages/',
       visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value

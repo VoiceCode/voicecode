@@ -213,3 +213,9 @@ module.exports = class Actions
     @repeat times, =>
       @key 'right'
     @
+
+  inTerminal: ->
+    @currentApplication() in Settings.terminalApplications
+
+  openDefaultTerminal: ->
+    @openApplication Settings.defaultTerminal

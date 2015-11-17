@@ -283,7 +283,7 @@ class DragonSynchronizer
         continue if id is 'dragon.catch-all' and hasChain is no
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
-        scopes = command.getTriggerScopes()
+        scopes = command.getApplications()
         for scope in scopes
           bundle = 'global'
           bundle = @getBundleId(scope) if scope isnt 'global'
@@ -305,7 +305,7 @@ class DragonSynchronizer
       _.each lists, (occurrences, variableName) =>
         _.each occurrences, (sublists, occurrence) =>
           _.each sublists, (listValues, sub) =>
-            scopes = @commands[commandName].getTriggerScopes()
+            scopes = @commands[commandName].getApplications()
             for scope in scopes
               bundle = @getBundleId(scope) if scope isnt 'global'
               continue if bundle is null and scope isnt "global"

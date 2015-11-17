@@ -1,9 +1,12 @@
+Context.register
+  name: 'gmail'
+  applications: Settings.browserApplications
+  when: -> @inBrowser() and @urlContains 'mail.google.com'
+
 pack = Packages.register
   name: 'gmail'
   description: 'Commands for gmail'
-  triggerScopes: ['Safari', 'Google Chrome']
-  when: ->
-    @inBrowser() and @urlContains 'mail.google.com'
+  context: 'gmail'
   tags: ['gmail']
 
 pack.commands

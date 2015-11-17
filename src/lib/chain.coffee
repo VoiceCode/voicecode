@@ -96,12 +96,12 @@ class Chain
     results
 
   needsCustomScope: (command) ->
-    command.triggerScopes?.length or command.when?
+    command.applications?.length or command.when?
 
   customScopeActive: (command) ->
     active = true
-    if command.triggerScopes?.length
-      active = Actions.currentApplication() in command.triggerScopes
+    if command.applications?.length
+      active = Actions.currentApplication() in command.applications
     if active
       if command.when?
         result = command.when.call(Actions)

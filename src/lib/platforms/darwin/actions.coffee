@@ -12,7 +12,7 @@ class DarwinActions extends Actions
       @monitorBrowserUrl(false)
 
   inBrowser: ->
-    @_currentApplication in ["Safari", "Google Chrome"]
+    @_currentApplication in Settings.browserApplications
 
   monitorBrowserUrl: (monitor=true) ->
     if monitor

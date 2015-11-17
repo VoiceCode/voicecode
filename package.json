@@ -4,7 +4,7 @@
   "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
   "main": "dist/app/startup.js",
   "scripts": {
-    "test": "./node_modules/tape/bin/tape dist/test/**/*.js | faucet",
+    "test": "gulp build-coffee ; ./node_modules/tape/bin/tape dist/test/**/*.js | faucet",
     "start": "gulp"
   },
   "repository": {

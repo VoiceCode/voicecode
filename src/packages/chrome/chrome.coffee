@@ -1,16 +1,19 @@
-packageInfo =
-  name: 'google.chrome'
+Context.register
+  name: 'chrome'
+  applications: ['Chrome']
+
+pack = Packages.register
+  name: 'chrome'
   description: 'Google Chrome integration'
-  triggerScopes: ['Google Chrome']
+  context: 'chrome'
 
-Commands.before 'object.refresh', packageInfo, (input, context) ->
-  @key 'R', 'command'
-  @stop()
-
-Commands.before 'object.forwards', packageInfo, (input, context) ->
-  @key ']', 'command'
-  @stop()
-
-Commands.before 'object.backwards', packageInfo, (input, context) ->
-  @key '[', 'command'
-  @stop()
+pack.before
+  'object.refresh': ->
+    @key 'R', 'command'
+    @stop()
+  'object.forwards': ->
+    @key ']', 'command'
+    @stop()
+  'object.backwards': ->
+    @key '[', 'command'
+    @stop()

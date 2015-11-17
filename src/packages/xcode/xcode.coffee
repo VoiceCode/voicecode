@@ -1,18 +1,22 @@
-packageInfo =
+Context.register
+  name: 'xcode'
+  applications: ['Xcode']
+
+pack = Packages.register
   name: 'xcode'
   description: 'Xcode IDE integration'
-  triggerScopes: ['Xcode']
+  context: 'xcode'
   tags: ['xcode']
 
-Commands.before 'cursor.move.lineNumber', packageInfo, (input, context) ->
-  @key 'l', 'command'
-  if input?
-    @delay 200
-    @string input
-    @delay 100
-    @enter()
-  @stop()
-
-Commands.before 'line.move.up', packageInfo, (input, context) ->
-  @key '[', 'command option'
-  @stop()
+pack.before
+  'cursor.move.lineNumber': (input) ->
+    @key 'l', 'command'
+    if input?
+      @delay 200
+      @string input
+      @delay 100
+      @enter()
+    @stop()
+  'line.move.up': ->
+    @key '[', 'command option'
+    @stop()

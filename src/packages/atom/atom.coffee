@@ -3,10 +3,14 @@
 #       The chain must break if something like core.search.next.wordOccurrence fails
 #       Actions.breakChain: -> emit 'chainLinkBroken', ...
 
+Context.register
+  name: 'atom'
+  applications: ['Atom']
+
 instance = Packages.register
   name: 'atom'
   description: 'Atom IDE integration'
-  triggerScopes: ['Atom']
+  context: 'atom'
   tags: ['atom']
 
 instance.before

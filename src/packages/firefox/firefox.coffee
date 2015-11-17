@@ -1,7 +1,11 @@
+Context.register
+  name: 'firefox'
+  applications: ['Firefox']
+
 pack = Packages.register
   name: 'firefox'
   description: 'Firefox integration'
-  triggerScopes: ['Firefox']
+  context: 'firefox'
 
 pack.before
   'object.forwards': (input, context) ->

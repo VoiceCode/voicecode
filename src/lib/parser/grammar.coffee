@@ -109,11 +109,7 @@ class Grammar
       = phrase
 
     phrase
-      // sublimePhrase / atomPhrase / globalPhrase
       = first:(command) rest:(commandContinuous)* {return [first].concat(rest);}
-
-    // sublimePhrase
-    //  = "cx-sublimetext" ss first:(commandSublime) rest:(commandContinuousSublime)* {return [first].concat(rest);}
 
     command
       = customCommand /
@@ -155,7 +151,7 @@ class Grammar
     #{@customLists()}
 
     overrideCommand
-     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger / )
+     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger)
      {
       if (isNaN(keeperRight)) {
         return keeperRight;

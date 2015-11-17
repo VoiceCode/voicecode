@@ -1,8 +1,12 @@
-Commands.createDisabled
-  'communication.place-phone-call':
+pack = Packages.register
+  name: 'communication'
+  description: 'Various commands for making phone calls, facetime, etc.'
+  tags: ['messaging', 'phone']
+
+pack.commands
+  'phone-call':
     spoken: 'please dial'
     description: 'place a phone call to the given person (uses Settings.phoneNumbers). Requires an iPhone connected to the same wi-fi network as the computer'
-    tags: ['messaging', 'phone']
     grammarType: 'textCapture'
     inputRequired: true
     action: (input) ->
@@ -22,11 +26,10 @@ Commands.createDisabled
           """
           @microphoneOff()
 
-  'communication.place-facetime-call':
+  'facetime-call':
     spoken: 'please facetime'
     description: 'place a facetime call to the given person (uses Settings.phoneNumbers)'
     tags: ['messaging', 'phone']
-    grammarType: 'textCapture'
     inputRequired: false
     action: (input) ->
       if input

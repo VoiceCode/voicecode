@@ -39,6 +39,9 @@ _.extend Settings,
     true
   defaultBrowser: "Safari"
   defaultTerminal: 'Terminal'
+  terminalApplications: ['Terminal', 'iTerm']
+  editorApplications: ['Atom', 'Sublime Text', 'Xcode', 'Terminal', 'iTerm']
+  browserApplications: ["Safari", "Google Chrome", "Firefox"]
   websites:
     "amazon": "http://www.amazon.com"
     "google docs": "http://docs.google.com"

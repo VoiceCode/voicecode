@@ -5,36 +5,64 @@ class Package
     @_before = {}
     @_after = {}
 
-    @settings = {}
+    @_settings = @options.settings or {}
 
     {@name, @description} = @options
     @setDefaultCommandOptions()
+    @setDefaultEditOptions()
+    @setContext()
 
-  commands: (commands) ->
+  commands: () ->
+    if arguments[1]?
+      defaults = arguments[0]
+      commands = arguments[1]
+    else
+      defaults = {}
+      commands = arguments[0]
+
     _.extend @_commands, commands
     packageOptions = @defaultCommandOptions
     _.each commands, (options, id) =>
-      Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, options)
+      Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, defaults, options)
 
-  commandsWithDefaults: (defaults, commands) ->
-    packageOptions = @defaultCommandOptions
+  # commandsWithDefaults: (defaults, commands) ->
+  #   packageOptions = @defaultCommandOptions
+  #
+  #   _.each commands, (options, id) =>
+  #     command = _.extend {}, packageOptions, defaults, options
+  #     @_commands[id] = command
+  #     Commands.createDisabled @normalizeId(id), command
 
-    _.each commands, (options, id) =>
-      command = _.extend {}, packageOptions, defaults, options
-      @_commands[id] = command
-      Commands.createDisabled @normalizeId(id), command
+  before: () ->
+    if arguments[1]?
+      context = arguments[0]
+      commands = arguments[1]
+    else
+      context = @context
+      commands = arguments[0]
 
-  before: (commands) ->
     _.extend @_before, commands
-    packageOptions = @defaultCommandOptions
+
+    packageOptions = @defaultEditOptions
     _.each commands, (extension, id) ->
       Commands.before id, packageOptions, extension
 
-  after: (commands) ->
+  after: () ->
+    if arguments[1]?
+      context = arguments[0]
+      commands = arguments[1]
+    else
+      context = @context
+      commands = arguments[0]
+
     _.extend @_after, commands
-    packageOptions = @defaultCommandOptions
+    
+    packageOptions = @defaultEditOptions
     _.each commands, (extension, id) ->
       Commands.after id, packageOptions, extension
+
+  settings: (options) ->
+    _.extend @_settings, options
 
   # the instance should automatically add its package name at the beginning of all commands it creates
   normalizeId: (id) ->
@@ -42,13 +70,24 @@ class Package
 
   setDefaultCommandOptions: ->
     @defaultCommandOptions = _.pick @options, [
-      'triggerScopes'
-      'triggerScope'
+      'applications'
       'when'
       'tags'
       'notes'
     ]
-    @defaultCommandOptions.packageId = @name
+    @defaultCommandOptions.package = @name
+
+  setDefaultEditOptions: ->
+    @defaultEditOptions = _.pick @options, [
+      'applications'
+      'when'
+    ]
+    @defaultEditOptions.package = @name
+
+  setContext: ->
+    @context = new Context
+      when: @when
+      applications: @applications
 
   remove: ->
     # TODO track commands that were added, and before/after - basically all changes, and then undo them

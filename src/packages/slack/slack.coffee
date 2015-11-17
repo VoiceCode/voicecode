@@ -1,8 +1,15 @@
-Commands.createDisabledWithDefaults
-  triggerScopes: ['Slack']
+Context.register
+  name: 'slack'
+  applications: ['Slack']
+
+pack = Packages.register
+  name: 'slack'
+  description: 'Slack integration'
+  context: 'slack'
   tags: ['slack']
-,
-  'slack.channel.change':
+
+pack.commands
+  'switch-channel':
     spoken: 'channel'
     description: 'open a channel / conversation'
     grammarType: 'textCapture'
