@@ -249,6 +249,8 @@ class Commands
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
       command.before ?= {}
       command.before["#{info.packageId}"] = {info, action}
+      if command.context is 'abstract'
+        command.applications = _.union(command.applications or [], info.applications)
       command
 
   after: (commandName, info, action) ->
@@ -261,6 +263,8 @@ class Commands
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
       command.after ?= {}
       command.after["#{info.packageId}"] = {info, action}
+      if command.context is 'abstract'
+        command.applications = _.union(command.applications or [], info.applications)
       command
 
   addMisspellings: (name, edition) ->

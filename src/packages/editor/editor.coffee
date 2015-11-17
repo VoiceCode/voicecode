@@ -1,11 +1,7 @@
-Context.register
-  name: 'editors'
-  applications: Settings.editorApplications
-
 pack = Packages.register
   name: 'editor'
   description: 'Common commands for editors/IDEs'
-  context: 'editors'
+  context: 'abstract'
 
 pack.commands
   'move-to-line-number':
@@ -14,7 +10,6 @@ pack.commands
     description: 'go to line number.'
     tags: ['cursor']
     inputRequired: false
-    action: (input) -> null
 
   'combo.move-to-line-number-and-way-right':
     spoken: 'sprinkler'
@@ -22,6 +17,10 @@ pack.commands
     description: 'go to line number then position cursor at end of line.'
     tags: ['cursor']
     inputRequired: false
+    requires: [
+      'editor.move-to-line-number'
+      'select.way.right'
+    ]
     action: (input) ->
       @do 'editor.move-to-line-number', input
       if input?
@@ -33,6 +32,10 @@ pack.commands
     description: 'Go to line number then position cursor at beginning of line.'
     tags: ['selection', 'IDE', 'cursor']
     inputRequired: false
+    requires: [
+      'editor.move-to-line-number'
+      'cursor.way.left'
+    ]
     action: (input) ->
       @do 'editor.move-to-line-number', input
       if input?
@@ -44,6 +47,10 @@ pack.commands
     description: 'Go to line number then insert a new line below.'
     tags: ['selection', 'IDE', 'cursor']
     inputRequired: false
+    requires: [
+      'editor.move-to-line-number'
+      'common.newLineBelow'
+    ]
     action: (input) ->
       @do 'editor.move-to-line-number', input
       if input?
@@ -55,6 +62,10 @@ pack.commands
     description: 'Go to line number then select entire line.'
     tags: ['selection', 'IDE', 'cursor']
     inputRequired: false
+    requires: [
+      'editor.move-to-line-number'
+      'select.line.text'
+    ]
     action: (input) ->
       @do 'editor.move-to-line-number', input
       if input?
@@ -64,7 +75,6 @@ pack.commands
     spoken: 'bracken'
     description: 'Expand selection to quotes, parens, braces, or brackets.'
     tags: ['selection', 'IDE']
-    action: (input) -> null
 
   'select-line-number-range':
     spoken: 'selrang'
@@ -72,7 +82,6 @@ pack.commands
     description: 'Selects text in a line range: selrang ten twenty.'
     tags: ['selection', 'IDE']
     inputRequired: true
-    action: (input) -> null
 
   'extend-selection-to-line-number':
     spoken: 'seltil'
@@ -80,7 +89,6 @@ pack.commands
     description: 'selects text from current position through spoken line number: seltil five five.'
     tags: ['selection', 'IDE']
     inputRequired: true
-    action: (input) -> null
 
   'insert-from-line-number':
     spoken: 'clonesert'
@@ -88,7 +96,6 @@ pack.commands
     description: 'Insert the text from another line at the current cursor position'
     tags: ['atom']
     inputRequired: true
-    action: (input) -> null
 
   'toggle-comments':
     spoken: 'trundle'
@@ -96,4 +103,3 @@ pack.commands
     tags: ['IDE']
     description: 'Toggle comments on the line or range'
     inputRequired: false
-    action: ({first, last} = {}) -> null

@@ -7,7 +7,7 @@ class Package
 
     @_settings = @options.settings or {}
 
-    {@name, @description} = @options
+    {@name, @description, @context} = @options
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
     @setContext()
@@ -66,31 +66,30 @@ class Package
 
   getSettings: ->
     @_settings
-    
+
   # the instance should automatically add its package name at the beginning of all commands it creates
   normalizeId: (id) ->
     [@name, ':', id].join('')
 
   setDefaultCommandOptions: ->
     @defaultCommandOptions = _.pick @options, [
-      'applications'
-      'when'
+      'context'
       'tags'
       'notes'
     ]
-    @defaultCommandOptions.package = @name
+    @defaultCommandOptions.packageId = @name
+    @defaultEditOptions.applications = @applications()
 
   setDefaultEditOptions: ->
     @defaultEditOptions = _.pick @options, [
-      'applications'
-      'when'
+      'context'
     ]
-    @defaultEditOptions.package = @name
+    @defaultEditOptions.packageId = @name
+    @defaultEditOptions.applications = @applications()
 
-  setContext: ->
-    @context = new Context
-      when: @when
-      applications: @applications
+  applications: ->
+    @_context ?= Context.get @context
+    @_context.applications or []
 
   remove: ->
     # TODO track commands that were added, and before/after - basically all changes, and then undo them
@@ -98,7 +97,7 @@ class Package
     _.each @_commands, (options, id) =>
       Commands.remove @normalizeId(id)
 
-    packageOptions = @defaultCommandOptions
+    packageOptions = @defaultEditOptions
 
     _.each @_before, (extension, id) =>
       Commands.removeBefore id, packageOptions

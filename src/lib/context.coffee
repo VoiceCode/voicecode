@@ -37,5 +37,10 @@ class Context
 Context.global = new Context
   name: 'global'
 
+# abstract context is used for commands that are shared across multiple other contexts, but should not be global
+# for example maybe 'selcrew'
+Context.abstract = new Context
+  name: 'abstract'
+
 
 module.exports = Context
