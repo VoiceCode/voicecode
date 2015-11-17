@@ -29,10 +29,10 @@ class Package
 
   before: () ->
     if arguments[1]?
-      defaults = arguments[0]
+      packageOptions = _.defaultsDeep arguments[0], @defaultEditOptions
       commands = arguments[1]
     else
-      defaults = {}
+      packageOptions = @defaultEditOptions
       commands = arguments[0]
 
     _.extend @_before, commands
