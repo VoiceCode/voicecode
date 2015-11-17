@@ -23,6 +23,7 @@ class Command
   generate: ->
     input = @input
     context = @generateContext()
+    currentApplication = Actions.currentApplication()
     funk = if @action?
       action = @action
       -> action.call(@, input, context)
@@ -32,9 +33,10 @@ class Command
     core = if @before?
       extensions = []
       extensions.push funk
-      _.each @before, ({action: e}) ->
-        extensions.push ->
-          e.call(@, input, context)
+      _.each @before, ({action: e, info}) ->
+        if _.isEmpty(info.applications) or currentApplication in info.applications
+          extensions.push ->
+            e.call(@, input, context)
       ->
         @extensionsStopped = false
         for callback in extensions.reverse()
@@ -50,9 +52,10 @@ class Command
     # after actions
     if @after?
       afterList = []
-      _.each @after, ({action: e}) ->
-        afterList.push ->
-          e.call(@, input, context)
+      _.each @after, ({action: e, info}) ->
+        if _.isEmpty(info.applications) or currentApplication in info.applications
+          afterList.push ->
+            e.call(@, input, context)
       segments.push ->
         for callback in afterList.reverse()
           callback.call(@)
