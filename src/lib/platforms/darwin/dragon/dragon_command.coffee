@@ -69,7 +69,9 @@ class DragonCommand extends Command
     result or ['global']
 
   needsDragonCommand: ->
-    @needsCommand != false
+    return false if @needsCommand is false
+    return false if @context is 'abstract' and _.isEmpty(@applications)
+    true
 
   generateDragonLists: ->
     variableNames = _.compact _.pluck @grammar.tokens, 'name'
