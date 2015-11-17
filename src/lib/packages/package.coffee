@@ -10,7 +10,6 @@ class Package
     {@name, @description, @context} = @options
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
-    @setContext()
 
   commands: () ->
     if arguments[1]?
@@ -78,7 +77,7 @@ class Package
       'notes'
     ]
     @defaultCommandOptions.packageId = @name
-    @defaultEditOptions.applications = @applications()
+    @defaultCommandOptions.applications = @applications()
 
   setDefaultEditOptions: ->
     @defaultEditOptions = _.pick @options, [
@@ -89,7 +88,7 @@ class Package
 
   applications: ->
     @_context ?= Context.get @context
-    @_context.applications or []
+    @_context?.applications or []
 
   remove: ->
     # TODO track commands that were added, and before/after - basically all changes, and then undo them
