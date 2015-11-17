@@ -1,10 +1,10 @@
-class @FreeTextBrowsing
+class FreeTextBrowsing
   instance = null
   linkList = {}
   constructor: (@browserController) ->
     return instance if instance?
     instance = @
-    @natural = Meteor.npmRequire 'natural'
+    @natural = require 'natural'
     @searchQuery = {}
     @alreadySubscribed = false
     @subscribeToEvents()

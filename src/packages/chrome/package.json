@@ -1,0 +1,18 @@
+{
+  "name": "voicecode-chrome",
+  "version": "1.0.0",
+  "description": "VoiceCode.io Google Chrome integration",
+  "main": "chrome.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ws": "^0.8.0",
+    "natural": "^0.2.1"
+  },
+  "keywords": [
+    "voicecode"
+  ],
+  "author": "",
+  "license": "ISC"
+}

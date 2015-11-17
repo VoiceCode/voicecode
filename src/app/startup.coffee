@@ -76,13 +76,13 @@ Events.on 'applicationStart', ->
     global.Synchronizer = require './synchronize'
     Commands.initialize()
     _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
-    UserAssetsController.getAssets '**/*.coffee', '**/user_settings.coffee'
-
-    Events.once 'userCommandEditsPerformed', ->
-      if Settings.slaveMode
-        _.each Commands.mapping, (command, name) ->
-          Commands.enable name
-        Commands.performCommandEdits('slaveModeEnableAllCommands')
+    Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
+    UserAssetsController.getAssets '**/*.coffee', '**/user_settings.coffee' # wandering into asynchronous land
+    startupFlow.wait 'user_code_loaded' # synchronous again
+    if Settings.slaveMode
+      _.each Commands.mapping, (command, name) ->
+        Commands.enable name
+      Commands.performCommandEdits('slaveModeEnableAllCommands')
 
 
     # DEVELOPER MODE ONLY
@@ -100,7 +100,8 @@ Events.on 'applicationStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-    ParserController.generateParser()
+    # unless Settings.slaveMode
+    Synchronizer.synchronize()
 
     mainWindow = null
     # application.on 'ready', ->

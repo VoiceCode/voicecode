@@ -4,7 +4,7 @@ class ChromeBrowserPipe
   constructor: (@browserController) ->
     return instance if instance?
     @debug = true
-    ws = Meteor.npmRequire 'ws'
+    ws = require 'ws'
     @_isConnected = false
     @webSocketServer = new ws.Server(port: Settings.browserPipePort)
     @webSocketServer.on 'connection', (socket) =>
@@ -61,7 +61,7 @@ class ChromeBrowserPipe
       eventBookmarksOnRemoved
       eventBookmarksOnChanged
 ###
-class ChromeBrowserController extends Meteor.npmRequire('events')
+class ChromeBrowserController extends require('events').EventEmitter
   # singleton
   instance = null
   constructor: ->
@@ -296,7 +296,8 @@ class ChromeBrowserController extends Meteor.npmRequire('events')
     @subscribedToChromeApiEvents = true
 
 if Settings.smartBrowsersUsed
-  @browserController = new ChromeBrowserController
+  module.exports =
+    ChromeBrowserController: new ChromeBrowserController
 
 Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
   if @currentApplication() in Settings.smartBrowsers
@@ -372,7 +373,7 @@ Commands.create "webneck",
   aliases: []
   tags: ["Google Chrome"]
   action: (input) ->
-    urlParser = Meteor.npmRequire 'url'
+    urlParser = require 'url'
     state = browserController.getState().windows
     url = browserController.getCurrentUrl()
     return unless url?
