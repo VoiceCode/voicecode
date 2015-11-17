@@ -1,11 +1,11 @@
-Context.register
+Scope.register
   name: 'sublime'
   applications: ['Sublime Text']
 
 pack = Packages.register
   name: 'sublime'
   description: 'Sublime Text integration'
-  context: 'sublime'
+  scope: 'sublime'
 
 pack.before
  'editor:expand-selection-to-scope': ->
@@ -47,11 +47,11 @@ pack.before
       @key 'g', 'control'
     @stop()
 
- 'showShortcuts': ->
+ 'show-shortcut-markers': ->
     @key ';', 'command'
     @stop()
 
- 'duplicate-current-line': ->
+ 'duplicate-selected': ->
     @key 'd', 'command shift'
     @stop()
 
@@ -106,9 +106,7 @@ pack.before
     @key '-', 'control'
     @stop()
 
-# TODO RENAMING ALERT
-# should this be an extension of core? will there ever be a core function implementation?
- 'combo.copyUnderMouseAndInsertAtCursor': ->
+'mouse-combo:insert-hovered': ->
     @doubleClick()
     @delay 200
     @copy()

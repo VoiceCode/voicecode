@@ -1,12 +1,11 @@
-Context.register
+Scope.register
   name: 'xcode'
   applications: ['Xcode']
 
 pack = Packages.register
   name: 'xcode'
   description: 'Xcode IDE integration'
-  context: 'xcode'
-  tags: ['xcode']
+  scope: 'xcode'
 
 pack.before
   'editor:move-to-line-number': (input) ->

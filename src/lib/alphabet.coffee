@@ -28,31 +28,6 @@ class Alphabet
     results.push Settings.uppercaseLetterPrefix
     results.push Settings.singleLetterSuffix
     results
-  loadCommands: ->
-    _.each Settings.letters, (value, key) ->
-      Commands.create value,
-        description: "Enters the single letter: #{key}"
-        grammarType: 'none'
-        tags: ['alphabet']
-
-      # uppers
-      upper = key.toUpperCase()
-      prefix = Settings.uppercaseLetterPrefix
-      Commands.create "#{prefix} #{value}",
-        description: "Enters the capital letter: #{upper}"
-        grammarType: 'none'
-
-      # with suffix
-      suffix = Settings.singleLetterSuffix
-      Commands.create "#{value} #{suffix}",
-        description: "Enters the letter: #{value} (with better recognition because of suffix: '#{suffix}')"
-        grammarType: 'none'
-
-      # nested
-      _.each Settings.letters, (valueIn, keyIn) ->
-        Commands.create [value, valueIn].join(' '),
-          description: "Enters the letter combo: #{key}#{keyIn}"
-          grammarType: "none"
   fingerprint: ->
     data =
       letters: Settings.letters

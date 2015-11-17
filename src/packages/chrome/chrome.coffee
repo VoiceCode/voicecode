@@ -1,11 +1,11 @@
-Context.register
+Scope.register
   name: 'chrome'
   applications: ['Chrome']
 
 pack = Packages.register
   name: 'chrome'
   description: 'Google Chrome integration'
-  context: 'chrome'
+  scope: 'chrome'
 
 pack.before
   'object.refresh': ->

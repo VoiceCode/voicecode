@@ -1,7 +1,7 @@
 pack = Packages.register
   name: 'editor'
   description: 'Common commands for editors/IDEs'
-  context: 'abstract'
+  scope: 'abstract'
 
 pack.commands
   'move-to-line-number':
@@ -11,7 +11,7 @@ pack.commands
     tags: ['cursor']
     inputRequired: false
 
-  'combo.move-to-line-number-and-way-right':
+  'move-to-line-number+way-right':
     spoken: 'sprinkler'
     grammarType: 'integerCapture'
     description: 'go to line number then position cursor at end of line.'
@@ -26,7 +26,7 @@ pack.commands
       if input?
         @do 'select.way.right'
 
-  'combo.move-to-line-number-and-way-left':
+  'move-to-line-number+way-left':
     spoken: 'sprinkle'
     grammarType: 'integerCapture'
     description: 'Go to line number then position cursor at beginning of line.'
@@ -41,7 +41,7 @@ pack.commands
       if input?
         @do 'cursor.way.left'
 
-  'combo.insert-under-line-number':
+  'insert-under-line-number':
     spoken: 'sprinkoon'
     grammarType: 'integerCapture'
     description: 'Go to line number then insert a new line below.'
@@ -56,7 +56,7 @@ pack.commands
       if input?
         @do 'common.newLineBelow'
 
-  'combo.move-to-line-number-then-select-line':
+  'move-to-line-number+select-line':
     spoken: 'spackle'
     grammarType: 'integerCapture'
     description: 'Go to line number then select entire line.'
@@ -103,3 +103,16 @@ pack.commands
     tags: ['IDE']
     description: 'Toggle comments on the line or range'
     inputRequired: false
+
+  'insert-code-template':
+    spoken: 'quinn'
+    grammarType: 'textCapture'
+    description: 'triggers an IDE code snippet / template'
+    tags: ['text', 'snippet', 'template']
+    action: (input) ->
+      if input?.length
+        snippet = @fuzzyMatch Settings.codeSnippets, input.join(' ')
+        @string snippet
+        @delay 200
+        completion = Settings.codeSnippetCompletions[@currentApplication()] or 'tab'
+        @key completion

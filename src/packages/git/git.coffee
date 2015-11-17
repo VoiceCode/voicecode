@@ -75,19 +75,16 @@ pack.settings
     'tag':
       spoken: 'jet tag'
 
-# pack.ready ->
-_.each pack.getSettings().commands, (value, key) ->
-  output = value.output or value.spoken
+pack.ready ->
+  _.each @settings().commands, (value, key) =>
+    output = value.output or value.spoken
 
-  defaults =
-    autoSpacing: 'normal always'
-    output: output
-    description: output
-    action: ->
-      @string output
+    defaults =
+      autoSpacing: 'normal always'
+      output: output
+      description: output
+      action: ->
+        @string output
 
-  # the defaults are overridden if any option is specified
-
-  options = {}
-  options[key] = _.extend({}, defaults, value)
-  pack.commands options
+    # the defaults are overridden if any option is specified
+    @command key, _.extend({}, defaults, value)

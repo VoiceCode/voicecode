@@ -1,17 +1,17 @@
 # this class simply encapsulates the concept of commands or command extensions only applying in certain
 # scenarios such as when a certain application is active, or an arbitrary function evaluates to true
 
-class Context
+class Scope
   @instances = {}
 
-  # applications: list of applications where this context is valid
-  # when: a function that returns true or false whether or not this context is valid
+  # applications: list of applications where this scope is valid
+  # when: a function that returns true or false whether or not this scope is valid
   constructor: ({@name, @applications, @when}) ->
 
   @register: (options) ->
     if @instances[options.name]?
-      warning 'contextCollision', options, "context: [#{options.name}] overridden by new values"
-    @instances[options.name] = new Context(options)
+      warning 'scopeCollision', options, "scope: [#{options.name}] overridden by new values"
+    @instances[options.name] = new Scope(options)
 
   @get: (name) ->
     @instances[name]
@@ -34,13 +34,13 @@ class Context
       true
 
 # this is just for easy access to a global version
-Context.global = new Context
+Scope.global = new Scope
   name: 'global'
 
-# abstract context is used for commands that are shared across multiple other contexts, but should not be global
+# abstract scope is used for commands that are shared across multiple other scopes, but should not be global
 # for example maybe 'selcrew'
-Context.abstract = new Context
+Scope.abstract = new Scope
   name: 'abstract'
 
 
-module.exports = Context
+module.exports = Scope

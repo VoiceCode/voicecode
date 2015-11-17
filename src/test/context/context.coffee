@@ -2,14 +2,14 @@ require '../dependencies'
 
 
 cleanup = (test) ->
-  Context.resetAll()
+  Scope.resetAll()
   test.end()
 
 
 test "register", (test) ->
-  context = Context.register
+  scope = Scope.register
     name: 'test'
     applications: 'Atom'
 
-  test.true context
+  test.true scope
   cleanup test

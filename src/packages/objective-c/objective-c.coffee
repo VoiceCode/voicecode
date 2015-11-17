@@ -4,7 +4,7 @@ pack = Packages.register
   tags: ['objective-c']
 
 pack.commands
-  'format.NS':
+  'format-NS':
     spoken: 'tennis'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in NSUpperCamelCase (automatically inserts the "NS" part)'
@@ -15,7 +15,7 @@ pack.commands
         @string 'NS' + Transforms.stud(input)
       else
         @string 'NS'
-  'format.UI':
+  'format-UI':
     spoken: 'youey'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in UIUpperCamelCase - automatically inserts the "UI" part. (pronounced like U-turn)'
@@ -26,7 +26,7 @@ pack.commands
         @string 'UI' + Transforms.stud(input)
       else
         @string 'UI'
-  'format.CG':
+  'format-CG':
     spoken: 'craggle'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in CGUpperCamelCase (automatically inserts the "CG" part)'
@@ -37,7 +37,7 @@ pack.commands
         @string 'CG' + Transforms.stud(input)
       else
         @string 'CG'
-  'format.atQuotes':
+  'format-at-quotes':
     spoken: 'lowcoif'
     tags: ['symbol']
     description: "inserts objective-c quotes (@\"\") leaving cursor inside them. If text is selected, will wrap the selected text"

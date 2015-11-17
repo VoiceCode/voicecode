@@ -1,11 +1,11 @@
-Context.register
+Scope.register
   name: 'mail'
   applications: ['Mail']
 
 pack = Packages.register
   name: 'mail'
   description: 'Apple Mail integration'
-  context: 'mail'
+  scope: 'mail'
 
 pack.before
   'object.next': ->

@@ -1,12 +1,11 @@
-Context.register
+Scope.register
   name: 'slack'
   applications: ['Slack']
 
 pack = Packages.register
   name: 'slack'
   description: 'Slack integration'
-  context: 'slack'
-  tags: ['slack']
+  scope: 'slack'
 
 pack.commands
   'switch-channel':

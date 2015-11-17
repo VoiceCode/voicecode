@@ -10,18 +10,6 @@ Commands.createDisabledWithDefaults {inputRequired: true},
       if input?.length
         result = @fuzzyMatch Settings.abbreviations, input.join(' ')
         @string result
-  "core.insertCodeSnippet":
-    spoken: 'quinn'
-    grammarType: "textCapture"
-    description: "inserts an IDE code snippet"
-    tags: ["text", "snippet"]
-    action: (input) ->
-      if input?.length
-        snippet = @fuzzyMatch Settings.codeSnippets, input.join(" ")
-        @string snippet
-        @delay 200
-        completion = Settings.codeSnippetCompletions[@currentApplication()] or "tab"
-        @key completion
   "core.insertPassword":
     spoken: 'trassword'
     grammarType: "textCapture"

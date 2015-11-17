@@ -1,11 +1,11 @@
-Context.register
+Scope.register
   name: 'command-line'
   applications: Settings.terminalApplications
 
 pack = Packages.register
   name: 'command-line'
   description: 'General commands for shell / console usage'
-  context: 'command-line'
+  scope: 'command-line'
   tags: ['command-line']
 
 pack.after
@@ -53,7 +53,7 @@ pack.commands
 
 # global
 pack.commands
-  context: 'global'
+  scope: 'global'
 ,
   'open-directory':
     spoken: 'direct'

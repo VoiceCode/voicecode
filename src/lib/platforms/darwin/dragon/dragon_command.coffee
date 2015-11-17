@@ -64,13 +64,13 @@ class DragonCommand extends Command
     trigger
 
   getApplications: ->
-    result = if @context?
-      Context.get(@context)?.applications
+    result = if @scope?
+      Scope.get(@scope)?.applications
     result or ['global']
 
   needsDragonCommand: ->
     return false if @needsCommand is false
-    return false if @context is 'abstract' and _.isEmpty(@applications)
+    return false if @scope is 'abstract' and _.isEmpty(@applications)
     true
 
   generateDragonLists: ->

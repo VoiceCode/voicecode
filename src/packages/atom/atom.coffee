@@ -3,14 +3,14 @@
 #       The chain must break if something like core.search.next.wordOccurrence fails
 #       Actions.breakChain: -> emit 'chainLinkBroken', ...
 
-Context.register
+Scope.register
   name: 'atom'
   applications: ['Atom']
 
 instance = Packages.register
   name: 'atom'
   description: 'Atom IDE integration'
-  context: 'atom'
+  scope: 'atom'
   tags: ['atom']
 
 instance.before
@@ -42,7 +42,7 @@ instance.before
     @key 'L', 'control option command'
     @stop()
 
-  'duplicate-current-line': ({first, last} = {}) ->
+  'duplicate-selected': ({first, last} = {}) ->
     # TODO: steal implementation from package
     # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
     @key 'D', 'shift command'

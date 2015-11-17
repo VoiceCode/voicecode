@@ -24,9 +24,9 @@ Commands.createDisabled
         _.each results, (command) =>
           command.call(@)
           @delay 50
-  'interpretLiterally'
+  'literal-escape'
     spoken: "keeper"
-    grammarType: "none" # treated specially in the grammar
+    needsParsing: false
     description: "whatever follows this command will be interpreted literally"
     tags: ["voicecode", "recommended"]
     action: (input) ->

@@ -22,7 +22,7 @@ class Modifiers
         Commands.createDisabled "modifiers.#{mods}.#{key}",
           spoken: "#{name} #{value}"
           description: "#{mods} #{key}"
-          grammarType: "none"
+          needsParsing: false
           tags: ["modifiers"]
           action: ->
             @key key, mods

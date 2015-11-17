@@ -1,11 +1,11 @@
-Context.register
+Scope.register
   name: 'firefox'
   applications: ['Firefox']
 
 pack = Packages.register
   name: 'firefox'
   description: 'Firefox integration'
-  context: 'firefox'
+  scope: 'firefox'
 
 pack.before
   'object.forward': (input, context) ->

@@ -92,8 +92,9 @@ class Commands
             if options.action.toString() is @mapping[command].action.toString()
               validated = false # action is the same
               break
-          else
-            warning 'commandHasNoAction', command, "Command #{command} has no action."
+          # else
+            # this is okay
+            # warning 'commandHasNoAction', command, "Command #{command} has no action."
           #   validated = false
           warning 'commandOverwritten', command,
           "Command '#{command}' overwritten by a command with a same name"
@@ -249,7 +250,7 @@ class Commands
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
       command.before ?= {}
       command.before["#{info.packageId}"] = {info, action}
-      if command.context is 'abstract'
+      if command.scope is 'abstract'
         command.applications = _.union(command.applications or [], info.applications)
       command
 
@@ -263,7 +264,7 @@ class Commands
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
       command.after ?= {}
       command.after["#{info.packageId}"] = {info, action}
-      if command.context is 'abstract'
+      if command.scope is 'abstract'
         command.applications = _.union(command.applications or [], info.applications)
       command
 
@@ -294,11 +295,12 @@ class Commands
 
     type = options.grammarType
     if type in @primaryGrammarTypes
-      unless name in @keys[type]
-        @keys[type].push name
-      unless options.continuous is false
-        unless name in @keys[type + "Continuous"]
-          @keys[type + "Continuous"].push name
+      unless options.needsParsing is false
+        unless name in @keys[type]
+          @keys[type].push name
+        unless options.continuous is false
+          unless name in @keys[type + "Continuous"]
+            @keys[type + "Continuous"].push name
 
     if options.findable?
       @keys.findable.push name

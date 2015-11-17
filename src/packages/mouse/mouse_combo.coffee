@@ -1,14 +1,18 @@
-Commands.createDisabled
-  'combo.selectLineUnderMouse':
+pack = Packages.register
+  name: 'mouse-combo'
+  description: 'Combinations of mouse actions and other actions'
+
+pack.commands
+  'select-hovered-line':
     spoken: 'chibble'
     description: 'selects the entire line of text cursor hovers over'
     tags: ['mouse', 'combo', 'recommended']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
+      @do 'mouse:click', input, context
       @key 'Left', 'command'
       @key 'Right', 'command shift'
-  'combo.double-clickThenCopy':
+  'double-click+copy':
     spoken: 'dookoosh'
     grammarType: 'oneArgument'
     description: 'mouse double click, then copy'
@@ -16,9 +20,9 @@ Commands.createDisabled
     mouseLatency: true
     inputRequired: false
     action: (input, context) ->
-      @do 'mouse.double-click', input, context
-      @do 'clipboard.copy', input
-  'combo.double-clickThenPaste':
+      @do 'mouse:double-click', input, context
+      @do 'clipboard:copy', input
+  'double-click+paste':
     spoken: 'doopark'
     grammarType: 'oneArgument'
     description: 'mouse double click, then paste'
@@ -26,18 +30,18 @@ Commands.createDisabled
     inputRequired: false
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.double-click', input, context
-      @do 'clipboard.paste', input
-  'combo.mouseClickThenPaste':
+      @do 'mouse:double-click', input, context
+      @do 'clipboard:paste', input
+  'click+paste':
     spoken: 'chiffpark'
     grammarType: 'oneArgument'
     description: 'mouse single click, then paste'
     tags: ['mouse', 'combo', 'recommended', 'clipboard']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
-      @do 'clipboard.paste', input
-  'combo.selectLineThenCopy':
+      @do 'mouse:click', input, context
+      @do 'clipboard:paste', input
+  'select-line+copy':
     spoken: 'shackloosh'
     grammarType: 'oneArgument'
     description: 'select entire line, then copy'
@@ -45,8 +49,8 @@ Commands.createDisabled
     inputRequired: false
     action: (input) ->
       @do 'select.line.text'
-      @do 'clipboard.copy', input
-  'combo.selectLineThenPaste':
+      @do 'clipboard:copy', input
+  'select-line+paste':
     spoken: 'shacklark'
     grammarType: 'oneArgument'
     description: 'select entire line, then paste'
@@ -54,8 +58,8 @@ Commands.createDisabled
     inputRequired: false
     action: (input) ->
       @do 'select.line.text'
-      @do 'clipboard.paste', input
-  'combo.selectLineUnderMouseThenCopy':
+      @do 'clipboard:paste', input
+  'select-hovered-line+copy':
     spoken: 'chibloosh'
     grammarType: 'oneArgument'
     description: 'select entire line under mouse, then copy'
@@ -63,9 +67,9 @@ Commands.createDisabled
     mouseLatency: true
     inputRequired: false
     action: (input, context) ->
-      @do 'combo.selectLineUnderMouse', input, context
-      @do 'clipboard.copy', input
-  'combo.selectLineUnderMousesAndPaste':
+      @do 'selectLineUnderMouse', input, context
+      @do 'clipboard:copy', input
+  'select-hovered-line+paste':
     spoken: 'chiblark'
     grammarType: 'oneArgument'
     description: 'select entire line, then paste'
@@ -73,55 +77,53 @@ Commands.createDisabled
     mouseLatency: true
     inputRequired: false
     action: (input, context) ->
-      @do 'combo.selectLineUnderMouse', input, context
-      @do 'clipboard.paste', input
-  'combo.clickThenInsertNewLineBelow':
+      @do 'selectLineUnderMouse', input, context
+      @do 'clipboard:paste', input
+  'click+insert-below':
     spoken: 'chiffacoon'
     description: 'click, then insert new line below'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
+      @do 'mouse:click', input, context
       @do 'common.newLineBelow'
-  'combo.clickThenSpace':
+  'click+space':
     spoken: 'chiffkoosh'
     description: 'click, then insert a space'
     tags: ['mouse', 'combo', 'space']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
+      @do 'mouse:click', input, context
       @do 'symbol.space'
-  'combo.clickThenDeleteLine':
+  'click+delete-line':
     spoken: 'sappy'
     misspellings: ['sapi']
     description: 'click, then delete entire line'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
+      @do 'mouse:click', input, context
       @do 'delete.all.line'
-  'combo.clickThenDeleteLineRight':
+  'click+delete-line-right':
     spoken: 'sapper'
     description: 'click, then delete line to the right'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
+      @do 'mouse:click', input, context
       @do 'delete.all.right'
-  'combo.clickThenDeleteLineLeft':
+  'click+delete-line-left':
     spoken: 'sapple'
     description: 'click, then delete line to the left'
     tags: ['mouse', 'combo']
     mouseLatency: true
     action: (input, context) ->
-      @do 'mouse.click', input, context
+      @do 'mouse:click', input, context
       @do 'delete.all.left'
-  # RENAMING ALERT
-  'combo.copyUnderMouseAndInsertAtCursor':
+  'insert-hovered':
     spoken: 'grabsy'
+    scope: 'abstract'
     description: 'Will grab the text underneath the mouse,
     then insert it at the current cursor location.
     Only supports a few applications for now but will be expanded.'
     tags: ['mouse', 'combo', 'clipboard']
-    action: () ->
-      null

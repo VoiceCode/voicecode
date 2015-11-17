@@ -1,22 +1,22 @@
-Context.register
+Scope.register
   name: 'iterm'
   applications: ['iTerm']
 
 pack = Packages.register
   name: 'iterm'
   description: 'iTerm integration'
-  context: 'iterm'
+  scope: 'iterm'
   tags: ['iterm']
 
 pack.before
-  'combo.copyUnderMouseAndInsertAtCursor': ->
+  'mouse-combo:insert-hovered': ->
     @rightClick()
     @rightClick()
     @paste()
     @stop()
 
 pack.commands
-  'change-to-directory-under-mouse':
+  'change-to-hovered-directory':
     spoken: 'engage'
     description: 'hover your mouse over a directory name output from a "ls"
     command in the terminal, and this command will "cd" to that directory'
@@ -29,7 +29,7 @@ pack.commands
       @paste()
       @string '; ls'
       @enter()
-  'execute-history-item-under-mouse':
+  'execute-hovered-history-item':
     spoken: 'shell recall'
     description: 'hovering the mouse over the left-hand number of a result
     from the history output, this will re-execute the command'
@@ -41,7 +41,7 @@ pack.commands
       @key '!'
       @paste()
       @enter()
-  'open-with-editor':
+  'open-hovered-with-editor':
     spoken: 'shell edit'
     description: 'open file in editor'
     tags: ['domain-specific', 'shell']

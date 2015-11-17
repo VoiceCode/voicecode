@@ -48,7 +48,7 @@ Events.on 'applicationStart', ->
     global.Homonyms = require '../lib/utility/homonyms'
     global.Packages = require '../lib/packages/packages'
     global.Commands = require '../lib/commands'
-    global.Context = require '../lib/context'
+    global.Scope = require '../lib/scope'
     global.UserAssetsController = require './user_assets_controller'
     Events.once 'userAssetsLoaded', startupFlow.add 'user_settings'
     UserAssetsController.getAssets 'user_settings.coffee'

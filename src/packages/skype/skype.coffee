@@ -1,11 +1,11 @@
-Context.register
+Scope.register
   name: 'skype'
   applications: ['Skype']
 
 pack = Packages.register
   name: 'skype'
   description: 'Skype integration'
-  context: 'skype'
+  scope: 'skype'
 
 pack.before
   'object.next': ->

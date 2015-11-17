@@ -2,6 +2,7 @@ class DarwinDragonController
   instance = null
   constructor: ->
     return instance if instance?
+    instance = @
     @forever = require "forever-monitor"
     @dragonInstance = null
     @dragonApplicationName = if Settings.dragonVersion is 4
@@ -20,7 +21,6 @@ class DarwinDragonController
       DragonController.subscribeToEvents()
       DragonController.start()
 
-    instance = @
   start: ->
     return if Settings.dontMessWithMyDragon
     if @dragonInstance?

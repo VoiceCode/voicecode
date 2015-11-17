@@ -152,7 +152,7 @@ Commands.createDisabled
     description: 'Will delete everything to the left'
     action: ->
       @key 'delete', 'command'
-  'duplicate-current-line':
+  'duplicate-selected':
     spoken: 'jolt'
     description: 'Will duplicate whichever makes sense in the context'
     tags: ['text-manipulation', 'recommended']
@@ -162,7 +162,7 @@ Commands.createDisabled
       @copy()
       @do 'common.newLineBelow'
       @paste()
-  'showShortcuts':
+  'show-shortcut-markers':
     spoken: 'swan'
     description: "Show shortcuts"
     tags: ['cursor']

@@ -1,11 +1,46 @@
-Chain.preprocess 'consume-everything-after-microphone-sleep', (chain) ->
-  index = _.findIndex chain, 'command', 'dragon.microphone.sleep'
+Scope.register
+  name: 'dragon'
+  applications: Settings.dragonApplicationName
+
+pack = Packages.register
+  name: 'dragon'
+  description: 'Commands for controlling Dragon'
+
+Chain.preprocess 'dragon:consume-after-microphone-sleep', (chain) ->
+  index = _.findIndex chain, 'command', 'dragon:microphone-sleep'
   if index isnt -1
     return _.slice chain, 0, ++index
   return chain
 
-Commands.createDisabled
-  "dragon.microphone.sleep":
+pack.settings
+  ignoredPhrases: [
+    "wakeup"
+    "processing document"
+    "processing selection"
+    "microphone off"
+    "go to sleep"
+    "show commands"
+    "show commands window"
+    "hide commands window"
+    "hide status window"
+    "command mode"
+    "press mouse"
+    "release mouse"
+  ]
+
+# this way the user could change the package settings before the commands are created
+# is there a better way?
+pack.ready ->
+  _.each @settings().ignoredPhrases, (phrase) =>
+    id = ['ignored', phrase.split(' ').join('-')].join('.')
+    @command id,
+      spoken: phrase
+      tags: ["ignored"]
+      needsCommand: false
+      continuous: false
+
+pack.commands
+  "microphone-sleep":
     spoken: 'snore'
     grammarType: 'textCapture'
     description: "put dragon into sleep mode"
@@ -18,7 +53,7 @@ Commands.createDisabled
         set microphone to sleep
       end tell
       """
-  "dragon.restart":
+  "restart":
     spoken: 'restart dragon'
     description: "restarts Dragon Dictate"
     tags: ["dragon", "recommended"]
@@ -32,7 +67,7 @@ Commands.createDisabled
       tell application "#{dictateName}" to activate
       """, false
 
-  "dragon.vocabulary.trainFromSelection":
+  "train-vocabulary-from-selection":
     description: "Train Dragon vocabulary from selection"
     tags: ["dragon", "recommended"]
     continuous: false
@@ -46,7 +81,7 @@ Commands.createDisabled
       end try
       """, false
 
-  "dragon.vocabulary.showWindow":
+  "show-vocabulary":
     spoken: 'show dragon vocab'
     description: "Open Dragon vocabulary window"
     tags: ["dragon", "recommended"]
@@ -60,7 +95,7 @@ Commands.createDisabled
       end try
       """, false
 
-  "dragon.commands.showWindow":
+  "show-commands":
     spoken: 'show dragon commands'
     description: "switch to Dragon Dictate, and open commands window"
     tags: ["dragon", "recommended"]
@@ -74,29 +109,9 @@ Commands.createDisabled
       end try
       """
 
-  "dragon.microphone.off":
+  "microphone-off":
     spoken: 'over and out'
     description: "turn the microphone off. This command is nice because it is 'chainable' in a phrase"
     tags: ["dragon", "recommended"]
     action: ->
       @microphoneOff()
-
-Commands.createWithDefaults
-  kind: "none"
-  tags: ["ignored"]
-  needsCommand: false
-  continuous: false
-,
-  # consume command text from dragon growl notifications
-  "wakeup": {}
-  "processing document": {}
-  "processing selection": {}
-  "microphone off": {}
-  "go to sleep": {}
-  "show commands": {}
-  "show commands window": {}
-  "hide commands window": {}
-  "hide status window": {}
-  "command mode": {}
-  "press mouse": {}
-  "release mouse": {}
