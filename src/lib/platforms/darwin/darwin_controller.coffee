@@ -1,3 +1,6 @@
+net = require 'net'
+fs = require 'fs'
+
 class DarwinController
   instance = null
   constructor: ->
@@ -5,7 +8,7 @@ class DarwinController
     instance = @
 
     @loadFrameworks()
-    # @initialize()
+    @initialize()
     @setDragonInfo()
 
     @listeningOnMainSocket = true
@@ -31,21 +34,19 @@ class DarwinController
     $.framework 'Foundation'
     $.framework 'Quartz'
     $.framework 'AppKit'
-    # TODO: de-globalize
-    global.net = require 'net'
-    global.fs = require 'fs'
 
   initialize: ->
     process.on 'exit', =>
       @app 'terminate', $('self')
       delete @
+
     @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
     @notificationCenter = @sharedWorkspace('notificationCenter')
     @mainQueue = $.NSOperationQueue('mainQueue')
     @app = $.NSApplication('sharedApplication')
 
     @delegate = $.NSObject.extend('AppDelegate')
-    @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged
+    @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged.bind(@)
     @delegate.register()
 
     @delegateInstance = @delegate('alloc')('init')
@@ -53,10 +54,10 @@ class DarwinController
 
     @notificationCenter('addObserver', @delegateInstance, 'selector',
     'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-    @notificationCenter('addObserver', @delegateInstance, 'selector',
-    'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
+    # @notificationCenter('addObserver', @delegateInstance, 'selector',
+    # 'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
 
-    $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler, ['v', ['@', '@']])
+    # $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler.bind(@), ['v', ['@', '@']])
 
     # @app 'finishLaunching'
 
@@ -77,9 +78,10 @@ class DarwinController
       , Settings.dragonIncompatibleApplicationDelay or 5000
 
   mouseHandler: (self, event) ->
-    if Commands.monitoringMouseToCancelSpacing
-      log 'autoSpacing', false, "Canceling auto spacing"
-      Commands.lastCommandOfPreviousPhrase = null
+    debug event
+    # if Commands.monitoringMouseToCancelSpacing
+    #   log 'autoSpacing', false, "Canceling auto spacing"
+    #   Commands.lastCommandOfPreviousPhrase = null
 
   listen: ->
     global.slaveController = new SlaveController()
