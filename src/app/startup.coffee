@@ -63,6 +63,7 @@ Events.on 'applicationStart', ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
     requireDirectory module, '../packages/',
+      exclude: /.*node_modules.*/
       visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
@@ -93,15 +94,16 @@ Events.on 'applicationStart', ->
       when "darwin"
         global.Actions = require '../lib/platforms/darwin/actions'
         global.DarwinController = require '../lib/platforms/darwin/darwin_controller'
-        unless Settings.slaveMode
+        if true
           global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
+          global.DragonVocabularyController = require '../lib/platforms/darwin/dragon/dragon_vocabulary_controller'
       when "win32"
         global.Actions = require '../lib/platforms/windows/actions'
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
     # unless Settings.slaveMode
-    Synchronizer.synchronize()
+    # Synchronizer.synchronize()
 
     mainWindow = null
     # application.on 'ready', ->

@@ -333,48 +333,6 @@ _.extend Settings,
     windy: "windowPositions"
     webs: "websites"
     quinn: "codeSnippets"
-  commonSequences:
-    # common sequences are added as vocabulary terms to provide maximum recognition accuracy
-    brax: w 'coif, posh'
-    chiff: w 'olly, junk, jolt, shock, junk, spunk, swipe, dot, shockey, shicks, chiff'
-    chris: w 'swipe, spunk, snipper, criffed, cram, snake, skoosh'
-    coalgap: w 'cram, criffed, snake, coif, posh, false, true'
-    coif: w 'spark'
-    comma: w 'shock'
-    crimp: w 'junk, skoosh, swipe, criffed, cram, snake'
-    doom: w 'shabble, shabber, shroom, switchy, switcho, shockoon, snipline'
-    dot: w 'spark, cram, criffed, snake, smash'
-    duke: w 'snipper, snipple, ricksy, junk, cram, criffed, snatch, shicks'
-    dookoosh: w 'doopark, dookoosh'
-    doopark: w 'doopark'
-    chibble: w 'shicks'
-    chibloosh: w 'chiblark, chibloosh, doopark'
-    chiblark: w 'chiblark, chibloosh'
-    "chom lick": w 'chom lick'
-    jeep: w 'shabble, shabber, shreep, switchy, switcho'
-    jeep: w 'shock, shockey, snipline'
-    junk: w 'spunk, spark'
-    prex: w 'spark, coif, posh, kirk'
-    ricksy: w 'stoosh, snatch'
-    ricky: w 'junk'
-    sage: w 'swick, totch'
-    shackle: w 'snatch'
-    shock: w 'cram, criffed, tarp'
-    shockey: w 'spark'
-    shockoon: w 'spark, cram, criffed'
-    shreep: w 'shabble, shabber'
-    shroom: w 'shabble, shabber'
-    skoosh: w 'cram, criffed, shrink, snake, smash'
-    snatch: w 'swick'
-    spark: w 'shock'
-    spunk: w 'junk'
-    swipe: w 'coif, posh, cram, criffed, spark, false, true'
-    talky: w 'spark'
-    trough: w 'junk, crimp'
-    tragic:  w 'cram, criffed, tridal, senchen, snake, yeller, smash, yellsmash'
-    wordneck: w 'junk'
-    wordpreev: w 'junk'
-    shicks: w 'stoosh, junk, jolt, shabble, shabber'
   modes:
     global: "global"
     emacs: "emacs"
@@ -604,6 +562,140 @@ _.extend Settings,
       fox
       """
     all: ["strict off"] # nothing is allowed except disabling strict mode
+  commonSequences: {
+    'symbol.brackets':
+      [ 'symbol.doubleQuotes.surround',
+        'symbol.singleQuotes.surround' ]
+    'mouse.click':
+      [ 'common.select.all',
+        'common.deletion.backward',
+        'duplicate-selected',
+        'common.enter',
+        'common.deletion.backward',
+        'common.deletion.forward',
+        'symbol.comma.padded.right',
+        'symbol.dot',
+        'common.newLineAbove',
+        'mouse.shiftClick',
+        'mouse.click' ]
+    'cursor.right':
+      [ 'symbol.comma.padded.right',
+        'common.deletion.forward',
+        'delete.all.right',
+        'format.upper-camel',
+        'format.camel',
+        'format.snake',
+        'symbol.space' ]
+    'symbol.colon.padded.right':
+      [ 'format.camel',
+        'format.upper-camel',
+        'format.snake',
+        'symbol.doubleQuotes.surround',
+        'symbol.singleQuotes.surround',
+        'word.false',
+        'word.true' ]
+    'symbol.doubleQuotes.surround': [ 'clipboard.paste' ]
+    'symbol.comma': [ 'common.enter' ]
+    'cursor.left':
+      [ 'common.deletion.backward',
+        'symbol.space',
+        'symbol.comma.padded.right',
+        'format.upper-camel',
+        'format.camel',
+        'format.snake' ]
+    'cursor.down':
+      [ 'common.indentation.left',
+        'common.indentation.right',
+        'select.down',
+        'line.move.up',
+        'line.move.down',
+        'common.newLineBelow',
+        'delete.all.line' ]
+    'symbol.dot':
+      [ 'clipboard.paste',
+        'format.camel',
+        'format.upper-camel',
+        'format.snake',
+        'format.lower-no-space' ]
+    'mouse.doubleClick':
+      [ 'delete.all.right',
+        'delete.all.left',
+        'select.all.right',
+        'common.deletion.backward',
+        'format.camel',
+        'format.upper-camel',
+        'clipboard.cut',
+        'mouse.shiftClick' ]
+    'combo.double-clickThenCopy': [ 'combo.double-clickThenPaste', 'combo.double-clickThenCopy' ]
+    'combo.double-clickThenPaste': [ 'combo.double-clickThenPaste' ]
+    'combo.selectLineUnderMouse': [ 'mouse.shiftClick' ]
+    'combo.selectLineUnderMouseThenCopy':
+      [ 'combo.selectLineUnderMousesAndPaste',
+        'combo.selectLineUnderMouseThenCopy',
+        'combo.double-clickThenPaste' ]
+    'combo.selectLineUnderMousesAndPaste':
+      [ 'combo.selectLineUnderMousesAndPaste',
+        'combo.selectLineUnderMouseThenCopy' ]
+    'mouse.commandClick': [ 'mouse.commandClick' ]
+    'cursor.up':
+      [ 'common.indentation.left',
+        'common.indentation.right',
+        'select.up',
+        'line.move.up',
+        'line.move.down',
+        'common.enter',
+        'common.newLineAbove',
+        'delete.all.line' ]
+    'common.deletion.backward': [ 'common.deletion.forward', 'clipboard.paste' ]
+    'symbol.surround.parentheses':
+      [ 'clipboard.paste',
+        'symbol.doubleQuotes.surround',
+        'symbol.singleQuotes.surround',
+        'symbol.braces.surround' ]
+    'select.all.right': [ 'clipboard.copy', 'clipboard.cut' ]
+    'cursor.way.right': [ 'common.deletion.backward' ]
+    'common.save': [ 'applicationControl.switchToPrevious', 'common.close.window' ]
+    'select.line.text': [ 'clipboard.cut' ]
+    'common.enter': [ 'format.camel', 'format.upper-camel', 'common.tab.backward' ]
+    'common.newLineAbove': [ 'clipboard.paste' ]
+    'common.newLineBelow': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
+    'select.up': [ 'common.indentation.left', 'common.indentation.right' ]
+    'select.down': [ 'common.indentation.left', 'common.indentation.right' ]
+    'symbol.space':
+      [ 'format.camel',
+        'format.upper-camel',
+        'core.insertAbbreviation',
+        'format.snake',
+        'format.lower-no-space' ]
+    'clipboard.cut': [ 'applicationControl.switchToPrevious' ]
+    'clipboard.paste': [ 'common.enter' ]
+    'common.deletion.forward': [ 'common.deletion.backward' ]
+    'symbol.comma.padded.right':
+      [ 'symbol.doubleQuotes.surround',
+        'symbol.singleQuotes.surround',
+        'format.camel',
+        'format.upper-camel',
+        'clipboard.paste',
+        'word.false',
+        'word.true' ]
+    'common.open.tab': [ 'clipboard.paste' ]
+    'delete.word.backward': [ 'common.deletion.backward', 'cursor.left' ]
+    'smart.select':
+      [ 'format.camel',
+        'format.upper-camel',
+        'format.title',
+        'format.snake',
+        'format.upper',
+        'format.lower-no-space',
+        'format.upper-no-space' ]
+    'select.word.next': [ 'common.deletion.backward' ]
+    'select.word.previous': [ 'common.deletion.backward' ]
+    'mouse.shiftClick':
+      [ 'clipboard.copy',
+        'common.deletion.backward',
+        'duplicate-selected',
+        'common.indentation.left',
+        'common.indentation.right' ] }
 
 # tens =
 #   ten: 10

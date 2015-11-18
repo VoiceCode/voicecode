@@ -1,29 +1,24 @@
-class @Vocabulary
-  # singleton
-  instance = null
+module.exports = new class DragonVocabularyController
   constructor: ->
-    if instance
-      return instance
-    else
-      instance = @
-      @standard = []
-      @alternate = {}
-      @repeatable = []
-      @spaceBefore = []
-      @loadCommandVocabulary()
-      @loadVocabulary()
-      # @checkVocabulary()
+    instance = @
+    @standard = []
+    @alternate = {}
+    @repeatable = []
+    @spaceBefore = []
+    @loadCommandVocabulary()
+    @loadSettingsVocabulary()
+    @generateVocabularies()
+
   loadCommandVocabulary: ->
-    for key, value of Commands.mapping
-      if value.vocabulary is true
-        @standard.push value.spoken
-      else if value.vocabulary?
-        @alternate[value.vocabulary] = value.spoken
-      else if value.repeatable
+    for key, value of _.pluck Commands.mapping, {enabled: true}
+      @standard.push value.spoken
+      # if value.vocabulary? # I don't get this
+      #   @alternate[value.vocabulary] = value.spoken
+      if value.repeatable
         @repeatable.push value.spoken
       else if value.spaceBefore
         @spaceBefore.push value.spoken
-  loadVocabulary: ->
+  loadSettingsVocabulary: ->
     # from vocab list
 
     # standard vocabulary
@@ -41,15 +36,14 @@ class @Vocabulary
         unless itemName[0] is "_"
           @standard.push [prefix, itemName].join(' ')
 
-  checkVocabulary: ->
-    contentGenerators = [
+  generateVocabularies: ->
+    contentGenerators =
       standard: @createStandardContent
       alternate: @createAlternateContent
       repeatable: @createRepeatableContent
       spaced: @createSpaceContent
       sequence: @createSequenceContent
-    ]
-    _.each contentGenerators, (generator, filename) => @createVocabFile filename, generator()
+    _.each contentGenerators, (generator, filename) => @createVocabFile filename, generator.call @
 
   createVocabFile: (filename, content) ->
     content = """
@@ -67,7 +61,7 @@ class @Vocabulary
     </plist>
     """
     path = require('path')
-    file = path.resolve(userAssetsController.assetsPath, "generated/#{filename}.xml")
+    file = path.resolve(UserAssetsController.assetsPath, "generated/#{filename}.xml")
     fs = require('fs')
     fs.writeFileSync file, content, 'utf8'
   createStandardContent: ->
@@ -94,8 +88,12 @@ class @Vocabulary
   createSequenceContent: ->
     items = []
     for name, followers of Settings.commonSequences
+      name = Commands.get name
+      continue if not name? or name.enabled is false
       for suffix in followers
-        items.push @buildWord [name, suffix].join(' ')
+        suffix = Commands.get suffix
+        continue if not suffix? or suffix.enabled is false
+        items.push @buildWord [name.spoken, suffix.spoken].join(' ')
     items.join("\n")
   buildWord: (item, spoken) ->
     """

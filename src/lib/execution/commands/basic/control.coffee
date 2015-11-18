@@ -18,7 +18,6 @@ Commands.createDisabled
   'combo.shiftSpace':
     spoken: 'sky koosh'
     description: "press shift+space (useful for scrolling up, or other random purposes in certain applications)"
-    vocabulary: true
     tags: ["space"]
     repeatable: true
     action: ->

@@ -69,7 +69,6 @@ pack.commands
     spoken: 'chom lick'
     description: 'command+click'
     tags: []
-    vocabulary: true
     mouseLatency: true
     action: (input, context) ->
       if context.mouseLatencyIndex
@@ -80,7 +79,6 @@ pack.commands
     spoken: 'crop lick'
     description: 'option+click'
     tags: []
-    vocabulary: true
     action: ->
       @optionClick()
   'press':

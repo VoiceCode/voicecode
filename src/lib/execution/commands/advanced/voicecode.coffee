@@ -24,7 +24,7 @@ Commands.createDisabled
         _.each results, (command) =>
           command.call(@)
           @delay 50
-  'literal-escape'
+  'literal-escape':
     spoken: "keeper"
     needsParsing: false
     description: "whatever follows this command will be interpreted literally"
@@ -32,7 +32,7 @@ Commands.createDisabled
     action: (input) ->
       if input?.length
         @string input.join(" ")
-  'mode.set'
+  'mode.set':
     spoken: "set mode"
     grammarType: "textCapture"
     description: "change voicecode command execution mode"
@@ -43,7 +43,7 @@ Commands.createDisabled
       if input?.length
         mode = @fuzzyMatch Settings.modes, input.join(' ')
         @setGlobalMode(mode)
-  'smartDelete'
+  'smart.delete':
     spoken: "scratchy"
     description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"
     tags: ["system", "voicecode", "recommended"]
@@ -57,7 +57,7 @@ Commands.createDisabled
         else
           @repeat count, =>
             @key 'delete'
-  'smartSelect'
+  'smart.select':
     spoken: "tragic"
     description: "tries to select the previously inserted text if possible"
     tags: ["system", "voicecode", "recommended"]
@@ -66,7 +66,7 @@ Commands.createDisabled
       if count? and count > 0
         for i in [1..count]
           @key 'left', 'shift'
-  'modes.strict.enable'
+  'modes.strict.enable':
     spoken: "strict on"
     grammarType: "textCapture"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
@@ -78,7 +78,7 @@ Commands.createDisabled
       else
         "default"
       @enableStrictMode mode
-  'modes.strict.disable'
+  'modes.strict.disable':
     spoken: "strict off"
     description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
