@@ -247,11 +247,11 @@ class Commands
       Please provide a unique identifier for your method as the second parameter: \n
       Commands.before '#{commandName}', 'my-#{commandName}-before', (input, context) -> doMagic()"
       return
-    @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
+    @edit commandName, 'commandBeforeAdded', {info, action}, (command) =>
       command.before ?= {}
       command.before["#{info.packageId}"] = {info, action}
       if command.scope is 'abstract'
-        command.applications = _.union(command.applications or [], info.applications)
+        @pushApplications(command, info.applications)
       command
 
   after: (commandName, info, action) ->
@@ -265,7 +265,7 @@ class Commands
       command.after ?= {}
       command.after["#{info.packageId}"] = {info, action}
       if command.scope is 'abstract'
-        command.applications = _.union(command.applications or [], info.applications)
+        @pushApplications(command, info.applications)
       command
 
   addMisspellings: (name, edition) ->
@@ -315,5 +315,9 @@ class Commands
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
     options
+
+  pushApplications: (command, applications) ->
+    unless _.isEmpty applications
+      command.applications = (command.applications or []).concat applications
 
 module.exports = new Commands

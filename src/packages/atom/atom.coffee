@@ -9,9 +9,8 @@ Scope.register
 
 instance = Packages.register
   name: 'atom'
-  description: 'Atom IDE integration'
+  description: 'Atom IDE integration (atom.io)'
   scope: 'atom'
-  tags: ['atom']
 
 instance.before
   'line.move.up': ->

@@ -19,17 +19,23 @@ class Scope
   @resetAll: ->
     @instances = {}
 
-  active: ->
-    @checkApplications() and @checkWhen()
+  @active: (options) ->
+    if options.scope?
+      @get(options.scope)?.active()
+    else
+      @checkApplications(options.applications) and @checkWhen(options.when)
 
-  checkApplications: ->
-    if @applications?
-      Actions.currentApplication() in @applications
+  active: ->
+    Scope.active({@applications, @when})
+
+  @checkApplications: (applications) ->
+    if applications?
+      Actions.currentApplication() in applications
     else
       true
-  checkWhen: ->
-    if @when?
-      @when.call(Actions)
+  @checkWhen: (_when) ->
+    if _when?
+      _when.call(Actions)
     else
       true
 

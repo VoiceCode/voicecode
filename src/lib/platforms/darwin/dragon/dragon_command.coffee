@@ -63,11 +63,6 @@ class DragonCommand extends Command
     # console.error trigger
     trigger
 
-  getApplications: ->
-    result = if @scope?
-      Scope.get(@scope)?.applications
-    result or ['global']
-
   needsDragonCommand: ->
     return false if @needsCommand is false
     return false if @scope is 'abstract' and _.isEmpty(@applications)

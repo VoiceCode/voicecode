@@ -73,19 +73,33 @@ class Package
       'tags'
       'notes'
     ]
-    @defaultCommandOptions.packageId = @name
-    @defaultCommandOptions.applications = @applications()
+    _.extend @defaultCommandOptions,
+      packageId: @name
+      applications: @applications()
+      when: @when()
 
   setDefaultEditOptions: ->
     @defaultEditOptions = _.pick @options, [
       'scope'
     ]
-    @defaultEditOptions.packageId = @name
-    @defaultEditOptions.applications = @applications()
+    _.extend @defaultEditOptions,
+      packageId: @name
+      applications: @applications()
+      when: @when()
 
   applications: ->
-    @_scope ?= Scope.get @scope
-    @_scope?.applications or []
+    if @scope?
+      @_scope ?= Scope.get @scope
+      @_scope?.applications or []
+    else
+      @options.applications
+
+  when: ->
+    if @scope?
+      @_scope ?= Scope.get @scope
+      @_scope?.when
+    else
+      @options.when
 
   remove: ->
     # TODO track commands that were added, and before/after - basically all changes, and then undo them

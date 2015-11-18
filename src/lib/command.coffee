@@ -34,7 +34,7 @@ class Command
       extensions = []
       extensions.push funk
       _.each @before, ({action: e, info}) ->
-        if _.isEmpty(info.applications) or currentApplication in info.applications
+        if Scope.active(info)
           extensions.push ->
             e.call(@, input, context)
       ->
@@ -53,7 +53,7 @@ class Command
     if @after?
       afterList = []
       _.each @after, ({action: e, info}) ->
-        if _.isEmpty(info.applications) or currentApplication in info.applications
+        if Scope.active(info)
           afterList.push ->
             e.call(@, input, context)
       segments.push ->
@@ -65,6 +65,16 @@ class Command
     ->
       for segment in segments
         segment?.call(@)
+
+  getApplications: ->
+    result = unless _.isEmpty @applications
+      @applications
+    else if @scope?
+      Scope.get(@scope)?.applications
+    if _.isEmpty result
+      ['global']
+    else
+      result
 
   generateContext: ->
     @context
