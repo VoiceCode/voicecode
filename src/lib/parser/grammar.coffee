@@ -184,7 +184,7 @@ class Grammar
       = (overrideCommand / findableIdentifier / nestableTextCommand / translation / spokenInteger / singleTextArgument)
 
     findableIdentifier
-      = identifier:(#{@findableCommands()}) ss {return Commands.mapping[identifier].findable;}
+      = identifier:(#{@findableCommands()}) ss {return Commands.getBySpoken(identifier).findable;}
 
     integerCaptureCommand
       = left:integerCaptureIdentifier right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
