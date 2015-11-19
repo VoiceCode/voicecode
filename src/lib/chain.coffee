@@ -2,10 +2,10 @@ class Chain
   preprocessors = []
   constructor: (@phrase = null) ->
 
-  @preprocess: (name, callback) ->
-    preprocessors = _.reject preprocessors, ({name: n}) -> n is name
-    preprocessors.push {name, callback}
-
+  @preprocess: (identity, callback) ->
+    preprocessors = _.reject preprocessors, _.matchesProperty 'identity.name', identity.name
+    preprocessors.push {identity, callback}
+    
   parse: ->
     if ParserController.isInitialized()
       parsed = ParserController.parse(@phrase)
@@ -25,8 +25,10 @@ class Chain
       chain = @parse()
 
     if shouldPreprocess
-      chain = _.reduce preprocessors, (chain, {callback}) ->
-        callback chain
+      chain = _.reduce preprocessors, (chain, {identity, callback}) ->
+        if Scope.active identity
+          chain = callback chain
+        chain
       , chain
       log 'chainPreprocessed', chain, JSON.stringify chain
 

@@ -146,7 +146,7 @@ class Commands
   createWithDefaults: (defaults, options) ->
     _.each options, (value, key) =>
       command = _.extend {}, defaults, value
-      command.enabled = true
+      command.enabled ?= true
       @create key, command
 
   createDisabled: (name, options) ->
@@ -154,13 +154,13 @@ class Commands
       _.each name, (value, key) =>
         @create key, value
       return
-    options.enabled = false
+    options.enabled ?= false
     @create name, options
 
   createDisabledWithDefaults: (defaults, options) ->
     for key, value of options
       command = _.extend {}, defaults, value
-      command.enabled = false
+      command.enabled ?= false
       @create key, command
 
   edit: (name, editType, edition, callback) ->

@@ -17,7 +17,7 @@ Commands.createDisabled
     tags: ["voicecode"]
     inputRequired: true
     action: (input) ->
-      if input?.length
+      if input?.length # FIX: this
         workflow = @fuzzyMatch Settings.workflows, input.join(' ')
         chain = new Chain(workflow + " ")
         results = chain.generateNestedInterpretation()
@@ -45,7 +45,8 @@ Commands.createDisabled
         @setGlobalMode(mode)
   'smart.delete':
     spoken: "scratchy"
-    description: "tries to do a 'smart' undo by deleting previously inserted characters if the previous command only inserted text"
+    description: "tries to do a 'smart' undo by deleting previously
+     inserted characters if the previous command only inserted text"
     tags: ["system", "voicecode", "recommended"]
     action: () ->
       count = Commands.previousUndoByDeletingCount
@@ -69,7 +70,8 @@ Commands.createDisabled
   'modes.strict.enable':
     spoken: "strict on"
     grammarType: "textCapture"
-    description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
+    description: "puts VoiceCode into one of the predefined 'strict'
+     modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
     inputRequired: true
     action: (input) ->
@@ -80,7 +82,15 @@ Commands.createDisabled
       @enableStrictMode mode
   'modes.strict.disable':
     spoken: "strict off"
-    description: "puts VoiceCode into one of the predefined 'strict' modes, where only a subset of commands can be executed"
+    description: "puts VoiceCode into one of the predefined 'strict'
+     modes, where only a subset of commands can be executed"
     tags: ["voicecode", "recommended"]
     action: (input) ->
       @disableStrictMode()
+  'vc-delay':
+    enabled: true
+    grammarType: 'none'
+    needsParsing: false
+    needsCommand: false
+    action: (ms) ->
+      @delay ms

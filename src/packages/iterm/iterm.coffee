@@ -1,3 +1,5 @@
+Settings.terminalApplications.push 'iTerm'
+Settings.editorApplications.push 'iTerm'
 Scope.register
   name: 'iterm'
   applications: ['iTerm']

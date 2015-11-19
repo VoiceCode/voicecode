@@ -1,3 +1,4 @@
+Settings.editorApplications.push 'Atom'
 Scope.register
   name: 'sublime'
   applications: ['Sublime Text']

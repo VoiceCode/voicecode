@@ -1,3 +1,4 @@
+Settings.editorApplications.push 'Xcode'
 Scope.register
   name: 'xcode'
   applications: ['Xcode']

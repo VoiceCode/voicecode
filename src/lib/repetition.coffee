@@ -1,6 +1,6 @@
 # If repetition.chain is followed by repetition.command || repetition.X
 # replace repetition.command with appropriate repetition.X.inline
-Chain.preprocess 'normalize-chain-repetition', (chain) ->
+Chain.preprocess {name: 'normalize-chain-repetition'}, (chain) ->
   _.each chain, (command, index) ->
     return true unless command?
     command = command.command

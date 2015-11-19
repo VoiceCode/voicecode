@@ -1,12 +1,12 @@
-Scope.register
+Settings.browserApplications.push 'Firefox'
+me =
   name: 'firefox'
   applications: ['Firefox']
-
-pack = Packages.register
-  name: 'firefox'
   description: 'Firefox integration'
   scope: 'firefox'
 
+Scope.register me
+pack = Packages.register me
 pack.before
   'object.forward': (input, context) ->
     @key ']', 'command'
