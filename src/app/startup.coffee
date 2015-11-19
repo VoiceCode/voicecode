@@ -28,6 +28,9 @@ global.$ = require('nodobjc')
 global.Events = require './event_emitter'
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
+global.numberToWords = require '../lib/utility/numberToWords'
+global.SelectionTransformer = require '../lib/utility/selectionTransformer'
+global.Transforms = require '../lib/utility/transforms'
 require '../lib/utility/deep_extension'
 
 process.on 'uncaughtException', (err) ->
