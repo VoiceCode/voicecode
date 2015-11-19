@@ -5,13 +5,14 @@ module.exports = new class DragonVocabularyController
     @alternate = {}
     @repeatable = []
     @spaceBefore = []
-    @loadCommandVocabulary()
-    @loadSettingsVocabulary()
+    @dynamic = []
     @generateVocabularies()
 
   loadCommandVocabulary: ->
-    for key, value of _.pluck Commands.mapping, {enabled: true}
+    for key, value of _.where Commands.mapping, {enabled: true}
       @standard.push value.spoken
+      if value.rule?
+        @dynamic.push value
       # if value.vocabulary? # I don't get this
       #   @alternate[value.vocabulary] = value.spoken
       if value.repeatable
@@ -37,12 +38,16 @@ module.exports = new class DragonVocabularyController
           @standard.push [prefix, itemName].join(' ')
 
   generateVocabularies: ->
+    @loadCommandVocabulary()
+    @loadSettingsVocabulary()
+
     contentGenerators =
       standard: @createStandardContent
       alternate: @createAlternateContent
       repeatable: @createRepeatableContent
       spaced: @createSpaceContent
       sequence: @createSequenceContent
+      dynamic: @createDynamicContent
     _.each contentGenerators, (generator, filename) => @createVocabFile filename, generator.call @
 
   createVocabFile: (filename, content) ->
@@ -95,6 +100,7 @@ module.exports = new class DragonVocabularyController
         continue if not suffix? or suffix.enabled is false
         items.push @buildWord [name.spoken, suffix.spoken].join(' ')
     items.join("\n")
+
   buildWord: (item, spoken) ->
     """
     <dict>
@@ -112,3 +118,35 @@ module.exports = new class DragonVocabularyController
       <string>#{item}</string>
     </dict>
     """
+  createDynamicContent: ->
+    natural = require 'natural'
+    all = _.map @dynamic, (command) ->
+      tokens = _.clone command.grammar.tokens
+      if command.grammar.includeName
+        tokens.unshift {text: command.spoken}
+      tokens = _.map tokens, (t) ->
+        if t.text?
+          list = [t.text]
+        else
+          if command.grammar.lists[t.list[0]]?
+            if command.grammar.lists[t.list[0]].kind is 'array'
+              list = command.grammar.lists[t.list[0]].items
+            else
+              list = _.keys command.grammar.lists[t.list[0]].items
+          else
+            list = t.list
+        list
+
+    all = _.map all, (tokens) ->
+      _.reduce tokens[1..], (result, list, index) ->
+        _.flattenDeep _.map result, (r) ->
+          _.map list, (l) -> "#{r} #{l}"
+      , tokens[0]
+
+    all = _.map all, (tokens) ->
+      _.unique _.flatten _.map tokens, (t) ->
+        _.map natural.NGrams.bigrams(t.toLowerCase()), (bigrams) -> bigrams.join ' '
+
+    _.reduce all, (result, phrases) =>
+      result += _.reduce phrases, ((res, phrase) => res += @buildWord phrase.trim().replace /\s+/, ' '), ''
+    , ''

@@ -19,7 +19,7 @@ util = require('util')
 
 global.debug = ->
   console.log chalk.white.bold.bgRed('   DEBUG   ')
-  console.log util.inspect (_.toArray arguments), {showHidden: true, depth: 2, colors: true}
+  console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
 
 application = require 'app'
 BrowserWindow = require 'browser-window'
@@ -80,15 +80,18 @@ Events.on 'applicationStart', ->
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
     UserAssetsController.getAssets '**/*.coffee', '**/user_settings.coffee' # wandering into asynchronous land
     startupFlow.wait 'user_code_loaded' # synchronous again
+
+    # DEVELOPER MODE ONLY
+    Settings.slaveMode = true
+    Settings.dontMessWithMyDragon = true
+
+
     if Settings.slaveMode
       _.each Commands.mapping, (command, name) ->
         Commands.enable name
       Commands.performCommandEdits('slaveModeEnableAllCommands')
 
 
-    # DEVELOPER MODE ONLY
-    Settings.slaveMode = true
-    Settings.dontMessWithMyDragon = true
 
     switch platform
       when "darwin"

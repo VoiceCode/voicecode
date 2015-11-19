@@ -28,6 +28,7 @@
     "fibers": "git+https://github.com/laverdet/node-fibers.git",
     "forever": "^0.15.1",
     "forever-monitor": "^1.7.0",
+    "natural": "git+https://github.com/NaturalNode/natural.git",
     "gulp-rimraf": "^0.2.0",
     "install": "^0.2.3",
     "lodash": "^3.10.1",
