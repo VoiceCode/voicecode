@@ -1,3 +1,4 @@
+Settings.browserApplications.push 'Google Chrome'
 me =
   name: 'chrome'
   applications: ['Google Chrome']

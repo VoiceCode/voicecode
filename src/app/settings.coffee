@@ -37,11 +37,11 @@ _.extend Settings,
   # determine if auto spacing should be enabled (called within the default actions context, so you can check @currentApplication or any other context)
   autoSpacingEnabled: ->
     true
-  defaultBrowser: "Safari"
-  defaultTerminal: 'Terminal'
-  terminalApplications: ['Terminal', 'iTerm']
-  editorApplications: ['Atom', 'Sublime Text', 'Xcode', 'Terminal', 'iTerm']
-  browserApplications: ["Safari", "Google Chrome", "Firefox"]
+  defaultBrowser: "Safari" # TODO: platform dependent
+  defaultTerminal: 'Terminal' # TODO: platform dependent
+  terminalApplications: []
+  editorApplications: []
+  browserApplications: []
   websites:
     "amazon": "http://www.amazon.com"
     "google docs": "http://docs.google.com"

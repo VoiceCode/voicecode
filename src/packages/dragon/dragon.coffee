@@ -6,7 +6,7 @@ pack = Packages.register
   name: 'dragon'
   description: 'Commands for controlling Dragon'
 
-Chain.preprocess 'dragon:consume-after-microphone-sleep', (chain) ->
+Chain.preprocess {name: 'dragon:consume-after-microphone-sleep'}, (chain) ->
   index = _.findIndex chain, 'command', 'dragon:microphone-sleep'
   if index isnt -1
     return _.slice chain, 0, ++index

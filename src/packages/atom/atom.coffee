@@ -2,15 +2,18 @@
 # TODO: implement synchronicity. We need to wait for success/failure call back.
 #       The chain must break if something like core.search.next.wordOccurrence fails
 #       Actions.breakChain: -> emit 'chainLinkBroken', ...
+Settings.editorApplications.push 'Atom'
+Settings.atom =
+  modalWindowDelay: 400
 
-Scope.register
+me =
   name: 'atom'
   applications: ['Atom']
-
-instance = Packages.register
-  name: 'atom'
   description: 'Atom IDE integration (atom.io)'
   scope: 'atom'
+
+Scope.register me
+instance = Packages.register me
 
 instance.before
   'line.move.up': ->
@@ -193,3 +196,13 @@ instance.commands
     spoken: 'tradam' # TODO: deprecated?
     description: 'Open Atom. (this is needed because the regular "fox Atom" always opens a new window)'
     action: -> @openApplication "Atom"
+
+Chain.preprocess me, (chain) ->
+  _.reduce chain, (newChain, link, index) ->
+    newChain.push link
+    if link.command is 'vc-literal' and
+      chain[index - 1]?.command is 'common.open.tab' and
+      chain[index + 1]?.command is 'common.enter'
+        newChain.push {command: 'vc-delay', arguments: Settings.atom.modalWindowDelay}
+    newChain
+  , []

@@ -1,3 +1,4 @@
+Settings.browserApplications.push 'Safari'
 me =
   name: 'safari'
   description: 'Safari integration'
