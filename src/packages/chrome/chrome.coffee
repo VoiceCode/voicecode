@@ -1,11 +1,11 @@
-Scope.register
+me =
   name: 'chrome'
-  applications: ['Chrome']
-
-pack = Packages.register
-  name: 'chrome'
+  applications: ['Google Chrome']
   description: 'Google Chrome integration'
   scope: 'chrome'
+
+Scope.register me
+pack = Packages.register me
 
 pack.before
   'object.refresh': ->
@@ -17,3 +17,14 @@ pack.before
   'object.backward': ->
     @key '[', 'command'
     @stop()
+
+Events.on 'getCurrentBrowserUrl', (container) ->
+  if Scope.active me
+    container.url = if not Settings.smartBrowsersUsed
+      Applescript """
+tell application "Google Chrome" to get URL of active tab of first window
+                  """, {async: false}
+    else
+      # TODO: smart browser magic
+    container.continue = false
+    container

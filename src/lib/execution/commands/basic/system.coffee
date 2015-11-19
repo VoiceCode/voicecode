@@ -33,7 +33,7 @@ Commands.createDisabled
 
   'volume.set':
     spoken: 'volume'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'adjust the system volume [0-100]'
     tags: ['system', 'recommended']
     continuous: false
@@ -43,7 +43,7 @@ Commands.createDisabled
 
   'volume.increase':
     spoken: 'volume plus'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'increase the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
     continuous: false
@@ -54,7 +54,7 @@ Commands.createDisabled
 
   'volume.decrease':
     spoken: 'volume minus'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'decrease the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
     continuous: false

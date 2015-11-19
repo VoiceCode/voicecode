@@ -1,11 +1,11 @@
-Scope.register
-  name: 'safari'
-  applications: ['Safari']
-
-pack = Packages.register
+me =
   name: 'safari'
   description: 'Safari integration'
   scope: 'safari'
+  applications: ['Safari']
+
+Scope.register me
+pack = Packages.register me
 
 pack.before
   'object.forward': ->
@@ -24,3 +24,11 @@ pack.commands
     description: 'show all the tabs open in safari'
     action: (input) ->
       @key '\\', 'command shift'
+
+Events.on 'getCurrentBrowserUrl', (container) ->
+  if Scope.active me
+    container.url = Applescript """
+tell application "Safari" to return URL of front document as string
+                                """, {async: false}
+    container.continue = false
+    container

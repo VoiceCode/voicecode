@@ -311,7 +311,10 @@ class DarwinActions extends Actions
     # find current screen
     else
       for s in @getScreenInfo().screens
-        if position.x > s.origin.x and position.x < (s.origin.x + s.size.width) and position.y > s.origin.y and position.y < (s.origin.y + s.size.height)
+        if position.x > s.origin.x and
+        position.x < (s.origin.x + s.size.width) and
+        position.y > s.origin.y and
+        position.y < (s.origin.y + s.size.height)
           screen = s
 
 
@@ -425,31 +428,23 @@ class DarwinActions extends Actions
     """, false
 
   currentApplication: ->
-    # if @_currentApplication
-    #   @_currentApplication
-    # else
-    w = $.NSWorkspace('sharedWorkspace')
-    app = w('frontmostApplication')
-    result = app('localizedName').toString()
-    @_currentApplication = result
-    result
+    if @_currentApplication
+      @_currentApplication
+    else
+      w = $.NSWorkspace('sharedWorkspace')
+      app = w('frontmostApplication')
+      result = app('localizedName').toString()
+      @_currentApplication = result
 
   _getCurrentBrowserUrl: (cb) ->
-    switch @currentApplication()
-      when "Google Chrome"
-        Applescript """
-        tell application "Google Chrome" to get URL of active tab of first window
-        """, {async: false}
-      when "Safari"
-        Applescript """
-        tell application "Safari" to return URL of front document as string
-        """, {async: false}
+    container = mutate 'getCurrentBrowserUrl', {url: null}
+    container.url
 
   currentBrowserUrl: ({reset} = {reset: false}) ->
     if reset or !@_currentBrowserUrl?
       # refresh in bg
       @_getCurrentBrowserUrl (code, url) =>
-        # console.log url: url
+        console.log url: url
         @_currentBrowserUrl = url
       @_currentBrowserUrl
     else

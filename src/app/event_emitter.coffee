@@ -96,10 +96,23 @@ class EventEmitter extends require('events').EventEmitter
         chalk.black.bgWhite(" #{event} "),  _.toArray(arguments)[1..]
     super
 
+  mutate: (event, container) ->
+    return container unless events = @_events[event]
+    container.continue = true
+    if _.isFunction events
+      events = [events]
+    _.reduce events, (container, event) ->
+      return container unless container.continue
+      container = event container
+      debug container
+      container
+    , container
+
 Events = new EventEmitter
 global.emit = _.bind Events.emit, Events
 global.error = _.bind Events.error, Events
 global.log = _.bind Events.log, Events
 global.warning = _.bind Events.warning, Events
 global.notify = _.bind Events.notify, Events
+global.mutate = _.bind Events.mutate, Events
 module.exports = Events

@@ -36,7 +36,7 @@ pack.commands
 
   'display-history':
     spoken: 'shell history'
-    grammarType: 'numberCapture'
+    grammarType: 'integerCapture'
     description: 'display the last [n](default all) shell commands executed'
     continuous: false
     inputRequired: false

@@ -82,7 +82,8 @@ class Chain
           results.push current
         else
           if previous
-            if previous.command is "vc-literal" or Commands.mapping[previous.command].grammarType is "textCapture"
+            if previous.command is "vc-literal" or
+            Commands.mapping[previous.command].grammarType is "textCapture"
               @mergeTextualCommands(previous, current)
             else
               results.push {command: "vc-literal", arguments: [current.command]}
