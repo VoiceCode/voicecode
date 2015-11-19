@@ -13,7 +13,7 @@ Commands.createDisabled
     action: ->
       @down()
   'cursor.way.up':
-    spoken: 'jeepway'
+    spoken: 'jeep way'
     description: 'Move the cursor to the top of the page'
     tags: ['cursor', 'recommended']
     action: ->

@@ -1,9 +1,13 @@
 module.exports =
   sortedCommandKeys: (kind, continuous=false) ->
     if continuous
-      _.sortBy(Commands.keys["#{kind}Continuous"], (e) -> e).reverse()
+      _.sortBy(Commands.keys["#{kind}Continuous"], (e) ->
+        Commands.get(e)?.spoken
+      ).reverse()
     else
-      _.sortBy(Commands.keys[kind], (e) -> e).reverse()
+      _.sortBy(Commands.keys[kind], (e) ->
+        Commands.get(e)?.spoken
+      ).reverse()
   allTags: ->
     result = []
     _.each(Commands.mapping, (command, key) ->
