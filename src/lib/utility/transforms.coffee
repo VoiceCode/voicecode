@@ -1,6 +1,12 @@
 Transforms =
   identity: (textArray) ->
-    textArray.join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".").replace(/\s\./, ".").replace(/\s:/, ":").replace(/\s'\s/, "'").replace(/-\s/, "-")
+    textArray.join(' ')
+    .replace(/\s\.\s/g, ".")
+    .replace(/\.\s/, ".")
+    .replace(/\s\./, ".")
+    .replace(/\s:/, ":")
+    .replace(/\s'\s/, "'")
+    .replace(/-\s/, "-")
   literal: (textArray) ->
     switch Settings.defaultLiteralTransform
       when "snake"
@@ -12,18 +18,13 @@ Transforms =
   snake: (textArray) ->
     textArray.join('_').replace(/_\._/g, ".").replace(/\._/, ".")
   camel: (textArray) ->
-    _.map(textArray, (item, index) ->
-      if index is 0
-        item.toLowerCase()
-      else
-        item.charAt(0).toUpperCase() + item.slice(1)
-    ).join('')
+    _.camelCase textArray.join ' '
   stud: (textArray) ->
     _.map(textArray, (item, index) ->
       item.charAt(0).toUpperCase() + item.slice(1)
     ).join('')
   spine: (textArray) ->
-    _s.slugify textArray.join(' ')
+    _.kebabCase textArray.join(' ')
   lowerSlam: (textArray) ->
     textArray.join('')
   upperSlam: (textArray) ->
@@ -39,15 +40,16 @@ Transforms =
       item.toUpperCase()
     ).join('_').replace(/_\._/g, ".").replace(/\._/, ".")
   upperSpine: (textArray) ->
-    _s.slugify(textArray.join(' ')).toUpperCase()
+    _.kebabCase(textArray.join(' ')).toUpperCase()
   dots: (textArray) ->
     textArray.join('.').replace(/\.\.\./g, ".").replace(/\.\./, ".")
   slashes: (textArray) ->
     textArray.join('/')
   titleSentance: (textArray) ->
-    _.map(_.compact(textArray), (item, index) ->
-      item.charAt(0).toUpperCase() + item.slice(1)
-    ).join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".")
+    # _.map(_.compact(textArray), (item, index) ->
+    #   item.charAt(0).toUpperCase() + item.slice(1)
+    # ).join(' ').replace(/\s\.\s/g, ".").replace(/\.\s/, ".")
+    _.startCase textArray.join ' '
   titleFirstSentance: (textArray) ->
     _.map(textArray, (item, index) ->
       if index is 0

@@ -19,12 +19,12 @@ pack.commands
     inputRequired: false
     requires: [
       'editor.move-to-line-number'
-      'select.way.right'
+      'cursor.way.right'
     ]
     action: (input) ->
       @do 'editor.move-to-line-number', input
       if input?
-        @do 'select.way.right'
+        @do 'cursor.way.right'
 
   'move-to-line-number+way-left':
     spoken: 'sprinkle'

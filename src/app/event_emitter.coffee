@@ -40,13 +40,12 @@ class EventEmitter extends require('events').EventEmitter
       # 'commandOverwritten'
       'commandAfterAdded'
       'commandBeforeAdded'
-      'commandNameChanged'
       'commandMisspellingsAdded'
-      'commandNameChanged'
+      'commandSpokenChanged'
       'userAssetEvent'
       'userAssetEvaluated'
       'commandValidationFailed'
-      'commandValidationError'
+      # 'commandValidationError'
     ]
   on: (event, callback) ->
     super

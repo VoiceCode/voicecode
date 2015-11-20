@@ -49,19 +49,13 @@ class Commands
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
     @spokenToCommandLookupTable = {}
-    Events.on 'commandNameChanged', (properties, name) =>
+    Events.on 'commandSpokenChanged', (command,  id) =>
       target = null
-      _.each @spokenToCommandLookupTable, (commandName, spoken) ->
-        if commandName is name
-          target = spoken
-          return false
-        return true
-      if target?
-        delete @spokenToCommandLookupTable[target]
-      @spokenToCommandLookupTable[properties.spoken] = name
+      @spokenToCommandLookupTable = _.reject @spokenToCommandLookupTable, id
+      @spokenToCommandLookupTable[command.spoken] = id
 
-    Events.on 'commandEnabled', (command, name) =>
-      @spokenToCommandLookupTable[command.spoken] = name
+    Events.on 'commandEnabled', (command, id) =>
+      @spokenToCommandLookupTable[command.spoken] = id
 
 
   initialize: () ->
@@ -81,7 +75,7 @@ class Commands
     validated = true
     switch editType
       when 'commandCreated'
-        validated = @validate command, options, 'commandNameChanged'
+        validated = @validate command, options, 'commandSpokenChanged'
         if not options.spoken?
           unless options.needsParsing is false or options.rule?
             error 'commandValidationError', command,
@@ -109,7 +103,7 @@ class Commands
       when 'commandEnabled'
         if command.enabled is true
           validated = false
-      when 'commandNameChanged'
+      when 'commandSpokenChanged'
         if _.findWhere(Commands.mapping, {spoken: options})?
           warning 'commandSpokenOverwritten', command,
           "Command #{options}`s spoken parameter overwritten by command with a same name"
@@ -279,14 +273,13 @@ class Commands
     "Failed adding aliases to '#{name}'.
     'addAliases' has been renamed to 'addMisspellings'. "
 
-  changeName: (name, newName) ->
-    @edit name, 'commandNameChanged', newName, (command) ->
+  changeSpoken: (name, newName) ->
+    @edit name, 'commandSpokenChanged', newName, (command) ->
       command.spoken = newName
       command
 
   normalizeOptions: (name, options) ->
     options.id = name
-    options.enabled ?= true
     options.grammarType ?= 'individual'
     options.kind ?= 'action'
 

@@ -86,7 +86,7 @@ _.extend Settings,
           Commands = {}
           # _.extend Commands, global.Commands <- does not work, prototypes or whatnot
           Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
-          Commands.changeName = global.Commands.changeName.bind global.Commands
+          Commands.changeSpoken = global.Commands.changeSpoken.bind global.Commands
           Commands.edit = global.Commands.edit.bind global.Commands
           Commands.create = (name, options) ->
             if _.isObject name

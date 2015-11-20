@@ -269,7 +269,7 @@ Commands.createDisabledWithDefaults {inputRequired: false},
   'format.dot-sentance':
     spoken: 'datsun'
     grammarType: 'textCapture'
-    description: 'Period, then space, then sentence case'
+    description: 'Period, then space, then Sentence case'
     tags: ['text', 'recommended']
     autoSpacing: (input) ->
       if input
