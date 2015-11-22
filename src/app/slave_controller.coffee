@@ -19,7 +19,7 @@ class SlaveController
     @connectedSlaves[slaveSocket.name] = slaveSocket
 
   createSocket: (name, host, port) ->
-    slaveSocket = new net.Socket()
+    slaveSocket = new require('net').Socket()
     slaveSocket.name = name
     slaveSocket.on 'error', (error) =>
       @onError slaveSocket, error

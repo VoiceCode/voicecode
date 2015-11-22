@@ -85,11 +85,11 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    Settings.slaveMode = true
-    Settings.dontMessWithMyDragon = true
+    # Settings.slaveMode = true
+    # Settings.dontMessWithMyDragon = true
 
 
-    if Settings.slaveMode
+    if Settings.slaveMode or true
       _.each Commands.mapping, (command, name) ->
         Commands.enable name
       Commands.performCommandEdits('slaveModeEnableAllCommands')
@@ -108,8 +108,8 @@ Events.on 'applicationStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-    # unless Settings.slaveMode
-    # Synchronizer.synchronize()
+     unless false#Settings.slaveMode
+       Synchronizer.synchronize()
 
     mainWindow = null
     # application.on 'ready', ->

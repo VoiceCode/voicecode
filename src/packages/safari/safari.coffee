@@ -1,12 +1,13 @@
-Settings.browserApplications.push 'Safari'
 me =
   name: 'safari'
   description: 'Safari integration'
   scope: 'safari'
-  applications: ['Safari']
+  applications:
+    'com.apple.Safari': 'Safari'
 
 Scope.register me
 pack = Packages.register me
+Settings.browserApplications.push me.applications
 
 pack.before
   'object.forward': ->

@@ -87,9 +87,8 @@ class DarwinController
     global.slaveController = new SlaveController()
     slaveController.connect()
 
-    @listenOnSocket "/tmp/voicecode_.sock", @dragonHandler
-
-    @listenOnSocket "/tmp/voicecode_2.sock", @growlHandler
+    @listenOnSocket "/tmp/_voicecode.sock", @dragonHandler
+    @listenOnSocket "/tmp/_voicecode2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>

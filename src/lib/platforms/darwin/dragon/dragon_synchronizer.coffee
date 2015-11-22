@@ -96,27 +96,6 @@ class DragonSynchronizer
   whoami: ->
     Execute("whoami")?.trim()
 
-  getBundleId: (name) ->
-    if @bundles[name]
-      @bundles[name]
-    else
-      bundle = Applescript("""
-      try
-        return id of app \"#{name}\"
-      on error errMsg number errNum
-        return ""
-      end try
-      """)?.trim()
-      if bundle? and bundle.replace(/[^\w]/g, '').length
-        @bundles[name] = bundle
-        @applicationNames[bundle] = name
-        bundle
-      else
-        @bundles[name] = null # caching empty so we don't retry
-        @applicationNames[bundle] = name
-        # console.log "could not get bundle identifier for: #{name}"
-        null
-
   getApplicationVersion: (bundle) ->
     return 0 if bundle is null # handling global
     name = @applicationNames[bundle]
@@ -284,10 +263,8 @@ class DragonSynchronizer
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         scopes = command.getApplications()
-        for scope in scopes
-          bundle = 'global'
-          bundle = @getBundleId(scope) if scope isnt 'global'
-          continue if bundle is null
+        _.all scopes, (appName, bundle) ->
+          return unless Actions.checkBundleExistence(bundle)
           needsCreating.push
             bundle: bundle
             triggerPhrase: dragonName
@@ -301,15 +278,14 @@ class DragonSynchronizer
       error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
       return false
 
-    _.each @lists, (lists, commandName) =>
-      _.each lists, (occurrences, variableName) =>
-        _.each occurrences, (sublists, occurrence) =>
-          _.each sublists, (listValues, sub) =>
+    _.all @lists, (lists, commandName) =>
+      _.all lists, (occurrences, variableName) =>
+        _.all occurrences, (sublists, occurrence) =>
+          _.all sublists, (listValues, sub) =>
             scopes = @commands[commandName].getApplications()
-            for scope in scopes
-              bundle = @getBundleId(scope) if scope isnt 'global'
-              continue if bundle is null and scope isnt "global"
-              bundle = '#' if scope is 'global'
+            _.all scopes, (appName, bundle) ->
+              return unless Actions.checkBundleExistence(bundle)
+              bundle = '#' if bundle is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
                 @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle
 

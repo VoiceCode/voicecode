@@ -8,7 +8,8 @@ Settings.atom =
 
 me =
   name: 'atom'
-  applications: ['Atom']
+  applications:
+    'com.github.atom': 'Atom'
   description: 'Atom IDE integration (atom.io)'
   scope: 'atom'
 

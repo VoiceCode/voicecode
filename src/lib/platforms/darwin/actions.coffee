@@ -973,4 +973,16 @@ class DarwinActions extends Actions
   notify: (text) ->
     Notify(text)
 
+  checkBundleExistence: do ->
+    cache = {global: true}
+    (bundleId) ->
+      return cache[bundleId] if cache[bundleId]?
+      cache[bundleId] = eval Applescript """
+      try
+        tell application "Finder" to get application file id \"#{bundleId}\"
+        return true
+      on error
+        return false
+      end try
+  """
 module.exports = new DarwinActions

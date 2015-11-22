@@ -1,10 +1,11 @@
-Settings.browserApplications.push 'Google Chrome'
 me =
   name: 'chrome'
-  applications: ['Google Chrome']
+  applications:
+    'com.google.Chrome': 'Google Chrome'
   description: 'Google Chrome integration'
   scope: 'chrome'
 
+Settings.browserApplications.push me.applications
 Scope.register me
 pack = Packages.register me
 
