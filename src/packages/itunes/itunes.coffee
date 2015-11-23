@@ -1,12 +1,8 @@
-me =
+pack = Packages.register
   name: 'itunes'
-  applications:
-    'com.apple.iTunes': 'iTunes'
+  applications: ['com.apple.iTunes']
   description: 'Basic iTunes music control'
   scope: 'itunes'
-
-Scope.register me
-pack = Packages.register me
 
 pack.commands
   scope: 'global'

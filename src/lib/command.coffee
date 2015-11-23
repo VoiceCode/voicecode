@@ -72,7 +72,7 @@ class Command
     else if @scope?
       Scope.get(@scope)?.applications
     if _.isEmpty result
-      ['global': 'Global']
+      'global'
     else
       result
 

@@ -8,7 +8,7 @@ module.exports = class Actions
   stop: () ->
     @extensionsStopped = true
   packageSettings: (packageId) ->
-    Packages.get(packageId)?.settings
+    Packages.get(packageId)?.settings()
   setUndoByDeleting: (amount) ->
     Commands.currentUndoByDeletingCount = amount
   notUndoable: ->
@@ -63,6 +63,9 @@ module.exports = class Actions
   setCurrentApplication: (application) ->
     @_currentApplication = application
     emit 'currentApplicationChanged', application
+
+  setCurrentApplicationName: (name) ->
+    @_currentApplicationName = name
 
   context: ->
     for item in Settings.contextChain

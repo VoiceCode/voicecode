@@ -62,14 +62,18 @@ class DarwinController
     # @app 'finishLaunching'
 
   applicationChanged: (self, _cmd, notification) ->
-    current = notification('object')('frontmostApplication')('localizedName').toString()
-    Actions.setCurrentApplication current
+    application = notification('object')('frontmostApplication')
+    bundle = application('bundleIdentifier').toString()
+    name = application('localizedName').toString()
+
+    Actions.setCurrentApplication bundle
+    Actions.setCurrentApplicationName name
 
     if Commands.monitoringMouseToCancelSpacing
       Commands.lastCommandOfPreviousPhrase = null
 
-    if current in Settings.dragonIncompatibleApplications
-      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{current}"
+    if name in Settings.dragonIncompatibleApplications
+      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{name}: #{bundle}"
       @listeningOnMainSocket = false
     else unless @listeningOnMainSocket
       setTimeout =>

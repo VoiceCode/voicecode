@@ -1,9 +1,6 @@
-Scope.register
-  name: 'skype'
-  applications: ['Skype']
-
 pack = Packages.register
   name: 'skype'
+  applications: ['com.skype.skype%']
   description: 'Skype integration'
   scope: 'skype'
 

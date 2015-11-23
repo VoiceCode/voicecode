@@ -1,16 +1,13 @@
-me =
+pack = Packages.register
   name: 'iterm'
   description: 'iTerm integration'
   scope: 'iterm'
   tags: ['iterm']
-  applications:
-    'com.googlecode.iterm2': 'iTerm2'
+  applications: ['com.googlecode.iterm2']
 
-Settings.terminalApplications.push me.applications
-Settings.editorApplications.push me.applications
+Settings.extend "terminalApplications", pack.applications()
+Settings.extend "editorApplications", pack.applications()
 
-Scope.register me
-pack = Packages.register me
 pack.before
   'mouse-combo:insert-hovered': ->
     @rightClick()

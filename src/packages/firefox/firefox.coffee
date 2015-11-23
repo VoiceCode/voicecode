@@ -1,12 +1,11 @@
-Settings.browserApplications.push 'Firefox'
-me =
+pack = Packages.register
   name: 'firefox'
-  applications: ['Firefox']
+  applications: ['org.mozilla.firefox']
   description: 'Firefox integration'
   scope: 'firefox'
 
-Scope.register me
-pack = Packages.register me
+Settings.extend 'browserApplications', pack.applications()
+
 pack.before
   'object.forward': (input, context) ->
     @key ']', 'command'

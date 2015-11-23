@@ -1,12 +1,13 @@
-Settings.editorApplications.push 'Atom'
-Scope.register
-  name: 'sublime'
-  applications: ['Sublime Text']
-
 pack = Packages.register
   name: 'sublime'
   description: 'Sublime Text integration'
   scope: 'sublime'
+  applications: [
+    'com.sublimetext.3'
+    'com.sublimetext.2'
+  ]
+
+Settings.extend "editorApplications", pack.applications()
 
 pack.before
  'editor:expand-selection-to-scope': ->

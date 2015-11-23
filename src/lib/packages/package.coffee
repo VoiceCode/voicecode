@@ -10,6 +10,7 @@ class Package
     {@name, @description, @scope} = @options
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
+    @registerScope()
 
   commands: () ->
     if arguments[1]?
@@ -86,6 +87,11 @@ class Package
       packageId: @name
       applications: @applications()
       when: @when()
+
+  registerScope: ->
+    if @scope?
+      if @options.applications? or @options.when?
+        Scope.register @options
 
   applications: ->
     if @scope?

@@ -33,3 +33,4 @@ test 'reset', (test) ->
   Packages.resetAll()
   test.equal _.size(Packages.packages), 0
   cleanup test
+  

@@ -1,13 +1,10 @@
-me =
+pack = Packages.register
   name: 'safari'
   description: 'Safari integration'
   scope: 'safari'
-  applications:
-    'com.apple.Safari': 'Safari'
+  applications: ['com.apple.Safari']
 
-Scope.register me
-pack = Packages.register me
-Settings.browserApplications.push me.applications
+Settings.extend 'browserApplications', pack.applications()
 
 pack.before
   'object.forward': ->
@@ -28,9 +25,9 @@ pack.commands
       @key '\\', 'command shift'
 
 Events.on 'getCurrentBrowserUrl', (container) ->
-  if Scope.active me
+  if Scope.active 'safari'
     container.url = Applescript """
-tell application "Safari" to return URL of front document as string
-                                """, {async: false}
+      tell application "Safari" to return URL of front document as string
+    """, {async: false}
     container.continue = false
     container

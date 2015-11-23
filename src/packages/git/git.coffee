@@ -1,7 +1,6 @@
 pack = Packages.register
   name: 'git'
   description: 'Basic commands for git'
-  tags: ['git']
 
 pack.settings
   commands:

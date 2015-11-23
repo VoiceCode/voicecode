@@ -1,15 +1,12 @@
-me =
+pack = Packages.register
   name: 'xcode'
-  applications:
-    'com.apple.dt.Xcode': 'Xcode'
+  applications: ['com.apple.dt.Xcode']
   description: 'Xcode IDE integration'
   scope: 'xcode'
 
-Settings.terminalApplications.push me.applications
-Settings.editorApplications.push me.applications
+Settings.terminalApplications.push pack.applications
+Settings.editorApplications.push pack.applications
 
-Scope.register me
-pack = Packages.register me
 pack.before
   'editor:move-to-line-number': (input) ->
     @key 'l', 'command'

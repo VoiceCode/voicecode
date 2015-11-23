@@ -1,13 +1,9 @@
-Scope.register
-  name: 'gmail'
-  applications: Settings.browserApplications
-  when: -> @inBrowser() and @urlContains 'mail.google.com'
-
 pack = Packages.register
   name: 'gmail'
   description: 'Commands for gmail'
   scope: 'gmail'
-  tags: ['gmail']
+  applications: Settings.browserApplications
+  when: -> @inBrowser() and @urlContains 'mail.google.com'
 
 pack.commands
   'go-to-inbox':

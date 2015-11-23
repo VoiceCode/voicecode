@@ -1,12 +1,9 @@
-Scope.register
-  name: 'command-line'
-  applications: Settings.terminalApplications
-
 pack = Packages.register
   name: 'command-line'
   description: 'General commands for shell / console usage'
   scope: 'command-line'
-  tags: ['command-line']
+  name: 'command-line'
+  applications: Settings.terminalApplications
 
 pack.after
   'git:status': ->

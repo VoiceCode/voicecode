@@ -7,6 +7,7 @@ class Scope
   # applications: list of applications where this scope is valid
   # when: a function that returns true or false whether or not this scope is valid
   constructor: ({@name, @applications, @when}) ->
+    debug @
 
   @register: (options) ->
     if @instances[options.name]?
@@ -20,10 +21,13 @@ class Scope
     @instances = {}
 
   @active: (options) ->
+    if typeof options is 'string'
+      @get(options)?.active()
     if options.scope?
       @get(options.scope)?.active()
     else
-      @checkApplications(options.applications) and @checkWhen(options.when)
+      @checkApplications(options.applications) and
+      @checkWhen(options.when)
 
   active: ->
     Scope.active({@applications, @when})
@@ -33,6 +37,7 @@ class Scope
       Actions.currentApplication() in applications
     else
       true
+
   @checkWhen: (_when) ->
     if _when?
       _when.call(Actions)

@@ -1,10 +1,8 @@
-Scope.register
-  name: 'dragon'
-  applications: Settings.dragonApplicationName
-
 pack = Packages.register
   name: 'dragon'
   description: 'Commands for controlling Dragon'
+  applications: ['com.dragon.dictate']
+  scope: 'dragon'
 
 Chain.preprocess {name: 'dragon:consume-after-microphone-sleep'}, (chain) ->
   index = _.findIndex chain, 'command', 'dragon:microphone-sleep'
@@ -38,8 +36,11 @@ pack.ready ->
       tags: ["ignored"]
       needsCommand: false
       continuous: false
+      scope: 'global'
 
 pack.commands
+  scope: 'global'
+,
   "microphone-sleep":
     spoken: 'snore'
     grammarType: 'textCapture'
@@ -68,6 +69,7 @@ pack.commands
       """, false
 
   "train-vocabulary-from-selection":
+    spoken: 'drag train'
     description: "Train Dragon vocabulary from selection"
     tags: ["dragon", "recommended"]
     continuous: false

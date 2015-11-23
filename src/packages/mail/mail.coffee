@@ -1,9 +1,6 @@
-Scope.register
-  name: 'mail'
-  applications: ['Mail']
-
 pack = Packages.register
   name: 'mail'
+  applications: ['com.apple.mail']
   description: 'Apple Mail integration'
   scope: 'mail'
 

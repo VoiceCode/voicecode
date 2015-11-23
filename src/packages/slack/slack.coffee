@@ -1,9 +1,6 @@
-Scope.register
-  name: 'slack'
-  applications: ['Slack']
-
 pack = Packages.register
   name: 'slack'
+  applications: ['com.tinyspeck.slackmacgap']
   description: 'Slack integration'
   scope: 'slack'
 

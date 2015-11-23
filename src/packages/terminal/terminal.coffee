@@ -1,12 +1,8 @@
-me =
+pack = Packages.register
   name: 'terminal'
-  applications:
-    'com.apple.Terminal': 'Terminal'
+  applications: ['com.apple.Terminal']
   description: 'Terminal integration'
   scope: 'terminal'
 
-Settings.terminalApplications.push me.applications
-Settings.editorApplications.push me.applications
-
-Scope.register me
-pack = Packages.register me
+Settings.extend "terminalApplications", pack.applications()
+Settings.extend "editorApplications", pack.applications()

@@ -262,8 +262,8 @@ class DragonSynchronizer
         continue if id is 'dragon.catch-all' and hasChain is no
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
-        scopes = command.getApplications()
-        _.all scopes, (appName, bundle) ->
+        bundleIds = command.getApplications()
+        _.all bundleIds, (bundle) ->
           return unless Actions.checkBundleExistence(bundle)
           needsCreating.push
             bundle: bundle
@@ -282,8 +282,8 @@ class DragonSynchronizer
       _.all lists, (occurrences, variableName) =>
         _.all occurrences, (sublists, occurrence) =>
           _.all sublists, (listValues, sub) =>
-            scopes = @commands[commandName].getApplications()
-            _.all scopes, (appName, bundle) ->
+            bundleIds = @commands[commandName].getApplications()
+            _.all bundleIds, (bundle) ->
               return unless Actions.checkBundleExistence(bundle)
               bundle = '#' if bundle is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
