@@ -313,7 +313,6 @@ Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-    @stop()
 
 Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
   if @currentApplication() in Settings.smartBrowsers
@@ -330,7 +329,6 @@ Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-    @stop()
 
 Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
   console.log @currentApplication()
@@ -348,7 +346,6 @@ Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
           namespace: 'SelectionController'
           method: 'extend'
           type: 'invokeBound'
-    @stop()
 
 Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
   if @currentApplication() in Settings.smartBrowsers
@@ -365,7 +362,6 @@ Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
           namespace: 'SelectionController'
           method: 'extend'
           type: 'invokeBound'
-    @stop()
 
 Commands.create "webneck",
   description: ""

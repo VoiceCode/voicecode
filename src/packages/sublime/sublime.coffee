@@ -10,11 +10,10 @@ pack = Packages.register
 Settings.extend "editorApplications", pack.applications()
 
 pack.before
- 'editor:expand-selection-to-scope': ->
+  'editor:expand-selection-to-scope': ->
     @key 's', 'control command option'
-    @stop()
 
- 'editor:select-line-number-range': (input) ->
+  'editor:select-line-number-range': (input) ->
     if input?
       number = input.toString()
       length = Math.floor(number.length / 2)
@@ -28,87 +27,77 @@ pack.before
         first = temp
 
     @sublime().selectRange(first, last).execute()
-    @stop()
 
- 'select.block': ->
+  'select.block': ->
     @key 'l', ['command']
-    @stop()
 
- 'line.move.down': ->
+  'line.move.down': ->
     @key 'down', 'control command'
-    @stop()
 
- 'line.move.up': ->
+  'line.move.up': ->
     @key 'up', 'control command'
-    @stop()
 
- 'editor:move-to-line-number': (input) ->
+  'editor:move-to-line-number': (input) ->
     if input
       @sublime().goToLine(input).execute()
     else
       @key 'g', 'control'
-    @stop()
 
- 'show-shortcut-markers': ->
+  'move-to-line-number+way-right': true
+  'move-to-line-number+way-left': true
+  'insert-under-line-number': true
+  'move-to-line-number+select-line': true
+
+  'show-shortcut-markers': ->
     @key ';', 'command'
-    @stop()
 
- 'duplicate-selected': ->
+  'duplicate-selected': ->
     @key 'd', 'command shift'
-    @stop()
 
- 'delete.all.right': ->
+  'delete.all.right': ->
     @key 'k', 'control'
-    @stop()
 
- 'editor:toggle-comments': ({first, last} = {}) ->
+  'editor:toggle-comments': ({first, last} = {}) ->
     if last?
       @sublime().selectRange(first, last).execute()
     else if first?
       @sublime().goToLine(first).execute()
     @key '/', 'command'
-    @stop()
 
- 'delete.all.line': ({first, last} = {}) ->
+  'delete.all.line': ({first, last} = {}) ->
     if last?
       @sublime().selectRange(first, last).execute()
     else if first?
       @sublime().goToLine(first).execute()
     @key 'k', 'control shift'
-    @stop()
 
- 'object.forward': ->
+  'object.forward': ->
     @key '-', 'control shift'
-    @stop()
 
- 'select.word.next': (input) ->
+  'select.word.next': (input) ->
     s = new Contexts.Sublime() #TODO: <-
     @repeat input or 1, ->
       s.selectNextWord()
     s.execute()
-    @stop()
 
- 'select.word.previous': (input) ->
+  'select.word.previous': (input) ->
     s = new Contexts.Sublime() #TODO: <-
     @repeat input or 1, ->
       s.selectPreviousWord()
     s.execute()
-    @stop()
 
- 'editor:extend-selection-to-line-number': (input) ->
+  'editor:extend-selection-to-line-number': (input) ->
     @sublime()
     .setMark()
     .goToLine(input)
     .selectToMark()
     .clearMark()
     .execute()
-    @stop()
 
- 'object.backward': ->
+  'object.backward': ->
     @key '-', 'control'
-    @stop()
 
-'mouse-combo:insert-hovered': ->
+ 'mouse-combo:insert-hovered': ->
     @doubleClick()
     @delay 200
     @copy()
@@ -118,4 +107,3 @@ pack.before
       .jumpBack()
       .execute()
     @paste()
-    @stop()

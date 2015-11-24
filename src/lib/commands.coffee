@@ -242,10 +242,13 @@ class Commands
       Commands.before '#{commandName}', 'my-#{commandName}-before', (input, context) -> doMagic()"
       return
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) =>
-      command.before ?= {}
-      command.before["#{info.packageId}"] = {info, action}
+      if action is true
+        # we are 'instantiating' an abstract command
+      else
+        command.before ?= {}
+        command.before["#{info.packageId}"] = {info, action}
       if command.scope is 'abstract'
-        @pushApplications(command, info.applications)
+        @pushScope(command, info)
       command
 
   after: (commandName, info, action) ->
@@ -256,10 +259,13 @@ class Commands
       Commands.after '#{commandName}', 'my-#{commandName}-after', (input, context) -> doMagic()"
       return
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
-      command.after ?= {}
-      command.after["#{info.packageId}"] = {info, action}
+      if action is true
+        # we are 'instantiating' an abstract command
+      else
+        command.after ?= {}
+        command.after["#{info.packageId}"] = {info, action}
       if command.scope is 'abstract'
-        @pushApplications(command, info.applications)
+        @pushScope(command, info)
       command
 
   addMisspellings: (name, edition) ->
@@ -309,8 +315,14 @@ class Commands
       #   console.log e
     options
 
-  pushApplications: (command, applications) ->
-    unless _.isEmpty applications
-      command.applications = (command.applications or []).concat applications
+  pushScope: (command, info) ->
+    # TODO commands need multiple scopes
+    # implies we need a different architecture
+    unless _.isEmpty info.applications
+      command.applications = (command.applications or []).concat info.applications
+    if info.when?
+      # TODO this needs to handle multiple 'when' for different scenarios
+      command.when = info.when
+
 
 module.exports = new Commands

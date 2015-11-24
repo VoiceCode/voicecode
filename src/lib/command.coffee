@@ -38,9 +38,9 @@ class Command
           extensions.push ->
             e.call(@, input, context)
       ->
-        @extensionsStopped = false
+        @extensionsContinue = true
         for callback in extensions.reverse()
-          unless @extensionsStopped
+          if @extensionsContinue
             callback.call(@, input, context)
     else
       funk

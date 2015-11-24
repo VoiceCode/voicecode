@@ -9,13 +9,10 @@ Settings.extend 'browserApplications', pack.applications()
 pack.before
   'object.refresh': ->
     @key 'R', 'command'
-    @stop()
   'object.forward': ->
     @key ']', 'command'
-    @stop()
   'object.backward': ->
     @key '[', 'command'
-    @stop()
 
 Events.on 'getCurrentBrowserUrl', (container) ->
   if Scope.active 'chrome'

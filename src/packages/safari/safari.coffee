@@ -9,13 +9,10 @@ Settings.extend 'browserApplications', pack.applications()
 pack.before
   'object.forward': ->
     @key ']', 'command'
-    @stop()
   'object.backward': ->
     @key '[', 'command'
-    @stop()
   'object.refresh': ->
     @key 'R', 'command'
-    @stop()
 
 pack.commands
   'show-tabs':

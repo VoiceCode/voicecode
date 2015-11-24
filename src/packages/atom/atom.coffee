@@ -17,37 +17,34 @@ pack.settings
 pack.before
   'line.move.up': ->
     @key 'up', 'control command'
-    @stop()
 
   'line.move.down': ->
     @key 'down', 'control command'
-    @stop()
 
   'select.word.next': (input) ->
     @runAtomCommand 'selectNextWord', input or 1
-    @stop()
 
   'select.word.previous': (input) ->
     @runAtomCommand 'selectPreviousWord', input or 1
-    @stop()
 
   'editor:move-to-line-number': (input) ->
     if input
       @runAtomCommand 'goToLine', input
     else
       @key 'g', 'control'
-    @stop()
 
-  # thank you very much, I tried it while rewriting this.../facepalm...ha ha
+  'move-to-line-number+way-right': true
+  'move-to-line-number+way-left': true
+  'insert-under-line-number': true
+  'move-to-line-number+select-line': true
+
   'object.refresh': ->
     @key 'L', 'control option command'
-    @stop()
 
   'duplicate-selected': ({first, last} = {}) ->
     # TODO: steal implementation from package
     # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
     @key 'D', 'shift command'
-    @stop()
 
   'delete.all.line': ({first, last} = {}) ->
     if last?
@@ -58,7 +55,6 @@ pack.before
       @runAtomCommand 'goToLine', first
     @delay 40
     @key 'k', 'control shift'
-    @stop()
 
   'search.previous.wordOccurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
@@ -67,7 +63,6 @@ pack.before
       @runAtomCommand "selectPreviousOccurrence",
         value: term
         distance: input.distance or 1
-      @stop()
 
   'search.next.wordOccurrence': (input) ->
     term = input?.value or @storage.nextTrapSearchTerm
@@ -76,7 +71,6 @@ pack.before
       @runAtomCommand "selectNextOccurrence",
         value: term
         distance: input.distance or 1
-      @stop()
 
   'search.extendSelection.next.wordOccurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
@@ -85,7 +79,6 @@ pack.before
       @runAtomCommand "selectToNextOccurrence",
         value: term
         distance: input.distance or 1
-      @stop()
 
   'search.extendSelection.previous.wordOccurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
@@ -94,19 +87,16 @@ pack.before
       @runAtomCommand "selectToPreviousOccurrence",
         value: term
         distance: input.distance or 1
-      @stop()
 
   'search.previous.selectionOccurrence': ->
     @runAtomCommand "selectPreviousOccurrence",
       value: null
       distance: 1
-    @stop()
 
   'search.next.selectionOccurrence': ->
     @runAtomCommand "selectNextOccurrence",
       value: null
       distance: 1
-    @stop()
 
   'search.previous.wordBySurroundingCharacters': (input) ->
     term = input?.value or @storage.previousTrapSearchTerm
@@ -116,7 +106,6 @@ pack.before
         expression: term
         distance: input.distance or 1
         direction: -1
-      @stop()
 
   'search.next.wordBySurroundingCharacters': (input) ->
     term = input?.value or @storage.previousTrapSearchTerm
@@ -126,11 +115,9 @@ pack.before
         expression: term
         distance: input.distance or 1
         direction: 1
-      @stop()
 
   'editor:expand-selection-to-scope': ->
     @runAtomCommand "trigger", "expand-selection:expand"
-    @stop()
 
   'editor:toggle-comments': ({first, last} = {}) ->
     if last?
@@ -141,16 +128,13 @@ pack.before
       @runAtomCommand 'goToLine', first
     @delay 50
     @key '/', 'command'
-    @stop()
 
   'editor:extend-selection-to-line-number': (input) ->
     @runAtomCommand 'extendSelectionToLine', input
-    @stop()
 
   'editor:insert-from-line-number': (input) ->
     if input?
       @runAtomCommand 'insertContentFromLine', input
-      @stop()
 
   'editor:select-line-number-range': (input) ->
     if input?
@@ -167,7 +151,6 @@ pack.before
       @runAtomCommand 'selectLineRange',
         from: first
         to: last
-      @stop()
 
 pack.commands
   'connect': # TODO: deprecated?

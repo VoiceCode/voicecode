@@ -13,7 +13,6 @@ pack.before
     @rightClick()
     @rightClick()
     @paste()
-    @stop()
 
 pack.commands
   'change-to-hovered-directory':

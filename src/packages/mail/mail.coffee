@@ -7,7 +7,5 @@ pack = Packages.register
 pack.before
   'object.next': ->
     @key 'down', 'command'
-    @stop()
   'object.previous': ->
     @key 'up', 'command'
-    @stop()

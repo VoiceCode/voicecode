@@ -4,8 +4,8 @@ pack = Packages.register
   description: 'Xcode IDE integration'
   createScope: true
 
-Settings.terminalApplications.push pack.applications
-Settings.editorApplications.push pack.applications
+Settings.extend 'terminalApplications', pack.applications()
+Settings.extend 'editorApplications', pack.applications()
 
 pack.before
   'editor:move-to-line-number': (input) ->
@@ -15,7 +15,5 @@ pack.before
       @string input
       @delay 100
       @enter()
-    @stop()
   'line.move.up': ->
     @key '[', 'command option'
-    @stop()

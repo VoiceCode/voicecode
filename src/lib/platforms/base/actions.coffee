@@ -7,6 +7,8 @@ module.exports = class Actions
     @storage = {}
   stop: () ->
     @extensionsStopped = true
+  continue: () ->
+    @extensionsContinue = true
   packageSettings: (packageId) ->
     Packages.get(packageId)?.settings()
   setUndoByDeleting: (amount) ->
