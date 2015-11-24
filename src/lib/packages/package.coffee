@@ -89,7 +89,7 @@ class Package
       when: @when()
 
   registerScope: ->
-    if @scope?
+    if @options.createScope is true
       if @options.applications? or @options.when?
         Scope.register @options
 

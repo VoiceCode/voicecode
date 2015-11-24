@@ -1,7 +1,7 @@
 pack = Packages.register
   name: 'iterm'
   description: 'iTerm integration'
-  scope: 'iterm'
+  createScope: true
   tags: ['iterm']
   applications: ['com.googlecode.iterm2']
 

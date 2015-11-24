@@ -2,7 +2,7 @@ pack = Packages.register
   name: 'chrome'
   applications: ['com.google.Chrome']
   description: 'Google Chrome integration'
-  scope: 'chrome'
+  createScope: true
 
 Settings.extend 'browserApplications', pack.applications()
 

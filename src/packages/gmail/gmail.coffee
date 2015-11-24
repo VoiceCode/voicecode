@@ -1,7 +1,7 @@
 pack = Packages.register
   name: 'gmail'
   description: 'Commands for gmail'
-  scope: 'gmail'
+  createScope: true
   applications: Settings.browserApplications
   when: -> @inBrowser() and @urlContains 'mail.google.com'
 

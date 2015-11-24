@@ -2,7 +2,7 @@ pack = Packages.register
   name: 'firefox'
   applications: ['org.mozilla.firefox']
   description: 'Firefox integration'
-  scope: 'firefox'
+  createScope: true
 
 Settings.extend 'browserApplications', pack.applications()
 

@@ -7,7 +7,6 @@ class Scope
   # applications: list of applications where this scope is valid
   # when: a function that returns true or false whether or not this scope is valid
   constructor: ({@name, @applications, @when}) ->
-    debug @
 
   @register: (options) ->
     if @instances[options.name]?

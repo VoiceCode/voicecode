@@ -2,7 +2,7 @@ pack = Packages.register
   name: 'mail'
   applications: ['com.apple.mail']
   description: 'Apple Mail integration'
-  scope: 'mail'
+  createScope: true
 
 pack.before
   'object.next': ->

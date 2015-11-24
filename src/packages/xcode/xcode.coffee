@@ -2,7 +2,7 @@ pack = Packages.register
   name: 'xcode'
   applications: ['com.apple.dt.Xcode']
   description: 'Xcode IDE integration'
-  scope: 'xcode'
+  createScope: true
 
 Settings.terminalApplications.push pack.applications
 Settings.editorApplications.push pack.applications

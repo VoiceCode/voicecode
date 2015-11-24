@@ -1,8 +1,7 @@
 pack = Packages.register
   name: 'command-line'
   description: 'General commands for shell / console usage'
-  scope: 'command-line'
-  name: 'command-line'
+  createScope: true
   applications: Settings.terminalApplications
 
 pack.after

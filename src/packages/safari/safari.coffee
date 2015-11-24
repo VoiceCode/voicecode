@@ -1,7 +1,7 @@
 pack = Packages.register
   name: 'safari'
   description: 'Safari integration'
-  scope: 'safari'
+  createScope: true
   applications: ['com.apple.Safari']
 
 Settings.extend 'browserApplications', pack.applications()

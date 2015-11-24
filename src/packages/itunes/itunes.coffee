@@ -2,7 +2,7 @@ pack = Packages.register
   name: 'itunes'
   applications: ['com.apple.iTunes']
   description: 'Basic iTunes music control'
-  scope: 'itunes'
+  createScope: true
 
 pack.commands
   scope: 'global'

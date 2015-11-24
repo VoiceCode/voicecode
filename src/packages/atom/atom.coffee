@@ -7,7 +7,7 @@ pack = Packages.register
   name: 'atom'
   applications: ['com.github.atom']
   description: 'Atom IDE integration (atom.io)'
-  scope: 'atom'
+  createScope: true
 
 Settings.extend "editorApplications", pack.applications()
 
