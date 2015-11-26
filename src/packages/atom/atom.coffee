@@ -183,7 +183,7 @@ pack.commands
 Chain.preprocess pack.options, (chain) ->
   _.reduce chain, (newChain, link, index) ->
     newChain.push link
-    if link.command is 'vc-literal' and
+    if link.command is 'core:literal' and
       chain[index - 1]?.command is 'common.open.tab' and
       chain[index + 1]?.command is 'common.enter'
         newChain.push {command: 'vc-delay', arguments: @packageSettings('atom').modalWindowDelay}

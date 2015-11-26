@@ -117,7 +117,6 @@ pack.commands
     tags: ['clipboard', 'snippet']
     grammarType: 'textCapture'
     continuous: false
-    inputRequired: false
     action: (input) ->
       position = @getMousePosition()
       flattened = "x: #{position.x}, y: #{position.y}"

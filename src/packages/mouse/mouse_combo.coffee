@@ -18,7 +18,6 @@ pack.commands
     description: 'mouse double click, then copy'
     tags: ['mouse', 'combo', 'recommended', 'clipboard']
     mouseLatency: true
-    inputRequired: false
     action: (input, context) ->
       @do 'mouse:double-click', input, context
       @do 'clipboard:copy', input
@@ -27,7 +26,6 @@ pack.commands
     grammarType: 'oneArgument'
     description: 'mouse double click, then paste'
     tags: ['mouse', 'combo', 'clipboard']
-    inputRequired: false
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:double-click', input, context
@@ -46,7 +44,6 @@ pack.commands
     grammarType: 'oneArgument'
     description: 'select entire line, then copy'
     tags: ['selection', 'combo', 'clipboard']
-    inputRequired: false
     action: (input) ->
       @do 'select.line.text'
       @do 'clipboard:copy', input
@@ -55,7 +52,6 @@ pack.commands
     grammarType: 'oneArgument'
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
-    inputRequired: false
     action: (input) ->
       @do 'select.line.text'
       @do 'clipboard:paste', input
@@ -65,7 +61,6 @@ pack.commands
     description: 'select entire line under mouse, then copy'
     tags: ['selection', 'mouse', 'combo', 'clipboard']
     mouseLatency: true
-    inputRequired: false
     action: (input, context) ->
       @do 'selectLineUnderMouse', input, context
       @do 'clipboard:copy', input
@@ -75,7 +70,6 @@ pack.commands
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
     mouseLatency: true
-    inputRequired: false
     action: (input, context) ->
       @do 'selectLineUnderMouse', input, context
       @do 'clipboard:paste', input

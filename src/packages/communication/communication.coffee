@@ -30,7 +30,6 @@ pack.commands
     spoken: 'please facetime'
     description: 'place a facetime call to the given person (uses Settings.phoneNumbers)'
     tags: ['messaging', 'phone']
-    inputRequired: false
     action: (input) ->
       if input
         number = @fuzzyMatch Settings.phoneNumbers, input.join(' ')

@@ -8,7 +8,6 @@ pack.commands
     spoken: 'tennis'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in NSUpperCamelCase (automatically inserts the "NS" part)'
-    inputRequired: false
     tags: ['format']
     action: (input) ->
       if input
@@ -19,7 +18,6 @@ pack.commands
     spoken: 'youey'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in UIUpperCamelCase - automatically inserts the "UI" part. (pronounced like U-turn)'
-    inputRequired: false
     tags: ['format']
     action: (input) ->
       if input
@@ -30,7 +28,6 @@ pack.commands
     spoken: 'craggle'
     grammarType: 'textCapture'
     description: 'formats spoken arguments in CGUpperCamelCase (automatically inserts the "CG" part)'
-    inputRequired: false
     tags: ['format']
     action: (input) ->
       if input

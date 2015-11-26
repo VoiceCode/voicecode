@@ -9,14 +9,12 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'go to line number.'
     tags: ['cursor']
-    inputRequired: false
 
   'move-to-line-number+way-right':
     spoken: 'sprinkler'
     grammarType: 'integerCapture'
     description: 'go to line number then position cursor at end of line.'
     tags: ['cursor']
-    inputRequired: false
     requires: [
       'editor.move-to-line-number'
       'cursor.way.right'
@@ -31,7 +29,6 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'Go to line number then position cursor at beginning of line.'
     tags: ['selection', 'IDE', 'cursor']
-    inputRequired: false
     requires: [
       'editor.move-to-line-number'
       'cursor.way.left'
@@ -46,7 +43,6 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'Go to line number then insert a new line below.'
     tags: ['selection', 'IDE', 'cursor']
-    inputRequired: false
     requires: [
       'editor.move-to-line-number'
       'common.newLineBelow'
@@ -61,7 +57,6 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'Go to line number then select entire line.'
     tags: ['selection', 'IDE', 'cursor']
-    inputRequired: false
     requires: [
       'editor.move-to-line-number'
       'select.line.text'
@@ -102,7 +97,6 @@ pack.commands
     grammarType: 'numberRange'
     tags: ['IDE']
     description: 'Toggle comments on the line or range'
-    inputRequired: false
 
   'insert-code-template':
     spoken: 'quinn'

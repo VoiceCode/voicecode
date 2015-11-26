@@ -46,7 +46,6 @@ pack.commands
     grammarType: 'textCapture'
     description: "put dragon into sleep mode"
     tags: ["dragon"]
-    inputRequired: false
     action: (input) ->
       dictateName = Settings.dragonApplicationName
       @applescript """

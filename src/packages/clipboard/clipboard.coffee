@@ -1,12 +1,15 @@
-Commands.createDisabled
-  'clipboard.paste':
+pack = Packages.register
+  name: 'clipboard'
+  description: 'Commands for a copy, paste, and other clipboard features'
+
+pack.commands
+  'paste':
     spoken: 'spark'
     grammarType: 'oneArgument'
-    description: 'paste the clipboard (or named item from {stoosh} command)'
+    description: 'paste the clipboard (or named item from {clipboard:copy} command)'
     misspellings: ['sparked']
-    tags: ['clipboard', 'recommended']
+    tags: ['recommended']
     spaceBefore: true
-    inputRequired: false
     action: (input) ->
       if input?
         previous = @getStoredItem('clipboard', input)
@@ -16,58 +19,55 @@ Commands.createDisabled
           @paste()
       else
         @paste()
-  'combo.selectAllThenPaste':
+  'select-all+paste':
     spoken: 'allspark'
     description: 'select all then paste the clipboard'
-    tags: ['clipboard', 'selection', 'recommended']
+    tags: ['selection', 'recommended']
     action: ->
       @selectAll()
       @paste()
-  'clipboard.paste.alternate':
+  'paste-from-history':
     spoken: 'sparky'
     description: 'paste the alternate clipboard'
-    tags: ['clipboard']
     action: ->
       @key 'V', 'command shift'
-  'combo.spaceThenPaste':
+  'space+paste':
     spoken: 'skoopark'
     grammarType: 'oneArgument'
     description: 'insert space then paste the clipboard (or named item from {stoosh} command)'
-    tags: ['clipboard', 'recommended']
-    inputRequired: false
+    tags: ['recommended']
     action: (input) ->
       @space()
       @paste input
-  'combo.copySelectionAndSwitchApp':
+  'copy+switch-application':
     spoken: 'stooshwick'
     description: 'copy whatever is selected then switch applications'
-    tags: ['clipboard', 'application', 'system', 'combo', 'recommended']
+    tags: ['application', 'system', 'combo', 'recommended']
     action: ->
       @copy()
       @switchApplication()
       @delay 250
-  'clipboard.copy':
+  'copy':
     spoken: 'stoosh'
     grammarType: 'oneArgument'
     description: 'copy whatever is selected (if an argument is given whatever is copied is stored with that name and can be pasted via {spark [name]})'
-    tags: ['clipboard', 'recommended']
-    inputRequired: false
+    tags: ['recommended']
     action: (input) ->
       @copy()
       if input?
         @waitForClipboard()
         @storeItem 'clipboard', input, @getClipboard()
-  'combo.selectAllThenCopy':
+  'select-all+copy':
     spoken: 'allstoosh'
     description: 'Select all then copy whatever is selected'
-    tags: ['clipboard', 'selection', 'recommended']
+    tags: ['selection', 'recommended']
     action: ->
       @selectAll()
       @copy()
-  'clipboard.cut':
+  'cut':
     spoken: 'snatch'
     description: 'Cut whatever is selected'
-    tags: ['clipboard', 'recommended']
+    tags: ['recommended']
     misspellings: ['snatched']
     action: ->
       @cut()

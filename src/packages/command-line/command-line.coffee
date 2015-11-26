@@ -22,7 +22,6 @@ pack.commands
     grammarType: 'textCapture'
     description: 'list directory contents (takes dynamic arguments)'
     continuous: false
-    inputRequired: false
     action: (input) ->
       options = _.map((input or []), (item) ->
         " -#{item}"
@@ -35,7 +34,6 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'display the last [n](default all) shell commands executed'
     continuous: false
-    inputRequired: false
     action: (input) ->
       @string "history #{input or ''}"
       @enter()

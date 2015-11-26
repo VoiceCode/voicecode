@@ -10,9 +10,12 @@ pack.commands
     description: 'open a channel / conversation'
     grammarType: 'textCapture'
     continuous: false
-    inputRequired: false
     action: (input) ->
       @key 'k', 'command'
       if input?.length
         @string input.join(' ')
         @key 'return'
+
+pack.before
+  'object.backward': -> @key '[', 'command'
+  'object.forward': -> @key ']', 'command'
