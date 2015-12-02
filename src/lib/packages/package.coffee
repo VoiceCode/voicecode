@@ -8,11 +8,11 @@ class Package
     @_settings = @options.settings or {}
 
     {@name, @description, @scope} = @options
+    @registerScope()
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
-    @registerScope()
 
-  commands: () ->
+  commands: ->
     if arguments[1]?
       defaults = arguments[0]
       commands = arguments[1]
@@ -28,7 +28,7 @@ class Package
   command: (id, options) ->
     Commands.createDisabled @normalizeId(id), _.extend({}, @defaultCommandOptions, options)
 
-  before: () ->
+  before: ->
     if arguments[1]?
       packageOptions = _.defaultsDeep arguments[0], @defaultEditOptions
       commands = arguments[1]
@@ -41,7 +41,7 @@ class Package
     _.each commands, (extension, id) ->
       Commands.before id, packageOptions, extension
 
-  after: () ->
+  after: ->
     if arguments[1]?
       packageOptions = _.defaultsDeep arguments[0], @defaultEditOptions
       commands = arguments[1]
@@ -69,36 +69,26 @@ class Package
     [@name, ':', id].join('')
 
   setDefaultCommandOptions: ->
-    @defaultCommandOptions = _.pick @options, [
-      'scope'
-      'tags'
-      'notes'
-    ]
-    _.extend @defaultCommandOptions,
+    @defaultCommandOptions =
       packageId: @name
-      applications: @applications()
-      when: @when()
+      scope: @scope
+      tags: @options.tags
+      notes: @options.notes
 
   setDefaultEditOptions: ->
-    @defaultEditOptions = _.pick @options, [
-      'scope'
-    ]
-    _.extend @defaultEditOptions,
+    @defaultEditOptions =
+      scope: @scope
       packageId: @name
-      applications: @applications()
-      when: @when()
 
   registerScope: ->
-    if @options.createScope is true
-      if @options.applications? or @options.when?
-        Scope.register @options
+    if @options.applications? or @options.when?
+      Scope.register @options
+      @scope = @name
 
   applications: ->
     if @scope?
       @_scope ?= Scope.get @scope
-      @_scope?.applications or []
-    else
-      @options.applications
+      @_scope?.applications()
 
   when: ->
     if @scope?

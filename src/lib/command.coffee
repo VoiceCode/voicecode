@@ -67,11 +67,8 @@ class Command
         segment?.call(@)
 
   getApplications: ->
-    result = unless _.isEmpty @applications
-      @applications
-    else if @scope?
-      Scope.get(@scope)?.applications
-      
+    if @scope?
+      Scope.get(@scope)?.applications()
 
   generateContext: ->
     @context

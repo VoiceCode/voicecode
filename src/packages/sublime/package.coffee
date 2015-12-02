@@ -1,7 +1,6 @@
 pack = Packages.register
   name: 'sublime'
   description: 'Sublime Text integration'
-  createScope: true
   applications: [
     'com.sublimetext.3'
     'com.sublimetext.2'

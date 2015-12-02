@@ -2,7 +2,6 @@ pack = Packages.register
   name: 'slack'
   applications: ['com.tinyspeck.slackmacgap']
   description: 'Slack integration'
-  createScope: true
 
 pack.commands
   'switch-channel':

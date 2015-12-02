@@ -1,7 +1,6 @@
 pack = Packages.register
   name: 'objective-c'
   description: 'Basic commands for some objective-c formatting'
-  tags: ['objective-c']
 
 pack.commands
   'format-NS':

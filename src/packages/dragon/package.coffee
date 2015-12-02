@@ -1,8 +1,7 @@
 pack = Packages.register
   name: 'dragon'
   description: 'Commands for controlling Dragon'
-  # applications: ['com.dragon.dictate']
-  createScope: true
+  applications: ['com.dragon.dictate']
 
 Chain.preprocess {name: 'dragon:consume-after-microphone-sleep'}, (chain) ->
   index = _.findIndex chain, 'command', 'dragon:microphone-sleep'

@@ -31,3 +31,8 @@ pack.commands
     needsCommand: false
     action: (ms) ->
       @delay ms or 100
+  'insert-command-id':
+    description: 'Will insert the identifier of the next command spoken'
+    grammarType: 'commandCapture'
+    action: ({identifier, spoken}) ->
+      @string(identifier) if identifier?

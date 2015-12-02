@@ -7,7 +7,6 @@ pack = Packages.register
   name: 'atom'
   applications: ['com.github.atom']
   description: 'Atom IDE integration (atom.io)'
-  createScope: true
 
 Settings.extend "editorApplications", pack.applications()
 
@@ -186,6 +185,6 @@ Chain.preprocess pack.options, (chain) ->
     if link.command is 'core:literal' and
       chain[index - 1]?.command is 'common.open.tab' and
       chain[index + 1]?.command is 'common.enter'
-        newChain.push {command: 'core:delay', arguments: @packageSettings('atom').modalWindowDelay}
+        newChain.push {command: 'core:delay', arguments: pack.settings().modalWindowDelay}
     newChain
   , []

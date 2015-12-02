@@ -3,7 +3,6 @@ pack = Packages.register
   platforms: ['darwin']
   applications: ['com.apple.dt.Xcode']
   description: 'Xcode IDE integration'
-  createScope: true
 
 Settings.extend 'terminalApplications', pack.applications()
 Settings.extend 'editorApplications', pack.applications()

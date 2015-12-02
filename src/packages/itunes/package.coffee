@@ -3,7 +3,6 @@ pack = Packages.register
   platforms: ['darwin']
   applications: ['com.apple.iTunes']
   description: 'Basic iTunes music control'
-  createScope: true
 
 pack.commands
   scope: 'global'

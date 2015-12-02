@@ -2,8 +2,6 @@ pack = Packages.register
   name: 'iterm'
   platforms: ['darwin']
   description: 'iTerm integration'
-  createScope: true
-  tags: ['iterm']
   applications: ['com.googlecode.iterm2']
 
 Settings.extend "terminalApplications", pack.applications()

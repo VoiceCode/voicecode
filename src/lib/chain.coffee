@@ -80,8 +80,9 @@ class Chain
       command = Commands.mapping[current.command]
       previous = _.last(results)
       if @needsCustomScope(command)
-        if @customScopeActive(command)
-          results.push current
+        if Scope.active(command)
+          if Actions.commandPermitted current.command
+            results.push current
         else
           if previous
             if previous.command is "core:literal" or
@@ -99,21 +100,7 @@ class Chain
     results
 
   needsCustomScope: (command) ->
-    command.applications?.length or command.when?
-
-  customScopeActive: (command) ->
-    active = true
-    if command.applications?.length
-      active = Actions.currentApplication() in command.applications
-    if active
-      if command.when?
-        result = command.when.call(Actions)
-        # console.log result: result
-        result
-      else
-        active
-    else
-      active
+    command.applications?.length or command.when? or command.scope?
 
   mergeTextualCommands: (previous, current) ->
     previous.arguments ?= []

@@ -1,8 +1,7 @@
 pack = Packages.register
   name: 'command-line'
   description: 'General commands for shell / console usage'
-  createScope: true
-  applications: Settings.terminalApplications
+  applications: -> Settings.terminalApplications
 
 pack.after
   'git:status': ->

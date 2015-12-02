@@ -1,8 +1,9 @@
+settings = require './tags'
+
 pack = Packages.register
   name: 'html'
   description: 'HTML commands'
-
-pack.settings(require './tags')
+  settings: settings
 
 "insert-tag":
   spoken: 'shag'
@@ -19,7 +20,7 @@ pack.settings(require './tags')
       ).join(" ")
     else
       ""
-    tag = if _.contains(pack.settings().selfClosingTags, tagName)
+    tag = if _.contains(settings.selfClosingTags, tagName)
       "<#{tagName}#{attributes} />"
     else
       "<#{tagName}#{attributes}></#{tagName}>"
