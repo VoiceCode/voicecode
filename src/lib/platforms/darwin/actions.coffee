@@ -983,5 +983,5 @@ class DarwinActions extends Actions
       on error
         return false
       end try
-  """
+      """
 module.exports = new DarwinActions
