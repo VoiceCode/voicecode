@@ -15,7 +15,7 @@ replify 'vc', repl
 
 global._ = require 'lodash'
 global.chalk = require 'chalk'
-util = require('util')
+global.util = require('util')
 
 global.debug = ->
   console.log chalk.white.bold.bgRed('   DEBUG   ')
@@ -48,7 +48,6 @@ Events.on 'applicationStart', ->
 
     global.Settings = require './settings'
     Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
-    global.Homonyms = require '../lib/utility/homonyms'
     global.Packages = require '../lib/packages/packages'
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
@@ -85,7 +84,7 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    # Settings.slaveMode = true
+    Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 
@@ -109,7 +108,7 @@ Events.on 'applicationStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-     unless false#Settings.slaveMode
+     unless Settings.slaveMode
        Synchronizer.synchronize()
 
     mainWindow = null

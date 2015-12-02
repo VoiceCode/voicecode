@@ -42,8 +42,8 @@ class DragonCommand extends Command
     trigger = trigger.replace /[(/](\w*?\s)/g, -> arguments[0][...-1]
     trigger = trigger.replace /\//g, ''
     # console.error trigger
-    _.each _.countBy((_.compact(_.pluck @grammar.tokens, 'name')), (v) -> v), (count, variableName) =>
-      _.each [1..count], (occurrence) =>
+    _.all _.countBy((_.compact(_.pluck @grammar.tokens, 'name')), (v) -> v), (count, variableName) =>
+      _.all [1..count], (occurrence) =>
         # console.error "searching for: #{variableName}"
         numberOfSubs = _.size @dragonLists[variableName][occurrence]
         expression = new RegExp "\\(#{variableName}\\)\\*?"
@@ -72,7 +72,7 @@ class DragonCommand extends Command
     variableNames = _.compact _.pluck @grammar.tokens, 'name'
     occurrenceCount = _.countBy(variableNames, (v) -> v)
     variableValues = {}
-    _.each _.unique(variableNames), (variableName) =>
+    _.all _.unique(variableNames), (variableName) =>
       variableValues[variableName] = @grammar.lists[variableName].items
       unless _.isArray variableValues[variableName]
         variableValues[variableName] = _.keys variableValues[variableName]
@@ -83,7 +83,7 @@ class DragonCommand extends Command
     # console.error variableValues
     lists = {}
     maximumTokenCount = {}
-    _.each _.unique(variableNames), (variableName) ->
+    _.all _.unique(variableNames), (variableName) ->
       lists[variableName] ?= {}
       maximumTokenCount[variableName] ?= 1
       # breaking up each value into tokens and counting how many sublists
@@ -96,10 +96,10 @@ class DragonCommand extends Command
     # console.error variableValues
     # console.error maximumTokenCount
 
-    _.each _.unique(variableNames), (variableName) ->
-      _.each [1..occurrenceCount[variableName]], (occurrence) ->
+    _.all _.unique(variableNames), (variableName) ->
+      _.all [1..occurrenceCount[variableName]], (occurrence) ->
         lists[variableName][occurrence] ?= {}
-        _.each [1..maximumTokenCount[variableName]], (sublistIndex) ->
+        _.all [1..maximumTokenCount[variableName]], (sublistIndex) ->
           lists[variableName][occurrence][sublistIndex] =
           _.unique _.compact(_.map variableValues[variableName], (tokens) ->
             tokens[(sublistIndex-1)] || null)

@@ -92,7 +92,7 @@ class EventEmitter extends require('events').EventEmitter
     if @debug
       unless event in @suppressedDebugEntries
         console.log "%s %s \n", chalk.white.bold.bgRed('   EVENT   '),
-        chalk.black.bgWhite(" #{event} "),  _.toArray(arguments)[1..]
+        chalk.black.bgWhite(" #{event} "),  util.inspect(_.toArray(arguments)[1..], {depth: 3})
     super
 
   mutate: (event, container) ->

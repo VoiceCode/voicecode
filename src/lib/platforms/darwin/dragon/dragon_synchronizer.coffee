@@ -230,6 +230,7 @@ class DragonSynchronizer
     if Settings.dragonVersion is 5
       chainedYesNo = [yes, no]
     DragonCommand = require './dragon_command'
+    debug Commands.getEnabled().length
     for id in Commands.getEnabled()
       command = new DragonCommand(id, null)
       continue unless command.needsDragonCommand()
@@ -252,6 +253,8 @@ class DragonSynchronizer
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         bundleIds = command.getApplications()
+        if _.isEmpty bundleIds
+          bundleIds = ['global']
         _.all bundleIds, (bundle) ->
           return unless Actions.checkBundleExistence(bundle)
           needsCreating.push
@@ -259,6 +262,7 @@ class DragonSynchronizer
             triggerPhrase: dragonName
             body: dragonBody
 
+    debug needsCreating.length
     for item in needsCreating
       @createCommand item.bundle, item.triggerPhrase, item.body
 
@@ -266,13 +270,15 @@ class DragonSynchronizer
     if @error
       error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
       return false
-
+    debug @insertedLists
     _.all @lists, (lists, commandName) =>
       _.all lists, (occurrences, variableName) =>
         _.all occurrences, (sublists, occurrence) =>
           _.all sublists, (listValues, sub) =>
             bundleIds = @commands[commandName].getApplications()
-            _.all bundleIds, (bundle) ->
+            if _.isEmpty bundleIds
+              bundleIds = ['global']
+            _.all bundleIds, (bundle) =>
               return unless Actions.checkBundleExistence(bundle)
               bundle = '#' if bundle is 'global'
               unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists

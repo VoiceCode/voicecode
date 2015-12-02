@@ -16,16 +16,25 @@ class Modifiers
   suffixes: ->
     _.extend {}, Settings.letters, Settings.modifierSuffixes
   loadCommands: ->
-    suffixes = @suffixes()
-    _.each Settings.modifierPrefixes, (mods, name) ->
-      _.each suffixes, (value, key) ->
-        Commands.createDisabled "modifiers.#{mods}.#{key}",
-          spoken: "#{name} #{value}"
-          description: "#{mods} #{key}"
-          needsParsing: false
-          tags: ["modifiers"]
-          action: ->
-            @key key, mods
+    # suffixes = @suffixes()
+    # _.each Settings.modifierPrefixes, (mods, name) ->
+    #   _.each suffixes, (value, key) ->
+    #     Commands.createDisabled "modifiers.#{mods}.#{key}",
+    #       spoken: "#{name} #{value}"
+    #       description: "#{mods} #{key}"
+    #       needsParsing: false
+    #       tags: ["modifiers"]
+    #       action: ->
+    #         @key key, mods
+    Commands.createDisabled 'modifiers',
+      grammarType: 'custom'
+      rule: '(modifierPrefixes) (modifierSuffixes)'
+      variables:
+        modifierPrefixes: Settings.modifierPrefixes
+        modifierSuffixes: _.invert @suffixes()
+      action: ({modifierPrefixes, modifierSuffixes}) ->
+        @key modifierSuffixes, modifierPrefixes
+
   fingerprint: ->
     data =
       letters: Settings.letters

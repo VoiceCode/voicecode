@@ -71,10 +71,7 @@ class Command
       @applications
     else if @scope?
       Scope.get(@scope)?.applications
-    if _.isEmpty result
-      'global'
-    else
-      result
+      
 
   generateContext: ->
     @context
