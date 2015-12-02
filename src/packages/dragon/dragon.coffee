@@ -1,7 +1,7 @@
 pack = Packages.register
   name: 'dragon'
   description: 'Commands for controlling Dragon'
-  applications: ['com.dragon.dictate']
+  # applications: ['com.dragon.dictate']
   createScope: true
 
 Chain.preprocess {name: 'dragon:consume-after-microphone-sleep'}, (chain) ->
@@ -48,7 +48,6 @@ pack.commands
     needsParsing: false
   "microphone-sleep":
     spoken: 'snore'
-    grammarType: 'textCapture'
     description: "put dragon into sleep mode"
     tags: ["dragon"]
     action: (input) ->
