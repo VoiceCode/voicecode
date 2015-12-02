@@ -420,9 +420,8 @@ class DarwinActions extends Actions
     w('openURL', u)
 
   microphoneOff: ->
-    dictateName = Settings.dragonApplicationName
     @applescript """
-    tell application "#{dictateName}"
+    tell application id "com.dragon.dictate"
       set listening to false
     end tell
     """, false

@@ -13,9 +13,6 @@ Settings.extend = (key, map) ->
     Settings[key] ?= {}
     _.deepExtend Settings[key], map
 
-Settings.addContext = (determiningFunction) ->
-  Settings.contextChain.unshift determiningFunction
-
 Settings.value = (listName, value) ->
   Settings[listName][value] or Settings[listName]["_#{value}"]
 
@@ -337,9 +334,6 @@ _.extend Settings,
     global: "global"
     emacs: "emacs"
     mate: "textmate"
-  contextChain: [
-    -> @currentApplication()
-  ]
   workflows:
     "workflow test": "yellsnik it worked clamor"
   shellCommands:
@@ -505,14 +499,10 @@ _.extend Settings,
   locale: "en"
   localeSettings:
     en:
-      dragonCommandsWindowName: "Commands" # Still needed?
-      dragonSaveButtonName: "Save" # Still needed?
-      dragonGlobalName: "Global"
       dragonOsLanguage: "en_GB"
       dragonCommandSpokenLanguage: "en_US"
       dragonTriggerSpokenLanguage: "en_US"
     de:
-      # dragonApplicationName: "Dragon Dictate"
       dragonOsLanguage: "de_DE"
       dragonCommandSpokenLanguage: "en_US"
       dragonTriggerSpokenLanguage: "en_US"
@@ -540,12 +530,6 @@ _.extend Settings,
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000
   notificationProvider: "applescript"
-  dateFormats:
-    yammer: "YYYYMMDD"
-    timestamp: "X"
-    time: "LT"
-    today: "LL"
-    date: "l"
   strictModes:
     default: w """
       strict off

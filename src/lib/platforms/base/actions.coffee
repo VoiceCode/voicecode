@@ -69,11 +69,6 @@ module.exports = class Actions
   setCurrentApplicationName: (name) ->
     @_currentApplicationName = name
 
-  context: ->
-    for item in Settings.contextChain
-      result = item.call(@)
-      return result if result?
-
   enableDwellClicking: ->
     @_dwellClickingEnabled = true
 

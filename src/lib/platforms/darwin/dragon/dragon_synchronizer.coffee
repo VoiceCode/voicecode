@@ -3,7 +3,6 @@ class DragonSynchronizer
   constructor: ->
     @sqlite3 = require("sqlite3").verbose()
     @bundles = {global: "global"}
-    @applicationNames = {}
     @lastId = (new Date()).getTime()
     @applicationVersions = {}
     @connectMain()
@@ -98,25 +97,15 @@ class DragonSynchronizer
 
   getApplicationVersion: (bundle) ->
     return 0 if bundle is null # handling global
-    name = @applicationNames[bundle]
-    if @applicationVersions[name]?
-      @applicationVersions[name]
+    if @applicationVersions[bundle]?
+      @applicationVersions[bundle]
     else
       @get "SELECT * FROM ZCOMMAND WHERE ZAPPBUNDLE = '#{bundle}' LIMIT 1", (existing) =>
         found = if existing?.ZAPPVERSION?
           existing.ZAPPVERSION
         else
-          version = Applescript("version of application \"#{name}\"")?.trim()
-          if version?
-            first = version.toString().split('')[0]
-            number = parseInt first
-            if isNaN(number)
-              0
-            else
-              number
-          else
-            0
-        @applicationVersions[name] = found
+          SystemInfo.applicationMajorVersionFromBundle bundle
+        @applicationVersions[bundle] = found
         found
 
   getUsername: ->

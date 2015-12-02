@@ -38,7 +38,6 @@ class UserAssetsController
 _.extend Settings,
   license: ''
   email: ''
-  dragonVersion: 5
     """
     fs.writeFile path, data, {flag: 'wx'}, (err) =>
       if err

@@ -22,14 +22,6 @@ class DarwinController
     else
       @listen()
 
-  tock: ->
-    event = undefined
-    while event = @app('nextEventMatchingMask', $.NSAnyEventMask.toString(),
-    'untilDate', null, 'inMode', $('kCFRunLoopDefaultMode'), 'dequeue', 1)
-      @app 'sendEvent', event
-    # app 'updateWindows'
-    setTimeout @tock.bind(@), 100
-
   loadFrameworks: ->
     $.framework 'Foundation'
     $.framework 'Quartz'
@@ -37,43 +29,17 @@ class DarwinController
 
   initialize: ->
     process.on 'exit', =>
-      @app 'terminate', $('self')
       delete @
 
-    @sharedWorkspace = $.NSWorkspace('sharedWorkspace')
-    @notificationCenter = @sharedWorkspace('notificationCenter')
-    @mainQueue = $.NSOperationQueue('mainQueue')
-    @app = $.NSApplication('sharedApplication')
-
-    @delegate = $.NSObject.extend('AppDelegate')
-    @delegate.addMethod 'applicationChanged:', 'v@:@', @applicationChanged.bind(@)
-    @delegate.register()
-
-    @delegateInstance = @delegate('alloc')('init')
-    @app 'setDelegate', @delegateInstance
-
-    @notificationCenter('addObserver', @delegateInstance, 'selector',
-    'applicationChanged:', 'name', $('NSWorkspaceDidActivateApplicationNotification'), 'object', null )
-    # @notificationCenter('addObserver', @delegateInstance, 'selector',
-    # 'windowChanged:', 'name', $('NSWindowDidBecomeMainNotification'), 'object', null )
-
-    # $.NSEvent 'addGlobalMonitorForEventsMatchingMask', $.NSLeftMouseDownMask, 'handler', $(@mouseHandler.bind(@), ['v', ['@', '@']])
-
-    # @app 'finishLaunching'
-
-  applicationChanged: (self, _cmd, notification) ->
-    application = notification('object')('frontmostApplication')
-    bundle = application('bundleIdentifier').toString()
-    name = application('localizedName').toString()
-
-    Actions.setCurrentApplication bundle
+  applicationChanged: ({event, bundleId, name}) ->
+    Actions.setCurrentApplication bundleId
     Actions.setCurrentApplicationName name
 
     if Commands.monitoringMouseToCancelSpacing
       Commands.lastCommandOfPreviousPhrase = null
 
     if name in Settings.dragonIncompatibleApplications
-      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{name}: #{bundle}"
+      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{name}: #{bundleId}"
       @listeningOnMainSocket = false
     else unless @listeningOnMainSocket
       setTimeout =>
@@ -81,11 +47,10 @@ class DarwinController
         log 'mainSocketListening', true, "Re-enabling main command socket"
       , Settings.dragonIncompatibleApplicationDelay or 5000
 
-  mouseHandler: (self, event) ->
-    debug event
-    # if Commands.monitoringMouseToCancelSpacing
-    #   log 'autoSpacing', false, "Canceling auto spacing"
-    #   Commands.lastCommandOfPreviousPhrase = null
+  mouseHandler: (event) ->
+    if Commands.monitoringMouseToCancelSpacing
+      log 'autoSpacing', false, "Canceling auto spacing"
+      Commands.lastCommandOfPreviousPhrase = null
 
   listen: ->
     global.slaveController = new SlaveController()
@@ -93,6 +58,7 @@ class DarwinController
 
     @listenOnSocket "/tmp/_voicecode.sock", @dragonHandler
     @listenOnSocket "/tmp/_voicecode2.sock", @growlHandler
+    @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
@@ -101,6 +67,15 @@ class DarwinController
       unixServer = net.createServer (connection) =>
         connection.on 'data', callback.bind(@)
       unixServer.listen socketPath
+
+  systemEventHandler: (buffer) ->
+    event = JSON.parse buffer.toString('utf8')
+    debug event
+    switch event.event
+      when 'applicationChanged'
+        @applicationChanged event
+      when 'leftClick'
+        @mouseHandler event
 
   normalizePhraseComparison: (phrase) ->
     if ParserController.isInitialized()
@@ -152,6 +127,7 @@ class DarwinController
     ).run()
 
   setDragonInfo: ->
+    Settings.dragonVersion = SystemInfo.applicationMajorVersionFromBundle('com.dragon.dictate')
     switch Settings.dragonVersion
       when 5
         Settings.dragonApplicationName =

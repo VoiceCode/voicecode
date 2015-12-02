@@ -2,6 +2,15 @@ pack = Packages.register
   name: 'insert'
   description: 'Commands for inserting preset textual content like usernames, passwords, snippets, abbreviations, etc.'
 
+pack.settings
+  dateFormats:
+    yammer: "YYYYMMDD"
+    timestamp: "X"
+    time: "LT"
+    today: "LL"
+    date: "l"
+  defaultDateFormat: 'LLL'
+
 pack.commands
   'abbreviation':
     spoken: 'shrink'
@@ -38,8 +47,6 @@ pack.commands
         result = @fuzzyMatch Settings.usernames, input.join(' ')
         @string result
 
-pack.settings
-  defaultDateFormat: 'LLL'
 
 pack.commands
   'date':
@@ -48,6 +55,6 @@ pack.commands
     rule: '<spoken> (dateFormat)*'
     description: 'insert the current date/time in several different formats. See http://momentjs.com/docs/#/displaying/ for more formatting options'
     variables:
-      dateFormat: -> Settings.dateFormats
+      dateFormat: -> pack.settings().dateFormats
     action: ({dateFormat}) ->
       @string moment().format(dateFormat or pack.settings().defaultDateFormat)

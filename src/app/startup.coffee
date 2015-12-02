@@ -99,6 +99,7 @@ Events.on 'applicationStart', ->
     switch platform
       when "darwin"
         global.Actions = require '../lib/platforms/darwin/actions'
+        global.SystemInfo = require '../lib/platforms/darwin/system_info'
         global.DarwinController = require '../lib/platforms/darwin/darwin_controller'
         if true
           global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'

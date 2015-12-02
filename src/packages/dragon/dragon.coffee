@@ -47,9 +47,8 @@ pack.commands
     description: "put dragon into sleep mode"
     tags: ["dragon"]
     action: (input) ->
-      dictateName = Settings.dragonApplicationName
       @applescript """
-      tell application "#{dictateName}"
+      tell application id "com.dragon.dictate"
         set microphone to sleep
       end tell
       """
@@ -59,12 +58,11 @@ pack.commands
     tags: ["dragon", "recommended"]
     continuous: false
     action: (input) ->
-      dictateName = Settings.dragonApplicationName
       # TODO: rewrite, take dragon controller into consideration
       @applescript """
-      tell application "#{dictateName}" to quit
+      tell application id "com.dragon.dictate" to quit
       delay 2
-      tell application "#{dictateName}" to activate
+      tell application id "com.dragon.dictate" to activate
       """, false
 
   "train-vocabulary-from-selection":
