@@ -5,7 +5,7 @@ class Chain
   @preprocess: (identity, callback) ->
     preprocessors = _.reject preprocessors, _.matchesProperty 'identity.name', identity.name
     preprocessors.push {identity, callback}
-    
+
   parse: ->
     if ParserController.isInitialized()
       parsed = ParserController.parse(@phrase)
@@ -84,14 +84,14 @@ class Chain
           results.push current
         else
           if previous
-            if previous.command is "vc-literal" or
+            if previous.command is "core:literal" or
             Commands.mapping[previous.command].grammarType is "textCapture"
               @mergeTextualCommands(previous, current)
             else
-              results.push {command: "vc-literal", arguments: [current.command]}
+              results.push {command: "core:literal", arguments: [current.command]}
           else
-            results.push {command: "vc-literal", arguments: [current.command]}
-      else if current.command is "vc-literal" and previous?.command is "vc-literal"
+            results.push {command: "core:literal", arguments: [current.command]}
+      else if current.command is "core:literal" and previous?.command is "core:literal"
         @mergeLiteralCommands(previous, current)
       else
         if Actions.commandPermitted current.command

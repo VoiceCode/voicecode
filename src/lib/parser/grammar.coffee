@@ -230,7 +230,7 @@ class Grammar
       = identifier:(#{@individualCommandsContinuous()}) ss {return identifier;}
 
     literalCommand
-      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {command: "vc-literal", arguments: text};}
+      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {command: "core:literal", arguments: text};}
 
     nestableTextIdentifier
       = "shrink" / "treemail" / "trusername" / "trassword"
