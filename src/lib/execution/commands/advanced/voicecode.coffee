@@ -1,9 +1,4 @@
 Commands.createDisabled
-  "dragon.catch-all":
-    description: "catches all text - just for creation in Dragon"
-    tags: ["voicecode", "recommended", 'modes']
-    triggerPhrase: ''
-    needsParsing: false
   "show.history":
     spoken: 'recon'
     description: "Show command history"
@@ -67,30 +62,3 @@ Commands.createDisabled
       if count? and count > 0
         for i in [1..count]
           @key 'left', 'shift'
-  'modes.strict.enable':
-    spoken: "strict on"
-    grammarType: "textCapture"
-    description: "puts VoiceCode into one of the predefined 'strict'
-     modes, where only a subset of commands can be executed"
-    tags: ["voicecode", "recommended"]
-    inputRequired: true
-    action: (input) ->
-      mode = if input?
-        @fuzzyMatchKey Settings.strictModes, input.join(' ')
-      else
-        "default"
-      @enableStrictMode mode
-  'modes.strict.disable':
-    spoken: "strict off"
-    description: "puts VoiceCode into one of the predefined 'strict'
-     modes, where only a subset of commands can be executed"
-    tags: ["voicecode", "recommended"]
-    action: (input) ->
-      @disableStrictMode()
-  'vc-delay':
-    enabled: true
-    grammarType: 'none'
-    needsParsing: false
-    needsCommand: false
-    action: (ms) ->
-      @delay ms

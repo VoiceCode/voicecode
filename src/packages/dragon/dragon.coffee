@@ -41,6 +41,11 @@ pack.ready ->
 pack.commands
   scope: 'global'
 ,
+  "catch-all":
+    description: "catches all text - just for creation in Dragon"
+    tags: ["recommended"]
+    triggerPhrase: ''
+    needsParsing: false
   "microphone-sleep":
     spoken: 'snore'
     grammarType: 'textCapture'

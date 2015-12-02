@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'xcode'
+  platforms: ['darwin']
   applications: ['com.apple.dt.Xcode']
   description: 'Xcode IDE integration'
   createScope: true

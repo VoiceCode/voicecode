@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'iterm'
+  platforms: ['darwin']
   description: 'iTerm integration'
   createScope: true
   tags: ['iterm']

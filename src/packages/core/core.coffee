@@ -25,3 +25,9 @@ pack.commands
     action: (input) ->
       if input
         @string Transforms.literal(@normalizeTextArray(input))
+  'delay':
+    enabled: true
+    needsParsing: false
+    needsCommand: false
+    action: (ms) ->
+      @delay ms or 100

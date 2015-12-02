@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'terminal'
+  platforms: ['darwin']
   applications: ['com.apple.Terminal']
   description: 'Terminal integration'
   createScope: true

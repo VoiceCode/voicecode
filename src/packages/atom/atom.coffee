@@ -186,6 +186,6 @@ Chain.preprocess pack.options, (chain) ->
     if link.command is 'core:literal' and
       chain[index - 1]?.command is 'common.open.tab' and
       chain[index + 1]?.command is 'common.enter'
-        newChain.push {command: 'vc-delay', arguments: @packageSettings('atom').modalWindowDelay}
+        newChain.push {command: 'core:delay', arguments: @packageSettings('atom').modalWindowDelay}
     newChain
   , []

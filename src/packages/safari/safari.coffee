@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'safari'
+  platforms: ['darwin']
   description: 'Safari integration'
   createScope: true
   applications: ['com.apple.Safari']

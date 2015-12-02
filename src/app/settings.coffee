@@ -530,22 +530,6 @@ _.extend Settings,
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000
   notificationProvider: "applescript"
-  strictModes:
-    default: w """
-      strict off
-      swick
-      chiff
-      chipper
-      duke
-      spark
-      stoosh
-      dookoosh
-      doopark
-      webseek
-      webs
-      fox
-      """
-    all: ["strict off"] # nothing is allowed except disabling strict mode
   commonSequences: {
     'symbol.brackets':
       [ 'symbol.doubleQuotes.surround',

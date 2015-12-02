@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'communication'
+  platforms: ['darwin']
   description: 'Various commands for making phone calls, facetime, etc.'
   tags: ['messaging', 'phone']
 

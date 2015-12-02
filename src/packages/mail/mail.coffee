@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'mail'
+  platforms: ['darwin']
   applications: ['com.apple.mail']
   description: 'Apple Mail integration'
   createScope: true

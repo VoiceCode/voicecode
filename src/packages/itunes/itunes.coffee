@@ -1,5 +1,6 @@
 pack = Packages.register
   name: 'itunes'
+  platforms: ['darwin']
   applications: ['com.apple.iTunes']
   description: 'Basic iTunes music control'
   createScope: true
