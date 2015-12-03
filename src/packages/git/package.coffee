@@ -76,7 +76,7 @@ pack.settings
 
 pack.ready ->
   _.each @settings().commands, (value, key) =>
-    output = value.output or value.spoken
+    output = value.output or value.spoken.replace('jet', 'git')
 
     defaults =
       autoSpacing: 'normal always'
