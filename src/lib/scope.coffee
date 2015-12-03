@@ -59,12 +59,12 @@ class Scope
       true
 
 # this is just for easy access to a global version
-Scope.global = new Scope
+Scope.global = Scope.register
   name: 'global'
 
 # abstract scope is used for commands that are shared across multiple other scopes, but should not be global
 # for example maybe 'selcrew'
-Scope.abstract = new Scope
+Scope.abstract = Scope.register
   name: 'abstract'
 
 
