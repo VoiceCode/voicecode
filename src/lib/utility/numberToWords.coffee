@@ -49,6 +49,7 @@ scales = [
 max = scales.length * 3
 
 numberToWords = (val) ->
+  val = "#{val}"
   len = undefined
   if val[0] == '-'
     return 'negative ' + convert(val.slice(1))
@@ -127,4 +128,4 @@ trim_zeros = (val) ->
 is_lt20 = (val) ->
   parseInt(val, 10) < 20
 
-module.experts = numberToWords
+module.exports = numberToWords
