@@ -8,28 +8,22 @@ class DarwinController
     instance = @
 
     @loadFrameworks()
-    @initialize()
     @setDragonInfo()
 
     @listeningOnMainSocket = true
     @historyGrowl = []
     @historyDragon = []
 
-    # @tock()
-
-    if Settings.slaveMode
-      @listenAsSlave()
-    else
-      @listen()
+    Events.once 'startupFlowComplete', =>
+      if Settings.slaveMode
+        @listenAsSlave()
+      else
+        @listen()
 
   loadFrameworks: ->
     $.framework 'Foundation'
     $.framework 'Quartz'
     $.framework 'AppKit'
-
-  initialize: ->
-    process.on 'exit', =>
-      delete @
 
   applicationChanged: ({event, bundleId, name}) ->
     Actions.setCurrentApplication bundleId

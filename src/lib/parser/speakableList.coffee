@@ -4,7 +4,7 @@ class SpeakableList
   # + represents a default
 
   constructor: (@items) ->
-    @kind = if Object::toString.call(@items) is '[object Array]'
+    @kind = if _.isArray @items
       'array'
     else
       'object'

@@ -39,7 +39,7 @@ class CustomGrammar
     else
       definition = @definitions[token.name]
       if definition?
-        if typeof definition is 'function'
+        if _.isFunction definition
           definition()
         else
           definition

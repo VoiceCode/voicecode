@@ -59,6 +59,18 @@ Events.on 'applicationStart', ->
     global.Grammar = require '../lib/parser/grammar'
     global.Chain = require '../lib/chain'
     global.HistoryController = require '../lib/history_controller'
+    _.extend global, require './shell' # Execute, Applescript
+
+    switch platform
+      when "darwin"
+        global.Actions = require '../lib/platforms/darwin/actions'
+        global.SystemInfo = require '../lib/platforms/darwin/system_info'
+        global.DarwinController = require '../lib/platforms/darwin/darwin_controller'
+      when "win32"
+        global.Actions = require '../lib/platforms/windows/actions'
+      when "linux"
+        global.Actions = require '../lib/platforms/linux/actions'
+
     requireDirectory = require 'require-directory'
     requireDirectory module, '../lib/execution/',
       visit: (required) ->
@@ -71,7 +83,6 @@ Events.on 'applicationStart', ->
           _.each required, (value, key) -> global[key] = value
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
-    _.extend global, require './shell' # Execute, Applescript
     global.Alphabet = require '../lib/alphabet'
     global.Repetition = require '../lib/repetition'
     global.Modifiers = require '../lib/modifiers'
@@ -87,31 +98,26 @@ Events.on 'applicationStart', ->
     # Settings.dontMessWithMyDragon = true
 
 
-    if Settings.slaveMode or true
+    if Settings.slaveMode
       _.each Commands.mapping, (command, name) ->
         Commands.enable name
       Commands.performCommandEdits('slaveModeEnableAllCommands')
 
-
-
     switch platform
       when "darwin"
-        global.Actions = require '../lib/platforms/darwin/actions'
-        global.SystemInfo = require '../lib/platforms/darwin/system_info'
-        global.DarwinController = require '../lib/platforms/darwin/darwin_controller'
         if true
           global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
           global.DragonVocabularyController = require '../lib/platforms/darwin/dragon/dragon_vocabulary_controller'
-      when "win32"
-        global.Actions = require '../lib/platforms/windows/actions'
-      when "linux"
-        global.Actions = require '../lib/platforms/linux/actions'
+      # when "win32"
+      # when "linux"
 
     unless Settings.slaveMode
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 
     mainWindow = null
+
+    emit "startupFlowComplete"
     # application.on 'ready', ->
       # mainWindow = new BrowserWindow
       #   width: 900

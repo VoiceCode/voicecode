@@ -173,10 +173,6 @@ pack.commands
     description: 'Use the currently selected text as a search term'
     action: ->
       @key 'e', 'command'
-  'open':
-    spoken: 'tradam' # TODO: deprecated?
-    description: 'Open Atom. (this is needed because the regular "fox Atom" always opens a new window)'
-    action: -> @openApplication "Atom"
 
 
 Chain.preprocess pack.options, (chain) ->

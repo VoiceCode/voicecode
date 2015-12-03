@@ -10,6 +10,10 @@ class ParserController
     @initialize()
 
   initialize: ->
+    Events.once 'startupFlowComplete', =>
+      @ready = true
+      @generateParser()
+      
     Events.on 'generateParserFailed', _.bind @regress, @
     Events.on 'commandEditsPerformed', =>
       @generateParser()
@@ -19,6 +23,7 @@ class ParserController
     @debouncedGenerateParser()
 
   _generateParser: ->
+    return unless @ready
     @generateFingerprint()
     @generateFingerprintHash()
     {
