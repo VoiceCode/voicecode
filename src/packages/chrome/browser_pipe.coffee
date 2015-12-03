@@ -364,6 +364,7 @@ Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
           type: 'invokeBound'
 
 Commands.create "webneck",
+  spoken: 'webneck'
   description: ""
   continuous: false
   aliases: []

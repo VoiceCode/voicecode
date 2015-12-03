@@ -26,7 +26,7 @@ class DragonSynchronizer
           return
         args = _.toArray arguments
         asyncblock (flow) =>
-          flow.firstArgIsError = false
+          # flow.firstArgIsError = false
           args.push flow.callback()
           flow.sync @database.all.bind(@database).apply null, args
       @get = =>
@@ -34,10 +34,14 @@ class DragonSynchronizer
           error 'dragonSynchronizerError', @error, "Could not execute query"
           return
         args = _.toArray arguments
+        result = null
         asyncblock (flow) =>
-          flow.firstArgIsError = false
+          # flow.firstArgIsError = false
           args.push flow.callback()
-          flow.sync @database.get.bind(@database).apply null, args
+          result = flow.sync @database.get.bind(@database).apply null, args
+          debug "inside", result
+          # TODO how can we return this?????
+          result
       @run = =>
         if @error
           error 'dragonSynchronizerError', @error, "Could not execute query"
@@ -66,7 +70,7 @@ class DragonSynchronizer
           return
         args = _.toArray arguments
         asyncblock (flow) =>
-          flow.firstArgIsError = false
+          # flow.firstArgIsError = false
           args.push flow.callback()
           flow.sync @dynamicDatabase.all.bind(@dynamicDatabase).apply null, args
       @dynamicGet = =>
@@ -75,7 +79,7 @@ class DragonSynchronizer
           return
         args = _.toArray arguments
         asyncblock (flow) =>
-          flow.firstArgIsError = false
+          # flow.firstArgIsError = false
           args.push flow.callback()
           flow.sync @dynamicDatabase.get.bind(@dynamicDatabase).apply null, args
       @dynamicRun = =>
@@ -136,6 +140,7 @@ class DragonSynchronizer
 
   getNextRecordId: ->
     result = @get "SELECT * FROM ZTRIGGER ORDER BY Z_PK DESC LIMIT 1"
+    debug "next record", result
     (result?.Z_PK or 0) + 1
     # @get "SELECT last_insert_rowid() FROM ZTRIGGER"
 
@@ -230,14 +235,14 @@ class DragonSynchronizer
     if Settings.dragonVersion is 5
       chainedYesNo = [yes, no]
     DragonCommand = require './dragon_command'
-    debug Commands.getEnabled().length
+    debug "enabled commands count", Commands.getEnabled().length
     for id in Commands.getEnabled()
       command = new DragonCommand(id, null)
       continue unless command.needsDragonCommand()
       @commands[id] = command
       @lists[id] = command.dragonLists if command.dragonLists?
       if Settings.dragonCommandMode is 'pure-vocab'
-        continue if id isnt 'dragon.catch-all'
+        continue if id isnt 'dragon:catch-all'
       # if Settings.dragonCommandMode is 'new-school'
       #   continue unless command.grammarType in ['custom', 'textCapture', 'oneArgument'] or
       #   command.kind is 'recognition'
@@ -249,7 +254,7 @@ class DragonSynchronizer
         hasChain is no
           continue
 
-        continue if id is 'dragon.catch-all' and hasChain is no
+        continue if id is 'dragon:catch-all' and hasChain is no
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         bundleIds = command.getApplications()
@@ -262,7 +267,7 @@ class DragonSynchronizer
             triggerPhrase: dragonName
             body: dragonBody
 
-    debug needsCreating.length
+    debug "needs creating", needsCreating.length
     for item in needsCreating
       @createCommand item.bundle, item.triggerPhrase, item.body
 

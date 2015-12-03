@@ -23,10 +23,11 @@ class DragonCommand extends Command
     """
 
   generateCommandName: (hasChain = false)->
-    trigger = @getTriggerPhrase()
-
-    if @rule?
+    trigger = if @rule?
       trigger = @generateCustomCommandName hasChain
+    else
+      @getTriggerPhrase()
+
     trigger = "#{trigger} /!Text!/" if hasChain
     unless trigger?
       debug @

@@ -53,7 +53,7 @@ Events.on 'applicationStart', ->
     global.Scope = require '../lib/scope'
     global.UserAssetsController = require './user_assets_controller'
     Events.once 'userAssetsLoaded', startupFlow.add 'user_settings'
-    UserAssetsController.getAssets 'user_settings.coffee'
+    UserAssetsController.getAssets 'settings.coffee'
     startupFlow.wait 'user_settings'
     global.Command = require '../lib/command'
     global.Grammar = require '../lib/parser/grammar'
@@ -80,11 +80,11 @@ Events.on 'applicationStart', ->
     Commands.initialize()
     _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
-    UserAssetsController.getAssets '**/*.coffee', '**/user_settings.coffee' # wandering into asynchronous land
+    UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee' # wandering into asynchronous land
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    Settings.slaveMode = true
+    # Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 

@@ -56,8 +56,8 @@ class DarwinController
     global.slaveController = new SlaveController()
     slaveController.connect()
 
-    @listenOnSocket "/tmp/_voicecode.sock", @dragonHandler
-    @listenOnSocket "/tmp/_voicecode2.sock", @growlHandler
+    @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
+    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
     @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
 
   listenOnSocket: (socketPath, callback) ->
@@ -88,7 +88,7 @@ class DarwinController
 
   dragonHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
-    log 'dragonPhrase', phrase, "Dragon: '#{phrase}'"
+    debug 'dragonPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyGrowl.indexOf normalized
@@ -105,7 +105,7 @@ class DarwinController
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
-    log 'growlPhrase', phrase, "Growl: '#{phrase}'"
+    debug 'growlPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
     old = @historyDragon.indexOf normalized

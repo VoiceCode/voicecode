@@ -12,6 +12,7 @@ class Chain
       parsed = _.map parsed, (parsedCommand) ->
         _.extend parsedCommand,
           command: Commands.getBySpoken(parsedCommand.command)?.id
+          spoken: parsedCommand.command
       parsed = @normalizeStructure parsed
       @applyMouseLatency parsed
       log 'chainParsed', parsed, JSON.stringify parsed
@@ -24,16 +25,16 @@ class Chain
     unless chain?
       chain = @parse()
 
-    if shouldPreprocess
-      chain = _.reduce preprocessors, (chain, {identity, callback}) ->
-        if Scope.active identity
-          chain = callback chain
-        chain
-      , chain
-      log 'chainPreprocessed', chain, JSON.stringify chain
+    # if shouldPreprocess
+    #   chain = _.reduce preprocessors, (chain, {identity, callback}) ->
+    #     if Scope.active identity
+    #       chain = callback chain
+    #     chain
+    #   , chain
+    #   log 'chainPreprocessed', chain, JSON.stringify chain
 
-    if shouldAutoSpace and Settings.autoSpacingEnabled.call(Actions)
-      chain = @applyAutoSpacing chain
+    # if shouldAutoSpace and Settings.autoSpacingEnabled.call(Actions)
+    #   chain = @applyAutoSpacing chain
 
     unless _.isEmpty chain
       Commands.monitoringMouseToCancelSpacing = false
@@ -89,9 +90,9 @@ class Chain
             Commands.mapping[previous.command].grammarType is "textCapture"
               @mergeTextualCommands(previous, current)
             else
-              results.push {command: "core:literal", arguments: [current.command]}
+              results.push {command: "core:literal", arguments: [current.spoken]}
           else
-            results.push {command: "core:literal", arguments: [current.command]}
+            results.push {command: "core:literal", arguments: [current.spoken]}
       else if current.command is "core:literal" and previous?.command is "core:literal"
         @mergeLiteralCommands(previous, current)
       else
@@ -104,7 +105,7 @@ class Chain
 
   mergeTextualCommands: (previous, current) ->
     previous.arguments ?= []
-    previous.arguments.push current.command
+    previous.arguments.push current.spoken
     if Object.prototype.toString.call(current.arguments) is '[object Array]'
       #concat arrays
       previous.arguments = previous.arguments.concat(current.arguments)

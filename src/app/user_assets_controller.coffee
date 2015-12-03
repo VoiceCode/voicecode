@@ -33,7 +33,7 @@ class UserAssetsController
          "Could not create user assets directory: #{@assetsPath}"
         @state = "error"
 
-    path =  "#{@assetsPath}/user_settings.coffee"
+    path =  "#{@assetsPath}/settings.coffee"
     data = """
 _.extend Settings,
   license: ''
@@ -49,8 +49,8 @@ _.extend Settings,
         else
           # this is good, file exists
           return
-      log 'assetSettingsFileCreated', "#{@assetsPath}/user_settings.coffee",
-      "User settings file created #{@assetsPath}/user_settings.coffee"
+      log 'assetSettingsFileCreated', "#{@assetsPath}/settings.coffee",
+      "User settings file created #{@assetsPath}/settings.coffee"
 
   getAssets: (assetsMask, ignoreMask = false) ->
     return if @state is "error"
@@ -89,9 +89,9 @@ _.extend Settings,
           Commands.edit = global.Commands.edit.bind global.Commands
           Commands.create = (name, options) ->
             if _.isObject name
-              pack.commands.call pack, name
+              pack.commands.call pack, name, options
             else
-              pack.commands.call pack, {"#{name}": options}
+              pack.command.call pack, name, options
           Commands.before = (name, options) ->
             if _.isObject name
               pack.before.call pack, name

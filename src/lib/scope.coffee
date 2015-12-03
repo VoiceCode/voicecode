@@ -42,10 +42,13 @@ class Scope
       @_applications
 
   @checkApplications: (applications) ->
-    if applications?
-      applications = if _.isFunction applications
+    apps = if applications?
+      if _.isFunction applications
         applications()
-      Actions.currentApplication() in applications
+      else
+        applications
+    if apps?
+      Actions.currentApplication() in apps
     else
       true
 

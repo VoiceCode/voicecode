@@ -17,8 +17,8 @@ Execute = (script, options = null) ->
 Applescript = (content, shouldReturn = true) ->
   script = $.NSAppleScript('alloc')('initWithSource', $(content)) # are we sure this gets garbage collected?
   results = script('executeAndReturnError', null)
-  debug results
   if shouldReturn
+    debug results
     results('stringValue')?.toString()
   else
     null

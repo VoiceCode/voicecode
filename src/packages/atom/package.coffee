@@ -32,10 +32,10 @@ pack.before
     else
       @key 'g', 'control'
 
-  'move-to-line-number+way-right': true
-  'move-to-line-number+way-left': true
-  'insert-under-line-number': true
-  'move-to-line-number+select-line': true
+  'editor:move-to-line-number+way-right': true
+  'editor:move-to-line-number+way-left': true
+  'editor:insert-under-line-number': true
+  'editor:move-to-line-number+select-line': true
 
   'object.refresh': ->
     @key 'L', 'control option command'

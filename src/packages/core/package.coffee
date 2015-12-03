@@ -32,6 +32,7 @@ pack.commands
     action: (ms) ->
       @delay ms or 100
   'insert-command-id':
+    spoken: 'sherlock'
     description: 'Will insert the identifier of the next command spoken'
     grammarType: 'commandCapture'
     action: ({identifier, spoken}) ->
