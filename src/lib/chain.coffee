@@ -25,16 +25,16 @@ class Chain
     unless chain?
       chain = @parse()
 
-    # if shouldPreprocess
-    #   chain = _.reduce preprocessors, (chain, {identity, callback}) ->
-    #     if Scope.active identity
-    #       chain = callback chain
-    #     chain
-    #   , chain
-    #   log 'chainPreprocessed', chain, JSON.stringify chain
+    if shouldPreprocess
+      chain = _.reduce preprocessors, (chain, {identity, callback}) ->
+        if Scope.active identity
+          chain = callback chain
+        chain
+      , chain
+      log 'chainPreprocessed', chain, JSON.stringify chain
 
-    # if shouldAutoSpace and Settings.autoSpacingEnabled.call(Actions)
-    #   chain = @applyAutoSpacing chain
+    if shouldAutoSpace and Settings.autoSpacingEnabled.call(Actions)
+      chain = @applyAutoSpacing chain
 
     unless _.isEmpty chain
       Commands.monitoringMouseToCancelSpacing = false
