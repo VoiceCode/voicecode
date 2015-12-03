@@ -76,7 +76,6 @@ Events.on 'applicationStart', ->
     global.Repetition = require '../lib/repetition'
     global.Modifiers = require '../lib/modifiers'
     global.ParserController = require '../lib/parser/parser_controller'
-    global.Synchronizer = require './synchronize'
     Commands.initialize()
     _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
@@ -108,8 +107,9 @@ Events.on 'applicationStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-     unless Settings.slaveMode
-       Synchronizer.synchronize()
+    unless Settings.slaveMode
+      global.Synchronizer = require './synchronize'
+      Synchronizer.synchronize()
 
     mainWindow = null
     # application.on 'ready', ->

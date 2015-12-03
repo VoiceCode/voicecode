@@ -28,17 +28,18 @@
     "fibers": "git+https://github.com/laverdet/node-fibers.git",
     "forever": "^0.15.1",
     "forever-monitor": "^1.7.0",
-    "natural": "git+https://github.com/NaturalNode/natural.git",
     "gulp-rimraf": "^0.2.0",
     "install": "^0.2.3",
     "lodash": "^3.10.1",
+    "natural": "git+https://github.com/NaturalNode/natural.git",
     "node-notifier": "^4.3.1",
     "nodobjc": "git+https://github.com/TooTallNate/NodObjC.git",
     "npm": "^3.3.10",
     "nslog": "git+https://github.com/atom/node-nslog.git",
     "require-directory": "^2.1.1",
     "shelljs": "^0.3.0",
-    "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git"
+    "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git",
+    "synchronize": "^0.9.14"
   },
   "devDependencies": {
     "babelify": "^7.1.0",
