@@ -95,7 +95,7 @@ class EventEmitter extends require('events').EventEmitter
         chalk.black.bgWhite(" #{event} "),  util.inspect(_.toArray(arguments)[1..], {depth: 3})
     super
 
-  mutate: (event, container) ->
+  mutate: (event, container={}) ->
     return container unless events = @_events[event]
     container.continue = true
     if _.isFunction events

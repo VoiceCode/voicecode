@@ -15,7 +15,7 @@ Execute = (script, options = null) ->
     error null, null, script
 
 Applescript = (content, shouldReturn = true) ->
-  script = $.NSAppleScript('alloc')('initWithSource', $(content)) # are we sure this gets garbage collected?
+  script = $.NSAppleScript('alloc')('initWithSource', $(content))
   results = script('executeAndReturnError', null)
   script('dealloc')
   if shouldReturn
