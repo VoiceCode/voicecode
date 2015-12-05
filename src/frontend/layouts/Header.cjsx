@@ -7,6 +7,7 @@ module.exports = React.createClass
     displayName: 'Header'
     render: ->
       <AppBar
+        className='application-bar'
         title="VoiceCode"
         iconElementLeft={<IconButton><NavigationClose /></IconButton>}
         iconElementRight={<FlatButton label="Save" />} />

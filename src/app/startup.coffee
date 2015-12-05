@@ -21,8 +21,6 @@ global.debug = ->
   console.log chalk.white.bold.bgRed('   DEBUG   ')
   console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
 
-application = require 'app'
-BrowserWindow = require 'browser-window'
 client = require('electron-connect').client # DEVELOPMENT
 global.$ = require('nodobjc')
 global.Events = require './event_emitter'
@@ -32,6 +30,29 @@ global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 require '../lib/utility/deep_extension'
+
+mb = require 'menubar'
+debug projectRoot
+global.menubar = mb
+  index: "file://#{projectRoot}/dist/frontend/main.html"
+  icon: "#{projectRoot}/assets/vc_tray.png"
+  width: 900
+  height: 800
+  x: 0
+  y: 0
+  'window-position': 'trayRight'
+  'always-on-top': true
+  showDockIcon: false
+
+menubar.on 'ready', ->
+  menubar.showWindow()
+
+menubar.on 'after-create-window', ->
+  debug 'after create window'
+  menubar.window.openDevTools()
+  menubar.window.on 'closed', -> return
+  client = client.create menubar.window
+
 
 process.on 'uncaughtException', (err) ->
   console.log chalk.white.bold.bgRed('   UNCAUGHT EXCEPTION   ')
@@ -94,7 +115,7 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    # Settings.slaveMode = true
+    Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 
@@ -115,18 +136,7 @@ Events.on 'applicationStart', ->
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 
-    mainWindow = null
-
     emit "startupFlowComplete"
-    # application.on 'ready', ->
-      # mainWindow = new BrowserWindow
-      #   width: 900
-      #   height: 600
-      # mainWindow.loadUrl "file://#{projectRoot}/dist/frontend/main.html"
-      # mainWindow.openDevTools()
-      # mainWindow.on 'closed', ->
-      #   mainWindow = null
-      #
-      # client = client.create mainWindow
 
+Events.once 'startupFlowComplete', -> global.startedUp = true
 emit 'applicationStart'

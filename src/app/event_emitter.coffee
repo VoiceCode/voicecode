@@ -7,6 +7,7 @@ class EventEmitter extends require('events').EventEmitter
     return instance if instance?
     instance = @
     @debug = true
+    @frontendSubscriptions = {}
     @suppressedDebugEntries = [
       'commandEnabled'
       'commandDisabled'
@@ -47,6 +48,17 @@ class EventEmitter extends require('events').EventEmitter
       'commandValidationFailed'
       # 'commandValidationError'
     ]
+
+  frontendOn: (event, callback) ->
+    @frontendSubscriptions[event] ?= []
+    @frontendSubscriptions[event].push callback
+    @on event, callback
+
+  frontendClearSubscriptions: ->
+    _.all @frontendSubscriptions, (callbacks, event) =>
+      @_events[event] = _.without @_events[event], callbacks
+    @frontendSubscriptions = {}
+
   on: (event, callback) ->
     super
 
