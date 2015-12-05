@@ -6,6 +6,9 @@ pack = Packages.register
     'com.sublimetext.2'
   ]
 
+Sublime = require './interface'
+Actions.sublime = -> new Sublime()
+
 Settings.extend "editorApplications", pack.applications()
 
 pack.before
@@ -73,16 +76,14 @@ pack.before
   'object.forward': ->
     @key '-', 'control shift'
 
-  'select.word.next': (input) ->
-    s = new Contexts.Sublime() #TODO: <-
-    @repeat input or 1, ->
-      s.selectNextWord()
+  'select.word.next': (times = 1) ->
+    s = @sublime()
+    @repeat times, s.selectNextWord
     s.execute()
 
-  'select.word.previous': (input) ->
-    s = new Contexts.Sublime() #TODO: <-
-    @repeat input or 1, ->
-      s.selectPreviousWord()
+  'select.word.previous': (times = 1) ->
+    s = @sublime()
+    @repeat times, s.selectPreviousWord
     s.execute()
 
   'editor:extend-selection-to-line-number': (input) ->
