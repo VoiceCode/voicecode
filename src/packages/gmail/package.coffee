@@ -3,7 +3,7 @@ pack = Packages.register
   description: 'Commands for gmail'
   createScope: true
   applications: -> Settings.browserApplications
-  when: -> @inBrowser() and @urlContains 'mail.google.com'
+  condition: -> @inBrowser() and @urlContains 'mail.google.com'
 
 pack.commands
   'go-to-inbox':

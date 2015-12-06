@@ -103,7 +103,7 @@ class Chain
   #   results
   #
   # needsCustomScope: (command) ->
-  #   command.applications?.length or command.when? or command.scope?
+  #   command.applications?.length or command.condition? or command.scope?
   #
   # mergeTextualCommands: (previous, current) ->
   #   previous.arguments ?= []
