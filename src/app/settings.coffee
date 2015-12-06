@@ -483,6 +483,7 @@ _.extend Settings,
     "Terminal"
     "iTerm"
   ]
+  maxStringTypingLength: 9 # strings longer than this will be pasted instead of typed char by char
   modifierKeyDelay: 2 # ms
   keyDelay: 8 # ms delay between each key when called individually, like Return, UpArrow, etc.
   characterDelay: 4 # ms delay between each letter when typing a string of characters
