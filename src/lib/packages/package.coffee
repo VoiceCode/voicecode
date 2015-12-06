@@ -81,7 +81,7 @@ class Package
       packageId: @name
 
   registerScope: ->
-    if @options.applications? or @options.when?
+    if @options.applications? or @options.condition?
       Scope.register @options
       @scope = @name
 
@@ -90,12 +90,12 @@ class Package
       @_scope ?= Scope.get @scope
       @_scope?.applications()
 
-  when: ->
+  condition: ->
     if @scope?
       @_scope ?= Scope.get @scope
-      @_scope?.when
+      @_scope?.condition
     else
-      @options.when
+      @options.condition
 
   remove: ->
     # TODO track commands that were added, and before/after - basically all changes, and then undo them

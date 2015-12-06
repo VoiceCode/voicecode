@@ -5,8 +5,8 @@ class Scope
   @instances = {}
 
   # applications: list of applications where this scope is valid
-  # when: a function that returns true or false whether or not this scope is valid
-  constructor: ({@name, applications, @when}) ->
+  # condition: a function that returns true or false whether or not this scope is valid
+  constructor: ({@name, applications, @condition}) ->
     @_applications = applications
 
   @register: (options) ->
@@ -27,19 +27,19 @@ class Scope
       @get(options.scope)?.active()
     else
       @checkApplications(options.applications) and
-      @checkWhen(options.when)
+      @checkCondition(options.condition)
 
   active: ->
     Scope.active
       applications: @applications()
-      when: @when
+      condition: @condition
 
   # allow lazy resolving of an application list
   applications: ->
     if _.isFunction @_applications
-      @_applications()
+      @_applications() or []
     else
-      @_applications
+      @_applications or []
 
   @applications: (scope) ->
     @get(scope)?.applications() or []
@@ -55,9 +55,9 @@ class Scope
     else
       true
 
-  @checkWhen: (_when) ->
-    if _when?
-      _when.call(Actions)
+  @checkCondition: (condition) ->
+    if condition?
+      condition.call(Actions)
     else
       true
 
