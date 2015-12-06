@@ -48,15 +48,18 @@ class DarwinActions extends Actions
         @_capturedText += string
       else
         @setUndoByDeleting string.length
-        for item in string.split('')
-          @delay Settings.characterDelay or 4
-          code = @keys.keyCodesRegular[item]
-          if code?
-            @_pressKey code
-          else
-            code = @keys.keyCodesShift[item]
+        if string.length > Settings.maxStringTypingLength or 9
+          @paste string
+        else
+          for item in string.split('')
+            @delay Settings.characterDelay or 4
+            code = @keys.keyCodesRegular[item]
             if code?
-              @_pressKey code, ["shift"]
+              @_pressKey code
+            else
+              code = @keys.keyCodesShift[item]
+              if code?
+                @_pressKey code, ["shift"]
   keyDown: (key, modifiers) ->
     code = @keys.keyCodes[key.toLowerCase()]
     if code?
@@ -984,4 +987,18 @@ class DarwinActions extends Actions
         return false
       end try
       """
+
+  paste: (content) ->
+    if content?.length
+      @pasteContent content
+    else
+      super
+      
+  pasteContent: (content) ->
+    old = @getClipboard()
+    @setClipboard content
+    @paste()
+    @delay 200
+    @setClipboard old
+
 module.exports = new DarwinActions
