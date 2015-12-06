@@ -29,10 +29,9 @@ global.asyncblock = require 'asyncblock'
 global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
-require '../lib/utility/deep_extension'
+require '../lib/utility/deep_extension' # _.deepExtend?
 
 mb = require 'menubar'
-debug projectRoot
 global.menubar = mb
   index: "file://#{projectRoot}/dist/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
@@ -48,10 +47,10 @@ menubar.on 'ready', ->
   menubar.showWindow()
 
 menubar.on 'after-create-window', ->
-  debug 'after create window'
   menubar.window.openDevTools()
   menubar.window.on 'closed', -> return
   client = client.create menubar.window
+  client.on 'reload', -> Events.frontendClearSubscriptions()
 
 
 process.on 'uncaughtException', (err) ->
@@ -138,5 +137,7 @@ Events.on 'applicationStart', ->
 
     emit "startupFlowComplete"
 
+# needed while developing ui
 Events.once 'startupFlowComplete', -> global.startedUp = true
+
 emit 'applicationStart'

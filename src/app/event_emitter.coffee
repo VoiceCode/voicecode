@@ -35,9 +35,9 @@ class EventEmitter extends require('events').EventEmitter
     ]
     @suppressedDebugEntries = [
       # 'deprecation'
-      'enableCommand'
-      'commandCreated'
-      'commandEnabled'
+      # 'enableCommand'
+      # 'commandCreated'
+      # 'commandEnabled'
       # 'commandOverwritten'
       'commandAfterAdded'
       'commandBeforeAdded'
@@ -56,7 +56,7 @@ class EventEmitter extends require('events').EventEmitter
 
   frontendClearSubscriptions: ->
     _.all @frontendSubscriptions, (callbacks, event) =>
-      @_events[event] = _.without @_events[event], callbacks
+      @_events[event] = _.difference @_events[event], callbacks
     @frontendSubscriptions = {}
 
   on: (event, callback) ->

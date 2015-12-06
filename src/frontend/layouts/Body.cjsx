@@ -5,40 +5,43 @@ Command = require '../components/Command.cjsx'
 List = require 'material-ui/lib/lists/list'
 ListDivider = require 'material-ui/lib/lists/list-divider'
 ListItem = require 'material-ui/lib/lists/list-item'
+View = require 'react-flexbox'
 
-formattedCommands = ->
+getFormattedCommands = ->
   commands = remote.getGlobal('Commands').mapping
   commands = _.map commands, (command) ->
     command = _.pick command, [
       'id', 'spoken', 'description', 'packageId', 'enabled'
     ]
-    unless command.packageId?
-      command.packageId = 'core'
     command
   commands = _.groupBy commands, 'packageId'
 
-renderCommands = (commands) ->
-  _.map commands, (c) ->
-    <Command key={c.id} command={c} />
 
 module.exports = React.createClass
-    displayName: 'Body'
+    displayName: 'CommandsView'
+    updateCommands: ->
+      @setState _.extend @state, commands: getFormattedCommands()
+    componentDidMount: ->
+      Events.on 'commandEnabled', (command) => @updateCommands()
+      Events.on 'commandDisabled', (command) => @updateCommands()
     getInitialState: ->
-      commands: formattedCommands()
+      commands: getFormattedCommands()
+    renderCommands: (commands) ->
+      _.map commands, (c, index) =>
+          <Command key={"#{c.id}-command"} command={c} />
     render: ->
-      console.log @state.commands
-      lists = _.map @state.commands, (commands, packageId) ->
+      lists = _.map @state.commands, (commands, packageId) =>
         [
           <List key={ "#{packageId}-list" } subheader={ "Package: #{_.capitalize packageId}" }>
-            { renderCommands commands }
+            { @renderCommands commands }
           </List>
           <ListDivider key={ "#{packageId}-divider" } />
         ]
-      <div>
-        <aside className='aside'>
-          aside
-        </aside>
-        <section className='body'>
+      <View row>
+        <View column width='30%' className='aside'>
+
+        </View>
+        <View column width='70%' className='body'>
             { lists }
-        </section>
-      </div>
+        </View>
+      </View>

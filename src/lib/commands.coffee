@@ -6,7 +6,7 @@ class Commands
   constructor: ->
     return instance if instance?
     instance = @
-    # Events.on 'chainPreprocessed', (commands) => @history commands
+    @immediateEdits = false
     @mapping = {}
     @renamings = []
     @context = "global"
@@ -65,11 +65,12 @@ class Commands
       @commandEditsFrom = 'user'
       @performCommandEdits() # userCommandEditsPerformed
 
-    Events.on 'enableCommand', (commandName) => @enable commandName
-    Events.on 'disableCommand', (commandName) => @disable commandName
+    Events.on 'enableCommand', (commandId) => @enable commandId
+    Events.on 'disableCommand', (commandId) => @disable commandId
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
       @commandEditsFrom = 'settings'
       @performCommandEdits() # settingsCommandEditsPerformed
+    Events.on 'startupFlowComplete', => @immediateEdits = true
 
   validate: (command, options, editType) ->
     validated = true
@@ -159,6 +160,8 @@ class Commands
 
   edit: (name, editType, edition, callback) ->
     @delayedEditFunctions.push {name, editType, callback, edition}
+    if @immediateEdits
+      @performCommandEdits('immediate')
 
   remove: (name) ->
     # TODO what else needs to be done to clean up?
@@ -284,6 +287,10 @@ class Commands
     options.id = name
     options.grammarType ?= 'individual'
     options.kind ?= 'action'
+
+    # TODO: move everything to packages & remove this
+    unless options.packageId?
+      options.packageId = 'core'
 
     unless options.spoken?
       options.spoken = options.id
