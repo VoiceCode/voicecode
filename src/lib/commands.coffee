@@ -247,8 +247,6 @@ class Commands
       else
         command.before ?= {}
         command.before["#{info.packageId}"] = {info, action}
-      if command.scope is 'abstract'
-        @pushScope(command, info)
       command
 
   after: (commandName, info, action) ->
@@ -264,8 +262,6 @@ class Commands
       else
         command.after ?= {}
         command.after["#{info.packageId}"] = {info, action}
-      if command.scope is 'abstract'
-        @pushScope(command, info)
       command
 
   addMisspellings: (name, edition) ->
@@ -314,15 +310,5 @@ class Commands
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
     options
-
-  pushScope: (command, info) ->
-    # TODO commands need multiple scopes
-    # implies we need a different architecture
-    unless _.isEmpty info.applications
-      command.applications = (command.applications or []).concat info.applications
-    if info.when?
-      # TODO this needs to handle multiple 'when' for different scenarios
-      command.when = info.when
-
 
 module.exports = new Commands
