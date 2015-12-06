@@ -67,8 +67,12 @@ class Command
         segment?.call(@)
 
   getApplications: ->
-    if @scope?
-      Scope.get(@scope)?.applications()
+    results = _.union Scope.applications(@scope), @applications
+    _.each @before, (value, key) ->
+      results = _.union results, Scope.applications(value.info.scope)
+    _.each @after, (value, key) ->
+      results = _.union results, Scope.applications(value.info.scope)
+    results
 
   generateContext: ->
     @context

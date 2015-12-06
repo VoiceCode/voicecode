@@ -41,6 +41,9 @@ class Scope
     else
       @_applications
 
+  @applications: (scope) ->
+    @get(scope)?.applications() or []
+
   @checkApplications: (applications) ->
     apps = if applications?
       if _.isFunction applications

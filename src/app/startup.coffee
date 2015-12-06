@@ -113,7 +113,7 @@ Events.on 'applicationStart', ->
 
     unless Settings.slaveMode
       global.Synchronizer = require './synchronize'
-      Synchronizer.synchronize()
+      # Synchronizer.synchronize()
 
     mainWindow = null
 
