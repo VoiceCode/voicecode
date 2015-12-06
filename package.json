@@ -31,6 +31,7 @@
     "gulp-rimraf": "^0.2.0",
     "install": "^0.2.3",
     "lodash": "^3.10.1",
+    "menubar": "^2.3.0",
     "natural": "git+https://github.com/NaturalNode/natural.git",
     "node-notifier": "^4.3.1",
     "nodobjc": "git+https://github.com/TooTallNate/NodObjC.git",
