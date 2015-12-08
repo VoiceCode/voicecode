@@ -36,6 +36,7 @@ class Command
       _.each @before, ({action: e, info}) ->
         if Scope.active(info)
           extensions.push ->
+            @extensionsContinue = false
             e.call(@, input, context)
       ->
         @extensionsContinue = true
