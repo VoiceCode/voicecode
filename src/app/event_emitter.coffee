@@ -35,9 +35,9 @@ class EventEmitter extends require('events').EventEmitter
     ]
     @suppressedDebugEntries = [
       # 'deprecation'
-      # 'enableCommand'
-      # 'commandCreated'
-      # 'commandEnabled'
+      'enableCommand'
+      'commandCreated'
+      'commandEnabled'
       # 'commandOverwritten'
       'commandAfterAdded'
       'commandBeforeAdded'

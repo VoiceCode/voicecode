@@ -86,4 +86,4 @@ pack.ready ->
         @string output
 
     # the defaults are overridden if any option is specified
-    @command key, _.extend({}, defaults, value)
+    @command _.kebabCase(key), _.extend({}, defaults, value)

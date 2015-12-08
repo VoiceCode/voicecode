@@ -48,7 +48,7 @@ class DarwinActions extends Actions
         @_capturedText += string
       else
         @setUndoByDeleting string.length
-        if string.length > Settings.maxStringTypingLength or 9
+        if string.length > (Settings.maxStringTypingLength or 9)
           @paste string
         else
           for item in string.split('')

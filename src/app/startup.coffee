@@ -14,6 +14,7 @@ replify 'vc', repl
 # DEVELOPMENT
 
 global._ = require 'lodash'
+global._s = require 'underscore.string'
 global.chalk = require 'chalk'
 global.util = require('util')
 
@@ -44,7 +45,7 @@ global.menubar = mb
   showDockIcon: false
 
 menubar.on 'ready', ->
-  menubar.showWindow()
+  # menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   menubar.window.openDevTools()
@@ -93,29 +94,34 @@ Events.on 'applicationStart', ->
         global.Actions = require '../lib/platforms/linux/actions'
 
     requireDirectory = require 'require-directory'
+
     requireDirectory module, '../lib/execution/',
       visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
+
     requireDirectory module, '../packages/',
       exclude: /.*node_modules.*/
       visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
+
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.Alphabet = require '../lib/alphabet'
     global.Repetition = require '../lib/repetition'
     global.Modifiers = require '../lib/modifiers'
     global.ParserController = require '../lib/parser/parser_controller'
+
     Commands.initialize()
+
     _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
     UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee' # wandering into asynchronous land
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    Settings.slaveMode = true
+    # Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 

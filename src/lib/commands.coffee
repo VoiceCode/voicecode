@@ -159,7 +159,7 @@ class Commands
       @create key, command
 
   edit: (name, editType, edition, callback) ->
-    @delayedEditFunctions.push {name, editType, callback, edition}
+    @delayedEditFunctions.push {name, editType, edition, callback}
     if @immediateEdits
       @performCommandEdits('immediate')
 
