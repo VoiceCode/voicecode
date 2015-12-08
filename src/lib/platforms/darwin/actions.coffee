@@ -993,12 +993,12 @@ class DarwinActions extends Actions
       @pasteContent content
     else
       super
-      
+
   pasteContent: (content) ->
     old = @getClipboard()
     @setClipboard content
     @paste()
-    @delay 200
+    @delay 300
     @setClipboard old
 
 module.exports = new DarwinActions

@@ -17,12 +17,13 @@ Execute = (script, options = null) ->
 Applescript = (content, shouldReturn = true) ->
   script = $.NSAppleScript('alloc')('initWithSource', $(content))
   results = script('executeAndReturnError', null)
-  script('dealloc')
-  if shouldReturn
+  returnValue = if shouldReturn
     debug results
     results('stringValue')?.toString()
   else
     null
+  script('dealloc')
+  returnValue
 
 
 

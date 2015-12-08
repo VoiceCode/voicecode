@@ -30,7 +30,7 @@ class Command
     else
       -> null
 
-    core = if @before?
+    core = unless _.isEmpty @before
       extensions = []
       extensions.push funk
       _.each @before, ({action: e, info}) ->
@@ -67,12 +67,17 @@ class Command
         segment?.call(@)
 
   getApplications: ->
-    results = _.union Scope.applications(@scope), @applications
-    _.each @before, (value, key) ->
-      results = _.union results, Scope.applications(value.info.scope)
-    _.each @after, (value, key) ->
-      results = _.union results, Scope.applications(value.info.scope)
-    results
+    unless _.isEmpty @applications
+      @applications
+    else if @scope is "abstract"
+      results = Scope.applications(@scope)
+      _.each @before, (value, key) ->
+        results = _.union results, Scope.applications(value.info.scope)
+      _.each @after, (value, key) ->
+        results = _.union results, Scope.applications(value.info.scope)
+      results
+    else
+      Scope.applications(@scope)
 
   generateContext: ->
     @context

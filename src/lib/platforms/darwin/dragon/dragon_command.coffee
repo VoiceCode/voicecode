@@ -66,7 +66,7 @@ class DragonCommand extends Command
 
   needsDragonCommand: ->
     return false if @needsCommand is false
-    return false if @scope is 'abstract' and _.isEmpty(@applications)
+    return false if @scope is 'abstract' and _.isEmpty(@getApplications())
     true
 
   generateDragonLists: ->

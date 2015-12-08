@@ -76,6 +76,7 @@ Events.on 'applicationStart', ->
     UserAssetsController.getAssets 'settings.coffee'
     startupFlow.wait 'user_settings'
     global.Command = require '../lib/command'
+    global.grammarContext = require '../lib/parser/grammarContext'
     global.Grammar = require '../lib/parser/grammar'
     global.Chain = require '../lib/chain'
     global.HistoryController = require '../lib/history_controller'

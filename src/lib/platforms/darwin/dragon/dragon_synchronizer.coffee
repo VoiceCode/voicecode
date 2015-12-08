@@ -49,17 +49,17 @@ class DragonSynchronizer
   whoami: ->
     Execute("whoami")?.trim()
 
-  getApplicationVersion: (bundle) ->
-    return 0 if bundle is null # handling global
-    if @applicationVersions[bundle]?
-      @applicationVersions[bundle]
+  getApplicationVersion: (bundleId) ->
+    return 0 if bundleId is null # handling global
+    if @applicationVersions[bundleId]?
+      @applicationVersions[bundleId]
     else
-      existing = @database.get "SELECT * FROM ZCOMMAND WHERE ZAPPBUNDLE = '#{bundle}' LIMIT 1"
+      existing = @database.get "SELECT * FROM ZCOMMAND WHERE ZAPPBUNDLE = '#{bundleId}' LIMIT 1"
       found = if existing?.ZAPPVERSION?
         existing.ZAPPVERSION
       else
-        SystemInfo.applicationMajorVersionFromBundle bundle
-      @applicationVersions[bundle] = found
+        SystemInfo.applicationMajorVersionFromBundle bundleId
+      @applicationVersions[bundleId] = found
       found
 
   getUsername: ->
@@ -69,11 +69,11 @@ class DragonSynchronizer
       @username = @whoami()
       @username
 
-  normalizeBundle: (bundle) ->
-    if bundle is "global"
+  normalizeBundleId: (bundleId) ->
+    if bundleId is "global"
       null
     else
-      bundle
+      bundleId
 
   digest: (triggerPhrase, bundleId) ->
     CryptoJS.MD5([triggerPhrase, bundleId].join('')).toString()
@@ -101,7 +101,7 @@ class DragonSynchronizer
     @lastId = id
     id
 
-  createCommand: (bundleId, triggerPhrase, body) ->
+  createCommand: ({bundleId, triggerPhrase, body}) ->
     locale = Settings.localeSettings[Settings.locale]
     commandId = @createCommandId()
     bundleId = null if bundleId is 'global'
@@ -118,7 +118,7 @@ class DragonSynchronizer
     @database.run "INSERT INTO ZCOMMAND (Z_ENT, Z_OPT, ZACTIVE, ZAPPVERSION, ZCOMMANDID, ZDISPLAY, ZENGINEID, ZISCOMMAND,
     ZISCORRECTION, ZISDICTATION, ZISSLEEP, ZISSPELLING, ZVERSION, ZCURRENTACTION, ZCURRENTTRIGGER, ZLOCATION,
     ZAPPBUNDLE, ZOSLANGUAGE, ZSPOKENLANGUAGE, ZTYPE, ZVENDOR) VALUES (2, 4, 1, #{applicationVersion}, #{commandId},
-    1, -1, 1, 0, 0, 0, 1, 1, #{id}, #{id}, NULL, $bundle, '#{locale.dragonOsLanguage}', '#{locale.dragonCommandSpokenLanguage}', 'ShellScript', $username);", {$bundle: @normalizeBundle(bundleId), $username: username}
+    1, -1, 1, 0, 0, 0, 1, 1, #{id}, #{id}, NULL, $bundleId, '#{locale.dragonOsLanguage}', '#{locale.dragonCommandSpokenLanguage}', 'ShellScript', $username);", {$bundleId: @normalizeBundleId(bundleId), $username: username}
     @database.run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'action'"
     @database.run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'trigger'"
     @database.run "UPDATE Z_PRIMARYKEY SET Z_MAX = #{id} WHERE Z_NAME = 'command'"
@@ -160,17 +160,17 @@ class DragonSynchronizer
     unless @error
       emit 'dragonSynchronizingEnded'
 
-  createList: (name, items, bundle = '#') ->
-    @dynamicDatabase.run "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundle, $name, $spokenLanguage, 'Alt')",
+  createList: (name, items, bundleId = '#') ->
+    @dynamicDatabase.run "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundleId, $name, $spokenLanguage, 'Alt')",
       $name: name
       $spokenLanguage: Settings.localeSettings[Settings.locale].dragonTriggerSpokenLanguage
-      $bundle: bundle
+      $bundleId: bundleId
     # get the new id
     result = @dynamicDatabase.get "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
     id = result?.Z_PK
     if @error
       error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
-    @insertedLists.push "#{bundle}#{name}"
+    @insertedLists.push "#{bundleId}#{name}"
     for item in items
       @createListItem item, id
 
@@ -209,33 +209,33 @@ class DragonSynchronizer
         bundleIds = command.getApplications()
         if _.isEmpty bundleIds
           bundleIds = ['global']
-        _.all bundleIds, (bundle) ->
-          return unless Actions.checkBundleExistence(bundle)
+        for bundleId in bundleIds
+          continue unless Actions.checkBundleExistence(bundleId)
           needsCreating.push
-            bundle: bundle
+            bundleId: bundleId
             triggerPhrase: dragonName
             body: dragonBody
 
     debug "needs creating", needsCreating.length
-    for item in needsCreating
-      @createCommand item.bundle, item.triggerPhrase, item.body
+    _.each needsCreating, (item) =>
+      @createCommand item
 
   synchronizeDynamic: ->
     if @error
       error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
       return false
     debug @insertedLists
-    _.all @lists, (lists, commandName) =>
-      _.all lists, (occurrences, variableName) =>
-        _.all occurrences, (sublists, occurrence) =>
-          _.all sublists, (listValues, sub) =>
+    _.each @lists, (lists, commandName) =>
+      _.each lists, (occurrences, variableName) =>
+        _.each occurrences, (sublists, occurrence) =>
+          _.each sublists, (listValues, sub) =>
             bundleIds = @commands[commandName].getApplications()
             if _.isEmpty bundleIds
               bundleIds = ['global']
-            _.all bundleIds, (bundle) =>
-              return unless Actions.checkBundleExistence(bundle)
-              bundle = '#' if bundle is 'global'
-              unless "#{bundle}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
-                @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundle
+            _.each bundleIds, (bundleId) =>
+              return unless Actions.checkBundleExistence(bundleId)
+              bundleId = '#' if bundleId is 'global'
+              unless "#{bundleId}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
+                @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundleId
 
 module.exports = new DragonSynchronizer

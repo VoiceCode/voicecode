@@ -13,7 +13,7 @@ class ParserController
     Events.once 'startupFlowComplete', =>
       @ready = true
       @generateParser()
-      
+
     Events.on 'generateParserFailed', _.bind @regress, @
     Events.on 'commandEditsPerformed', =>
       @generateParser()
@@ -83,6 +83,7 @@ class ParserController
     @settingsManager.settings
 
   generateFingerprint: ->
+    # debug Grammar.build()
     @fingerprint =
       license: Settings.license
       email: Settings.email

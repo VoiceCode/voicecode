@@ -46,7 +46,7 @@ class Grammar
           if name is "."
             results.push "dot"
           else
-            results.push name.split(" ").join('_')
+            results.push _.snakeCase(name)
         else
           results.push "\"#{name}\""
     results.join(' / ')
@@ -76,33 +76,12 @@ class Grammar
     '"' + _.values(Modifiers.suffixes()).join('" / "') + '"'
   modifierPrefixes: ->
     '"' + _.keys(Settings.modifierPrefixes).join('" / "') + '"'
+  buildNew: -> """
+
+  """
   build: -> """
     {
-      var grammarTransforms = {
-        shrink: function(arguments) {
-          return Actions.fuzzyMatch(Settings.abbreviations, arguments.join(' '));
-        },
-        treemail: function(arguments) {
-          return Actions.fuzzyMatch(Settings.emails, arguments.join(' '));
-        },
-        trusername: function(arguments) {
-          return Actions.fuzzyMatch(Settings.usernames, arguments.join(' '));
-        },
-        trassword: function(arguments) {
-          return Actions.fuzzyMatch(Settings.passwords, arguments.join(' '));
-        },
-        champ: function(word) {
-          return Transforms.titleSentance([word]);
-        }
-      }
-
-      function grammarTransform (name, arguments) {
-        return grammarTransforms[name](arguments);
-      }
-
-      function makeInteger(textArray) {
-        return parseInt(textArray.join(""), 10);
-      }
+      var g = grammarContext;
     }
 
     start
@@ -237,9 +216,7 @@ class Grammar
 
     nestableTextCommand
       = identifier:nestableTextIdentifier ss arguments:(word)+
-      {return grammarTransform(identifier, (arguments));}
-
-    // translations
+      {return g.grammarTransform(identifier, (arguments));}
 
     translation
       = identifier:translationIdentifier {return translationReplacement(identifier);}
@@ -247,12 +224,9 @@ class Grammar
     translationIdentifier
       = identifier:(#{@translationIdentifiers()}) ss {return identifier;}
 
-
     s = " "*
 
     ss = " "+
-
-    // identifier = id:(textCaptureIdentifier / integerCaptureIdentifier / individualIdentifier / oneArgumentIdentifier / singleSearchIdentifier / overrideIdentifier) s {return id;}
 
     identifier = id:(
       textCaptureIdentifierContinuous /

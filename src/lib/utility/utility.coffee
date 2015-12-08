@@ -8,6 +8,7 @@ module.exports =
       _.sortBy(Commands.keys[kind], (e) ->
         Commands.get(e)?.spoken
       ).reverse()
+      
   allTags: ->
     result = []
     _.each(Commands.mapping, (command, key) ->
@@ -15,6 +16,7 @@ module.exports =
         result.push tag
     )
     _.uniq result
+
   allEnabledTags: (enabled) ->
     enabled = switch enabled
       when "enabled"
@@ -29,16 +31,19 @@ module.exports =
         _.each (command.tags or []), (tag) ->
           result.push tag
     _.uniq result
+
   allModules: ->
     result = []
     _.each(Commands.mapping, (command, key) ->
       result.push command.module
     )
     _.uniq result
+
   scopedCommands: (tag) ->
     _.filter(_.keys(Commands.mapping), (key) ->
       _.contains (Commands.mapping[key].tags or []), tag
     )
+
   scopedCommandsWithToggle: (tag, toggle) ->
     enabled = switch toggle
       when "enabled"
@@ -55,6 +60,7 @@ module.exports =
       _.filter _.keys(Commands.mapping), (key) ->
         command = Commands.mapping[key]
         (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
+
   customCommandNames: ->
     Commands.keys.custom.concat(Commands.keys.customContinuous)
 

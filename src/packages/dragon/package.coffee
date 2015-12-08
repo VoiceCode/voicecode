@@ -64,7 +64,7 @@ pack.commands
       # TODO: rewrite, take dragon controller into consideration
       @applescript """
       tell application id "com.dragon.dictate" to quit
-      delay 2
+      delay 4
       tell application id "com.dragon.dictate" to activate
       """, false
 

@@ -13,12 +13,12 @@ pack.before
   'object.backward': ->
     @key '[', 'command'
 
-Events.on 'getCurrentBrowserUrl', (container) ->
+Events.on 'getCurrentBrowserUrl', (container={}) ->
   if Scope.active 'chrome'
     container.url = if not Settings.smartBrowsersUsed
       Applescript """
         tell application "Google Chrome" to get URL of active tab of first window
-      """, {async: false}
+      """, true
     else
       # TODO: smart browser magic
     container.continue = false
