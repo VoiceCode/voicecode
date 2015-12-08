@@ -112,7 +112,7 @@ class EventEmitter extends require('events').EventEmitter
     container.continue = true
     if _.isFunction events
       events = [events]
-    _.reduce events, (container, event) ->
+    _.reduce events, (container={}, event) ->
       return container unless container.continue
       container = event container
       debug container

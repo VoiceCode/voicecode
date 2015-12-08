@@ -21,7 +21,7 @@ pack.commands
     action: (input) ->
       @key '\\', 'command shift'
 
-Events.on 'getCurrentBrowserUrl', (container) ->
+Events.on 'getCurrentBrowserUrl', (container={}) ->
   if Scope.active 'safari'
     container.url = Applescript """
       tell application "Safari" to return URL of front document as string
