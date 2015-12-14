@@ -286,6 +286,7 @@ _.extend Settings,
     ']': 'race'
     '[': 'lets'
     '\\': 'pike'
+  chainRepetitionSuffix: 'way'
   repetitionWords:
     # you can add more repetition commands like this
     wink: 1
@@ -554,7 +555,7 @@ _.extend Settings,
         'format.upper-camel',
         'format.camel',
         'format.snake',
-        'symbol.space' ]
+        'symbols:space' ]
     'symbol.colon.padded.right':
       [ 'format.camel',
         'format.upper-camel',
@@ -567,7 +568,7 @@ _.extend Settings,
     'symbol.comma': [ 'common.enter' ]
     'cursor.left':
       [ 'common.deletion.backward',
-        'symbol.space',
+        'symbols:space',
         'symbol.comma.padded.right',
         'format.upper-camel',
         'format.camel',
@@ -630,7 +631,7 @@ _.extend Settings,
     'common.newLineBelow': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
     'select.up': [ 'common.indentation.left', 'common.indentation.right' ]
     'select.down': [ 'common.indentation.left', 'common.indentation.right' ]
-    'symbol.space':
+    'symbols:space':
       [ 'format.camel',
         'format.upper-camel',
         'core.insertAbbreviation',

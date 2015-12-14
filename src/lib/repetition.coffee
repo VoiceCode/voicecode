@@ -54,13 +54,13 @@ class Repetition
   constructor: ->
     @words = _.clone Settings.repetitionWords
     _.each @words, (repetitionCount, word) =>
-      @words["#{word} way"] = repetitionCount #TODO: make way a variable
+      @words["#{word} #{Settings.chainRepetitionSuffix}"] = repetitionCount
     @build()
   build: ->
     _.each @words, (value, key) ->
       suffix = ''
       description = 'command'
-      if key.match(/way/)?
+      if key.match(new RegExp(Settings.chainRepetitionSuffix))?
         description = 'chain'
         suffix = '.inline'
 
@@ -71,7 +71,7 @@ class Repetition
         description: "Repeat previous in-line #{description} #{value} times"
         tags: ["voicecode", "repetition", "recommended"]
         action: (input, context) ->
-          if key.match(/way/)?
+          if key.match(new RegExp(Settings.chainRepetitionSuffix))?
             context.repeat = value
             if context.chainLinkIndex > 1 and value isnt 1
               context.repeat = value - 1

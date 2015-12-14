@@ -22,8 +22,8 @@ module.exports = React.createClass
     updateCommands: ->
       @setState _.extend @state, commands: getFormattedCommands()
     componentDidMount: ->
-      Events.on 'commandEnabled', (command) => @updateCommands()
-      Events.on 'commandDisabled', (command) => @updateCommands()
+      # Events.on 'commandEnabled', (command) => @updateCommands()
+      # Events.on 'commandDisabled', (command) => @updateCommands()
     getInitialState: ->
       commands: getFormattedCommands()
     renderCommands: (commands) ->

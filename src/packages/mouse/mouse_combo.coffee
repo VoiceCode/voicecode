@@ -88,7 +88,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'symbol.space'
+      @do 'symbols:space'
   'click+delete-line':
     spoken: 'sappy'
     misspellings: ['sapi']

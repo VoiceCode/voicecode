@@ -108,5 +108,5 @@ pack.commands
         snippet = @fuzzyMatch Settings.codeSnippets, input.join(' ')
         @string snippet
         @delay 200
-        completion = Settings.codeSnippetCompletions[@currentApplication()] or 'tab'
+        completion = Settings.codeSnippetCompletions[@currentApplication().name] or 'tab'
         @key completion

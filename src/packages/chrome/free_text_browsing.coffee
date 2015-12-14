@@ -271,7 +271,7 @@ Commands.create 'browser.toggle-markers',
   description: ''
   tags: ['Chrome']
   action: (input) ->
-    console.error @currentApplication()
+    console.error @currentApplication().name
     console.error Settings.smartBrowsers
-    if Settings.smartBrowsersUsed and @currentApplication() in Settings.smartBrowsers
+    if Settings.smartBrowsersUsed and @currentApplication().name in Settings.smartBrowsers
       browserController.freeTextBrowsing.toggleAllMarkers()

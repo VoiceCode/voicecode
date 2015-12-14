@@ -51,7 +51,10 @@ class Scope
       else
         applications
     if apps?
-      Actions.currentApplication() in apps
+      switch global.platform
+        when 'darwin'
+          Actions.currentApplication().bundleId in apps
+        # windows, linux
     else
       true
 

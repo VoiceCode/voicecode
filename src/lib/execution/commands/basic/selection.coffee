@@ -136,7 +136,7 @@ Commands.createDisabled
     description: 'selects all text to the left'
     tags: ['selection', 'left', 'recommended']
     action: ->
-      switch @currentApplication()
+      switch @currentApplication().name
         # TODO: package
         when "Parallels Desktop"
           @key 'home', 'shift'

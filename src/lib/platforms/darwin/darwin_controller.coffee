@@ -15,6 +15,7 @@ class DarwinController
     @historyDragon = []
 
     Events.once 'startupFlowComplete', =>
+      @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
       if Settings.slaveMode
         @listenAsSlave()
       else
@@ -26,8 +27,7 @@ class DarwinController
     $.framework 'AppKit'
 
   applicationChanged: ({event, bundleId, name}) ->
-    Actions.setCurrentApplication bundleId
-    Actions.setCurrentApplicationName name
+    Actions.setCurrentApplication {name, bundleId}
 
     if Commands.monitoringMouseToCancelSpacing
       Commands.lastCommandOfPreviousPhrase = null
@@ -52,7 +52,6 @@ class DarwinController
 
     @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
     @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
-    @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>

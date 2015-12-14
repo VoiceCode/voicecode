@@ -86,7 +86,7 @@ module.exports = new class DragonVocabularyController
     items.join("\n")
   createSpaceContent: ->
     items = []
-    spokenForSpace = Commands.get('symbol.space').spoken
+    spokenForSpace = Commands.get('symbols:space').spoken
     for name in @spaceBefore
       items.push @buildWord [spokenForSpace, name].join(' ')
     items.join("\n")

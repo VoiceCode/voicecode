@@ -66,9 +66,6 @@ module.exports = class Actions
     @_currentApplication = application
     emit 'currentApplicationChanged', application
 
-  setCurrentApplicationName: (name) ->
-    @_currentApplicationName = name
-
   enableDwellClicking: ->
     @_dwellClickingEnabled = true
 
@@ -215,7 +212,7 @@ module.exports = class Actions
     @
 
   inTerminal: ->
-    @currentApplication() in Settings.terminalApplications
+    @currentApplication().name in Settings.terminalApplications
 
   openDefaultTerminal: ->
     @openApplication Settings.defaultTerminal
