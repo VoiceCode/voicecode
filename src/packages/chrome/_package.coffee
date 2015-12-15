@@ -1,6 +1,6 @@
 pack = Packages.register
   name: 'chrome'
-  applications: ['com.google.Chrome']
+  applications: ['com.google.Chrome', 'com.google.Chrome.canary']
   description: 'Google Chrome integration'
 
 Settings.extend 'browserApplications', pack.applications()
@@ -23,3 +23,6 @@ Events.on 'getCurrentBrowserUrl', (container={}) ->
       # TODO: smart browser magic
     container.continue = false
     container
+
+if Settings.chromeExtension
+  global.ChromeBrowserController = require './browser_pipe'
