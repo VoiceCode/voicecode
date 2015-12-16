@@ -1,3 +1,8 @@
+fs = require 'fs'
+path = require 'path'
+
+grammarDebug = true
+
 class ParserController
   instance = null
   constructor: ->
@@ -34,6 +39,7 @@ class ParserController
       @setParser oldParser, false
     else
       try
+        @writeGrammar() if grammarDebug
         @getNewParser()
       catch e
         @regress e
@@ -78,12 +84,15 @@ class ParserController
     @settingsManager ?= new SettingsManager("generated/parser")
     @settingsManager.update data
 
+  writeGrammar: ->
+    file = path.resolve(UserAssetsController.assetsPath, "generated/grammar.js")
+    fs.writeFile file, @fingerprint.grammar, 'utf8'
+
   loadFromDisk: ->
     @settingsManager ?= new SettingsManager("generated/parser")
     @settingsManager.settings
 
   generateFingerprint: ->
-    # debug Grammar.build()
     @fingerprint =
       license: Settings.license
       email: Settings.email

@@ -1,14 +1,9 @@
 module.exports =
-  sortedCommandKeys: (kind, continuous=false) ->
-    if continuous
-      _.sortBy(Commands.keys["#{kind}Continuous"], (e) ->
-        Commands.get(e)?.spoken
-      ).reverse()
-    else
-      _.sortBy(Commands.keys[kind], (e) ->
-        Commands.get(e)?.spoken
-      ).reverse()
-      
+  sortedCommandKeys: (kind) ->
+    _.sortBy(Commands.keys[kind], (e) ->
+      Commands.get(e)?.spoken
+    ).reverse()
+
   allTags: ->
     result = []
     _.each(Commands.mapping, (command, key) ->
@@ -62,7 +57,7 @@ module.exports =
         (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
 
   customCommandNames: ->
-    Commands.keys.custom.concat(Commands.keys.customContinuous)
+    Commands.keys.custom
 
   scopedModules: (module) ->
     _.filter(_.keys(Commands.mapping), (key) ->

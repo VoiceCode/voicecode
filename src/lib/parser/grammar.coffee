@@ -3,555 +3,72 @@ class Grammar
   constructor: () ->
     return instance if instance?
     instance = @
-  textCaptureCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("textCapture")
-  textCaptureCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("textCapture", true)
-  integerCaptureCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("integerCapture")
-  integerCaptureCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("integerCapture", true)
-  numberRangeCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("numberRange")
-  numberRangeCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("numberRange", true)
-  individualCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("individual")
-  individualCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("individual", true)
-  singleSearchCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("singleSearch")
-  singleSearchCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("singleSearch", true)
-  findableCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("findable")
-  oneArgumentCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("oneArgument")
-  oneArgumentCommandsContinuous: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("oneArgument", true)
-  customCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("custom")
-  # customCommandsContinuous: ->
-  #   @buildCommandList Commands.Utility.sortedCommandKeys("custom", true)
-  repeaterCommands: ->
-    @buildCommandList Commands.Utility.sortedCommandKeys("repeater")
+
+  buildCommands: (kind) ->
+    @buildCommandList Commands.Utility.sortedCommandKeys(kind)
+
   buildCommandList: (keys) ->
-    results = []
-    for id in keys
-      command = Commands.mapping[id]
-      continue unless command?
-      name = command.spoken
+    results = _.map keys, (id) =>
+      command = new Command id
       if command.enabled
-        if command.misspellings?.length
-          if name is "."
-            results.push "dot"
-          else
-            results.push _.snakeCase(name)
-        else
-          results.push "\"#{name}\""
-    results.join(' / ')
-  misspellings: ->
-    results = []
-    for id, command of Commands.mapping
-      name = command.spoken
-      if command.misspellings?.length
-        alternates = _.map command.misspellings, (alt) ->
-          "'#{alt}'"
-        alternates.push "'#{name}'"
-        normalName = if name is "."
-          "dot"
-        else
-          name.split(" ").join('_')
-        misspellings = _.sortBy(alternates, (e) -> e).reverse()
-        aliasLine = "#{normalName} = (#{misspellings.join(" / ")}) {return '#{name}';}"
-        results.push aliasLine
-    results.join("\n")
-  translationIdentifiers: ->
+        unless command.needsParsing is false
+          switch command.grammarType
+            when "custom"
+              @customCommand command
+            when "textCapture"
+              @textCaptureCommand command
+            when "singleSearch"
+              @singleSearchCommand command
+            when "integerCapture"
+              @integerCaptureCommand command
+            when "numberRange"
+              @numberRangeCommand command
+            when "individual"
+              @individualCommand command
+            when "oneArgument"
+              @oneArgumentCommand command
+    _.compact(results).join('/\n')
+
+  translationIds: ->
     _.map(Settings.translations, (value, key) -> "\"#{key}\"").join(" / ")
+
+  findableIds: ->
+    @buildRecognizedNameList Commands.Utility.sortedCommandKeys('findable')
+
+  repeaterIds: ->
+    @buildRecognizedNameList Commands.Utility.sortedCommandKeys('repeater')
+
+  buildRecognizedNameList: (ids) ->
+    _.map ids, (id) =>
+      @buildMisspellings Commands.mapping[id], true
+    .join '/'
+
   buildPhonemeChain: ->
     _.map Settings.letters, (value, key) ->
       "'#{value}'"
-    .join " / "
-  modifierSuffixes: ->
-    '"' + _.values(Modifiers.suffixes()).join('" / "') + '"'
-  modifierPrefixes: ->
-    '"' + _.keys(Settings.modifierPrefixes).join('" / "') + '"'
-  buildNew: -> """
-    {
-      var g = grammarContext;
-    }
-
-    start
-      = phrase
-
-    phrase
-      = commands:(command)*
-
-    command
-      = customCommand /
-        textCaptureCommand /
-        singleSearchCommand /
-        integerCaptureCommand /
-        numberRangeCommand /
-        individualCommand /
-        oneArgumentCommand /
-        modifierCommand /
-        literalCommand
-
-    textCaptureCommand
-      = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}
-
-    textCaptureIdentifier
-      = identifier:(#{@textCaptureCommands()}) ss {return identifier;}
-
-    #{@misspellings()}
-
-    #{@customCommandsContent()}
-
-    #{@customLists()}
-
-    overrideCommand
-     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger / modifierCommand)
-     {
-      if (isNaN(keeperRight)) {
-        return keeperRight;
-      }
-      else {
-        return numberToWords(keeperRight);
-      }
-     }
-
-    overrideIdentifier
-      = identifier:("keeper") ss {return identifier;}
-
-    textArgument
-      = (overrideCommand / nestableTextCommand / translation / exactInteger / phonemeString / word)+
-
-    singleSearchCommand
-      = left:singleSearchIdentifier right:singleSearchArgument? distance:repeaterIdentifier? {return {command: left, arguments: {value: right, distance: distance}};}
-
-    repeaterIdentifier
-      = identifier:(#{@repeaterCommands()}) ss {return Commands.mapping[identifier].repeater;}
-
-    singleSearchIdentifier
-      = identifier:(#{@singleSearchCommands()}) ss {return identifier;}
-
-    singleSearchArgument
-      = (overrideCommand / findableIdentifier / nestableTextCommand / translation / spokenInteger / singleTextArgument)
-
-    findableIdentifier
-      = identifier:(#{@findableCommands()}) ss {return Commands.getBySpoken(identifier).findable;}
-
-    integerCaptureCommand
-      = left:integerCaptureIdentifier right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
-
-    numberRangeCommand
-      = left:numberRangeIdentifier right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
-
-    integerCaptureIdentifier
-      = identifier:(#{@integerCaptureCommands()}) ss {return identifier;}
-
-    numberRangeIdentifier
-      = identifier:(#{@numberRangeCommands()}) ss {return identifier;}
-
-    oneArgumentCommand
-      = left:oneArgumentIdentifier right:(spokenInteger / singleTextArgument)? {return {command: left, arguments: right};}
-
-    oneArgumentIdentifier
-      = identifier:(#{@oneArgumentCommands()}) ss {return identifier;}
-
-    singleTextArgument
-      = (translation / phonemeString / word / exactInteger / symbol)
-
-    individualCommand
-      = identifier:individualIdentifier {return {command: identifier};}
-
-    individualIdentifier
-      = identifier:(#{@individualCommands()}) ss {return identifier;}
-
-    literalCommand
-      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {command: "core:literal", arguments: text};}
-
-    nestableTextIdentifier
-      = "shrink" / "treemail" / "trusername" / "trassword"
-
-    nestableTextCommand
-      = identifier:nestableTextIdentifier ss arguments:(word)+
-      {return g.grammarTransform(identifier, (arguments));}
-
-    translation
-      = identifier:translationIdentifier {return translationReplacement(identifier);}
-
-    translationIdentifier
-      = identifier:(#{@translationIdentifiers()}) ss {return identifier;}
-
-    s = " "*
-
-    ss = " "+
-
-    identifier = id:(
-      textCaptureIdentifier /
-      integerCaptureIdentifier /
-      numberRangeIdentifier /
-      individualIdentifier /
-      oneArgumentIdentifier /
-      singleSearchIdentifier /
-      nestableTextIdentifier /
-      overrideIdentifier /
-      modifierIdentifier /
-      modifierPrefix
-    ) s {return id;}
-
-    word = !identifier !customCommand text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss {return text.join('')}
-
-    symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
-
-    numberRange = first:(spokenInteger) "." ss last:(spokenInteger)? {return {first: parseInt(first), last: parseInt(last)};}
-
-    integer "integer"
-      = digits:[0-9]+ s {return makeInteger(digits);}
-
-    spokenInteger
-      = components:(tensPlace / spokenDigit / teen / thousands / integer)+
-      {return components.join('');}
-
-    exactInteger
-      = start:(tensPlace / exactDigit / teen / thousands / integer) rest:(spokenInteger)*
-      {return start.toString() + rest.join('');}
-
-    spokenDigit = zero / oh / one / to / two / three / for / four / five / six / seven / eight / nine
-    exactDigit = zero / one / two / three / four / five / six / seven / eight / nine
-    teen = ten / eleven / twelve / thirteen / fourteen / fifteen / sixteen / seventeen / eighteen / nineteen
-    tensPlace = twenty / thirty / forty / fifty / sixty / seventy / eighty / ninety
-    thousands = hundred / thousand / million / billion / trillion
-
-    zero = "zero" ss {return 0;}
-    oh = "oh" ss {return 0;}
-    one = "one" ss {return 1;}
-    to = "to" ss {return 2;}
-    two = ("two" / "twah") ss {return 2;}
-    three = "three" ss {return 3;}
-    for = "for" ss {return 4;}
-    four = ("four" / "quads") ss {return 4;}
-    five = "five" ss {return 5;}
-    six = "six" ss {return 6;}
-    seven = "seven" ss {return 7;}
-    eight = "eight" ss {return 8;}
-    nine = "nine" ss {return 9;}
-
-    ten = "ten" ss {return 10;}
-    eleven = "eleven" ss {return 11;}
-    twelve = "twelve" ss {return 12;}
-    thirteen = "thirteen" ss {return 13;}
-    fourteen = "fourteen" ss {return 14;}
-    fifteen = "fifteen" ss {return 15;}
-    sixteen = "sixteen" ss {return 16;}
-    seventeen = "seventeen" ss {return 17;}
-    eighteen = "eighteen" ss {return 18;}
-    nineteen = "nineteen" ss {return 19;}
-
-    twenty = "twenty" ("-" / " ")+ {return 20;}
-    thirty = "thirty" ("-" / " ")+ {return 30;}
-    forty = "forty" ("-" / " ")+ {return 40;}
-    fifty = "fifty" ("-" / " ")+ {return 50;}
-    sixty = "sixty" ("-" / " ")+ {return 60;}
-    seventy = "seventy" ("-" / " ")+ {return 70;}
-    eighty = "eighty" ("-" / " ")+ {return 80;}
-    ninety = "ninety" ("-" / " ")+ {return 90;}
-
-    hundred = "hundred" ss {return '00';}
-    thousand = "thousand" ss {return '000';}
-    million = "million" ss {return '000000';}
-    billion = "billion" ss {return '000000000';}
-    trillion = "trillion" ss {return '000000000000';}
-
-    phonemeRoot = letter:(#{@buildPhonemeChain()})
-      {return Alphabet.roots[letter];}
-
-    phonemeIndividual = first:phonemeRoot ss {return first;}
-    phonemeCapital = '#{Settings.uppercaseLetterPrefix}' ss root:phonemeRoot ss {return root.toUpperCase();}
-    phonemeSuffix = root:phonemeRoot ss '#{Settings.singleLetterSuffix}' ss {return root;}
-    phonemeString =
-      phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
-      {return phonemes.join('');}
-    labeledPhonemeString =
-      phonemes:(phonemeString)
-      {return {text: phonemes, source: 'phonemes'};}
-
-    modifierIdentifier
-      = prefix:modifierPrefix ss suffix:modifierSuffix {return prefix + " " + suffix;}
-
-    modifierCommand
-      = identifier:modifierIdentifier ss {return {command: identifier};}
-
-    modifierPrefix = #{@modifierPrefixes()}
-    modifierSuffix = #{@modifierSuffixes()}
-  """
-  build: -> """
-    {
-      var g = grammarContext;
-    }
-
-    start
-      = phrase
-
-    phrase
-      = first:(command) rest:(commandContinuous)* {return [first].concat(rest);}
-
-    command
-      = customCommand /
-        textCaptureCommand /
-        singleSearchCommand /
-        integerCaptureCommand /
-        numberRangeCommand /
-        individualCommand /
-        oneArgumentCommand /
-        modifierCommand /
-        literalCommand
-
-    commandContinuous
-      = customCommand /
-        textCaptureCommandContinuous /
-        singleSearchCommandContinuous /
-        integerCaptureCommandContinuous /
-        numberRangeCommandContinuous /
-        individualCommandContinuous /
-        oneArgumentCommandContinuous /
-        modifierCommand /
-        literalCommand
-
-    textCaptureCommand
-      = left:textCaptureIdentifier right:textArgument? {return {command: left, arguments: right};}
-    textCaptureCommandContinuous
-      = left:textCaptureIdentifierContinuous right:textArgument? {return {command: left, arguments: right};}
-
-    textCaptureIdentifier
-      = identifier:(#{@textCaptureCommands()}) ss {return identifier;}
-    textCaptureIdentifierContinuous
-      = identifier:(#{@textCaptureCommandsContinuous()}) ss {return identifier;}
-
-
-    #{@misspellings()}
-
-    #{@customCommandsContent()}
-
-    #{@customLists()}
-
-    overrideCommand
-     = keeperLeft:overrideIdentifier keeperRight:(identifier / spokenInteger)
-     {
-      if (isNaN(keeperRight)) {
-        return keeperRight;
-      }
-      else {
-        return numberToWords(keeperRight);
-      }
-     }
-
-    overrideIdentifier
-      = identifier:("keeper") ss {return identifier;}
-
-    textArgument
-      = (overrideCommand / nestableTextCommand / translation / exactInteger / phonemeString / word)+
-
-    singleSearchCommand
-      = left:singleSearchIdentifier right:singleSearchArgument? distance:repeaterIdentifier? {return {command: left, arguments: {value: right, distance: distance}};}
-    singleSearchCommandContinuous
-      = left:singleSearchIdentifierContinuous right:singleSearchArgument? distance:repeaterIdentifier? {return {command: left, arguments: {value: right, distance: distance}};}
-
-    repeaterIdentifier
-      = identifier:(#{@repeaterCommands()}) ss {return Commands.mapping[identifier].repeater;}
-
-    singleSearchIdentifier
-      = identifier:(#{@singleSearchCommands()}) ss {return identifier;}
-    singleSearchIdentifierContinuous
-      = identifier:(#{@singleSearchCommandsContinuous()}) ss {return identifier;}
-
-    singleSearchArgument
-      = (overrideCommand / findableIdentifier / nestableTextCommand / translation / spokenInteger / singleTextArgument)
-
-    findableIdentifier
-      = identifier:(#{@findableCommands()}) ss {return Commands.getBySpoken(identifier).findable;}
-
-    integerCaptureCommand
-      = left:integerCaptureIdentifier right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
-    integerCaptureCommandContinuous
-      = left:integerCaptureIdentifierContinuous right:spokenInteger? {return {command: left, arguments: parseInt(right)};}
-
-    numberRangeCommand
-      = left:numberRangeIdentifier right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
-    numberRangeCommandContinuous
-      = left:numberRangeIdentifierContinuous right:(numberRange / spokenInteger)? {return {command: left, arguments: right};}
-
-    integerCaptureIdentifier
-      = identifier:(#{@integerCaptureCommands()}) ss {return identifier;}
-    integerCaptureIdentifierContinuous
-      = identifier:(#{@integerCaptureCommandsContinuous()}) ss {return identifier;}
-
-    numberRangeIdentifier
-      = identifier:(#{@numberRangeCommands()}) ss {return identifier;}
-    numberRangeIdentifierContinuous
-      = identifier:(#{@numberRangeCommandsContinuous()}) ss {return identifier;}
-
-    oneArgumentCommand
-      = left:oneArgumentIdentifier right:(spokenInteger / singleTextArgument)? {return {command: left, arguments: right};}
-    oneArgumentCommandContinuous
-      = left:oneArgumentIdentifierContinuous right:(spokenInteger / singleTextArgument)? {return {command: left, arguments: right};}
-
-    oneArgumentIdentifier
-      = identifier:(#{@oneArgumentCommands()}) ss {return identifier;}
-    oneArgumentIdentifierContinuous
-      = identifier:(#{@oneArgumentCommandsContinuous()}) ss {return identifier;}
-
-    singleTextArgument
-      = (translation / phonemeString / word / exactInteger / symbol)
-
-    individualCommand
-      = identifier:individualIdentifier {return {command: identifier};}
-    individualCommandContinuous
-      = identifier:individualIdentifierContinuous {return {command: identifier};}
-
-    individualIdentifier
-      = identifier:(#{@individualCommands()}) ss {return identifier;}
-    individualIdentifierContinuous
-      = identifier:(#{@individualCommandsContinuous()}) ss {return identifier;}
-
-    literalCommand
-      = text:(overrideCommand / nestableTextCommand / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {command: "core:literal", arguments: text};}
-
-    nestableTextIdentifier
-      = "shrink" / "treemail" / "trusername" / "trassword"
-
-    nestableTextCommand
-      = identifier:nestableTextIdentifier ss arguments:(word)+
-      {return g.grammarTransform(identifier, (arguments));}
-
-    translation
-      = identifier:translationIdentifier {return translationReplacement(identifier);}
-
-    translationIdentifier
-      = identifier:(#{@translationIdentifiers()}) ss {return identifier;}
-
-    s = " "*
-
-    ss = " "+
-
-    identifier = id:(
-      textCaptureIdentifierContinuous /
-      integerCaptureIdentifierContinuous /
-      numberRangeIdentifierContinuous /
-      individualIdentifierContinuous /
-      oneArgumentIdentifierContinuous /
-      singleSearchIdentifierContinuous /
-      nestableTextIdentifier /
-      overrideIdentifier /
-      modifierIdentifier /
-      modifierPrefix
-    ) s {return id;}
-
-    word = !identifier !customCommand text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss {return text.join('')}
-
-    symbol = !identifier symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
-
-    numberRange = first:(spokenInteger) "." ss last:(spokenInteger)? {return {first: parseInt(first), last: parseInt(last)};}
-
-    integer "integer"
-      = digits:[0-9]+ s {return makeInteger(digits);}
-
-    spokenInteger
-      = components:(tensPlace / spokenDigit / teen / thousands / integer)+
-      {return components.join('');}
-
-    exactInteger
-      = start:(tensPlace / exactDigit / teen / thousands / integer) rest:(spokenInteger)*
-      {return start.toString() + rest.join('');}
-
-    spokenDigit = zero / oh / one / to / two / three / for / four / five / six / seven / eight / nine
-    exactDigit = zero / one / two / three / four / five / six / seven / eight / nine
-    teen = ten / eleven / twelve / thirteen / fourteen / fifteen / sixteen / seventeen / eighteen / nineteen
-    tensPlace = twenty / thirty / forty / fifty / sixty / seventy / eighty / ninety
-    thousands = hundred / thousand / million / billion / trillion
-
-    zero = "zero" ss {return 0;}
-    oh = "oh" ss {return 0;}
-    one = "one" ss {return 1;}
-    to = "to" ss {return 2;}
-    two = ("two" / "twah") ss {return 2;}
-    three = "three" ss {return 3;}
-    for = "for" ss {return 4;}
-    four = ("four" / "quads") ss {return 4;}
-    five = "five" ss {return 5;}
-    six = "six" ss {return 6;}
-    seven = "seven" ss {return 7;}
-    eight = "eight" ss {return 8;}
-    nine = "nine" ss {return 9;}
-
-    ten = "ten" ss {return 10;}
-    eleven = "eleven" ss {return 11;}
-    twelve = "twelve" ss {return 12;}
-    thirteen = "thirteen" ss {return 13;}
-    fourteen = "fourteen" ss {return 14;}
-    fifteen = "fifteen" ss {return 15;}
-    sixteen = "sixteen" ss {return 16;}
-    seventeen = "seventeen" ss {return 17;}
-    eighteen = "eighteen" ss {return 18;}
-    nineteen = "nineteen" ss {return 19;}
-
-    twenty = "twenty" ("-" / " ")+ {return 20;}
-    thirty = "thirty" ("-" / " ")+ {return 30;}
-    forty = "forty" ("-" / " ")+ {return 40;}
-    fifty = "fifty" ("-" / " ")+ {return 50;}
-    sixty = "sixty" ("-" / " ")+ {return 60;}
-    seventy = "seventy" ("-" / " ")+ {return 70;}
-    eighty = "eighty" ("-" / " ")+ {return 80;}
-    ninety = "ninety" ("-" / " ")+ {return 90;}
-
-    hundred = "hundred" ss {return '00';}
-    thousand = "thousand" ss {return '000';}
-    million = "million" ss {return '000000';}
-    billion = "billion" ss {return '000000000';}
-    trillion = "trillion" ss {return '000000000000';}
-
-    phonemeRoot = letter:(#{@buildPhonemeChain()})
-      {return Alphabet.roots[letter];}
-
-    phonemeIndividual = first:phonemeRoot ss {return first;}
-    phonemeCapital = '#{Settings.uppercaseLetterPrefix}' ss root:phonemeRoot ss {return root.toUpperCase();}
-    phonemeSuffix = root:phonemeRoot ss '#{Settings.singleLetterSuffix}' ss {return root;}
-    phonemeString =
-      phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
-      {return phonemes.join('');}
-    labeledPhonemeString =
-      phonemes:(phonemeString)
-      {return {text: phonemes, source: 'phonemes'};}
-
-    modifierIdentifier
-      = prefix:modifierPrefix ss suffix:modifierSuffix {return prefix + " " + suffix;}
-
-    modifierCommand
-      = identifier:modifierIdentifier ss {return {command: identifier};}
-
-    modifierPrefix = #{@modifierPrefixes()}
-    modifierSuffix = #{@modifierSuffixes()}
-    """
-  customCommandsContent: ->
-    cc = _.map Commands.Utility.sortedCommandKeys("custom"), (id) =>
-      command = new Command(id, null)
-      unless command.needsParsing is false
-        "(" + @buildCustomCommand(command) + ")"
-    result = _.compact(cc).join(" / ")
-
-    """
-    customCommand = #{result}
-    """
-  buildCustomCommand: (command) ->
+    .join "/"
+
+  buildMisspellings: (command, convergent = false) ->
+    name = command.spoken
+    if command.misspellings?.length
+      alternates = _.map command.misspellings, (alt) ->
+        "'#{alt}'"
+      alternates.push "'#{name}'"
+      misspellings = _.sortBy(alternates, (e) -> e).reverse()
+      result = [
+        '('
+        misspellings.join(" / ")
+        if convergent
+          "{return '#{name}';}"
+        ')'
+      ].join('')
+    else
+      "'#{name}'"
+
+  customCommand: (command) ->
     name = command.spoken
     first = if command.grammar.includeName
-      token = if command.misspellings?.length
-        name.split(" ").join('_')
-      else
-        '"' + name + '"'
-      [token, "ss"]
+      [@buildMisspellings(command), "ss"]
     else
       []
     second = []
@@ -568,9 +85,12 @@ class Grammar
         else
           first.push "('#{item.text}')?"
         first.push "ss"
-
-    returnObject = second.join(", ")
-    first.join(" ") + " " + "{return {command: '#{name}', arguments: {#{returnObject}}};}"
+    [
+      first.join(" ")
+      if command.isConditional()
+        "& {return ia('#{command.id}')}"
+      "{return{c:'#{command.id}',a:{#{second.join(",")}}};}"
+    ].join ' '
 
   customLists: ->
     _.map(Commands.Utility.getUsedOptionLists('recognized'), @buildCustomList).join("\n")
@@ -580,5 +100,238 @@ class Grammar
     itemString = _.map sorted, (item) ->
       "\"#{item}\""
     .join " / "
-    "_#{name} = value:(#{itemString}) ss {return value;}"
+    "_#{name}=value:(#{itemString}) ss {return value;}"
+
+  textCaptureCommand: (command) ->
+    [
+      @buildMisspellings(command)
+      "ss"
+      "a:textArgument?"
+      "{return{c:'#{command.id}',a:a}}"
+    ].join ' '
+
+  singleSearchCommand: (command) ->
+    [
+      @buildMisspellings(command)
+      "ss"
+      "r:singleSearchArgument?"
+      "d:repeaterId?"
+      "{return{c:'#{command.id}',a:{value:r,distance:d}}}"
+    ].join ' '
+
+  integerCaptureCommand: (command) ->
+    # TODO parseInt on arg in normalizeOptions
+    [
+      @buildMisspellings(command)
+      "ss"
+      "a:spokenInteger?"
+      "{return{c:'#{command.id}',a:a}}"
+    ].join ' '
+
+  numberRangeCommand: (command) ->
+    [
+      @buildMisspellings(command)
+      "ss"
+      "a:(numberRange/spokenInteger)?"
+      "& {return ia('#{command.id}')}"
+      "{return{c:'#{command.id}',a:a}}"
+    ].join ' '
+
+  individualCommand: (command) ->
+    [
+      @buildMisspellings(command)
+      "ss"
+      "{return{c:'#{command.id}'}}"
+    ].join ' '
+
+  oneArgumentCommand: (command) ->
+    [
+      @buildMisspellings(command)
+      "ss"
+      "a:(spokenInteger/singleTextArgument)?"
+      "{return{c:'#{command.id}',a:a}}"
+    ].join ' '
+
+  buildSentinels: ->
+    keys = _.union Commands.keys['individual'],
+      Commands.keys['oneArgument'],
+      Commands.keys['numberRange'],
+      Commands.keys['integerCapture'],
+      Commands.keys['singleSearch'],
+      Commands.keys['custom'],
+      Commands.keys['textCapture']
+
+    results = []
+    _.each keys, (key) ->
+      command = new Command key
+      if command.enabled and command.needsParsing != false and command.spoken?
+        conditional = command.isConditional() or command.continuous is false
+        results.push [key, command.spoken, conditional]
+        _.each command.misspellings, (word) ->
+          results.push [key, word, conditional]
+
+    _.map _.sortBy(results, (e) -> e[1]).reverse(), (e) ->
+      value = "'#{e[1]}'"
+      if e[2]
+        value + "&{return state.sen('#{e[0]}')}"
+      else
+        value
+    .join '/'
+
+  build: -> """
+    {
+      var g = grammarContext;
+      var state = new GrammarState();
+    }
+
+    start = commands:(command)*
+
+    command =
+      command:customCommand & {return state.found(command)} {return command}/
+      command:textCaptureCommand & {return state.found(command)} {return command}/
+      command:singleSearchCommand & {return state.found(command)} {return command}/
+      command:integerCaptureCommand & {return state.found(command)} {return command}/
+      command:numberRangeCommand & {return state.found(command)} {return command}/
+      command:individualCommand & {return state.found(command)} {return command}/
+      command:oneArgumentCommand & {return state.found(command)} {return command}/
+      command:literalCommand & {return state.found(command)} {return command}
+
+    textCaptureCommand = #{@buildCommands('textCapture')}
+    customCommand = #{@buildCommands('custom')}
+    singleSearchCommand = #{@buildCommands('singleSearch')}
+    integerCaptureCommand = #{@buildCommands('integerCapture')}
+    numberRangeCommand = #{@buildCommands('numberRange')}
+    individualCommand = #{@buildCommands('individual')}
+    oneArgumentCommand = #{@buildCommands('oneArgument')}
+    literalCommand
+      = a:(overrideCommand / nestedText / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {c: "core:literal", a: a};}
+
+    #{@customLists()}
+
+    sentinel = s:(#{@buildSentinels()}) ss
+
+    overrideCommand
+     = keeperLeft:overrideId keeperRight:(spokenInteger)
+     {
+      if (isNaN(keeperRight)) {
+        return keeperRight;
+      }
+      else {
+        return numberToWords(keeperRight);
+      }
+     }
+
+    overrideId
+      = id:("keeper") ss {return id;}
+
+    textArgument
+      = (overrideCommand / nestedText / translation / exactInteger / phonemeString / word)+
+
+    repeaterId
+      = id:(#{@repeaterIds()}) ss {return Commands.getRepeater(id);}
+
+    singleSearchArgument
+      = (overrideCommand / findableId / nestedText / translation / spokenInteger / singleTextArgument)
+
+    findableId
+      = id:(#{@findableIds()}) ss {return Commands.getFindable(id);}
+
+    singleTextArgument
+      = (translation / phonemeString / word / exactInteger / symbol)
+
+    nestedText
+      = id:nestedTextId ss arguments:(word)+
+      {return g.grammarTransform(id, (arguments));}
+
+    nestedTextId
+      = "shrink" / "treemail" / "trusername" / "trassword"
+
+    translation
+      = id:translationId {return translationReplacement(id);}
+
+    translationId
+      = id:(#{@translationIds()}) ss {return id;}
+
+    s = " "*
+
+    ss = " "+
+
+    word = !sentinel text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss {return text.join('')}
+
+    symbol = !sentinel symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
+
+    numberRange = first:(spokenInteger) "." ss last:(spokenInteger)? {return {first: parseInt(first), last: parseInt(last)};}
+
+    integer "integer"
+      = digits:[0-9]+ s {return g.makeInteger(digits);}
+
+    spokenInteger
+      = components:(tensPlace / spokenDigit / teen / thousands / integer)+
+      {return components.join('');}
+
+    exactInteger
+      = start:(tensPlace / exactDigit / teen / thousands / integer) rest:(spokenInteger)*
+      {return start.toString() + rest.join('');}
+
+    spokenDigit = zero / oh / one / to / two / three / for / four / five / six / seven / eight / nine
+    exactDigit = zero / one / two / three / four / five / six / seven / eight / nine
+    teen = ten / eleven / twelve / thirteen / fourteen / fifteen / sixteen / seventeen / eighteen / nineteen
+    tensPlace = twenty / thirty / forty / fifty / sixty / seventy / eighty / ninety
+    thousands = hundred / thousand / million / billion / trillion
+
+    zero = "zero" ss {return 0;}
+    oh = "oh" ss {return 0;}
+    one = "one" ss {return 1;}
+    to = "to" ss {return 2;}
+    two = ("two" / "twah") ss {return 2;}
+    three = "three" ss {return 3;}
+    for = "for" ss {return 4;}
+    four = ("four" / "quads") ss {return 4;}
+    five = "five" ss {return 5;}
+    six = "six" ss {return 6;}
+    seven = "seven" ss {return 7;}
+    eight = "eight" ss {return 8;}
+    nine = "nine" ss {return 9;}
+
+    ten = "ten" ss {return 10;}
+    eleven = "eleven" ss {return 11;}
+    twelve = "twelve" ss {return 12;}
+    thirteen = "thirteen" ss {return 13;}
+    fourteen = "fourteen" ss {return 14;}
+    fifteen = "fifteen" ss {return 15;}
+    sixteen = "sixteen" ss {return 16;}
+    seventeen = "seventeen" ss {return 17;}
+    eighteen = "eighteen" ss {return 18;}
+    nineteen = "nineteen" ss {return 19;}
+
+    twenty = "twenty" ("-" / " ")+ {return 20;}
+    thirty = "thirty" ("-" / " ")+ {return 30;}
+    forty = "forty" ("-" / " ")+ {return 40;}
+    fifty = "fifty" ("-" / " ")+ {return 50;}
+    sixty = "sixty" ("-" / " ")+ {return 60;}
+    seventy = "seventy" ("-" / " ")+ {return 70;}
+    eighty = "eighty" ("-" / " ")+ {return 80;}
+    ninety = "ninety" ("-" / " ")+ {return 90;}
+
+    hundred = "hundred" ss {return '00';}
+    thousand = "thousand" ss {return '000';}
+    million = "million" ss {return '000000';}
+    billion = "billion" ss {return '000000000';}
+    trillion = "trillion" ss {return '000000000000';}
+
+    phonemeRoot = letter:(#{@buildPhonemeChain()})
+      {return Alphabet.roots[letter];}
+
+    phonemeIndividual = first:phonemeRoot ss {return first;}
+    phonemeCapital = '#{Settings.uppercaseLetterPrefix}' ss root:phonemeRoot ss {return root.toUpperCase();}
+    phonemeSuffix = root:phonemeRoot ss '#{Settings.singleLetterSuffix}' ss {return root;}
+    phonemeString =
+      phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
+      {return phonemes.join('');}
+    labeledPhonemeString =
+      phonemes:(phonemeString)
+      {return {text: phonemes, source: 'phonemes'};}
+
+  """
+
 module.exports = new Grammar

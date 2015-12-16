@@ -80,6 +80,9 @@ class Command
     else
       Scope.applications(@scope)
 
+  isConditional: ->
+    (@scope? and @scope != 'global') or (not _.isEmpty @applications) or @condition?
+
   generateContext: ->
     @context
 

@@ -10,17 +10,19 @@ class Chain
     if ParserController.isInitialized()
       parsed = ParserController.parse(@phrase)
       parsed = _.map parsed, (parsedCommand) ->
-        _.extend parsedCommand,
-          command: Commands.getBySpoken(parsedCommand.command)?.id
-          spoken: parsedCommand.command
-      # parsed = @normalizeStructure parsed
+        parsedCommand.command = parsedCommand.c
+        parsedCommand.arguments = parsedCommand.a
+        delete parsedCommand.c
+        delete parsedCommand.a
+        parsedCommand
+      debug parsed
       @applyMouseLatency parsed
       log 'chainParsed', parsed, JSON.stringify parsed
       parsed
     else
       error 'chainMissingParser', null, "The parser is not initialized -
       probably a problem with the license code, email, or internet connection"
-
+    
   execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
     unless chain?
       chain = @parse()

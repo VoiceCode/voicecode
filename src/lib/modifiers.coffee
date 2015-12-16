@@ -28,12 +28,12 @@ class Modifiers
     #         @key key, mods
     Commands.createDisabled 'modifiers',
       grammarType: 'custom'
-      rule: '(modifierPrefixes) (modifierSuffixes)'
+      rule: '(modifierPrefix) (modifierSuffix)'
       variables:
-        modifierPrefixes: Settings.modifierPrefixes
-        modifierSuffixes: _.invert @suffixes()
-      action: ({modifierPrefixes, modifierSuffixes}) ->
-        @key modifierSuffixes, modifierPrefixes
+        modifierPrefix: Settings.modifierPrefixes
+        modifierSuffix: _.invert @suffixes()
+      action: ({modifierPrefix, modifierSuffix}) ->
+        @key modifierSuffix, modifierPrefix
 
   fingerprint: ->
     data =

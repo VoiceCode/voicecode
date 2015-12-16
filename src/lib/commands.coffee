@@ -21,42 +21,32 @@ class Commands
     @aggregateUndoByDeletingCount = 0
     @previousUndoByDeletingCount = 0
     @primaryGrammarTypes = [
+      "custom"
+      "textCapture"
+      "singleSearch"
       "integerCapture"
       "numberRange"
-      "textCapture"
       "individual"
-      "singleSearch"
       "oneArgument"
-      "custom"
     ]
     @keys =
-      oneArgument: []
-      oneArgumentContinuous: []
-      singleSearch: []
-      singleSearchContinuous: []
-      individual: []
-      individualContinuous: []
-      integerCapture: []
-      integerCaptureContinuous: []
-      numberRange: []
-      numberRangeContinuous: []
-      textCapture: []
-      textCaptureContinuous: []
+      # main command types
       custom: []
-      customContinuous: []
+      textCapture: []
+      singleSearch: []
+      integerCapture: []
+      numberRange: []
+      oneArgument: []
+      individual: []
+      # extra facets to keep track of
       repeater: []
       findable: []
+
+    @findableLookup = {}
+    @repeaterLookup = {}
+
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
-    @spokenToCommandLookupTable = {}
-    Events.on 'commandSpokenChanged', (command,  id) =>
-      target = null
-      @spokenToCommandLookupTable = _.reject @spokenToCommandLookupTable, id
-      @spokenToCommandLookupTable[command.spoken] = id
-
-    Events.on 'commandEnabled', (command, id) =>
-      @spokenToCommandLookupTable[command.spoken] = id
-
 
   initialize: () ->
     @performCommandEdits() # codeCommandEditsPerformed
@@ -174,10 +164,6 @@ class Commands
   removeAfter: (name, edition) ->
     # TODO
 
-  getBySpoken: (spoken) ->
-    # @spokenToCommandLookupTable[spoken]
-    _.findWhere @mapping, {spoken}
-
   get: (name) ->
     command = @mapping[name]
     # unless command?
@@ -283,6 +269,12 @@ class Commands
       command.spoken = newName
       command
 
+  getFindable: (spoken) ->
+    @findableLookup[spoken]
+
+  getRepeater: (spoken) ->
+    @repeaterLookup[spoken]
+
   normalizeOptions: (name, options) ->
     options.id = name
     options.grammarType ?= 'individual'
@@ -300,15 +292,14 @@ class Commands
       unless options.needsParsing is false
         unless name in @keys[type]
           @keys[type].push name
-        unless options.continuous is false
-          unless name in @keys[type + "Continuous"]
-            @keys[type + "Continuous"].push name
 
     if options.findable?
       @keys.findable.push name
+      @findableLookup[options.spoken] = options.findable
 
     if options.repeater?
       @keys.repeater.push name
+      @repeaterLookup[options.spoken] = options.repeater
 
     if options.rule?
       # try
@@ -317,5 +308,11 @@ class Commands
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
     options
+
+  isAvailable: (id) ->
+    command = @mapping[id]
+    return false unless command?
+    Scope.active command
+
 
 module.exports = new Commands

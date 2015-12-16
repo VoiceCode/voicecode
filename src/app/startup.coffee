@@ -78,6 +78,7 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_settings'
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
+    global.GrammarState = require '../lib/parser/grammar_state'
     global.Grammar = require '../lib/parser/grammar'
     global.Chain = require '../lib/chain'
     global.HistoryController = require '../lib/history_controller'
@@ -121,7 +122,7 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    # Settings.slaveMode = true
+    Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 
