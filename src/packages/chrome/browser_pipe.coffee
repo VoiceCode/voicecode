@@ -300,7 +300,7 @@ if Settings.smartBrowsersUsed
     ChromeBrowserController: new ChromeBrowserController
 
 Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
-  if @currentApplication() in Settings.smartBrowsers
+  if @currentApplication().name in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?
     browserController.send
@@ -315,7 +315,7 @@ Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
           type: 'invokeBound'
 
 Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
-  if @currentApplication() in Settings.smartBrowsers
+  if @currentApplication().name in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?
     browserController.send
@@ -331,8 +331,8 @@ Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
           type: 'invokeBound'
 
 Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
-  console.log @currentApplication()
-  if @currentApplication() in Settings.smartBrowsers
+  console.log @currentApplication().name
+  if @currentApplication().name in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?
     browserController.send
@@ -348,7 +348,7 @@ Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
           type: 'invokeBound'
 
 Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
-  if @currentApplication() in Settings.smartBrowsers
+  if @currentApplication().name in Settings.smartBrowsers
     {id} = browserController.getActiveTab()
     return false unless id?
     browserController.send

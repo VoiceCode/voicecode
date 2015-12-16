@@ -74,7 +74,7 @@ Commands.createDisabledWithDefaults
     description : "Select next occurrence of select text"
     inputRequired: false
     action : (input) ->
-      switch @currentApplication()
+      switch @currentApplication().name
         when "Atom"
           @runAtomCommand "selectNextOccurrence",
             value: null

@@ -6,15 +6,7 @@ Commands.createDisabled
     tags: ["text", "recommended"]
     action: ->
       null
-  'symbol.space':
-    spoken: 'skoosh'
-    description: "insert a space"
-    findable: " "
-    tags: ["space", "recommended"]
-    misspellings: ["skoo", "sku"]
-    repeatable: true
-    action: ->
-      @space()
+
   'combo.shiftSpace':
     spoken: 'sky koosh'
     description: "press shift+space (useful for scrolling up, or other random purposes in certain applications)"
@@ -29,7 +21,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       # TODO: move 2 sublime package
-      if @currentApplication() is "sublime"
+      if @currentApplication().name is "sublime"
         @key "return", "command"
       else
         @key "right", "command"
@@ -42,7 +34,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       # TODO: move 2 sublime package
-      if @currentApplication() is "sublime"
+      if @currentApplication().name is "sublime"
         @key "return", "command shift"
       else
         @key "left", "command"

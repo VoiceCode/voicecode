@@ -61,7 +61,7 @@ class HistoryController
     # dump to disk?
 
   getCurrentContext: ->
-    Actions.currentApplication()
+    Actions.currentApplication().name
 
   getChainLength: (offset = 0) ->
     try

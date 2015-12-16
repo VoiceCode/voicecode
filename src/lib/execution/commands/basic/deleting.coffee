@@ -13,7 +13,7 @@ Commands.createDisabled
     repeatable: true
     misspellings: ['steffy']
     action: ->
-      current = @currentApplication()
+      current = @currentApplication().name
       if current is 'Sublime Text'
         @key 'delete', 'control'
       else if current is 'iTerm' and @mode is 'vim'
@@ -28,7 +28,7 @@ Commands.createDisabled
     tags: ['deleting']
     repeatable: true
     action: ->
-      if @currentApplication() is 'Sublime Text'
+      if @currentApplication().name is 'Sublime Text'
         @key 'forwarddelete', 'control'
       else
         @deletePartialWord('right')

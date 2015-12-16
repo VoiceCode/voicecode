@@ -13,7 +13,7 @@ class Platforms.windows.actions extends Actions
   _keyUp: (key, modifiers) ->
   _modifierMask: (modifiers) ->
   clickDelayRequired: ->
-    Settings.clickDelayRequired[@currentApplication()] or Settings.clickDelayRequired["default"] or 0
+    Settings.clickDelayRequired[@currentApplication().name] or Settings.clickDelayRequired["default"] or 0
   _pressKey: (key, modifiers) ->
   getMousePosition: ->
   mouseDown: (position) ->
@@ -54,10 +54,10 @@ class Platforms.windows.actions extends Actions
   setClipboard: (text) ->
   getSelectedText: ->
   waitForClipboard: ->
-    delay = Settings.clipboardLatency[@currentApplication()] or 200
+    delay = Settings.clipboardLatency[@currentApplication().name] or 200
     @delay delay
   canDetermineSelections: ->
-    not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication())
+    not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
   verticalSelectionExpansion: (number) ->
   symmetricSelectionExpansion: (number) ->
   selectCurrentOccurrence: (input) ->

@@ -67,7 +67,7 @@ Events.on 'applicationStart', ->
     # startupFlow.timeoutIsError = false
     # startupFlow.errorCallback = debug
 
-    global.Settings = require './settings'
+    global.Settings = require "../lib/platforms/#{platform}/settings"
     Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
     global.Packages = require '../lib/packages/packages'
     global.Commands = require '../lib/commands'
@@ -122,7 +122,7 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    # Settings.slaveMode = true
+    Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 

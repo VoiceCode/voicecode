@@ -5,6 +5,15 @@ pack = Packages.register
 pack.commands
   tags: ['recommended']
 ,
+  'space':
+    spoken: 'skoosh'
+    description: "insert a space"
+    findable: " "
+    tags: ["space", "recommended"]
+    misspellings: ["skoo", "sku"]
+    repeatable: true
+    action: ->
+      @space()
   'dot':
     spoken: 'dot'
     findable: '.'

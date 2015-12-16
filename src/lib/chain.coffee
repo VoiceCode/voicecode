@@ -47,7 +47,7 @@ class Chain
         _.extend link.context,
             chainLinkIndex: ++chainLinkIndex
             chain: _.cloneDeep chain
-        emit 'chainLinkWillExecute', {link, chain}
+        # emit 'chainLinkWillExecute', {link, chain}
         try
           new Command(
             link.command
@@ -176,13 +176,13 @@ class Chain
     if combined.indexOf('never') != -1
       null
     else if combined.indexOf('always') != -1
-      'symbol.space'
+      'symbols:space'
     else
       switch combined
         when 'normal normal'
-          'symbol.space'
+          'symbols:space'
         when 'soft normal', 'normal soft'
-          'symbol.space'
+          'symbols:space'
 
   getAutoSpacingFromCommand: (command, multiPhrase) ->
     info = Commands.get command.command

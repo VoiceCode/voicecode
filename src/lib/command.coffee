@@ -23,7 +23,7 @@ class Command
   generate: ->
     input = @input
     context = @generateContext()
-    currentApplication = Actions.currentApplication()
+    currentApplication = Actions.currentApplication().name
     funk = if @action?
       action = @action
       -> action.call(@, input, context)

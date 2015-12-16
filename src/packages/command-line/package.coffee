@@ -59,7 +59,7 @@ pack.commands
     inputRequired: true
     action: (input) ->
       if input?.length
-        current = @currentApplication()
+        current = @currentApplication().name
         directory = @fuzzyMatch Settings.directories, input.join(' ')
         if @inTerminal()
           @string "cd #{directory} ; ls \n"

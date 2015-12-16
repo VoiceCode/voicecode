@@ -47,7 +47,7 @@ Commands.createDisabled
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      switch @currentApplication()
+      switch @currentApplication().name
         when "Parallels Desktop"
           @key 'left', 'control'
         else
@@ -72,7 +72,7 @@ Commands.createDisabled
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
-      switch @currentApplication() #TODO: package
+      switch @currentApplication().name #TODO: package
         when "Parallels Desktop"
           @key 'right', 'control'
         else
@@ -82,7 +82,7 @@ Commands.createDisabled
     description: 'Move the cursor all the way to the right'
     tags: ['cursor', 'recommended']
     action: ->
-      switch @currentApplication() #TODO: package
+      switch @currentApplication().name #TODO: package
         when "Parallels Desktop"
           @key 'end'
         else
@@ -109,7 +109,7 @@ Commands.createDisabled
     description: 'selects all text to the right'
     tags: ['selection', 'right', 'recommended']
     action: ->
-      switch @currentApplication()
+      switch @currentApplication().name
         when "Parallels Desktop"
           @key 'end', 'shift'
         else
@@ -119,7 +119,7 @@ Commands.createDisabled
     description: 'Move the cursor all the way to the left'
     tags: ['cursor', 'left', 'recommended']
     action: ->
-      switch @currentApplication()
+      switch @currentApplication().name
         # TODO: package
         when "Parallels Desktop"
           @key 'home'
