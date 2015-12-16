@@ -87,8 +87,6 @@ class Grammar
         first.push "ss"
     [
       first.join(" ")
-      if command.isConditional()
-        "& {return ia('#{command.id}')}"
       "{return{c:'#{command.id}',a:{#{second.join(",")}}};}"
     ].join ' '
 
@@ -133,7 +131,6 @@ class Grammar
       @buildMisspellings(command)
       "ss"
       "a:(numberRange/spokenInteger)?"
-      "& {return ia('#{command.id}')}"
       "{return{c:'#{command.id}',a:a}}"
     ].join ' '
 

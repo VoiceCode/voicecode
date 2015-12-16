@@ -122,7 +122,7 @@ Events.on 'applicationStart', ->
     startupFlow.wait 'user_code_loaded' # synchronous again
 
     # DEVELOPER MODE ONLY
-    Settings.slaveMode = true
+    # Settings.slaveMode = true
     # Settings.dontMessWithMyDragon = true
 
 
