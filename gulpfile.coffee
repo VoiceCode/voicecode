@@ -86,6 +86,8 @@ gulp.task 'build-coffee', ->
 gulp.task 'move-js', ->
   gulp.src './src/!(frontend)/**/*.js'
   .pipe gulp.dest('dist/')
+  gulp.src './src/!(frontend)/**/package.json'
+  .pipe gulp.dest('dist/')
 
 gulp.task 'build-front-end-js', ->
   browserify(

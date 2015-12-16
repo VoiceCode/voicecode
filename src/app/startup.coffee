@@ -123,6 +123,7 @@ Events.on 'applicationStart', ->
 
     # DEVELOPER MODE ONLY
     # Settings.slaveMode = true
+    Settings.chromeExtension = true
     # Settings.dontMessWithMyDragon = true
 
 

@@ -3,10 +3,10 @@ class ChromeBrowserPipe
   instance = null
   constructor: (@browserController) ->
     return instance if instance?
-    @debug = true
+    @_debug = true
     ws = require 'ws'
     @_isConnected = false
-    @webSocketServer = new ws.Server(port: Settings.browserPipePort)
+    @webSocketServer = new ws.Server(port: 4445)
     @webSocketServer.on 'connection', (socket) =>
       @_isConnected = true
       @webSocket = socket
@@ -35,11 +35,11 @@ class ChromeBrowserPipe
         return
       when 'domEvent'
         eventName = parameters.event.charAt(0).toUpperCase() + parameters.event.slice(1)
-        console.error "Emitting domEvent#{eventName}", parameters.tabId, parameters.frameId if @debug
+        console.error "Emitting domEvent#{eventName}", parameters.tabId, parameters.frameId if @_debug
         @browserController.emit "domEvent" + eventName, parameters
       else
         if parameters.callbackName?
-          console.error "Emitting #{parameters.callbackName}", parameters.callbackArguments.tabId, parameters.callbackArguments.frameId if @debug
+          console.error "Emitting #{parameters.callbackName}", parameters.callbackArguments.tabId, parameters.callbackArguments.frameId if @_debug
           @browserController.emit parameters.callbackName, parameters.callbackArguments
         else
           console.error "Don't know how to handle '#{type}'", parameters
@@ -66,7 +66,7 @@ class ChromeBrowserController extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    @debug = true
+    @_debug = true
     @state = {}
     @subscribedToChromeApiEvents = false
     @subscribedToDomEvents = false
@@ -74,7 +74,7 @@ class ChromeBrowserController extends require('events').EventEmitter
     @on 'browserDisconnected', @eventBrowserDisconnected
     @on 'browserError', @browserError
     @browserPipe = new ChromeBrowserPipe @
-    @freeTextBrowsing = new FreeTextBrowsing @
+    # @freeTextBrowsing = new FreeTextBrowsing @
     instance = @
 
   send: (payload) ->
@@ -88,7 +88,7 @@ class ChromeBrowserController extends require('events').EventEmitter
     # @browserPipe = null
 
   eventBrowserConnected: ->
-    console.log "Got browser connection!" if @debug
+    log null, null, "Got browser connection!" if @_debug
     @subscribeToChromeApiEvents()
     @subscribeToDomEvents()
     @updateState()
@@ -110,7 +110,7 @@ class ChromeBrowserController extends require('events').EventEmitter
     activeTab = @getActiveTab currentWindow
     return if currentWindow.id isnt windowId
     return if activeTab.id isnt tabId
-    console.log 'Input focused' if @debug
+    debug 'Input focused' if @_debug
     @state.inputFocused = true
 
   domEventBlur: ({event, target, frameId, tabId, windowId}) ->
@@ -122,7 +122,7 @@ class ChromeBrowserController extends require('events').EventEmitter
     return if currentWindow.id isnt windowId
     console.log '2'
     return if activeTab.id isnt tabId
-    console.log 'Input not focused' if @debug
+    console.log 'Input not focused' if @_debug
     @state.inputFocused = false
 
   executeScript: (tabId, code) ->
@@ -150,24 +150,24 @@ class ChromeBrowserController extends require('events').EventEmitter
     results
 
   browserError: (error) ->
-    console.error 'Got browser error: ', error
+    error 'browserPipe', error, 'Got browser error: ' + error
 
   getFocusedWindow: ->
     return undefined unless @getState()?
     focusedWindow = _.findWhere @state.windows, {focused: true}
-    # console.log focusedWindow if @debug
+    # console.log focusedWindow if @_debug
     focusedWindow
 
   getActiveTab: (window = null) ->
     unless window?
       window = @getFocusedWindow()
     activeTab = _.findWhere window.tabs, {active: true}
-    # console.log activeTab if @debug
+    # console.log activeTab if @_debug
     activeTab
 
   getUrl: (tab) ->
     url = tab.url
-    # console.log url if @debug
+    # console.log url if @_debug
     url
 
   getCurrentUrl: ->
@@ -176,7 +176,7 @@ class ChromeBrowserController extends require('events').EventEmitter
     activeTab = @getActiveTab focusedWindow
     return undefined unless activeTab?
     url = @getUrl activeTab
-    # console.log url if @debug
+    # console.log url if @_debug
     url
 
   activateTab: (tabId) ->
@@ -229,38 +229,38 @@ class ChromeBrowserController extends require('events').EventEmitter
   setState: ({windows}) ->
     @state ?= {}
     @state.windows = windows
-    console.log "Window state updated" if @debug
-    # console.log("State is: ", windows) if @debug
+    console.log "Window state updated" if @_debug
+    # console.log("State is: ", windows) if @_debug
 
   eventTabsOnCreated: ({tab}) ->
-    console.log 'Tab created' if @debug
+    console.log 'Tab created' if @_debug
     @updateState()
   eventTabsOnUpdated: ({tabId, changeInfo, tab}) ->
-    console.log 'Tab updated' if @debug
+    console.log 'Tab updated' if @_debug
     console.error changeInfo
     @updateState()
   eventTabsOnActivated: ({tabId, windowId}) ->
-    console.log 'Tab activated' if @debug
+    console.log 'Tab activated' if @_debug
     @updateState()
   eventTabsOnRemoved: ({tabId, removeInfo}) ->
-    console.log 'Tab removed' if @debug
+    console.log 'Tab removed' if @_debug
     @updateState()
   eventWindowsOnCreated: ({window}) ->
-    console.log 'Window created' if @debug
+    console.log 'Window created' if @_debug
     @updateState()
   eventWindowsOnRemoved: ({windowId}) ->
-    console.log 'Window removed' if @debug
+    console.log 'Window removed' if @_debug
     @updateState()
   eventWindowsOnFocusChanged: ({windowId}) ->
-    console.log 'Window focus changed' if @debug
+    console.log 'Window focus changed' if @_debug
     @updateState()
 
   eventBookmarksOnCreated: ({id, bookmark}) ->
-    console.log 'Bookmark created' if @debug
+    console.log 'Bookmark created' if @_debug
   eventBookmarksOnRemoved: ({id, removeInfo}) ->
-    console.log 'Bookmark removed' if @debug
+    console.log 'Bookmark removed' if @_debug
   eventBookmarkOnChanged: ({id, changeInfo}) ->
-    console.log 'Bookmark changed' if @debug
+    console.log 'Bookmark changed' if @_debug
 
   subscribeToChromeApiEvents: ->
     eventsOfInterest =
@@ -290,20 +290,22 @@ class ChromeBrowserController extends require('events').EventEmitter
             callbackName: "event#{Namespace}#{Event}"
             callbackArguments: callbackArguments
         unless @subscribedToChromeApiEvents
-          console.log "Subscribed to 'event#{Namespace}#{Event}'" if @debug
           @on "event#{Namespace}#{Event}", (callbackArguments) =>
             @["event#{Namespace}#{Event}"]?.call @, callbackArguments
+          log 'browserPipeSubscribed', {namespace: Namespace, event: Event},
+          "Subscribed to 'event#{Namespace}#{Event}'"
     @subscribedToChromeApiEvents = true
 
-if Settings.smartBrowsersUsed
-  module.exports =
-    ChromeBrowserController: new ChromeBrowserController
+ChromeBrowserController = new ChromeBrowserController
+module.exports = ChromeBrowserController
 
-Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
-  if @currentApplication().name in Settings.smartBrowsers
-    {id} = browserController.getActiveTab()
+
+pack = Packages.get 'chrome'
+pack.before
+  'search.next.wordOccurrence': (input, context) ->
+    {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
-    browserController.send
+    ChromeBrowserController.send
       request: 'tabMessage'
       parameters:
         tabId: id
@@ -313,12 +315,10 @@ Commands.before 'crew', 'smartBrowsers.crew', (input, context) ->
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-
-Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
-  if @currentApplication().name in Settings.smartBrowsers
-    {id} = browserController.getActiveTab()
+  'search.previous.wordOccurrence': (input, context) ->
+    {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
-    browserController.send
+    ChromeBrowserController.send
       request: 'tabMessage'
       parameters:
         tabId: id
@@ -329,13 +329,10 @@ Commands.before 'trail', 'smartBrowsers.trail', (input, context) ->
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-
-Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
-  console.log @currentApplication().name
-  if @currentApplication().name in Settings.smartBrowsers
-    {id} = browserController.getActiveTab()
+  'search.extendSelection.next.wordOccurrence': (input, context) ->
+    {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
-    browserController.send
+    ChromeBrowserController.send
       request: 'tabMessage'
       parameters:
         tabId: id
@@ -346,12 +343,10 @@ Commands.before 'selcrew', 'smartBrowsers.selcrew', (input, context) ->
           namespace: 'SelectionController'
           method: 'extend'
           type: 'invokeBound'
-
-Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
-  if @currentApplication().name in Settings.smartBrowsers
-    {id} = browserController.getActiveTab()
+  'search.extendSelection.previous.wordOccurrence': (input, context) ->
+    {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
-    browserController.send
+    ChromeBrowserController.send
       request: 'tabMessage'
       parameters:
         tabId: id
@@ -363,34 +358,35 @@ Commands.before 'seltrail', 'smartBrowsers.seltrail', (input, context) ->
           method: 'extend'
           type: 'invokeBound'
 
-Commands.create "webneck",
-  spoken: 'webneck'
-  description: ""
-  continuous: false
-  aliases: []
-  tags: ["Google Chrome"]
-  action: (input) ->
-    urlParser = require 'url'
-    state = browserController.getState().windows
-    url = browserController.getCurrentUrl()
-    return unless url?
-    url = urlParser.parse url, true, true
-    tabs = _.flatten _.pluck state, 'tabs'
-    currentTab = null
-    tabs = _.filter tabs, (tab) ->
-      comparison = tab.url.indexOf(url.hostname) >= 0
-      if tab.active and comparison and _.findWhere(state, {id: tab.windowId}).focused
-        currentTab = tab
-        return false
-      comparison
-    return if tabs.length is 0
-    # reverse the next 2 in order to go backwards
-    nextTab = _.find tabs, (tab) ->
-      tab.id > currentTab.id
-    if not nextTab?
+pack.commands
+  "browser_pipe:webneck":
+    spoken: 'web neck'
+    description: ""
+    continuous: false
+    aliases: []
+    tags: ["Google Chrome"]
+    action: (input) ->
+      urlParser = require 'url'
+      state = ChromeBrowserController.getState().windows
+      url = ChromeBrowserController.getCurrentUrl()
+      return unless url?
+      url = urlParser.parse url, true, true
+      tabs = _.flatten _.pluck state, 'tabs'
+      currentTab = null
+      tabs = _.filter tabs, (tab) ->
+        comparison = tab.url.indexOf(url.hostname) >= 0
+        if tab.active and comparison and _.findWhere(state, {id: tab.windowId}).focused
+          currentTab = tab
+          return false
+        comparison
+      return if tabs.length is 0
+      # reverse the next 2 in order to go backwards
       nextTab = _.find tabs, (tab) ->
-        tab.id < currentTab.id
-    # console.log "Switching tab #{currentTab.id}:#{currentTab.windowId} => #{nextTab.id}:#{nextTab.windowId}"
-    if currentTab.windowId isnt nextTab.windowId
-      browserController.focusWindow nextTab.windowId
-    browserController.activateTab nextTab.id
+        tab.id > currentTab.id
+      if not nextTab?
+        nextTab = _.find tabs, (tab) ->
+          tab.id < currentTab.id
+      # console.log "Switching tab #{currentTab.id}:#{currentTab.windowId} => #{nextTab.id}:#{nextTab.windowId}"
+      if currentTab.windowId isnt nextTab.windowId
+        ChromeBrowserController.focusWindow nextTab.windowId
+      ChromeBrowserController.activateTab nextTab.id
