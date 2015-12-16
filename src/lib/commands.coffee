@@ -309,10 +309,4 @@ class Commands
       #   console.log e
     options
 
-  isAvailable: (id) ->
-    command = @mapping[id]
-    return false unless command?
-    Scope.active command
-
-
 module.exports = new Commands

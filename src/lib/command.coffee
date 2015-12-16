@@ -67,6 +67,13 @@ class Command
       for segment in segments
         segment?.call(@)
 
+  active: ->
+    if @scope is "abstract"
+      _.any @before, (options, name) ->
+        Scope.active options.info
+    else
+      Scope.active @
+
   getApplications: ->
     unless _.isEmpty @applications
       @applications

@@ -3,9 +3,12 @@ pack = Packages.register
   description: 'General commands for shell / console usage'
   applications: -> Settings.terminalApplications
 
-pack.after
-  'git:status': ->
-    @enter()
+# TODO pack.ready here should not be necessary. It is currently necessary because the git module is loaded
+# AFTER user settings, so this needs to be loaded afterwards as well because it's extending a command that might not exist yet
+pack.ready ->
+  @after
+    'git:status': ->
+      @enter()
 
 pack.commands
   'change-directory':
