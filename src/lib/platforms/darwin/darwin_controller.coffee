@@ -19,7 +19,8 @@ class DarwinController
     @methodCallTimes = {}
 
     Events.once 'startupFlowComplete', =>
-      @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
+      unless developmentMode
+        @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
       if Settings.slaveMode
         @listenAsSlave()
       else
@@ -37,7 +38,8 @@ class DarwinController
       Commands.lastCommandOfPreviousPhrase = null
 
     if name in Settings.dragonIncompatibleApplications
-      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{name}: #{bundleId}"
+      log 'mainSocketListening', false,
+      "Disabling main command socket for compatibility with: #{name}: #{bundleId}"
       @listeningOnMainSocket = false
     else unless @listeningOnMainSocket
       setTimeout =>
@@ -143,12 +145,11 @@ class DarwinController
     @historyGrowl.splice(10) # don't accrue too much history
 
   statusWindowTextHandler: (event) ->
+    return unless event.phrase?.length
     lastCalled = @methodCallTimes.statusWindowTextHandler
     if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 500)
       @methodCallTimes.statusWindowTextHandler = Date.now()
       phrase = event.phrase
-      # sometimes it soundssometimes it sends empty commands
-      return unless phrase?.length
       debug 'statusWindowPhrase', phrase
       normalized = @normalizePhraseComparison(phrase)
 
