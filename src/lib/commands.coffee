@@ -233,11 +233,8 @@ class Commands
       Commands.before '#{commandName}', 'my-#{commandName}-before', (input, context) -> doMagic()"
       return
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) =>
-      if action is true
-        # we are 'instantiating' an abstract command
-      else
-        command.before ?= {}
-        command.before["#{info.packageId}"] = {info, action}
+      command.before ?= {}
+      command.before["#{info.packageId}"] = {info, action}
       command
 
   after: (commandName, info, action) ->
@@ -248,11 +245,8 @@ class Commands
       Commands.after '#{commandName}', 'my-#{commandName}-after', (input, context) -> doMagic()"
       return
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
-      if action is true
-        # we are 'instantiating' an abstract command
-      else
-        command.after ?= {}
-        command.after["#{info.packageId}"] = {info, action}
+      command.after ?= {}
+      command.after["#{info.packageId}"] = {info, action}
       command
 
   addMisspellings: (name, edition) ->

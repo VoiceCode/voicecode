@@ -34,7 +34,7 @@ class Command
       extensions = []
       extensions.push funk
       _.each @before, ({action: e, info}) ->
-        if Scope.active(info)
+        if Scope.active(info) and _.isFunction(e)
           extensions.push ->
             @extensionsContinue = false
             e.call(@, input, context)
@@ -54,7 +54,7 @@ class Command
     if @after?
       afterList = []
       _.each @after, ({action: e, info}) ->
-        if Scope.active(info)
+        if Scope.active(info) and _.isFunction(e)
           afterList.push ->
             e.call(@, input, context)
       segments.push ->

@@ -522,12 +522,12 @@ _.extend Settings,
 
   # For JetBrains IDEs and possibly other applications that do not work with Dragon Dictate
   dragonIncompatibleApplications: [
-    "AppCode"
-    "IntelliJ IDEA"
-    "PhpStorm"
-    "PyCharm"
-    "RubyMine"
-    "WebStorm"
+    # "AppCode"
+    # "IntelliJ IDEA"
+    # "PhpStorm"
+    # "PyCharm"
+    # "RubyMine"
+    # "WebStorm"
   ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
   dragonIncompatibleApplicationDelay: 5000

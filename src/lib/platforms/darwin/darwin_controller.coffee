@@ -11,8 +11,12 @@ class DarwinController
     @setDragonInfo()
 
     @listeningOnMainSocket = true
+
     @historyGrowl = []
     @historyDragon = []
+    @historyStatusWindow = []
+
+    @methodCallTimes = {}
 
     Events.once 'startupFlowComplete', =>
       @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
@@ -69,6 +73,8 @@ class DarwinController
         @applicationChanged event
       when 'leftClick'
         @mouseHandler event
+      when 'recognizedText'
+        @statusWindowTextHandler event
 
   normalizePhraseComparison: (phrase) ->
     if ParserController.isInitialized()
@@ -84,35 +90,92 @@ class DarwinController
     debug 'dragonPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
-    old = @historyGrowl.indexOf normalized
-    if old != -1
+    oldGrowl = @historyGrowl.indexOf normalized
+    oldStatusWindow = @historyStatusWindow.indexOf normalized
+    proceed = true
+
+    if oldGrowl != -1
       #ignore
-      @historyGrowl.splice old, 1
-    else
-      if @listeningOnMainSocket
-        @historyDragon.push normalized
-        if slaveController.isActive()
-          slaveController.process phrase
-        else
-          @executeChain(phrase)
+      @historyGrowl.splice oldGrowl, 1
+      proceed = false
+
+    if oldStatusWindow != -1
+      #ignore
+      @historyStatusWindow.splice oldStatusWindow, 1
+      proceed = false
+
+    if proceed
+      @historyDragon.push normalized
+      if slaveController.isActive()
+        slaveController.process phrase
+      else
+        @executeChain(phrase)
+
+    @historyDragon.splice(10) # don't accrue too much history
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
     debug 'growlPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
-    old = @historyDragon.indexOf normalized
-    if old != -1
+    oldDragon = @historyDragon.indexOf normalized
+    oldStatusWindow = @historyStatusWindow.indexOf normalized
+    proceed = true
+
+    if oldDragon != -1
       #ignore
-      @historyDragon.splice old, 1
-    else
-      if @listeningOnMainSocket
-        @historyGrowl.push normalized
+      @historyDragon.splice oldDragon, 1
+      proceed = false
+
+    if oldStatusWindow != -1
+      #ignore
+      @historyStatusWindow.splice oldStatusWindow, 1
+      proceed = false
+
+    if proceed
+      @historyGrowl.push normalized
 
       if slaveController.isActive()
         slaveController.process phrase
       else
         @executeChain(phrase)
+
+    @historyGrowl.splice(10) # don't accrue too much history
+
+  statusWindowTextHandler: (event) ->
+    lastCalled = @methodCallTimes.statusWindowTextHandler
+    if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 500)
+      @methodCallTimes.statusWindowTextHandler = Date.now()
+      phrase = event.phrase
+      # sometimes it soundssometimes it sends empty commands
+      return unless phrase?.length
+      debug 'statusWindowPhrase', phrase
+      normalized = @normalizePhraseComparison(phrase)
+
+      oldDragon = @historyDragon.indexOf normalized
+      oldGrowl = @historyGrowl.indexOf normalized
+      proceed = true
+      if oldDragon != -1
+        #ignore
+        @historyDragon.splice oldDragon, 1
+        proceed = false
+
+      if oldGrowl != -1
+        #ignore
+        @historyGrowl.splice oldGrowl, 1
+        proceed = false
+
+      if proceed
+        @historyStatusWindow.push normalized
+
+        if slaveController.isActive()
+          slaveController.process phrase
+        else
+          @executeChain(phrase)
+
+      @historyStatusWindow.splice(10) # don't accrue too much history
+    else
+      # skip
 
   executeChain: (phrase) ->
     Fiber(->
