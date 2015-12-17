@@ -7,7 +7,7 @@ class DarwinController
     return instance if instance?
     instance = @
 
-    @loadFrameworks()
+    @loadFrameworks() # still needed?
     @setDragonInfo()
 
     @listeningOnMainSocket = true
@@ -20,7 +20,7 @@ class DarwinController
 
     Events.once 'startupFlowComplete', =>
       unless developmentMode
-        @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
+        @startEventMonitor()
       if Settings.slaveMode
         @listenAsSlave()
       else
@@ -30,6 +30,16 @@ class DarwinController
     $.framework 'Foundation'
     $.framework 'Quartz'
     $.framework 'AppKit'
+
+  startEventMonitor: ->
+    @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
+    @eventMonitor = forever.start '',
+      command: "#{projectRoot}/assets/DarwinEventMonitor"
+      silent: true
+    @eventMonitor.on 'start', =>
+      log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
+    @eventMonitor.on 'exit:code', (code) ->
+      error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
 
   applicationChanged: ({event, bundleId, name}) ->
     Actions.setCurrentApplication {name, bundleId}
