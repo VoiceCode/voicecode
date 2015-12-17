@@ -18,9 +18,12 @@ global._s = require 'underscore.string'
 global.chalk = require 'chalk'
 global.util = require('util')
 
-global.debug = ->
-  console.log chalk.white.bold.bgRed('   DEBUG   ')
-  console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
+global.debug = do ->
+  previous = Date.now()
+  ->
+    console.log chalk.white.bold.bgRed('   ' + ((c = Date.now()) - previous) + '   ')
+    console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
+    previous = c
 
 client = require('electron-connect').client # DEVELOPMENT
 global.$ = require('nodobjc')

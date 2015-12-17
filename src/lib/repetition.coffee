@@ -23,7 +23,7 @@ Commands.createDisabled
     tags: ["voicecode", "repetition", "recommended"]
     bypassHistory: (context) -> true
     action: (offset, context) ->
-      if _.isNaN offset
+      if not offset?
         offset = 1
       if context.chain.length is 1
         HistoryController.hasAmnesia yes

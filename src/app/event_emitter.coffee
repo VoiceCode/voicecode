@@ -47,6 +47,11 @@ class EventEmitter extends require('events').EventEmitter
       'userAssetEvaluated'
       'commandValidationFailed'
       # 'commandValidationError'
+      'chainParsed'
+      'chainPreprocessed'
+      'chainExecutionStart'
+      'chainLinkExecuted'
+      # 'chainExecutionEnd'
     ]
 
   frontendOn: (event, callback) ->
