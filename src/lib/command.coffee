@@ -23,7 +23,6 @@ class Command
   generate: ->
     input = @input
     context = @generateContext()
-    currentApplication = Actions.currentApplication().name
     funk = if @action?
       action = @action
       -> action.call(@, input, context)
@@ -36,13 +35,14 @@ class Command
       _.each @before, ({action: e, info}) ->
         if Scope.active(info) and _.isFunction(e)
           extensions.push ->
-            @extensionsContinue = false
+            @extensionStack[0] = false
             e.call(@, input, context)
       ->
-        @extensionsContinue = true
+        @extensionStack.unshift true
         for callback in extensions.reverse()
-          if @extensionsContinue
+          if @extensionStack[0] is true
             callback.call(@, input, context)
+        @extensionStack.shift()
     else
       funk
     segments = []

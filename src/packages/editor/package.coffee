@@ -16,11 +16,11 @@ pack.commands
     description: 'go to line number then position cursor at end of line.'
     tags: ['cursor']
     requires: [
-      'editor.move-to-line-number'
+      'editor:move-to-line-number'
       'cursor.way.right'
     ]
     action: (input) ->
-      @do 'editor.move-to-line-number', input
+      @do 'editor:move-to-line-number', input
       if input?
         @do 'cursor.way.right'
 
@@ -30,11 +30,11 @@ pack.commands
     description: 'Go to line number then position cursor at beginning of line.'
     tags: ['selection', 'IDE', 'cursor']
     requires: [
-      'editor.move-to-line-number'
+      'editor:move-to-line-number'
       'cursor.way.left'
     ]
     action: (input) ->
-      @do 'editor.move-to-line-number', input
+      @do 'editor:move-to-line-number', input
       if input?
         @do 'cursor.way.left'
 
@@ -44,11 +44,11 @@ pack.commands
     description: 'Go to line number then insert a new line below.'
     tags: ['selection', 'IDE', 'cursor']
     requires: [
-      'editor.move-to-line-number'
+      'editor:move-to-line-number'
       'common.newLineBelow'
     ]
     action: (input) ->
-      @do 'editor.move-to-line-number', input
+      @do 'editor:move-to-line-number', input
       if input?
         @do 'common.newLineBelow'
 
@@ -58,11 +58,11 @@ pack.commands
     description: 'Go to line number then select entire line.'
     tags: ['selection', 'IDE', 'cursor']
     requires: [
-      'editor.move-to-line-number'
+      'editor:move-to-line-number'
       'select.line.text'
     ]
     action: (input) ->
-      @do 'editor.move-to-line-number', input
+      @do 'editor:move-to-line-number', input
       if input?
         @do 'select.line.text'
 

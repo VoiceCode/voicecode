@@ -144,7 +144,7 @@ class DarwinController
 
   statusWindowTextHandler: (event) ->
     lastCalled = @methodCallTimes.statusWindowTextHandler
-    if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 500)
+    if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 800)
       @methodCallTimes.statusWindowTextHandler = Date.now()
       phrase = event.phrase
       # sometimes it soundssometimes it sends empty commands

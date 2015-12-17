@@ -5,8 +5,10 @@
 module.exports = class Actions
   constructor: () ->
     @storage = {}
+    @extensionStack = []
   stop: () ->
-    @extensionsStopped = true
+    # @extensionsStopped = true
+    @extensionStack[0] = false
   continue: () ->
     @extensionsContinue = true
   packageSettings: (packageId) ->
