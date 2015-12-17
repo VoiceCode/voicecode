@@ -42,7 +42,8 @@
     "shelljs": "^0.3.0",
     "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git",
     "synchronize": "^0.9.14",
-    "underscore.string": "^3.2.2"
+    "underscore.string": "^3.2.2",
+    "ws": "^0.8.1"
   },
   "devDependencies": {
     "babelify": "^7.1.0",

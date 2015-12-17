@@ -15,3 +15,5 @@ module.exports =
     grammarTransforms[name](args)
   makeInteger: (textArray) ->
     parseInt textArray.join(''), 10
+  flatten: (input) ->
+    _.flatten input, true

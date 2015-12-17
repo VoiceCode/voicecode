@@ -19,14 +19,6 @@ Commands.createDisabled
         _.each results, (command) =>
           command.call(@)
           @delay 50
-  'literal-escape':
-    spoken: "keeper"
-    needsParsing: false
-    description: "whatever follows this command will be interpreted literally"
-    tags: ["voicecode", "recommended"]
-    action: (input) ->
-      if input?.length
-        @string input.join(" ")
   'mode.set':
     spoken: "set mode"
     grammarType: "textCapture"

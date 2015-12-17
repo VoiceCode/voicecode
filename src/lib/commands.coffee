@@ -28,6 +28,7 @@ class Commands
       "numberRange"
       "individual"
       "oneArgument"
+      "unconstrainedText"
     ]
     @keys =
       # main command types
@@ -37,6 +38,7 @@ class Commands
       integerCapture: []
       numberRange: []
       oneArgument: []
+      unconstrainedText: []
       individual: []
       # extra facets to keep track of
       repeater: []

@@ -37,3 +37,11 @@ pack.commands
     grammarType: 'commandCapture'
     action: ({identifier, spoken}) ->
       @string(identifier) if identifier?
+  'pass-through':
+    spoken: 'keeper'
+    description: 'whatever follows this command will be interpreted literally'
+    grammarType: 'unconstrainedText'
+    tags: ['text', 'recommended']
+    action: (input) ->
+      if input?.length
+        @string input.join ' '

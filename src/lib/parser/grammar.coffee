@@ -27,6 +27,8 @@ class Grammar
               @individualCommand command
             when "oneArgument"
               @oneArgumentCommand command
+            when "unconstrainedText"
+              @unconstrainedTextCommand command
     _.compact(results).join('/\n')
 
   translationIds: ->
@@ -149,6 +151,14 @@ class Grammar
       "{return{c:'#{command.id}',a:a}}"
     ].join ' '
 
+  unconstrainedTextCommand: (command) ->
+    [
+      @buildMisspellings(command)
+      "ss"
+      "a:(unconstrainedText)?"
+      "{return{c:'#{command.id}',a:a}}"
+    ].join ' '
+
   buildSentinels: ->
     keys = _.union Commands.keys['individual'],
       Commands.keys['oneArgument'],
@@ -191,6 +201,7 @@ class Grammar
       command:numberRangeCommand & {return state.found(command)} {return command}/
       command:individualCommand & {return state.found(command)} {return command}/
       command:oneArgumentCommand & {return state.found(command)} {return command}/
+      command:unconstrainedTextCommand & {return state.found(command)} {return command}/
       command:literalCommand & {return state.found(command)} {return command}
 
     textCaptureCommand = #{@buildCommands('textCapture')}
@@ -200,35 +211,38 @@ class Grammar
     numberRangeCommand = #{@buildCommands('numberRange')}
     individualCommand = #{@buildCommands('individual')}
     oneArgumentCommand = #{@buildCommands('oneArgument')}
-    literalCommand
-      = a:(overrideCommand / nestedText / translation / exactInteger / labeledPhonemeString / word / symbol)+ {return {c: "core:literal", a: a};}
+    unconstrainedTextCommand = #{@buildCommands('unconstrainedText')}
+    literalCommand = a:(
+      nestedText /
+      translation /
+      exactInteger /
+      labeledPhonemeString /
+      word /
+      symbol
+    )+ {return {c: "core:literal", a: a};}
 
     #{@customLists()}
 
     sentinel = s:(#{@buildSentinels()}) ss
 
-    overrideCommand
-     = keeperLeft:overrideId keeperRight:(spokenInteger)
-     {
-      if (isNaN(keeperRight)) {
-        return keeperRight;
-      }
-      else {
-        return numberToWords(keeperRight);
-      }
-     }
-
-    overrideId
-      = id:("keeper") ss {return id;}
-
-    textArgument
-      = (overrideCommand / nestedText / translation / exactInteger / phonemeString / word)+
+    textArgument = segments:(
+      nestedText /
+      translation /
+      exactInteger /
+      phonemeString /
+      word
+    )+ {return g.flatten(segments)}
 
     repeaterId
       = id:(#{@repeaterIds()}) ss {return Commands.getRepeater(id);}
 
-    singleSearchArgument
-      = (overrideCommand / findableId / nestedText / translation / spokenInteger / singleTextArgument)
+    singleSearchArgument = (
+      findableId /
+      nestedText /
+      translation /
+      spokenInteger /
+      singleTextArgument
+    )
 
     findableId
       = id:(#{@findableIds()}) ss {return Commands.getFindable(id);}
@@ -239,6 +253,9 @@ class Grammar
     nestedText
       = id:nestedTextId ss arguments:(word)+
       {return g.grammarTransform(id, (arguments));}
+
+    unconstrainedText = unconstrainedWord*
+    unconstrainedWord = chars:(!ss ch:. {return ch})* ss {return chars.join('')}
 
     nestedTextId
       = "shrink" / "treemail" / "trusername" / "trassword"
