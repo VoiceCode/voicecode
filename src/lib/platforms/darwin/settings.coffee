@@ -182,6 +182,7 @@ _.extend Settings,
     december: "dec"
     # multi word abbreviations
     "stripe test card": "4242424242424242"
+  presetTexts: {}
   codeSnippets:
     "if else": "ife"
     if: "if"

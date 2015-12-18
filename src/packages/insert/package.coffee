@@ -46,6 +46,15 @@ pack.commands
       if input?.length
         result = @fuzzyMatch Settings.usernames, input.join(' ')
         @string result
+  'preset-text':
+    spoken: "textile"
+    grammarType: "textCapture"
+    description: "paste in a block of preset text, like a preset email reply, or other text you commonly repeat"
+    tags: "text"
+    action: (input) ->
+      if input?.length
+        text = @fuzzyMatch Settings.presetTexts, input.join(" ")
+        @paste(text) if text?.length
 
 
 pack.commands
