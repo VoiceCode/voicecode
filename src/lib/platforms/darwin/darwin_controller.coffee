@@ -1,5 +1,6 @@
 net = require 'net'
 fs = require 'fs'
+forever = require 'forever'
 
 class DarwinController
   instance = null
@@ -34,7 +35,8 @@ class DarwinController
   startEventMonitor: ->
     @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
     @eventMonitor = forever.start '',
-      command: "#{projectRoot}/assets/DarwinEventMonitor"
+      # command: "#{projectRoot}/assets/DarwinEventMonitor"
+      command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
     @eventMonitor.on 'start', =>
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"

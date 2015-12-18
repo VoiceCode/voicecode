@@ -1,4 +1,4 @@
-global.developmentMode = true
+global.developmentMode = false
 global.projectRoot = require('app-root-path').path
 global.platform =
   switch process.platform
@@ -138,9 +138,8 @@ Events.on 'applicationStart', ->
 
     switch platform
       when "darwin"
-        if true # was there a condition here?
-          global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
-          global.DragonVocabularyController = require '../lib/platforms/darwin/dragon/dragon_vocabulary_controller'
+        global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
+        global.DragonVocabularyController = require '../lib/platforms/darwin/dragon/dragon_vocabulary_controller'
       # when "win32"
       # when "linux"
 
