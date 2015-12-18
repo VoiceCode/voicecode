@@ -27,7 +27,6 @@ pack.before
     @runAtomCommand 'selectPreviousWord', input or 1
 
   'editor:move-to-line-number': (input) ->
-    debug 'I am here'
     if input
       @runAtomCommand 'goToLine', input
     else

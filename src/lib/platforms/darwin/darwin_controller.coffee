@@ -105,7 +105,7 @@ class DarwinController
       proceed = false
 
     if proceed
-      @historyDragon.push normalized
+      @historyDragon.unshift normalized
       if slaveController.isActive()
         slaveController.process phrase
       else
@@ -133,7 +133,7 @@ class DarwinController
       proceed = false
 
     if proceed
-      @historyGrowl.push normalized
+      @historyGrowl.unshift normalized
 
       if slaveController.isActive()
         slaveController.process phrase
@@ -166,7 +166,7 @@ class DarwinController
         proceed = false
 
       if proceed
-        @historyStatusWindow.push normalized
+        @historyStatusWindow.unshift normalized
 
         if slaveController.isActive()
           slaveController.process phrase
