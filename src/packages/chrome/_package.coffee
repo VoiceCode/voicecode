@@ -23,6 +23,3 @@ Events.on 'getCurrentBrowserUrl', (container={}) ->
       # TODO: smart browser magic
     container.continue = false
     container
-
-if Settings.chromeExtension
-  global.ChromeBrowserController = require './browser_pipe'

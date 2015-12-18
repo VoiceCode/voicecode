@@ -45,7 +45,9 @@ Commands.createDisabledWithDefaults
   'search.previous.wordBySurroundingCharacters':
     spoken: 'trapreev'
     tags: ["search", "voicecode", "selection"]
-    description: "Select the previous word by its surrounding characters, so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell' - useful for unpronounceable or long words"
+    description: "Select the previous word by its surrounding characters,
+     so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell'
+      - useful for unpronounceable or long words"
     action: (input) ->
       term = input?.value or @storage.previousTrapSearchTerm
       if term?.length
@@ -58,7 +60,9 @@ Commands.createDisabledWithDefaults
   'search.next.wordBySurroundingCharacters':
     spoken: "trapneck"
     tags: ["search", "voicecode", "selection"]
-    description: "select the next word by its surrounding characters, so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell' - useful for unpronounceable or long words"
+    description: "select the next word by its surrounding characters,
+     so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell'
+      - useful for unpronounceable or long words"
     action: (input) ->
       term = input?.value or @storage.previousTrapSearchTerm
       if term?.length
@@ -74,17 +78,11 @@ Commands.createDisabledWithDefaults
     description : "Select next occurrence of select text"
     inputRequired: false
     action : (input) ->
-      switch @currentApplication().name
-        when "Atom"
-          @runAtomCommand "selectNextOccurrence",
-            value: null
-            distance: 1
-        else
-          if @canDetermineSelections() and @isTextSelected()
-            term = @getSelectedText()
-          else
-            return
-          @selectNextOccurrenceWithDistance term, 1
+      if @canDetermineSelections() and @isTextSelected()
+        term = @getSelectedText()
+      else
+        return
+      @selectNextOccurrenceWithDistance term, 1
   "search.previous.selectionOccurrence":
     spoken: "privok"
     kind : "action"

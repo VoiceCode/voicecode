@@ -7,7 +7,7 @@ class DarwinController
     return instance if instance?
     instance = @
 
-    @loadFrameworks()
+    @loadFrameworks() # still needed?
     @setDragonInfo()
 
     @listeningOnMainSocket = true
@@ -19,7 +19,8 @@ class DarwinController
     @methodCallTimes = {}
 
     Events.once 'startupFlowComplete', =>
-      @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
+      unless developmentMode
+        @startEventMonitor()
       if Settings.slaveMode
         @listenAsSlave()
       else
@@ -30,6 +31,16 @@ class DarwinController
     $.framework 'Quartz'
     $.framework 'AppKit'
 
+  startEventMonitor: ->
+    @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
+    @eventMonitor = forever.start '',
+      command: "#{projectRoot}/assets/DarwinEventMonitor"
+      silent: true
+    @eventMonitor.on 'start', =>
+      log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
+    @eventMonitor.on 'exit:code', (code) ->
+      error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
+
   applicationChanged: ({event, bundleId, name}) ->
     Actions.setCurrentApplication {name, bundleId}
 
@@ -37,7 +48,8 @@ class DarwinController
       Commands.lastCommandOfPreviousPhrase = null
 
     if name in Settings.dragonIncompatibleApplications
-      log 'mainSocketListening', false,  "Disabling main command socket for compatibility with: #{name}: #{bundleId}"
+      log 'mainSocketListening', false,
+      "Disabling main command socket for compatibility with: #{name}: #{bundleId}"
       @listeningOnMainSocket = false
     else unless @listeningOnMainSocket
       setTimeout =>
@@ -143,12 +155,11 @@ class DarwinController
     @historyGrowl.splice(10) # don't accrue too much history
 
   statusWindowTextHandler: (event) ->
+    return unless event.phrase?.length
     lastCalled = @methodCallTimes.statusWindowTextHandler
     if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 800)
       @methodCallTimes.statusWindowTextHandler = Date.now()
       phrase = event.phrase
-      # sometimes it soundssometimes it sends empty commands
-      return unless phrase?.length
       debug 'statusWindowPhrase', phrase
       normalized = @normalizePhraseComparison(phrase)
 

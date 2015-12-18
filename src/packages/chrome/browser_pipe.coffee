@@ -296,8 +296,8 @@ class ChromeBrowserController extends require('events').EventEmitter
           "Subscribed to 'event#{Namespace}#{Event}'"
     @subscribedToChromeApiEvents = true
 
-ChromeBrowserController = new ChromeBrowserController
-module.exports = ChromeBrowserController
+if Settings.chromeExtension
+  module.exports = ChromeBrowserController: new ChromeBrowserController
 
 
 pack = Packages.get 'chrome'

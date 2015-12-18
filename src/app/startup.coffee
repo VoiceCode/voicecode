@@ -1,3 +1,4 @@
+global.developmentMode = true
 global.projectRoot = require('app-root-path').path
 global.platform =
   switch process.platform
@@ -7,22 +8,26 @@ global.platform =
       "windows"
     when "linux"
       "linux"
-# DEVELOPMENT
-replify = require('replify')
-repl = require('http').createServer()
-replify 'vc', repl
-# DEVELOPMENT
+
+if developmentMode
+  replify = require('replify')
+  repl = require('http').createServer()
+  replify 'vc', repl
+  client = require('electron-connect').client
 
 global._ = require 'lodash'
 global._s = require 'underscore.string'
 global.chalk = require 'chalk'
 global.util = require('util')
 
-global.debug = ->
-  console.log chalk.white.bold.bgRed('   DEBUG   ')
-  console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
+global.debug = do ->
+  previous = Date.now()
+  ->
+    console.log chalk.white.bold.bgRed('   ' + ((c = Date.now()) - previous) + '   ')
+    console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
+    previous = c
 
-client = require('electron-connect').client # DEVELOPMENT
+
 global.$ = require('nodobjc')
 global.Events = require './event_emitter'
 global.Fiber = require 'fibers'
@@ -50,8 +55,9 @@ menubar.on 'ready', ->
 menubar.on 'after-create-window', ->
   menubar.window.openDevTools()
   menubar.window.on 'closed', -> return
-  client = client.create menubar.window
-  client.on 'reload', -> Events.frontendClearSubscriptions()
+  menubar.window.on 'reload', -> Events.frontendClearSubscriptions()
+  if developmentMode
+    client = client.create menubar.window
 
 
 process.on 'uncaughtException', (err) ->
@@ -60,13 +66,11 @@ process.on 'uncaughtException', (err) ->
   process.exit(1)
 
 Events.on 'applicationStart', ->
-  asyncblock (startupFlow) -> # DEVELOPMENT
-  # asyncblock.nostack (startupFlow) ->
+  funk = asyncblock.nostack
+  if developmentMode
+    funk = asyncblock
+  funk (startupFlow) ->
     startupFlow.firstArgIsError = false
-    # startupFlow.taskTimeout = 3
-    # startupFlow.timeoutIsError = false
-    # startupFlow.errorCallback = debug
-
     global.Settings = require "../lib/platforms/#{platform}/settings"
     Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
     global.Packages = require '../lib/packages/packages'
@@ -121,20 +125,20 @@ Events.on 'applicationStart', ->
     UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee' # wandering into asynchronous land
     startupFlow.wait 'user_code_loaded' # synchronous again
 
-    # DEVELOPER MODE ONLY
-    # Settings.slaveMode = true
-    Settings.chromeExtension = true
-    # Settings.dontMessWithMyDragon = true
+    if developmentMode
+      Settings.slaveMode = true
+      Settings.chromeExtension = false
+      # Settings.dontMessWithMyDragon = true
 
 
-    if Settings.slaveMode
+    if Settings.slaveMode or developmentMode
       _.each Commands.mapping, (command, name) ->
         Commands.enable name
       Commands.performCommandEdits('slaveModeEnableAllCommands')
 
     switch platform
       when "darwin"
-        if true
+        if true # was there a condition here?
           global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
           global.DragonVocabularyController = require '../lib/platforms/darwin/dragon/dragon_vocabulary_controller'
       # when "win32"
