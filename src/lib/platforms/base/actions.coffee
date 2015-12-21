@@ -10,7 +10,7 @@ module.exports = class Actions
     # @extensionsStopped = true
     @extensionStack[0] = false
   continue: () ->
-    @extensionsContinue = true
+    @extensionStack[0] = true
   packageSettings: (packageId) ->
     Packages.get(packageId)?.settings()
   setUndoByDeleting: (amount) ->

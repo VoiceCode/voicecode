@@ -1,4 +1,6 @@
 global.developmentMode = false
+testing = true
+
 global.projectRoot = require('app-root-path').path
 global.platform =
   switch process.platform
@@ -9,7 +11,7 @@ global.platform =
     when "linux"
       "linux"
 
-if developmentMode
+if developmentMode or testing
   replify = require('replify')
   repl = require('http').createServer()
   replify 'vc', repl
