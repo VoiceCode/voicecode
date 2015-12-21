@@ -4,6 +4,9 @@ class DarwinActions extends Actions
   constructor: ->
     super
     @keys = require './keyCodes'
+    @undoableKeys = [
+      'v command'
+    ]
   setCurrentApplication: (application) ->
     super
     if @inBrowser()
@@ -29,7 +32,7 @@ class DarwinActions extends Actions
   key: (key, modifiers) ->
     key = key.toString().toLowerCase()
 
-    @notUndoable()
+    emit 'notUndoable'
     code = @keys.keyCodes[key]
     if code?
       @_pressKey(code, @_normalizeModifiers(modifiers))
@@ -47,7 +50,7 @@ class DarwinActions extends Actions
       if @_capturingText
         @_capturedText += string
       else
-        @setUndoByDeleting string.length
+        emit 'charactersTyped', string
         if string.length > (Settings.maxStringTypingLength or 9)
           @paste string
         else
@@ -129,13 +132,13 @@ class DarwinActions extends Actions
     $.CGEventGetLocation($.CGEventCreate(null))
 
   mouseDown: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, down)
 
   mouseUp: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
     $.CGEventPost($.kCGSessionEventTap, up)
@@ -144,7 +147,7 @@ class DarwinActions extends Actions
     mouseTracker.previousLocation(index or 0)
 
   click: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     @mouseDown(position)
     @mouseUp(position)
@@ -156,7 +159,7 @@ class DarwinActions extends Actions
       @click(position)
 
   doubleClick: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -186,7 +189,7 @@ class DarwinActions extends Actions
     $.CGEventPost($.kCGSessionEventTap, event)
 
   tripleClick: ->
-    @notUndoable()
+    emit 'notUndoable'
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -208,7 +211,7 @@ class DarwinActions extends Actions
     @delay(@clickDelayRequired())
 
   rightClick: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseDown, position, $.kCGMouseButtonRight)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventRightMouseUp, position, $.kCGMouseButtonRight)
@@ -221,7 +224,7 @@ class DarwinActions extends Actions
       @rightClick(position)
 
   shiftClick: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -242,7 +245,7 @@ class DarwinActions extends Actions
 
 
   commandClick: (position) ->
-    @notUndoable()
+    emit 'notUndoable'
     position ?= @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -262,7 +265,7 @@ class DarwinActions extends Actions
       @commandClick(position)
 
   optionClick: ->
-    @notUndoable()
+    emit 'notUndoable'
     position = @getMousePosition()
     down = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseDown, position, $.kCGMouseButtonLeft)
     up = $.CGEventCreateMouseEvent(null, $.kCGEventLeftMouseUp, position, $.kCGMouseButtonLeft)
@@ -307,7 +310,7 @@ class DarwinActions extends Actions
           height: frame.size.height
 
   positionMouse: (x, y, screenIndex) ->
-    @notUndoable()
+    emit 'notUndoable'
     position = @getMousePosition()
     if screenIndex?
       screen = @getScreenInfo().screens[screenIndex - 1]
@@ -340,7 +343,7 @@ class DarwinActions extends Actions
 
 
   applescript: (content, shouldReturn=true) ->
-    @notUndoable()
+    emit 'notUndoable'
     Applescript content, shouldReturn
 
   exec: (script, options = null) ->
@@ -358,7 +361,7 @@ class DarwinActions extends Actions
     @exec command
 
   openMenuBarItem: (item) ->
-    @notUndoable()
+    emit 'notUndoable'
     @applescript """
     tell application "System Events" to tell (process 1 where frontmost is true)
       click menu bar item "#{item}" of menu bar 1
@@ -366,7 +369,7 @@ class DarwinActions extends Actions
     """
 
   openMenuBarPath: (itemArray) ->
-    @notUndoable()
+    emit 'notUndoable'
     elements = _.map itemArray.reverse(), (item, index) ->
       if index is 0
         "click menu item \"#{item}\""
@@ -382,27 +385,27 @@ class DarwinActions extends Actions
     @applescript script
 
   scrollDown: (amount) ->
-    @notUndoable()
+    emit 'notUndoable'
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, -1 * (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   scrollUp: (amount) ->
-    @notUndoable()
+    emit 'notUndoable'
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   scrollLeft: (amount) ->
-    @notUndoable()
+    emit 'notUndoable'
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   scrollRight: (amount) ->
-    @notUndoable()
+    emit 'notUndoable'
     event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, -1 * (amount or 1))
     $.CGEventPost($.kCGHIDEventTap, event)
 
   openApplication: (name) ->
-    @notUndoable()
+    emit 'notUndoable'
     if name in Settings.applicationsThatNeedLaunchingWithApplescript
       @applescript "tell application \"#{name}\" to activate"
     else
@@ -411,12 +414,12 @@ class DarwinActions extends Actions
       w('launchApplication', string)
 
   openBrowser: ->
-    @notUndoable()
+    emit 'notUndoable'
     defaultBrowser = Settings.defaultBrowser or "Safari"
     @openApplication(defaultBrowser)
 
   openURL: (url) ->
-    @notUndoable()
+    emit 'notUndoable'
     string = $.NSString('stringWithUTF8String', url)
     u = $.NSURL('URLWithString', string)
     w = $.NSWorkspace('sharedWorkspace')
@@ -470,7 +473,7 @@ class DarwinActions extends Actions
           @string transformed
 
   revealFinderDirectory: (directory) ->
-    @notUndoable()
+    emit 'notUndoable'
     w = $.NSWorkspace('sharedWorkspace')
     d = $.NSString('stringWithUTF8String', directory)
     # finder = $.NSString('stringWithUTF8String', "Finder")
@@ -493,7 +496,7 @@ class DarwinActions extends Actions
       undefined
 
   clickServiceItem: (item) ->
-    @notUndoable()
+    emit 'notUndoable'
     @applescript """
     tell application "System Events" to tell (process 1 where frontmost is true)
       click menu item "#{item}" of menu "Services" of menu item "Services" of menu 1 of menu bar item 2 of menu bar 1
@@ -574,7 +577,7 @@ class DarwinActions extends Actions
     not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
 
   verticalSelectionExpansion: (number) ->
-    @notUndoable()
+    emit 'notUndoable'
     @copy()
     @delay 100
     clipboard = @getClipboard()
@@ -592,7 +595,7 @@ class DarwinActions extends Actions
       @key 'down', 'shift'
 
   symmetricSelectionExpansion: (number) ->
-    @notUndoable()
+    emit 'notUndoable'
     @copy()
     @delay 100
     clipboard = @getClipboard()
@@ -603,7 +606,7 @@ class DarwinActions extends Actions
       @key 'right', 'shift'
 
   selectCurrentOccurrence: (input) ->
-    @notUndoable()
+    emit 'notUndoable'
     if input?.length
       first = input[0]
       last = input[1]
@@ -633,7 +636,7 @@ class DarwinActions extends Actions
         @repeat width, =>
           @key 'right', 'shift'
   selectPreviousOccurrence: (input) ->
-    @notUndoable()
+    emit 'notUndoable'
     if input?.length
       first = input[0]
       last = input[1]
@@ -665,7 +668,7 @@ class DarwinActions extends Actions
       else
         @right()
   selectNextOccurrence: (input) ->
-    @notUndoable()
+    emit 'notUndoable'
     if input?.length
       first = input[0]
       last = input[1]
@@ -698,7 +701,7 @@ class DarwinActions extends Actions
         @left()
 
   selectNextOccurrenceWithDistance: (phrase, distance) ->
-    @notUndoable()
+    emit 'notUndoable'
     if phrase?.length
       distance = (distance or 1)
       @left()
@@ -717,7 +720,7 @@ class DarwinActions extends Actions
         @left()
 
   selectPreviousOccurrenceWithDistance: (phrase, distance) ->
-    @notUndoable()
+    emit 'notUndoable'
     if phrase?.length
       distance = (distance or 1)
       @right()
@@ -736,7 +739,7 @@ class DarwinActions extends Actions
         @right()
 
   extendSelectionToFollowingOccurrenceWithDistance: (phrase, distance) ->
-    @notUndoable()
+    emit 'notUndoable'
     if phrase?.length
       if @canDetermineSelections() and @isTextSelected()
         existing = @getSelectedText()
@@ -758,7 +761,7 @@ class DarwinActions extends Actions
           @key 'right', 'shift'
 
   extendSelectionToPreviousOccurrenceWithDistance: (phrase, distance) ->
-    @notUndoable()
+    emit 'notUndoable'
     if phrase?.length
       if @canDetermineSelections() and @isTextSelected()
         existing = @getSelectedText()
@@ -803,7 +806,7 @@ class DarwinActions extends Actions
       horizontalBackward = 'right'
       verticalForward = 'up'
 
-    @notUndoable()
+    emit 'notUndoable'
 
     if @canDetermineSelections() and @isTextSelected()
       @key horizontalForward
@@ -865,7 +868,7 @@ class DarwinActions extends Actions
       horizontalBackward = 'right'
       verticalForward = 'up'
 
-    @notUndoable()
+    emit 'notUndoable'
 
     if @canDetermineSelections() and @isTextSelected()
       @key horizontalForward
@@ -922,7 +925,7 @@ class DarwinActions extends Actions
 
 
   selectBlock: ->
-    @notUndoable()
+    emit 'notUndoable'
     clipboard = if @canDetermineSelections() and @isTextSelected()
       @getSelectedText()
     else

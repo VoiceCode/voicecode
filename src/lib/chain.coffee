@@ -22,7 +22,7 @@ class Chain
     else
       error 'chainMissingParser', null, "The parser is not initialized -
       probably a problem with the license code, email, or internet connection"
-    
+
   execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
     unless chain?
       chain = @parse()
@@ -40,21 +40,21 @@ class Chain
 
     unless _.isEmpty chain
       Commands.monitoringMouseToCancelSpacing = false
-      emit 'chainExecutionStart', chain
+      emit 'chainWillExecute', chain
       _.each chain, (link) ->
         chainLinkIndex = HistoryController.getChainLength()
         link.context ?= {}
         _.extend link.context,
             chainLinkIndex: ++chainLinkIndex
             chain: _.cloneDeep chain
-        # emit 'chainLinkWillExecute', {link, chain}
+        emit 'commandWillExecute', {link, chain}
         try
           new Command(
             link.command
             link.arguments
             link.context
           ).generate().call Actions
-          emit 'chainLinkExecuted', {link, chain}
+          emit 'commandDidExecute', {link, chain}
           return true
         catch e
           if e.name is 'breakChain'
@@ -63,7 +63,7 @@ class Chain
             error 'chainExecutionError', chain, e
           return false
 
-      emit 'chainExecutionEnd', chain
+      emit 'chainDidExecute', chain
       setTimeout ->
         Commands.monitoringMouseToCancelSpacing = true
       , 150

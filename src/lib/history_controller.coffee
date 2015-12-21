@@ -6,18 +6,18 @@ class HistoryController
   constructor: ->
     @history = {}
 
-    Events.on 'chainExecutionStart', =>
+    Events.on 'chainWillExecute', =>
       activeChains++
       if activeChains is 1
         @startNewChain()
 
-    Events.on 'chainExecutionEnd', =>
+    Events.on 'chainDidExecute', =>
       activeChains--
       @history[previousContext][0] = _.compact @history[previousContext][0]
       if _.isEmpty @history[previousContext][0]
         @forgetChain 0
 
-    Events.on 'chainLinkExecuted', ({link}) =>
+    Events.on 'commandDidExecute', ({link}) =>
       command = Commands.get link.command
       unless command.bypassHistory?(link.context)
         currentContext = @getCurrentContext()

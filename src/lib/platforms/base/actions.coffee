@@ -15,8 +15,6 @@ module.exports = class Actions
     Packages.get(packageId)?.settings()
   setUndoByDeleting: (amount) ->
     Commands.currentUndoByDeletingCount = amount
-  notUndoable: ->
-    Commands.currentUndoByDeletingCount = 0
   undoByDeleting: ->
     amount = Commands.previousUndoByDeletingCount or 0
     _.times(amount) =>
@@ -56,7 +54,7 @@ module.exports = class Actions
         modifiers.split(" ")
       else
         modifiers
-      # titleize mods
+
       _.map mods, (m) =>
         actual = m.toLowerCase()
         if actual is "super"
@@ -175,7 +173,9 @@ module.exports = class Actions
   cut: ->
     @key 'x', 'super' ; @
   paste: ->
+    emit 'startUndoable'
     @key 'v', 'super' ; @
+    emit 'stopUndoable'
   undo: ->
     @key 'z', 'super' ; @
   redo: ->

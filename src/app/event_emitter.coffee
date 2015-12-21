@@ -49,9 +49,9 @@ class EventEmitter extends require('events').EventEmitter
       # 'commandValidationError'
       'chainParsed'
       'chainPreprocessed'
-      'chainExecutionStart'
-      'chainLinkExecuted'
-      # 'chainExecutionEnd'
+      'chainWillExecute'
+      'commandDidExecute'
+      # 'chainDidExecute'
     ]
 
   frontendOn: (event, callback) ->

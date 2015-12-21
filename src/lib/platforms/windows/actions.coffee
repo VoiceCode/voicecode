@@ -5,7 +5,7 @@ class Platforms.windows.actions extends Actions
     "control"
   key: (key, modifiers) ->
     key = key.toString()
-    @notUndoable()
+    emit 'notUndoable'
   string: (string) ->
   keyDown: (key, modifiers) ->
   keyUp: (key, modifiers) ->

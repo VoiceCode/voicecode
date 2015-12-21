@@ -30,27 +30,3 @@ Commands.createDisabled
       if input?.length
         mode = @fuzzyMatch Settings.modes, input.join(' ')
         @setGlobalMode(mode)
-  'smart.delete':
-    spoken: "scratchy"
-    description: "tries to do a 'smart' undo by deleting previously
-     inserted characters if the previous command only inserted text"
-    tags: ["system", "voicecode", "recommended"]
-    action: () ->
-      count = Commands.previousUndoByDeletingCount
-      if count? and count > 0
-        if @contextAllowsArrowKeyTextSelection()
-          @repeat count, =>
-            @key 'left', 'shift'
-          @key "delete"
-        else
-          @repeat count, =>
-            @key 'delete'
-  'smart.select':
-    spoken: "tragic"
-    description: "tries to select the previously inserted text if possible"
-    tags: ["system", "voicecode", "recommended"]
-    action: () ->
-      count = Commands.previousUndoByDeletingCount
-      if count? and count > 0
-        for i in [1..count]
-          @key 'left', 'shift'
