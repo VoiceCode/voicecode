@@ -50,7 +50,7 @@ class Scope
         applications()
       else
         applications
-    if apps?
+    if apps?.length
       switch global.platform
         when 'darwin'
           Actions.currentApplication().bundleId in apps
@@ -59,7 +59,7 @@ class Scope
       true
 
   @checkCondition: (condition) ->
-    if condition?
+    if _.isFunction condition
       condition.call(Actions)
     else
       true
