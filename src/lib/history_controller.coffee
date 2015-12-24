@@ -5,7 +5,7 @@ class HistoryController
 
   constructor: ->
     @history = {}
-
+    maintenanceInterval = setInterval @doMaintenance.bind(@), 900000 # 15 minutes
     Events.on 'chainWillExecute', =>
       activeChains++
       if activeChains is 1
@@ -56,8 +56,8 @@ class HistoryController
     @history[context].unshift []
     previousContext = context
 
-  doChainMaintenance: ->
-    # delete old stuff
+  doMaintenance: ->
+    _.all @history, (v, k) => Array::splice.call @history[k], 10
     # dump to disk?
 
   getCurrentContext: ->

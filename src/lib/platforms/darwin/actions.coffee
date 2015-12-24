@@ -439,7 +439,7 @@ class DarwinActions extends Actions
       w = $.NSWorkspace('sharedWorkspace')
       app = w('frontmostApplication')
       result = app('localizedName').toString()
-      @_currentApplication = result
+      @_currentApplication = {name: result}
 
   _getCurrentBrowserUrl: (cb) ->
     container = mutate 'getCurrentBrowserUrl', {url: null}
