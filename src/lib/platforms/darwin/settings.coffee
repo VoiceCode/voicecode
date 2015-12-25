@@ -312,6 +312,7 @@ _.extend Settings,
     "consol": "console"
     "consul": "console"
     "et cetera": "etc."
+    "e-mail": "email"
   vocabulary: [
     "trello"
     "auto space"
