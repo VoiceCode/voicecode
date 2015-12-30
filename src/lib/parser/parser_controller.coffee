@@ -67,7 +67,8 @@ class ParserController
     for c, index in parts
       item = c
       # capitalize I's
-      if c is "i" and (index is 0 or parts[index - 1] is " ") and (index is (parts.length - 1) or parts[index + 1] is " ")
+      if c is "i" and (index is 0 or parts[index - 1] is " ") and
+      (index is (parts.length - 1) or parts[index + 1] is " ")
         item = "I"
       else if c is "…"
         item = "ellipsis"
@@ -127,10 +128,12 @@ class ParserController
         try
           newParser = eval data
         catch e
-          error 'generateParserFailed', data?.substring(0, 300), 'Failed evaluating new parser.'
+          error 'generateParserFailed', data?.substring(0, 300),
+          'Failed evaluating new parser.'
           return
         if newParser.success is false
-          error 'generateParserFailed', data?.substring(0, 300), "Parser got no success. #{newParser.message}"
+          error 'generateParserFailed', data?.substring(0, 300),
+          "Parser got no success. #{newParser.message}"
           return
         @setParser newParser
         @writeToDisk
