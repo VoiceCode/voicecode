@@ -222,7 +222,15 @@ class Commands
       Please provide a unique identifier for your method as the second parameter: \n
       Commands.before '#{commandName}', 'my-#{commandName}-before', (input, context) -> doMagic()"
       return
-    @edit commandName, 'commandBeforeAdded', {info, action}, (command) =>
+    @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
+      if info.scope?
+        command.scopes ?= []
+        command.scopes.push info.scope
+        if command.scope?
+          command.scopes.push command.scope
+          delete command.scope
+        command.scopes = _.unique command.scopes
+
       command.before ?= {}
       command.before["#{info.packageId}"] = {info, action}
       command
