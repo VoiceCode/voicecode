@@ -8,18 +8,8 @@ class Commands
     instance = @
     @immediateEdits = false
     @mapping = {}
-    @renamings = []
     @context = "global"
-    @initialized = false
     @commandEditsFrom = 'code'
-    @conditionalModules = {}
-    @lastIndividualCommand = null
-    @lastFullCommand = null
-    @subcommandIndex = 0
-    @repetitionIndex = 0
-    @currentUndoByDeletingCount = 0
-    @aggregateUndoByDeletingCount = 0
-    @previousUndoByDeletingCount = 0
     @primaryGrammarTypes = [
       "custom"
       "textCapture"
