@@ -537,20 +537,20 @@ _.extend Settings,
       [ 'symbol.doubleQuotes.surround',
         'symbol.singleQuotes.surround' ]
     'mouse.click':
-      [ 'common.select.all',
-        'common.deletion.backward',
+      [ 'common:select.all',
+        'common:deletion.backward',
         'duplicate-selected',
-        'common.enter',
-        'common.deletion.backward',
-        'common.deletion.forward',
+        'common:enter',
+        'common:deletion.backward',
+        'common:deletion.forward',
         'symbol.comma.padded.right',
         'symbol.dot',
-        'common.newLineAbove',
+        'common:newLineAbove',
         'mouse.shiftClick',
         'mouse.click' ]
     'cursor.right':
       [ 'symbol.comma.padded.right',
-        'common.deletion.forward',
+        'common:deletion.forward',
         'delete.all.right',
         'format.upper-camel',
         'format.camel',
@@ -565,21 +565,21 @@ _.extend Settings,
         'word.false',
         'word.true' ]
     'symbol.doubleQuotes.surround': [ 'clipboard.paste' ]
-    'symbol.comma': [ 'common.enter' ]
+    'symbol.comma': [ 'common:enter' ]
     'cursor.left':
-      [ 'common.deletion.backward',
+      [ 'common:deletion.backward',
         'symbols:space',
         'symbol.comma.padded.right',
         'format.upper-camel',
         'format.camel',
         'format.snake' ]
     'cursor.down':
-      [ 'common.indentation.left',
-        'common.indentation.right',
+      [ 'common:indentation.left',
+        'common:indentation.right',
         'select.down',
         'line.move.up',
         'line.move.down',
-        'common.newLineBelow',
+        'common:newLineBelow',
         'delete.all.line' ]
     'symbol.dot':
       [ 'clipboard.paste',
@@ -591,7 +591,7 @@ _.extend Settings,
       [ 'delete.all.right',
         'delete.all.left',
         'select.all.right',
-        'common.deletion.backward',
+        'common:deletion.backward',
         'format.camel',
         'format.upper-camel',
         'clipboard.cut',
@@ -608,29 +608,29 @@ _.extend Settings,
         'combo.selectLineUnderMouseThenCopy' ]
     'mouse.commandClick': [ 'mouse.commandClick' ]
     'cursor.up':
-      [ 'common.indentation.left',
-        'common.indentation.right',
+      [ 'common:indentation.left',
+        'common:indentation.right',
         'select.up',
         'line.move.up',
         'line.move.down',
-        'common.enter',
-        'common.newLineAbove',
+        'common:enter',
+        'common:newLineAbove',
         'delete.all.line' ]
-    'common.deletion.backward': [ 'common.deletion.forward', 'clipboard.paste' ]
+    'common:deletion.backward': [ 'common:deletion.forward', 'clipboard.paste' ]
     'symbol.surround.parentheses':
       [ 'clipboard.paste',
         'symbol.doubleQuotes.surround',
         'symbol.singleQuotes.surround',
         'symbol.braces.surround' ]
     'select.all.right': [ 'clipboard.copy', 'clipboard.cut' ]
-    'cursor.way.right': [ 'common.deletion.backward' ]
-    'common.save': [ 'applicationControl.switchToPrevious', 'common.close.window' ]
+    'cursor.way.right': [ 'common:deletion.backward' ]
+    'common:save': [ 'applicationControl.switchToPrevious', 'common:close.window' ]
     'select.line.text': [ 'clipboard.cut' ]
-    'common.enter': [ 'format.camel', 'format.upper-camel', 'common.tab.backward' ]
-    'common.newLineAbove': [ 'clipboard.paste' ]
-    'common.newLineBelow': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
-    'select.up': [ 'common.indentation.left', 'common.indentation.right' ]
-    'select.down': [ 'common.indentation.left', 'common.indentation.right' ]
+    'common:enter': [ 'format.camel', 'format.upper-camel', 'common:tab.backward' ]
+    'common:newLineAbove': [ 'clipboard.paste' ]
+    'common:newLineBelow': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
+    'select.up': [ 'common:indentation.left', 'common:indentation.right' ]
+    'select.down': [ 'common:indentation.left', 'common:indentation.right' ]
     'symbols:space':
       [ 'format.camel',
         'format.upper-camel',
@@ -638,8 +638,8 @@ _.extend Settings,
         'format.snake',
         'format.lower-no-space' ]
     'clipboard.cut': [ 'applicationControl.switchToPrevious' ]
-    'clipboard.paste': [ 'common.enter' ]
-    'common.deletion.forward': [ 'common.deletion.backward' ]
+    'clipboard.paste': [ 'common:enter' ]
+    'common:deletion.forward': [ 'common:deletion.backward' ]
     'symbol.comma.padded.right':
       [ 'symbol.doubleQuotes.surround',
         'symbol.singleQuotes.surround',
@@ -648,8 +648,8 @@ _.extend Settings,
         'clipboard.paste',
         'word.false',
         'word.true' ]
-    'common.open.tab': [ 'clipboard.paste' ]
-    'delete.word.backward': [ 'common.deletion.backward', 'cursor.left' ]
+    'common:open.tab': [ 'clipboard.paste' ]
+    'delete.word.backward': [ 'common:deletion.backward', 'cursor.left' ]
     'smart.select':
       [ 'format.camel',
         'format.upper-camel',
@@ -658,14 +658,14 @@ _.extend Settings,
         'format.upper',
         'format.lower-no-space',
         'format.upper-no-space' ]
-    'select.word.next': [ 'common.deletion.backward' ]
-    'select.word.previous': [ 'common.deletion.backward' ]
+    'select.word.next': [ 'common:deletion.backward' ]
+    'select.word.previous': [ 'common:deletion.backward' ]
     'mouse.shiftClick':
       [ 'clipboard.copy',
-        'common.deletion.backward',
+        'common:deletion.backward',
         'duplicate-selected',
-        'common.indentation.left',
-        'common.indentation.right' ] }
+        'common:indentation.left',
+        'common:indentation.right' ] }
 
 # tens =
 #   ten: 10

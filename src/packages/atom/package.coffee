@@ -179,8 +179,8 @@ Chain.preprocess pack.options, (chain) ->
   _.reduce chain, (newChain, link, index) ->
     newChain.push link
     if link.command is 'core:literal' and
-      chain[index - 1]?.command is 'common.open.tab' and
-      chain[index + 1]?.command is 'common.enter'
+      chain[index - 1]?.command is 'common:open.tab' and
+      chain[index + 1]?.command is 'common:enter'
         newChain.push {command: 'core:delay', arguments: pack.settings().modalWindowDelay}
     newChain
   , []

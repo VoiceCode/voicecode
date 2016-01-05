@@ -45,12 +45,12 @@ pack.commands
     tags: ['selection', 'IDE', 'cursor']
     requires: [
       'editor:move-to-line-number'
-      'common.newLineBelow'
+      'common:newLineBelow'
     ]
     action: (input) ->
       @do 'editor:move-to-line-number', input
       if input?
-        @do 'common.newLineBelow'
+        @do 'common:newLineBelow'
 
   'move-to-line-number+select-line':
     spoken: 'spackle'

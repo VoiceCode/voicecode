@@ -14,7 +14,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       @key 'space', 'shift'
-  'common.newLineBelow':
+  'common:newLineBelow':
     spoken: 'shockoon'
     description: "Inserts a new line below the current line"
     tags: ["return", "combo", "recommended"]
@@ -26,7 +26,7 @@ Commands.createDisabled
       else
         @key "right", "command"
         @enter()
-  'common.newLineAbove':
+  'common:newLineAbove':
     spoken: 'shockey'
     description: "Inserts a new line above the current line"
     misspellings: ["chalky", "shocking", "shocky"]

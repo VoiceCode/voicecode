@@ -160,7 +160,7 @@ Commands.createDisabled
     action: ->
       @do 'select.line.text'
       @copy()
-      @do 'common.newLineBelow'
+      @do 'common:newLineBelow'
       @paste()
   'show-shortcut-markers':
     spoken: 'swan'

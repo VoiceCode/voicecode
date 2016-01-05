@@ -1,6 +1,11 @@
-Commands.createDisabled
-  # 'actions.affirmation': # RENAMING ALERT
-  'common.enter': # RENAMING ALERT
+pack = Packages.register
+  name: 'common'
+  platforms: ['darwin', 'windows', 'linux']
+  description: 'Common actions'
+
+pack.commands
+  # 'actions.affirmation':
+  'enter':
     spoken: 'shock'
     misspellings: ['shocked', 'shox', 'chalk', 'schock']
     description: 'press the return key'
@@ -8,7 +13,7 @@ Commands.createDisabled
     repeatable: true
     action: (input) ->
       @enter()
-  'common.deletion.backward':
+  'deletion.backward':
     spoken: 'junk'
     description: 'press the delete key'
     misspellings: ['junks', 'junked']
@@ -16,64 +21,64 @@ Commands.createDisabled
     repeatable: true
     action: (input) ->
       @key 'delete'
-  'common.deletion.forward':
+  'deletion.forward':
     spoken: 'spunk'
     description: 'pressed the forward delete key'
     tags: ['deleting', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'forwarddelete'
-  # 'actions.regret' # RENAMING ALERT
-  'common.undo': # RENAMING ALERT
+  # 'actions.regret'
+  'undo':
     spoken: 'dizzle'
     description: 'undo'
     tags: ['application', 'recommended']
     repeatable: true
     action: (input) ->
       @undo()
-  'common.redo':
+  'redo':
     spoken: 'rizzle'
     description: 'redo'
     tags: ['application', 'recommended']
     repeatable: true
     action: (input) ->
       @redo()
-  'common.tab.backward':
+  'tab.backward':
     spoken: 'tarp'
     description: 'inserts a tab'
     tags: ['tab', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'tab'
-  'common.tab.forward':
+  'tab.forward':
     spoken: 'tarsh'
     description: 'inserts a shift + tab'
     tags: ['tab', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'tab', 'shift'
-  'common.zoom.in':
+  'zoom.in':
     spoken: 'shompla'
     description: 'zoom in'
     tags: ['application', 'plus', 'recommended']
     repeatable: true
     action: (input) ->
       @key '=', 'command'
-  'common.zoom.out':
+  'zoom.out':
     spoken: 'shaman'
     description: 'zoom out'
     tags: ['application', 'minus', 'recommended']
     repeatable: true
     action: (input) ->
       @key '-', 'command'
-  'common.indentation.left':
+  'indentation.left':
     spoken: 'shabble'
     description: 'indent to the left'
     tags: ['[', 'recommended']
     repeatable: true
     action: (input) ->
       @key '[', 'command'
-  'common.indentation.right':
+  'indentation.right':
     spoken: 'shabber'
     description: 'indent to the right'
     misspellings: ['shammar']
@@ -81,27 +86,27 @@ Commands.createDisabled
     repeatable: true
     action: (input) ->
       @key ']', 'command'
-  'common.search.nextOccurrence':
+  'search.nextOccurrence':
     spoken: 'marneck'
     description: 'find the next occurrence of a search term'
     tags: ['application', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'g', 'command'
-  'common.search.previousOccurrence':
+  'search.previousOccurrence':
     spoken: 'marpreev'
     description: 'find the previous occurrence of a search term'
     tags: ['application', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'g', 'command shift'
-  'common.select.all':
+  'select.all':
     spoken: 'olly'
     description: 'select all'
     tags: ['selection', 'recommended']
     action: ->
       @selectAll()
-  'common.save':
+  'save':
     spoken: 'sage'
     description: 'file > save'
     tags: ['application', 'recommended']
@@ -114,40 +119,40 @@ Commands.createDisabled
     action: ->
       @save()
       @switchApplication()
-  'common.close.window':
+  'close.window':
     spoken: 'totch'
     description: 'close a window or tab'
     tags: ['application', 'window', 'recommended']
     repeatable: true
     action: ->
       @key 'w', 'command'
-  'common.open.search':
+  'open.search':
     spoken: 'marco'
     description: 'find'
     tags: ['application', 'recommended']
     action: ->
       @key 'f', 'command'
-  'common.open.tab':
+  'open.tab':
     spoken: 'talky'
     description: 'open a new tab'
     tags: ['application', 'window', 'recommended']
     misspellings: ['talkie']
     action: ->
       @newTab()
-  'common.escape': # RENAMING ALERT
-  # 'actions.negation': # RENAMING ALERT
+  'escape':
+  # 'actions.negation':
     spoken: 'randall'
     description: 'Press escape'
     tags: ['key', 'recommended']
     action: ->
       @key 'escape'
-  'common.key.home': # RENAMING ALERT
+  'key.home':
     spoken: 'prome'
     description: 'press the home key'
     tags: ['recommended', 'key']
     action: ->
       @key 'home'
-  'common.key.end': # RENAMING ALERT
+  'key.end':
     spoken: 'prend'
     description: 'press the end key'
     tags: ['recommended', 'key']
