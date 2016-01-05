@@ -1,6 +1,6 @@
 pack = Packages.register
   name: 'text-manipulation'
-  description: ''
+  description: 'Various text manipulations'
 
 pack.commands
   'delete.word.backward':

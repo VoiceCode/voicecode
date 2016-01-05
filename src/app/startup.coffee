@@ -1,4 +1,4 @@
-global.developmentMode = false
+global.developmentMode = true
 testing = true
 
 global.projectRoot = require('app-root-path').path
