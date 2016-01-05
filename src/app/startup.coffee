@@ -21,7 +21,6 @@ global._ = require 'lodash'
 global._s = require 'underscore.string'
 global.chalk = require 'chalk'
 global.util = require('util')
-
 global.debug = do ->
   previous = Date.now()
   ->
@@ -32,6 +31,7 @@ global.debug = do ->
 
 global.$ = require('nodobjc')
 global.Events = require './event_emitter'
+global.path = require 'path'
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
 global.numberToWords = require '../lib/utility/numberToWords'
@@ -97,9 +97,10 @@ Events.on 'applicationStart', ->
 
     switch platform
       when "darwin"
-        global.Actions = require '../lib/platforms/darwin/actions'
-        global.SystemInfo = require '../lib/platforms/darwin/system_info'
-        global.DarwinController = require '../lib/platforms/darwin/darwin_controller'
+        darwin = path.join '../lib', 'platforms', 'darwin'
+        global.Actions = require "#{darwin}/actions"
+        global.SystemInfo = require "#{darwin}/system_info"
+        global.DarwinController = require "#{darwin}/darwin_controller"
       when "win32"
         global.Actions = require '../lib/platforms/windows/actions'
       when "linux"
@@ -127,10 +128,11 @@ Events.on 'applicationStart', ->
 
     Commands.initialize()
 
-    _.extend global, require './settings_manager' # EnabledCommandsManager, SettingsManager
+    # EnabledCommandsManager, SettingsManager
+    _.extend global, require './settings_manager'
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
-    UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee' # wandering into asynchronous land
-    startupFlow.wait 'user_code_loaded' # synchronous again
+    UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee'
+    startupFlow.wait 'user_code_loaded'
 
     if developmentMode
       Settings.slaveMode = true

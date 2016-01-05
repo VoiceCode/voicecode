@@ -1,6 +1,5 @@
 fs = require 'fs'
 os = require 'os'
-path = require 'path'
 chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
 asyncblock = require 'asyncblock'
@@ -68,7 +67,7 @@ _.extend Settings,
 
   handleFile: (event, fileName) ->
     if fileName.match(/.coffee$/)?
-      cleanFileName = fileName.split('/')[-1..].pop().replace /\.coffee$/, ''
+      cleanFileName = path.basename fileName, '.coffee'
       log 'userAssetEvent', {event, fileName},
       "User asset #{event}: #{fileName}"
       asyncblock (flow) =>
