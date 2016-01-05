@@ -545,7 +545,7 @@ _.extend Settings,
         'common:deletion.forward',
         'symbol.comma.padded.right',
         'symbol.dot',
-        'common:newLineAbove',
+        'common:new-line-above',
         'mouse.shiftClick',
         'mouse.click' ]
     'cursor.right':
@@ -579,7 +579,7 @@ _.extend Settings,
         'select.down',
         'line.move.up',
         'line.move.down',
-        'common:newLineBelow',
+        'common:new-line-below',
         'delete.all.line' ]
     'symbol.dot':
       [ 'clipboard.paste',
@@ -614,7 +614,7 @@ _.extend Settings,
         'line.move.up',
         'line.move.down',
         'common:enter',
-        'common:newLineAbove',
+        'common:new-line-above',
         'delete.all.line' ]
     'common:deletion.backward': [ 'common:deletion.forward', 'clipboard.paste' ]
     'symbol.surround.parentheses':
@@ -627,8 +627,8 @@ _.extend Settings,
     'common:save': [ 'application-control:previous.application', 'common:close.window' ]
     'select.line.text': [ 'clipboard.cut' ]
     'common:enter': [ 'format.camel', 'format.upper-camel', 'common:tab.backward' ]
-    'common:newLineAbove': [ 'clipboard.paste' ]
-    'common:newLineBelow': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
+    'common:new-line-above': [ 'clipboard.paste' ]
+    'common:new-line-below': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
     'select.up': [ 'common:indentation.left', 'common:indentation.right' ]
     'select.down': [ 'common:indentation.left', 'common:indentation.right' ]
     'symbols:space':

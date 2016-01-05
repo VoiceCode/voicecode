@@ -76,6 +76,11 @@ Events.on 'applicationStart', ->
     global.Settings = require "../lib/platforms/#{platform}/settings"
     Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
     global.Packages = require '../lib/packages/packages'
+    # A package for platform specific global commands
+    Packages.register
+      name: global.platform
+      description: "#{_.startCase global.platform} "
+
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.UserAssetsController = require './user_assets_controller'

@@ -158,3 +158,21 @@ pack.commands
     tags: ['recommended', 'key']
     action: ->
       @key 'end'
+  'new-line-below':
+    spoken: 'shockoon'
+    description: "Inserts a new line below the current line"
+    tags: ["return", "combo", "recommended"]
+    repeatable: true
+  'new-line-above':
+    spoken: 'shockey'
+    description: "Inserts a new line above the current line"
+    misspellings: ["chalky", "shocking", "shocky"]
+    tags: ["return", "combo", "recommended"]
+    repeatable: true
+  'shift-space':
+    spoken: 'sky koosh'
+    description: "press shift+space (useful for scrolling up, or other random purposes in certain applications)"
+    tags: ["space"]
+    repeatable: true
+    action: ->
+      @key 'space', 'shift'

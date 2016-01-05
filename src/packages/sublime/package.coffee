@@ -12,6 +12,11 @@ Actions.sublime = -> new Sublime()
 Settings.extend "editorApplications", pack.applications()
 
 pack.implement
+  'common:new-line-below': ->
+    @key "return", "command"
+  'common:new-line-above': ->
+    @key "return", "command shift"
+
   'editor:expand-selection-to-scope': ->
     @key 's', 'control command option'
 

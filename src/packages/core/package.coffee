@@ -45,3 +45,10 @@ pack.commands
     action: (input) ->
       if input?.length
         @string input.join ' '
+  'delimiter':
+    spoken: 'shin'
+    description: "Does nothing on its own, used as a command delimiter."
+    misspellings: ["chin"]
+    tags: ["text", "recommended"]
+    action: ->
+      null

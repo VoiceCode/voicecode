@@ -80,7 +80,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'common:newLineBelow'
+      @do 'common:new-line-below'
   'click+space':
     spoken: 'chiffkoosh'
     description: 'click, then insert a space'

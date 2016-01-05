@@ -29,8 +29,9 @@ class Package
       id = @normalizeId(id)
       Commands.createDisabled id,
       _.extend({}, packageOptions, defaults, options)
-      @implement _.extend({}, packageOptions, defaults, options),
-      {"#{id}": funk}
+      if options.action?
+        @implement _.extend({}, packageOptions, defaults, options),
+        {"#{id}": funk}
 
   command: (id, options) ->
     if options.action?
@@ -39,9 +40,9 @@ class Package
     id = @normalizeId(id)
     Commands.createDisabled id,
     _.extend({}, @defaultCommandOptions, options)
-
-    @implement _.extend({}, @defaultCommandOptions, options),
-    {"#{id}": funk}
+    if options.action?
+      @implement _.extend({}, @defaultCommandOptions, options),
+      {"#{id}": funk}
 
   implement: ->
     if arguments[1]?
