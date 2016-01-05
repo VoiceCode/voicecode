@@ -624,7 +624,7 @@ _.extend Settings,
         'symbol.braces.surround' ]
     'select.all.right': [ 'clipboard.copy', 'clipboard.cut' ]
     'cursor.way.right': [ 'common:deletion.backward' ]
-    'common:save': [ 'applicationControl.switchToPrevious', 'common:close.window' ]
+    'common:save': [ 'application-control:previous.application', 'common:close.window' ]
     'select.line.text': [ 'clipboard.cut' ]
     'common:enter': [ 'format.camel', 'format.upper-camel', 'common:tab.backward' ]
     'common:newLineAbove': [ 'clipboard.paste' ]
@@ -637,7 +637,7 @@ _.extend Settings,
         'core.insertAbbreviation',
         'format.snake',
         'format.lower-no-space' ]
-    'clipboard.cut': [ 'applicationControl.switchToPrevious' ]
+    'clipboard.cut': [ 'application-control:previous.application' ]
     'clipboard.paste': [ 'common:enter' ]
     'common:deletion.forward': [ 'common:deletion.backward' ]
     'symbol.comma.padded.right':
