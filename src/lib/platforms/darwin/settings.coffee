@@ -21,8 +21,6 @@ w = (commaSeparatedString) ->
 
 _.extend Settings,
   dragonVersion: 4
-  # dragonCommandMode: old-school/new-school/pure-vocab
-  dragonCommandMode: 'old-school'
   dontMessWithMyDragon: true
   slaveMode: false
   slaveModePort: 4444
@@ -34,8 +32,8 @@ _.extend Settings,
   # determine if auto spacing should be enabled (called within the default actions context, so you can check @currentApplication or any other context)
   autoSpacingEnabled: ->
     true
-  defaultBrowser: "Safari" # TODO: platform dependent
-  defaultTerminal: 'Terminal' # TODO: platform dependent
+  defaultBrowser: 'Safari'
+  defaultTerminal: 'Terminal'
   terminalApplications: []
   editorApplications: []
   browserApplications: []

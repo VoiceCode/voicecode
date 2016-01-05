@@ -23,10 +23,12 @@ class Package
     _.extend @_commands, commands
     packageOptions = @defaultCommandOptions
     _.each commands, (options, id) =>
-      Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, defaults, options)
+      Commands.createDisabled @normalizeId(id),
+      _.extend({}, packageOptions, defaults, options)
 
   command: (id, options) ->
-    Commands.createDisabled @normalizeId(id), _.extend({}, @defaultCommandOptions, options)
+    Commands.createDisabled @normalizeId(id),
+    _.extend({}, @defaultCommandOptions, options)
 
   before: ->
     if arguments[1]?
@@ -60,11 +62,14 @@ class Package
     else
       @_settings
 
-  # called after user code has been evaluated (so a user can change package settings that this package's commands depend on)
+  # called after user code has been evaluated
+  # (so a user can change package settings that
+  # this package's commands depend on)
   ready: (callback) ->
     Events.once 'userAssetsLoaded', callback.bind(@)
 
-  # the instance should automatically add its package name at the beginning of all commands it creates
+  # the instance should automatically add its
+  # package name at the beginning of all commands it creates
   normalizeId: (id) ->
     [@name, ':', id].join('')
 
@@ -98,17 +103,18 @@ class Package
       @options.condition
 
   remove: ->
-    # TODO track commands that were added, and before/after - basically all changes, and then undo them
+    # TODO track commands that were added, and before/after-
+    # basically all changes, and then undo them
 
     _.each @_commands, (options, id) =>
       Commands.remove @normalizeId(id)
 
     packageOptions = @defaultEditOptions
 
-    _.each @_before, (extension, id) =>
+    _.each @_before, (extension, id) ->
       Commands.removeBefore id, packageOptions
 
-    _.each @_after, (extension, id) =>
+    _.each @_after, (extension, id) ->
       Commands.removeAfter id, packageOptions
 
     # commit changes
