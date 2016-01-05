@@ -71,7 +71,7 @@ pack.implement
         value: term
         distance: input.distance or 1
 
-  'selection:extendSelection.next.word-occurrence': (input) ->
+  'selection:extend.next.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
       @storage.previousSearchTerm = term
@@ -79,7 +79,7 @@ pack.implement
         value: term
         distance: input.distance or 1
 
-  'selection:extendSelection.previous.word-occurrence': (input) ->
+  'selection:extend.previous.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
       @storage.previousSearchTerm = term
@@ -129,7 +129,7 @@ pack.implement
     @key '/', 'command'
 
   'editor:extend-selection-to-line-number': (input) ->
-    @runAtomCommand 'extendSelectionToLine', input
+    @runAtomCommand 'extendToLine', input
 
   'editor:insert-from-line-number': (input) ->
     if input?

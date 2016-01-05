@@ -2,6 +2,8 @@ pack = Packages.register
   name: 'selection'
   description: 'Text selection'
 
+_.extend pack, require "./#{global.platform}"
+
 pack.commands
   'all.down':
     spoken: 'shroomway'
@@ -63,7 +65,7 @@ pack.commands
     tags: ['text-manipulation']
     misspellings: ['foley', 'fawley']
     action: ->
-      @selectBlock()
+      Packages.get('selection').selectBlock()
   'expand.horizontal':
     spoken: 'spando'
     description: 'expand selection symmetrically (horizontally)'
@@ -71,7 +73,7 @@ pack.commands
     tags: ['text-manipulation']
     inputRequired: false
     action: (input) ->
-      @symmetricSelectionExpansion(input or 1)
+      Packages.get('selection').symmetricSelectionExpansion(input or 1)
   'expand.vertical':
     spoken: 'bloxy'
     description: 'expand selection vertically, symmetrically'
@@ -79,7 +81,7 @@ pack.commands
     tags: ['text-manipulation']
     inputRequired: true
     action: (input) ->
-      @verticalSelectionExpansion(input or 1)
+      Packages.get('selection').verticalSelectionExpansion(input or 1)
   'range.currentLine':
     spoken: 'kerleck'
     description: 'With argument: [word], Will select the text [word] on
@@ -90,7 +92,7 @@ pack.commands
     tags: ['text-manipulation', 'cursor', 'selection']
     inputRequired: true
     action: (input) ->
-      @selectCurrentOccurrence(input)
+      Packages.get('selection').selectCurrentOccurrence(input)
   'range.upward':
     spoken: 'jeepleck'
     description: 'With argument: [word], Will select the text [word]
@@ -101,7 +103,7 @@ pack.commands
     inputRequired: true
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
-      @selectPreviousOccurrence(input)
+      Packages.get('selection').selectPreviousOccurrence(input)
   'range.downward':
     spoken: 'doomleck'
     description: 'With argument: [word], Will select the text
@@ -112,7 +114,7 @@ pack.commands
     inputRequired: true
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
-      @selectNextOccurrence(input)
+      Packages.get('selection').selectNextOccurrence(input)
   'word.next':
     spoken: 'wordneck'
     description: 'select the following whole word'
@@ -120,7 +122,7 @@ pack.commands
     inputRequired: false
     tags: ['text-manipulation', 'cursor', 'selection']
     action: (input) ->
-      @selectContiguousMatching
+      Packages.get('selection').selectContiguousMatching
         input: input
         expression: /\w/
         direction: 1
@@ -131,7 +133,7 @@ pack.commands
     tags: ['text-manipulation', 'cursor', 'selection']
     inputRequired: false
     action: (input) ->
-      @selectContiguousMatching
+      Packages.get('selection').selectContiguousMatching
         input: input
         expression: /\w/
         direction: -1
@@ -169,51 +171,55 @@ pack.commands
     description: 'select all'
     tags: ['selection', 'recommended']
     action: ->
-      @selectAll()
+      @selectAll() #TODO: fix
   'previous.word-occurrence':
     spoken: 'trail'
     description: "Search backward for the next thing you say, then select it"
     misspellings: ["trailed"]
     grammarType: "singleSearch"
     action: (input) ->
-      term = input?.value or @storage.previousSearchTerm
+      term = input?.value or
+      Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
       if term?.length
-        @storage.previousSearchTerm = term
-        @selectPreviousOccurrenceWithDistance term, input.distance
+        Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
+        Packages.get('selection').selectPreviousOccurrenceWithDistance term, input.distance
   'next.word-occurrence':
     spoken: 'crew'
     description: "Search forward for the next thing you say, then select it"
     misspellings: ["crews", "cruise"]
     grammarType: "singleSearch"
     action: (input) ->
-      term = input?.value or @storage.previousSearchTerm
+      term = input?.value or
+      Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
       if term?.length
-        @storage.previousSearchTerm = term
-        @selectNextOccurrenceWithDistance term, input.distance
+        Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
+        Packages.get('selection').selectNextOccurrenceWithDistance term, input.distance
 
-  'extendSelection.previous.word-occurrence':
+  'extend.previous.word-occurrence':
     spoken: 'seltrail'
     tags: ["search", "voicecode", "selection"]
     description: "Extend the selection backward
      until the next occurrence of the spoken argument"
     grammarType: "singleSearch"
     action: (input) ->
-      term = input?.value or @storage.previousSearchTerm
+      term = input?.value or
+      Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
       if term?.length
-        @storage.previousSearchTerm = term
-        @extendSelectionToPreviousOccurrenceWithDistance term, input.distance
+        Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
+        Packages.get('selection').extendToPreviousOccurrenceWithDistance term, input.distance
 
-  'extendSelection.next.word-occurrence':
+  'extend.next.word-occurrence':
     spoken: 'selcrew'
     tags: ["search", "voicecode", "selection"]
     description: "Extend the selection forward until
      the next occurrence of the spoken argument"
     grammarType: "singleSearch"
     action: (input) ->
-      term = input?.value or @storage.previousSearchTerm
+      term = input?.value or
+      Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
       if term?.length
-        @storage.previousSearchTerm = term
-        @extendSelectionToFollowingOccurrenceWithDistance term, input.distance
+        Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
+        Packages.get('selection').extendToFollowingOccurrenceWithDistance term, input.distance
 
   'previous.word-by-surrounding-characters':
     spoken: 'trapreev'
@@ -223,9 +229,10 @@ pack.commands
      so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell'
       - useful for unpronounceable or long words"
     action: (input) ->
-      term = input?.value or @storage.previousTrapSearchTerm
+      term = input?.value or
+      Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
       if term?.length
-        @storage.previousTrapSearchTerm = term
+        Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
         @selectSurroundedOccurrence
           expression: term
           distance: input.distance or 1
@@ -239,10 +246,11 @@ pack.commands
      so the word 'ThxSrndSnd', would be selected by saying 'trapreev teek dell'
       - useful for unpronounceable or long words"
     action: (input) ->
-      term = input?.value or @storage.previousTrapSearchTerm
+      term = input?.value or
+      Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
       if term?.length
-        @storage.previousTrapSearchTerm = term
-        @selectSurroundedOccurrence
+        Actions.storage.previousSearchTerm = term # TODO: un-ugly-fy
+        Packages.get('selection').selectSurroundedOccurrence
           expression: term
           distance: input.distance
           direction: 1
@@ -257,7 +265,7 @@ pack.commands
         term = @getSelectedText()
       else
         return
-      @selectNextOccurrenceWithDistance term, 1
+      Packages.get('selection').selectNextOccurrenceWithDistance term, 1
   "previous.selection-occurrence":
     spoken: "privok"
     kind : "action"
@@ -269,4 +277,4 @@ pack.commands
         term = @getSelectedText()
       else
         return
-      @selectPreviousOccurrenceWithDistance term, 1
+      Packages.get('selection').selectPreviousOccurrenceWithDistance term, 1

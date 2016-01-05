@@ -1,5 +1,12 @@
 return unless pack = Packages.get 'darwin'
 
+pack.commands
+  'application-preferences':
+    spoken: 'prefies'
+    description: 'Open application preferences'
+    action: ->
+      @key ',', ['command']
+
 pack.implement
   'cursor:new-line-below': ->
     @key 'right', 'command'

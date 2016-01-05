@@ -329,7 +329,7 @@ pack.implement
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-  'selection:extendSelection.next.word-occurrence': (input, context) ->
+  'selection:extend.next.word-occurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
     ChromeBrowserController.send
@@ -343,7 +343,7 @@ pack.implement
           namespace: 'SelectionController'
           method: 'extend'
           type: 'invokeBound'
-  'selection:extendSelection.previous.word-occurrence': (input, context) ->
+  'selection:extend.previous.word-occurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
     ChromeBrowserController.send
