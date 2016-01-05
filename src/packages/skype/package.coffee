@@ -3,7 +3,7 @@ pack = Packages.register
   applications: ['com.skype.skype%']
   description: 'Skype integration'
 
-pack.before
+pack.implement
   'object.next': ->
     @key 'right', 'command option'
   'object.previous': ->

@@ -4,7 +4,7 @@ class Package
     @_commands = {}
     @_before = {}
     @_after = {}
-
+    @_implementations = {}
     @_settings = @options.settings or {}
 
     {@name, @description, @scope} = @options
@@ -23,12 +23,38 @@ class Package
     _.extend @_commands, commands
     packageOptions = @defaultCommandOptions
     _.each commands, (options, id) =>
-      Commands.createDisabled @normalizeId(id),
+      if options.action?
+        funk = options.action
+        delete options.action
+      id = @normalizeId(id)
+      Commands.createDisabled id,
       _.extend({}, packageOptions, defaults, options)
+      @implement _.extend({}, packageOptions, defaults, options),
+      {"#{id}": funk}
 
   command: (id, options) ->
-    Commands.createDisabled @normalizeId(id),
+    if options.action?
+      funk = options.action
+      delete options.action
+    id = @normalizeId(id)
+    Commands.createDisabled id,
     _.extend({}, @defaultCommandOptions, options)
+
+    @implement _.extend({}, @defaultCommandOptions, options),
+    {"#{id}": funk}
+
+  implement: ->
+    if arguments[1]?
+      packageOptions = _.defaultsDeep arguments[0], @defaultEditOptions
+      commands = arguments[1]
+    else
+      packageOptions = @defaultEditOptions
+      commands = arguments[0]
+
+    _.extend @_implementations, commands
+
+    _.each commands, (extension, id) ->
+      Commands.implement id, packageOptions, extension
 
   before: ->
     if arguments[1]?
@@ -76,7 +102,6 @@ class Package
   setDefaultCommandOptions: ->
     @defaultCommandOptions =
       packageId: @name
-      scope: @scope
       tags: @options.tags
       notes: @options.notes
 

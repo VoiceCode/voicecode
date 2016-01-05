@@ -4,7 +4,7 @@ pack = Packages.register
   applications: ['com.apple.mail']
   description: 'Apple Mail integration'
 
-pack.before
+pack.implement
   'object.next': ->
     @key 'down', 'command'
   'object.previous': ->

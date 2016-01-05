@@ -211,37 +211,23 @@ class Commands
     Commands.override is deprecated. Use Commands.extend"
 
   extend: (name, edition) ->
-    warning 'deprecation', "Failed extending '#{name}'.
+    error 'deprecation', "Failed extending '#{name}'.
     Commands.extend is deprecated. Use Commands.before"
-    @before name, edition
+
+  implement: (commandName, info, action) ->
+    @edit commandName, 'commandImplementationAdded', {info, action},
+    (command) ->
+      command.actions ?= {}
+      command.actions["#{info.packageId}"] = {info, action}
+      command
 
   before: (commandName, info, action) ->
-    if _.isFunction info
-      error 'commandValidationFailed', commandName,
-      "Commands.before API changed.\n
-      Please provide a unique identifier for your method as the second parameter: \n
-      Commands.before '#{commandName}', 'my-#{commandName}-before', (input, context) -> doMagic()"
-      return
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
-      if info.scope?
-        command.scopes ?= []
-        command.scopes.push info.scope
-        if command.scope?
-          command.scopes.push command.scope
-          delete command.scope
-        command.scopes = _.unique command.scopes
-
       command.before ?= {}
       command.before["#{info.packageId}"] = {info, action}
       command
 
   after: (commandName, info, action) ->
-    if _.isFunction info
-      error 'commandValidationFailed', commandName,
-      "Commands.after API changed.\n
-      Please provide a unique identifier for your method as the second parameter: \n
-      Commands.after '#{commandName}', 'my-#{commandName}-after', (input, context) -> doMagic()"
-      return
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
       command.after ?= {}
       command.after["#{info.packageId}"] = {info, action}
@@ -301,6 +287,7 @@ class Commands
       # catch e
       #   console.log "error parsing custom grammar for command: #{key}"
       #   console.log e
+
     options
 
 module.exports = new Commands

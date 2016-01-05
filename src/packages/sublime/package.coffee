@@ -11,7 +11,7 @@ Actions.sublime = -> new Sublime()
 
 Settings.extend "editorApplications", pack.applications()
 
-pack.before
+pack.implement
   'editor:expand-selection-to-scope': ->
     @key 's', 'control command option'
 

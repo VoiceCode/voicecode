@@ -5,7 +5,7 @@ pack = Packages.register
 
 Settings.extend 'browserApplications', pack.applications()
 
-pack.before
+pack.implement
   'object.refresh': ->
     @key 'R', 'command'
   'object.forward': ->

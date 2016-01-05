@@ -301,7 +301,7 @@ if Settings.chromeExtension
 
 
 pack = Packages.get 'chrome'
-pack.before
+pack.implement
   'search.next.wordOccurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?

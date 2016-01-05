@@ -7,7 +7,7 @@ pack = Packages.register
 Settings.extend "terminalApplications", pack.applications()
 Settings.extend "editorApplications", pack.applications()
 
-pack.before
+pack.implement
   'mouse-combo:insert-hovered': ->
     @rightClick()
     @rightClick()

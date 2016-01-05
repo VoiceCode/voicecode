@@ -6,7 +6,7 @@ pack = Packages.register
 
 Settings.extend 'browserApplications', pack.applications()
 
-pack.before
+pack.implement
   'object.forward': ->
     @key ']', 'command'
   'object.backward': ->

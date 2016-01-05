@@ -13,7 +13,7 @@ Settings.extend "editorApplications", pack.applications()
 pack.settings
   modalWindowDelay: 400
 
-pack.before
+pack.implement
   'line.move.up': ->
     @key 'up', 'control command'
 

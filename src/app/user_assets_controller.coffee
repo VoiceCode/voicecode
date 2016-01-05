@@ -94,9 +94,9 @@ _.extend Settings,
               pack.command.call pack, name, options
           Commands.before = (name, options) ->
             if _.isObject name
-              pack.before.call pack, name
+              pack.implement.call pack, name
             else
-              pack.before.call pack, {"#{name}": options}
+              pack.implement.call pack, {"#{name}": options}
           Commands.after = (name, options) ->
             if _.isObject name
               pack.after.call pack, name

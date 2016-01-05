@@ -1,19 +1,22 @@
 # If repetition.chain is followed by repetition.command || repetition.X
 # replace repetition.command with appropriate repetition.X.inline
-Chain.preprocess {name: 'normalize-chain-repetition'}, (chain) ->
-  _.each chain, (command, index) ->
-    return true unless command?
-    command = command.command
-    if command is 'repetition.chain'
-      if chain[index+1]?.command.match(/^repetition.command$/)?
-        times = parseInt(chain[index+1].arguments) or 1
-        chain[index].context ?= {}
-        chain[index].context.repeat = times
-        delete chain[index+1]
+Chain.preprocess {
+  scope: 'global'
+  name: 'normalize-chain-repetition'
+  }, (chain) ->
+    _.each chain, (command, index) ->
+      return true unless command?
+      command = command.command
+      if command is 'repetition.chain'
+        if chain[index+1]?.command.match(/^repetition.command$/)?
+          times = parseInt(chain[index+1].arguments) or 1
+          chain[index].context ?= {}
+          chain[index].context.repeat = times
+          delete chain[index+1]
 
-      if chain[index+1]?.command.match(/^repetition\.\d$/)?
-        chain[index+1].command = chain[index+1].command + '.inline'
-  _.compact chain
+        if chain[index+1]?.command.match(/^repetition\.\d$/)?
+          chain[index+1].command = chain[index+1].command + '.inline'
+    _.compact chain
 
 Commands.createDisabled
   'repetition.chain':
