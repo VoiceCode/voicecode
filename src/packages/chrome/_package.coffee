@@ -6,11 +6,11 @@ pack = Packages.register
 Settings.extend 'browserApplications', pack.applications()
 
 pack.implement
-  'object.refresh': ->
+  'object:refresh': ->
     @key 'R', 'command'
-  'object.forward': ->
+  'object:forward': ->
     @key ']', 'command'
-  'object.backward': ->
+  'object:backward': ->
     @key '[', 'command'
 
 Events.on 'getCurrentBrowserUrl', (container={}) ->

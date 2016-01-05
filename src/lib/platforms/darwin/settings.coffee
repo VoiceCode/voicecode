@@ -537,7 +537,7 @@ _.extend Settings,
       [ 'symbol.doubleQuotes.surround',
         'symbol.singleQuotes.surround' ]
     'mouse.click':
-      [ 'common:select.all',
+      [ 'selection:all',
         'common:deletion.backward',
         'duplicate-selected',
         'common:enter',
@@ -548,10 +548,10 @@ _.extend Settings,
         'common:new-line-above',
         'mouse.shiftClick',
         'mouse.click' ]
-    'cursor.right':
+    'cursor:right':
       [ 'symbol.comma.padded.right',
         'common:deletion.forward',
-        'delete.all.right',
+        'text-manipulation:delete.all.right',
         'format.upper-camel',
         'format.camel',
         'format.snake',
@@ -566,21 +566,21 @@ _.extend Settings,
         'word.true' ]
     'symbol.doubleQuotes.surround': [ 'clipboard.paste' ]
     'symbol.comma': [ 'common:enter' ]
-    'cursor.left':
+    'cursor:left':
       [ 'common:deletion.backward',
         'symbols:space',
         'symbol.comma.padded.right',
         'format.upper-camel',
         'format.camel',
         'format.snake' ]
-    'cursor.down':
+    'cursor:down':
       [ 'common:indentation.left',
         'common:indentation.right',
-        'select.down',
+        'selection:down',
         'line.move.up',
         'line.move.down',
-        'common:new-line-below',
-        'delete.all.line' ]
+        'cursor:new-line-below',
+        'text-manipulation:delete.all.line' ]
     'symbol.dot':
       [ 'clipboard.paste',
         'format.camel',
@@ -588,9 +588,9 @@ _.extend Settings,
         'format.snake',
         'format.lower-no-space' ]
     'mouse.doubleClick':
-      [ 'delete.all.right',
-        'delete.all.left',
-        'select.all.right',
+      [ 'text-manipulation:delete.all.right',
+        'text-manipulation:delete.all.left',
+        'selection:all.right',
         'common:deletion.backward',
         'format.camel',
         'format.upper-camel',
@@ -607,30 +607,30 @@ _.extend Settings,
       [ 'combo.selectLineUnderMousesAndPaste',
         'combo.selectLineUnderMouseThenCopy' ]
     'mouse.commandClick': [ 'mouse.commandClick' ]
-    'cursor.up':
+    'cursor:up':
       [ 'common:indentation.left',
         'common:indentation.right',
-        'select.up',
+        'selection:up',
         'line.move.up',
         'line.move.down',
         'common:enter',
         'common:new-line-above',
-        'delete.all.line' ]
+        'text-manipulation:delete.all.line' ]
     'common:deletion.backward': [ 'common:deletion.forward', 'clipboard.paste' ]
     'symbol.surround.parentheses':
       [ 'clipboard.paste',
         'symbol.doubleQuotes.surround',
         'symbol.singleQuotes.surround',
         'symbol.braces.surround' ]
-    'select.all.right': [ 'clipboard.copy', 'clipboard.cut' ]
-    'cursor.way.right': [ 'common:deletion.backward' ]
+    'selection:all.right': [ 'clipboard.copy', 'clipboard.cut' ]
+    'cursor:way.right': [ 'common:deletion.backward' ]
     'common:save': [ 'application-control:previous.application', 'common:close.window' ]
-    'select.line.text': [ 'clipboard.cut' ]
+    'selection:line.text': [ 'clipboard.cut' ]
     'common:enter': [ 'format.camel', 'format.upper-camel', 'common:tab.backward' ]
     'common:new-line-above': [ 'clipboard.paste' ]
-    'common:new-line-below': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
-    'select.up': [ 'common:indentation.left', 'common:indentation.right' ]
-    'select.down': [ 'common:indentation.left', 'common:indentation.right' ]
+    'cursor:new-line-below': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
+    'selection:up': [ 'common:indentation.left', 'common:indentation.right' ]
+    'selection:down': [ 'common:indentation.left', 'common:indentation.right' ]
     'symbols:space':
       [ 'format.camel',
         'format.upper-camel',
@@ -649,7 +649,7 @@ _.extend Settings,
         'word.false',
         'word.true' ]
     'common:open.tab': [ 'clipboard.paste' ]
-    'delete.word.backward': [ 'common:deletion.backward', 'cursor.left' ]
+    'text-manipulation:delete.word.backward': [ 'common:deletion.backward', 'cursor:left' ]
     'smart.select':
       [ 'format.camel',
         'format.upper-camel',
@@ -658,8 +658,8 @@ _.extend Settings,
         'format.upper',
         'format.lower-no-space',
         'format.upper-no-space' ]
-    'select.word.next': [ 'common:deletion.backward' ]
-    'select.word.previous': [ 'common:deletion.backward' ]
+    'selection:word.next': [ 'common:deletion.backward' ]
+    'selection:word.previous': [ 'common:deletion.backward' ]
     'mouse.shiftClick':
       [ 'clipboard.copy',
         'common:deletion.backward',

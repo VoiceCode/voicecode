@@ -1,10 +1,9 @@
 pack = Packages.register
   name: 'common'
-  platforms: ['darwin', 'windows', 'linux']
   description: 'Common actions'
 
 pack.commands
-  # 'actions.affirmation':
+  # 'object.affirmation':
   'enter':
     spoken: 'shock'
     misspellings: ['shocked', 'shox', 'chalk', 'schock']
@@ -13,6 +12,7 @@ pack.commands
     repeatable: true
     action: (input) ->
       @enter()
+  # object.delete
   'deletion.backward':
     spoken: 'junk'
     description: 'press the delete key'
@@ -21,6 +21,7 @@ pack.commands
     repeatable: true
     action: (input) ->
       @key 'delete'
+  # text-manipulation:delete.char.forward
   'deletion.forward':
     spoken: 'spunk'
     description: 'pressed the forward delete key'
@@ -36,6 +37,7 @@ pack.commands
     repeatable: true
     action: (input) ->
       @undo()
+  # object.double regret
   'redo':
     spoken: 'rizzle'
     description: 'redo'
@@ -86,26 +88,20 @@ pack.commands
     repeatable: true
     action: (input) ->
       @key ']', 'command'
-  'search.nextOccurrence':
+  'search.next-occurrence':
     spoken: 'marneck'
     description: 'find the next occurrence of a search term'
     tags: ['application', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'g', 'command'
-  'search.previousOccurrence':
+  'search.previous-occurrence':
     spoken: 'marpreev'
     description: 'find the previous occurrence of a search term'
     tags: ['application', 'recommended']
     repeatable: true
     action: (input) ->
       @key 'g', 'command shift'
-  'select.all':
-    spoken: 'olly'
-    description: 'select all'
-    tags: ['selection', 'recommended']
-    action: ->
-      @selectAll()
   'save':
     spoken: 'sage'
     description: 'file > save'
@@ -158,21 +154,20 @@ pack.commands
     tags: ['recommended', 'key']
     action: ->
       @key 'end'
-  'new-line-below':
-    spoken: 'shockoon'
-    description: "Inserts a new line below the current line"
-    tags: ["return", "combo", "recommended"]
-    repeatable: true
-  'new-line-above':
-    spoken: 'shockey'
-    description: "Inserts a new line above the current line"
-    misspellings: ["chalky", "shocking", "shocky"]
-    tags: ["return", "combo", "recommended"]
-    repeatable: true
   'shift-space':
     spoken: 'sky koosh'
-    description: "press shift+space (useful for scrolling up, or other random purposes in certain applications)"
+    description: "press shift+space (useful for scrolling up, or
+    other random purposes in certain applications)"
     tags: ["space"]
     repeatable: true
     action: ->
       @key 'space', 'shift'
+  'down-arrows+enter':
+    spoken: 'cheese'
+    description: 'Presses the down arrow [x] times then presses
+     return (for choosing items from lists that don\'t have direct shortcuts)'
+    tags: ['navigation']
+    grammarType: 'integerCapture'
+    action: (input) ->
+      @down input or 1
+      @enter()

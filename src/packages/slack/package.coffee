@@ -16,5 +16,5 @@ pack.commands
         @key 'return'
 
 pack.implement
-  'object.backward': -> @key '[', 'command'
-  'object.forward': -> @key ']', 'command'
+  'object:backward': -> @key '[', 'command'
+  'object:forward': -> @key ']', 'command'

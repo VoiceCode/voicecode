@@ -1,6 +1,7 @@
 pack = Packages.register
   name: 'insert'
-  description: 'Commands for inserting preset textual content like usernames, passwords, snippets, abbreviations, etc.'
+  description: 'Commands for inserting preset textual
+   content like usernames, passwords, snippets, abbreviations, etc.'
 
 pack.settings
   dateFormats:
@@ -49,7 +50,8 @@ pack.commands
   'preset-text':
     spoken: "textile"
     grammarType: "textCapture"
-    description: "paste in a block of preset text, like a preset email reply, or other text you commonly repeat"
+    description: "paste in a block of preset text,
+     like a preset email reply, or other text you commonly repeat"
     tags: "text"
     action: (input) ->
       if input?.length
@@ -62,7 +64,8 @@ pack.commands
     grammarType: 'custom'
     spoken: 'daitler'
     rule: '<spoken> (dateFormat)*'
-    description: 'insert the current date/time in several different formats. See http://momentjs.com/docs/#/displaying/ for more formatting options'
+    description: 'insert the current date/time in several different formats.
+     See http://momentjs.com/docs/#/displaying/ for more formatting options'
     variables:
       dateFormat: -> pack.settings().dateFormats
     action: ({dateFormat}) ->

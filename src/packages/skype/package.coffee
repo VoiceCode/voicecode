@@ -4,7 +4,7 @@ pack = Packages.register
   description: 'Skype integration'
 
 pack.implement
-  'object.next': ->
+  'object:next': ->
     @key 'right', 'command option'
-  'object.previous': ->
+  'object:previous': ->
     @key 'left', 'command option'

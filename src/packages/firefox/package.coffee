@@ -6,9 +6,9 @@ pack = Packages.register
 Settings.extend 'browserApplications', pack.applications()
 
 pack.implement
-  'object.forward': (input, context) ->
+  'object:forward': (input, context) ->
     @key ']', 'command'
-  'object.backward': (input, context) ->
+  'object:backward': (input, context) ->
     @key '[', 'command'
-  'object.refresh': (input, context) ->
+  'object:refresh': (input, context) ->
     @key 'R', 'command'

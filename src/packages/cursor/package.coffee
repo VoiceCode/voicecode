@@ -1,31 +1,35 @@
-Commands.createDisabled
-  'cursor.way.down':
+pack = Packages.register
+  name: 'cursor'
+  description: 'Cursor movement, etc.'
+
+pack.commands
+  'way.down':
     spoken: 'doomway'
     formdescription: 'Move the cursor to the bottom of the page'
     tags: ['cursor', 'recommended']
     action: ->
       @key 'down', 'command'
-  'cursor.down':
+  'down':
     spoken: 'doom'
     description: 'press the down arrow'
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
       @down()
-  'cursor.way.up':
+  'way.up':
     spoken: 'jeep way'
     description: 'Move the cursor to the top of the page'
     tags: ['cursor', 'recommended']
     action: ->
       @key 'up', 'command'
-  'cursor.up':
+  'up':
     spoken: 'jeep'
     description: 'Press the up arrow'
     tags: ['cursor', 'recommended']
     repeatable: true
     action: ->
       @up()
-  'cursor.left':
+  'left':
     spoken: 'crimp'
     description: 'press the left arrow'
     misspellings: ['crimped']
@@ -33,7 +37,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       @left()
-  'cursor.right':
+  'right':
     spoken: 'chris'
     description: 'press the right arrow'
     tags: ['cursor', 'recommended']
@@ -41,7 +45,7 @@ Commands.createDisabled
     repeatable: true
     action: ->
       @right()
-  'cursor.word.left':
+  'word.left':
     spoken: 'shunkrim'
     description: 'Move the cursor by word to the left'
     tags: ['cursor', 'recommended']
@@ -52,21 +56,21 @@ Commands.createDisabled
           @key 'left', 'control'
         else
           @key 'left', 'option'
-  'cursor.wordpartial.left':
+  'wordpartial.left':
     spoken: 'wonkrim'
     description: 'Move the cursor by partial word to the left'
     tags: ['cursor']
     repeatable: true
     action: ->
       @key 'left', 'control'
-  'cursor.wordpartial.right':
+  'wordpartial.right':
     spoken: 'wonkrish'
     description: 'Move the cursor by partial word to the right'
     tags: ['cursor']
     repeatable: true
     action: ->
       @key 'right', 'control'
-  'cursor.word.right':
+  'word.right':
     spoken: 'shunkrish'
     description: 'Move the cursor by word to the right'
     tags: ['cursor', 'recommended']
@@ -77,7 +81,7 @@ Commands.createDisabled
           @key 'right', 'control'
         else
           @key 'right', 'option'
-  'cursor.way.right':
+  'way.right':
     spoken: 'ricky'
     description: 'Move the cursor all the way to the right'
     tags: ['cursor', 'recommended']
@@ -87,7 +91,7 @@ Commands.createDisabled
           @key 'end'
         else
           @key 'right', 'command'
-  'cursor.way.rightThenSpace':
+  'way.right+space':
     spoken: 'derek'
     description: 'Move the cursor all the way to the right than inserts a space'
     tags: ['cursor', 'space', 'right', 'combo', 'recommended']
@@ -95,26 +99,7 @@ Commands.createDisabled
     action: ->
       @key 'right', 'command'
       @space()
-  'text.nudge.left':
-    spoken: 'nudgle'
-    description: 'remove a space before the adjacent word on the left'
-    tags: ['cursor', 'space', 'deleting', 'left', 'combo', 'recommended']
-    repeatable: true
-    misspellings: ['nigel']
-    action: ->
-      @key 'left', 'option'
-      @key 'delete'
-  'select.all.right':
-    spoken: 'ricksy'
-    description: 'selects all text to the right'
-    tags: ['selection', 'right', 'recommended']
-    action: ->
-      switch @currentApplication().name
-        when "Parallels Desktop"
-          @key 'end', 'shift'
-        else
-          @key 'right', 'command shift'
-  'cursor.way.left':
+  'way.left':
     spoken: 'lefty'
     description: 'Move the cursor all the way to the left'
     tags: ['cursor', 'left', 'recommended']
@@ -125,46 +110,14 @@ Commands.createDisabled
           @key 'home'
         else
           @key 'left', 'command'
-  'delete.all.line':
-    spoken: 'snipline'
-    description: 'With no arguments will delete the entire line(s).
-    With a single argument will move to that line and delete it.
-    With a number range will delete the range of lines'
-    grammarType: 'numberRange'
-    tags: ['deleting', 'recommended']
-    misspellings: ['snipeline']
-    inputRequired: false
-    action: ({first, last} = {}) ->
-      @key 'delete'
-      @key 'right', 'command'
-      @key 'delete', 'command'
-  'delete.all.right':
-    spoken: 'snipper'
-    description: 'Will delete everything to the right'
-    tags: ['deleting', 'right', 'recommended']
-    misspellings: ['sniper']
-    action: ->
-      @key 'right', 'command shift'
-      @key 'delete'
-  'delete.all.left':
-    spoken: 'snipple'
-    tags: ['deleting', 'left', 'recommended']
-    description: 'Will delete everything to the left'
-    action: ->
-      @key 'delete', 'command'
-  'duplicate-selected':
-    spoken: 'jolt'
-    description: 'Will duplicate whichever makes sense in the context'
-    tags: ['text-manipulation', 'recommended']
-    misspellings: ['joel']
-    action: ->
-      @do 'select.line.text'
-      @copy()
-      @do 'common:new-line-below'
-      @paste()
-  'show-shortcut-markers':
-    spoken: 'swan'
-    description: "Show shortcuts"
-    tags: ['cursor']
-    action: ->
-      null
+  'new-line-below':
+    spoken: 'shockoon'
+    description: "Inserts a new line below the current line"
+    tags: ["return", "combo", "recommended"]
+    repeatable: true
+  'new-line-above':
+    spoken: 'shockey'
+    description: "Inserts a new line above the current line"
+    misspellings: ["chalky", "shocking", "shocky"]
+    tags: ["return", "combo", "recommended"]
+    repeatable: true

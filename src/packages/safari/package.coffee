@@ -7,11 +7,11 @@ pack = Packages.register
 Settings.extend 'browserApplications', pack.applications()
 
 pack.implement
-  'object.forward': ->
+  'object:forward': ->
     @key ']', 'command'
-  'object.backward': ->
+  'object:backward': ->
     @key '[', 'command'
-  'object.refresh': ->
+  'object:refresh': ->
     @key 'R', 'command'
 
 pack.commands
