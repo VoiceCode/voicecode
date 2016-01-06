@@ -23,15 +23,9 @@ class Command
   generate: ->
     input = @input
     context = @generateContext()
-    funk = if @action?
-      action = @action
-      -> action.call(@, input, context)
-    else
-      -> null
 
-    core = unless _.isEmpty @before
+    before = unless _.isEmpty @before
       extensions = []
-      extensions.push funk
       _.each @before, ({action: e, info}) ->
         if Scope.active(info) and _.isFunction(e)
           extensions.push ->
@@ -44,11 +38,27 @@ class Command
             callback.call(@, input, context)
         @extensionStack.shift()
     else
-      funk
-    segments = []
+      ->
 
-    # core actions
-    segments.push core
+    actions = unless _.isEmpty @actions
+      extensions = []
+      _.each @actions, ({action: e, info}) ->
+        if Scope.active(info) and _.isFunction(e)
+          extensions.push ->
+            @extensionStack[0] = false
+            e.call(@, input, context)
+      ->
+        @extensionStack.unshift true
+        for callback in extensions.reverse()
+          if @extensionStack[0] is true
+            callback.call(@, input, context)
+        @extensionStack.shift()
+    else
+      ->
+
+    segments = []
+    segments.push before
+    segments.push actions
 
     # after actions
     if @after?

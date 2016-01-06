@@ -11,7 +11,15 @@ Actions.sublime = -> new Sublime()
 
 Settings.extend "editorApplications", pack.applications()
 
-pack.before
+pack.implement
+  'text-manipulation:text-manipulation:delete.wordpartial.forward': ->
+    @key 'forwarddelete', 'control'
+
+  'cursor:new-line-below': ->
+    @key "return", "command"
+  'common:new-line-above': ->
+    @key "return", "command shift"
+
   'editor:expand-selection-to-scope': ->
     @key 's', 'control command option'
 
@@ -30,7 +38,7 @@ pack.before
 
     @sublime().selectRange(first, last).execute()
 
-  'select.block': ->
+  'selection:block': ->
     @key 'l', ['command']
 
   'line.move.down': ->
@@ -56,7 +64,7 @@ pack.before
   'duplicate-selected': ->
     @key 'd', 'command shift'
 
-  'delete.all.right': ->
+  'text-manipulation:delete.all.right': ->
     @key 'k', 'control'
 
   'editor:toggle-comments': ({first, last} = {}) ->
@@ -66,22 +74,22 @@ pack.before
       @sublime().goToLine(first).execute()
     @key '/', 'command'
 
-  'delete.all.line': ({first, last} = {}) ->
+  'text-manipulation:delete.all.line': ({first, last} = {}) ->
     if last?
       @sublime().selectRange(first, last).execute()
     else if first?
       @sublime().goToLine(first).execute()
     @key 'k', 'control shift'
 
-  'object.forward': ->
+  'object:forward': ->
     @key '-', 'control shift'
 
-  'select.word.next': (times = 1) ->
+  'selection:word.next': (times = 1) ->
     s = @sublime()
     @repeat times, s.selectNextWord
     s.execute()
 
-  'select.word.previous': (times = 1) ->
+  'selection:word.previous': (times = 1) ->
     s = @sublime()
     @repeat times, s.selectPreviousWord
     s.execute()
@@ -94,7 +102,7 @@ pack.before
     .clearMark()
     .execute()
 
-  'object.backward': ->
+  'object:backward': ->
     @key '-', 'control'
 
   'mouse-combo:insert-hovered': ->

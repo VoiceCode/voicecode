@@ -65,8 +65,8 @@ class Platforms.linux.actions extends Actions
   selectNextOccurrence: (input) ->
   selectNextOccurrenceWithDistance: (phrase, distance) ->
   selectPreviousOccurrenceWithDistance: (phrase, distance) ->
-  extendSelectionToFollowingOccurrenceWithDistance: (phrase, distance) ->
-  extendSelectionToPreviousOccurrenceWithDistance: (phrase, distance) ->
+  extendToFollowingOccurrenceWithDistance: (phrase, distance) ->
+  extendToPreviousOccurrenceWithDistance: (phrase, distance) ->
   selectContiguousMatching: (params) ->
   selectSurroundedOccurrence: (params) ->
   selectBlock: ->

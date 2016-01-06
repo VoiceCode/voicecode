@@ -15,6 +15,6 @@ pack.commands
         @string input.join(' ')
         @key 'return'
 
-pack.before
-  'object.backward': -> @key '[', 'command'
-  'object.forward': -> @key ']', 'command'
+pack.implement
+  'object:backward': -> @key '[', 'command'
+  'object:forward': -> @key ']', 'command'

@@ -38,6 +38,7 @@ class EventEmitter extends require('events').EventEmitter
       'enableCommand'
       'commandCreated'
       'commandEnabled'
+      'commandImplementationAdded'
       # 'commandOverwritten'
       'commandAfterAdded'
       'commandBeforeAdded'

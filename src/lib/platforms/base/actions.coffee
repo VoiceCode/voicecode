@@ -14,12 +14,10 @@ module.exports = class Actions
   packageSettings: (packageId) ->
     Packages.get(packageId)?.settings()
   setUndoByDeleting: (amount) ->
-    Commands.currentUndoByDeletingCount = amount
+    # TODO: implement
   undoByDeleting: ->
-    amount = Commands.previousUndoByDeletingCount or 0
-    _.times(amount) =>
-      @key "delete"
-
+    # TODO: implement
+    
   breakChain: (reason = 'Unknown reason...') ->
     throw
       name: 'breakChain'

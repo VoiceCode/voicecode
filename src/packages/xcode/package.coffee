@@ -7,7 +7,7 @@ pack = Packages.register
 Settings.extend 'terminalApplications', pack.applications()
 Settings.extend 'editorApplications', pack.applications()
 
-pack.before
+pack.implement
   'editor:move-to-line-number': (input) ->
     @key 'l', 'command'
     if input?

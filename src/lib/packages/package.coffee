@@ -4,7 +4,7 @@ class Package
     @_commands = {}
     @_before = {}
     @_after = {}
-
+    @_implementations = {}
     @_settings = @options.settings or {}
 
     {@name, @description, @scope} = @options
@@ -23,10 +23,39 @@ class Package
     _.extend @_commands, commands
     packageOptions = @defaultCommandOptions
     _.each commands, (options, id) =>
-      Commands.createDisabled @normalizeId(id), _.extend({}, packageOptions, defaults, options)
+      if options.action?
+        funk = options.action
+        delete options.action
+      id = @normalizeId(id)
+      Commands.createDisabled id,
+      _.extend({}, packageOptions, defaults, options)
+      if options.action?
+        @implement _.extend({}, packageOptions, defaults, options),
+        {"#{id}": funk}
 
   command: (id, options) ->
-    Commands.createDisabled @normalizeId(id), _.extend({}, @defaultCommandOptions, options)
+    if options.action?
+      funk = options.action
+      delete options.action
+    id = @normalizeId(id)
+    Commands.createDisabled id,
+    _.extend({}, @defaultCommandOptions, options)
+    if options.action?
+      @implement _.extend({}, @defaultCommandOptions, options),
+      {"#{id}": funk}
+
+  implement: ->
+    if arguments[1]?
+      packageOptions = _.defaultsDeep arguments[0], @defaultEditOptions
+      commands = arguments[1]
+    else
+      packageOptions = @defaultEditOptions
+      commands = arguments[0]
+
+    _.extend @_implementations, commands
+
+    _.each commands, (extension, id) ->
+      Commands.implement id, packageOptions, extension
 
   before: ->
     if arguments[1]?
@@ -60,18 +89,20 @@ class Package
     else
       @_settings
 
-  # called after user code has been evaluated (so a user can change package settings that this package's commands depend on)
+  # called after user code has been evaluated
+  # (so a user can change package settings that
+  # this package's commands depend on)
   ready: (callback) ->
     Events.once 'userAssetsLoaded', callback.bind(@)
 
-  # the instance should automatically add its package name at the beginning of all commands it creates
+  # the instance should automatically add its
+  # package name at the beginning of all commands it creates
   normalizeId: (id) ->
     [@name, ':', id].join('')
 
   setDefaultCommandOptions: ->
     @defaultCommandOptions =
       packageId: @name
-      scope: @scope
       tags: @options.tags
       notes: @options.notes
 
@@ -98,17 +129,18 @@ class Package
       @options.condition
 
   remove: ->
-    # TODO track commands that were added, and before/after - basically all changes, and then undo them
+    # TODO track commands that were added, and before/after-
+    # basically all changes, and then undo them
 
     _.each @_commands, (options, id) =>
       Commands.remove @normalizeId(id)
 
     packageOptions = @defaultEditOptions
 
-    _.each @_before, (extension, id) =>
+    _.each @_before, (extension, id) ->
       Commands.removeBefore id, packageOptions
 
-    _.each @_after, (extension, id) =>
+    _.each @_after, (extension, id) ->
       Commands.removeAfter id, packageOptions
 
     # commit changes

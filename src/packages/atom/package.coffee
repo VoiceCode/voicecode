@@ -1,6 +1,6 @@
 # TODO: distance parameter must react to repetition command
 # TODO: implement synchronicity. We need to wait for success/failure call back.
-#       The chain must break if something like core.search.next.wordOccurrence fails
+#       The chain must break if something like core.selection:next.wordOccurrence fails
 #       Actions.breakChain: -> emit 'chainLinkBroken', ...
 
 pack = Packages.register
@@ -13,17 +13,17 @@ Settings.extend "editorApplications", pack.applications()
 pack.settings
   modalWindowDelay: 400
 
-pack.before
+pack.implement
   'line.move.up': ->
     @key 'up', 'control command'
 
   'line.move.down': ->
     @key 'down', 'control command'
 
-  'select.word.next': (input) ->
+  'selection:word.next': (input) ->
     @runAtomCommand 'selectNextWord', input or 1
 
-  'select.word.previous': (input) ->
+  'selection:word.previous': (input) ->
     @runAtomCommand 'selectPreviousWord', input or 1
 
   'editor:move-to-line-number': (input) ->
@@ -37,7 +37,7 @@ pack.before
   'editor:insert-under-line-number': true
   'editor:move-to-line-number+select-line': true
 
-  'object.refresh': ->
+  'object:refresh': ->
     @key 'L', 'control option command'
 
   'duplicate-selected': ({first, last} = {}) ->
@@ -45,7 +45,7 @@ pack.before
     # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
     @key 'D', 'shift command'
 
-  'delete.all.line': ({first, last} = {}) ->
+  'text-manipulation:delete.all.line': ({first, last} = {}) ->
     if last?
       @runAtomCommand 'selectLineRange',
         from: first
@@ -55,7 +55,7 @@ pack.before
     @delay 40
     @key 'k', 'control shift'
 
-  'search.previous.wordOccurrence': (input) ->
+  'selection:previous.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
       @storage.previousSearchTerm = term
@@ -63,7 +63,7 @@ pack.before
         value: term
         distance: input.distance or 1
 
-  'search.next.wordOccurrence': (input) ->
+  'selection:next.word-occurrence': (input) ->
     term = input?.value or @storage.nextTrapSearchTerm
     if term?.length
       @storage.previousTrapSearchTerm = term
@@ -71,7 +71,7 @@ pack.before
         value: term
         distance: input.distance or 1
 
-  'search.extendSelection.next.wordOccurrence': (input) ->
+  'selection:extend.next.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
       @storage.previousSearchTerm = term
@@ -79,7 +79,7 @@ pack.before
         value: term
         distance: input.distance or 1
 
-  'search.extendSelection.previous.wordOccurrence': (input) ->
+  'selection:extend.previous.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
       @storage.previousSearchTerm = term
@@ -87,17 +87,17 @@ pack.before
         value: term
         distance: input.distance or 1
 
-  'search.previous.selectionOccurrence': ->
+  'selection:previous.selection-occurrence': ->
     @runAtomCommand "selectPreviousOccurrence",
       value: null
       distance: 1
 
-  'search.next.selectionOccurrence': ->
+  'selection:next.selection-occurrence': ->
     @runAtomCommand "selectNextOccurrence",
       value: null
       distance: 1
 
-  'search.previous.wordBySurroundingCharacters': (input) ->
+  'selection:previous.word-by-surrounding-characters': (input) ->
     term = input?.value or @storage.previousTrapSearchTerm
     if term?.length
       @storage.previousTrapSearchTerm = term
@@ -106,7 +106,7 @@ pack.before
         distance: input.distance or 1
         direction: -1
 
-  'search.next.wordBySurroundingCharacters': (input) ->
+  'selection:next.word-by-surrounding-characters': (input) ->
     term = input?.value or @storage.previousTrapSearchTerm
     if term?.length
       @storage.previousTrapSearchTerm = term
@@ -129,7 +129,7 @@ pack.before
     @key '/', 'command'
 
   'editor:extend-selection-to-line-number': (input) ->
-    @runAtomCommand 'extendSelectionToLine', input
+    @runAtomCommand 'extendToLine', input
 
   'editor:insert-from-line-number': (input) ->
     if input?
@@ -179,8 +179,8 @@ Chain.preprocess pack.options, (chain) ->
   _.reduce chain, (newChain, link, index) ->
     newChain.push link
     if link.command is 'core:literal' and
-      chain[index - 1]?.command is 'common.open.tab' and
-      chain[index + 1]?.command is 'common.enter'
+      chain[index - 1]?.command is 'common:open.tab' and
+      chain[index + 1]?.command is 'common:enter'
         newChain.push {command: 'core:delay', arguments: pack.settings().modalWindowDelay}
     newChain
   , []

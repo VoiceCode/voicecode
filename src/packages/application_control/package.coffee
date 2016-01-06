@@ -1,52 +1,34 @@
-Commands.createDisabled
-  'applicationControl.switchToPrevious':
+pack = Packages.register
+  name: 'application-control'
+  description: 'Application Control'
+
+pack.commands
+  'previous.application':
     spoken: 'swick'
     description: 'Switch to most recent application'
     tags: ['application', 'tab', 'recommended']
     bypassHistory: true
-    action: ->
-      @switchApplication()
-      @delay(250)
-  'applicationControl.openLauncher':
+  'open.launcher':
     spoken: 'launcher'
     description: 'Open application launcher'
     tags: ['application', 'system', 'launching', 'alfred']
-    action: ->
-      @key 'space', 'option'
-      @delay 100
-  'applicationControl.openPreferences':
+  'open.preferences':
     spoken: 'prefies'
     description: 'Open application preferences'
     tags: ['application', 'system']
-    action: ->
-      @key ',', 'command'
-  'applicationControl.openSearch':
+  'open.search':
     spoken: 'spotty'
     description: 'open spotlight'
     tags: ['application', 'system', 'launching']
-    action: ->
-      @key ' ', 'command'
-      @delay 100
-  'applicationControl.openApplicationSwitcher':
+  'open.application-switcher':
     spoken: 'foxwitch'
     description: 'open application switcher'
     tags: ['application', 'system', 'launching', 'tab', 'recommended']
-    action: ->
-      @keyDown 'command', 'command'
-      @keyDown 'tab', 'command'
-      @keyUp 'tab', 'command'
-      @delay 10000
-      @keyUp 'tab', 'command'
-      @keyUp 'command'
-  'applicationControl.openBrowser':
+  'open.browser':
     spoken: 'webseek'
     description: 'open a new browser tab (from anywhere)'
     tags: ['system', 'launching', 'recommended']
-    action: ->
-      @openBrowser()
-      @newTab()
-      @delay 200
-  'applicationControl.openApplication':
+  'open.application':
     spoken: 'fox'
     description: 'open application'
     tags: ['application', 'system', 'launching', 'recommended']
@@ -54,22 +36,13 @@ Commands.createDisabled
     rule: '<spoken> (application)'
     variables:
       application: -> Settings.applications
-    action: ({application}) ->
-      if application?
-        @openApplication application
-      else
-        @do 'applicationControl.openLauncher'
-  'applicationControl.nextWindow':
+  'next.window':
     spoken: 'gibby'
     description: 'Switch to next window in same application'
     tags: ['application', 'window', 'recommended']
     repeatable: true
-    action: (input) ->
-      @key '`', 'command'
-  'applicationControl.previousWindow':
+  'previous.window':
     spoken: 'shibby'
     description: 'Switch to previous window in same application'
     tags: ['application', 'window', 'recommended']
     repeatable: true
-    action: (input) ->
-      @key '`', 'command shift'

@@ -45,7 +45,7 @@ pack.commands
     description: 'select entire line, then copy'
     tags: ['selection', 'combo', 'clipboard']
     action: (input) ->
-      @do 'select.line.text'
+      @do 'selection:line.text'
       @do 'clipboard:copy', input
   'select-line+paste':
     spoken: 'shacklark'
@@ -53,7 +53,7 @@ pack.commands
     description: 'select entire line, then paste'
     tags: ['selection', 'combo', 'clipboard']
     action: (input) ->
-      @do 'select.line.text'
+      @do 'selection:line.text'
       @do 'clipboard:paste', input
   'select-hovered-line+copy':
     spoken: 'chibloosh'
@@ -80,7 +80,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'common.newLineBelow'
+      @do 'cursor:new-line-below'
   'click+space':
     spoken: 'chiffkoosh'
     description: 'click, then insert a space'
@@ -97,7 +97,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'delete.all.line'
+      @do 'text-manipulation:delete.all.line'
   'click+delete-line-right':
     spoken: 'sapper'
     description: 'click, then delete line to the right'
@@ -105,7 +105,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'delete.all.right'
+      @do 'text-manipulation:delete.all.right'
   'click+delete-line-left':
     spoken: 'sapple'
     description: 'click, then delete line to the left'
@@ -113,7 +113,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'delete.all.left'
+      @do 'text-manipulation:delete.all.left'
   'insert-hovered':
     spoken: 'grabsy'
     scope: 'abstract'

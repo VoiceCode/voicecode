@@ -301,8 +301,8 @@ if Settings.chromeExtension
 
 
 pack = Packages.get 'chrome'
-pack.before
-  'search.next.wordOccurrence': (input, context) ->
+pack.implement
+  'selection:next.word-occurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
     ChromeBrowserController.send
@@ -315,7 +315,7 @@ pack.before
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-  'search.previous.wordOccurrence': (input, context) ->
+  'selection:previous.word-occurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
     ChromeBrowserController.send
@@ -329,7 +329,7 @@ pack.before
           namespace: 'SelectionController'
           method: 'select'
           type: 'invokeBound'
-  'search.extendSelection.next.wordOccurrence': (input, context) ->
+  'selection:extend.next.word-occurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
     ChromeBrowserController.send
@@ -343,7 +343,7 @@ pack.before
           namespace: 'SelectionController'
           method: 'extend'
           type: 'invokeBound'
-  'search.extendSelection.previous.wordOccurrence': (input, context) ->
+  'selection:extend.previous.word-occurrence': (input, context) ->
     {id} = ChromeBrowserController.getActiveTab()
     return false unless id?
     ChromeBrowserController.send
