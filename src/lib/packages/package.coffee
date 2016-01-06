@@ -21,28 +21,18 @@ class Package
       commands = arguments[0]
 
     _.extend @_commands, commands
-    packageOptions = @defaultCommandOptions
     _.each commands, (options, id) =>
-      if options.action?
-        funk = options.action
-        delete options.action
-      id = @normalizeId(id)
-      Commands.createDisabled id,
-      _.extend({}, packageOptions, defaults, options)
-      if options.action?
-        @implement _.extend({}, packageOptions, defaults, options),
-        {"#{id}": funk}
+      @command id, _.defaultsDeep(options, defaults)
 
   command: (id, options) ->
     if options.action?
       funk = options.action
       delete options.action
     id = @normalizeId(id)
-    Commands.createDisabled id,
-    _.extend({}, @defaultCommandOptions, options)
-    if options.action?
-      @implement _.extend({}, @defaultCommandOptions, options),
-      {"#{id}": funk}
+    commandOptions = _.defaultsDeep(options, @defaultCommandOptions)
+    Commands.createDisabled id, commandOptions
+    if funk?
+      @implement _.pick(commandOptions, 'packageId', 'scope'), {"#{id}": funk}
 
   implement: ->
     if arguments[1]?

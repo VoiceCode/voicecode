@@ -20,82 +20,47 @@ class Command
     if @packageId?
       Packages.get @packageId
 
-  generate: ->
+  execute: ->
     input = @input
     context = @generateContext()
 
-    before = unless _.isEmpty @before
-      extensions = []
-      _.each @before, ({action: e, info}) ->
+    unless _.isEmpty @before
+      @extensionStack.unshift true
+      _.each _.reverse(@before), ({action: e, info}) ->
         if Scope.active(info) and _.isFunction(e)
-          extensions.push ->
-            @extensionStack[0] = false
-            e.call(@, input, context)
-      ->
-        @extensionStack.unshift true
-        for callback in extensions.reverse()
           if @extensionStack[0] is true
-            callback.call(@, input, context)
-        @extensionStack.shift()
-    else
-      ->
-
-    actions = unless _.isEmpty @actions
-      extensions = []
-      _.each @actions, ({action: e, info}) ->
-        if Scope.active(info) and _.isFunction(e)
-          extensions.push ->
             @extensionStack[0] = false
-            e.call(@, input, context)
-      ->
-        @extensionStack.unshift true
-        for callback in extensions.reverse()
-          if @extensionStack[0] is true
-            callback.call(@, input, context)
-        @extensionStack.shift()
-    else
-      ->
+            e.call(Actions, input, context)
+          @extensionStack.shift()
 
-    segments = []
-    segments.push before
-    segments.push actions
+    debug 'sorted', @sortedActions()
+    _.each @sortedActions(), ({action: e, info}) ->
+      if Scope.active(info) and _.isFunction(e)
+        e.call(Actions, input, context)
+        # stop execution, only one (the most 'specific') action should execute
+        return false
 
     # after actions
-    if @after?
-      afterList = []
-      _.each @after, ({action: e, info}) ->
+    unless _.isEmpty @after?
+      _.each _.reverse(@after), ({action: e, info}) ->
         if Scope.active(info) and _.isFunction(e)
-          afterList.push ->
-            e.call(@, input, context)
-      segments.push ->
-        for callback in afterList.reverse()
-          callback.call(@)
+          e.call(Actions, input, context)
 
-    # needs to return an executable function that can be called later.
-    # context should be explicitly set to an 'Actions' instance when called
-    ->
-      for segment in segments
-        segment?.call(@)
+  sortedActions: ->
+    _.sortBy @actions, ({action: e, info}) ->
+      result = 0
+      result += 1 if info.applications?.length > 0
+      result += 1 if info.condition?
+      result
 
   active: ->
-    if @scope is "abstract"
-      _.any @before, (options, name) ->
-        Scope.active options.info
-    else
-      Scope.active @
+    _.any @actions, ({action: e, info}) ->
+      Scope.active info
 
   getApplications: ->
-    unless _.isEmpty @applications
-      @applications
-    else if @scope is "abstract"
-      results = Scope.applications(@scope)
-      _.each @before, (value, key) ->
-        results = _.union results, Scope.applications(value.info.scope)
-      _.each @after, (value, key) ->
-        results = _.union results, Scope.applications(value.info.scope)
-      results
-    else
-      Scope.applications(@scope)
+    results = []
+    _.each @actions, (value, key) ->
+      results = _.union results, Scope.applications(value.info.scope)
 
   isConditional: ->
     (@scope? and @scope != 'global') or (not _.isEmpty @applications) or @condition?

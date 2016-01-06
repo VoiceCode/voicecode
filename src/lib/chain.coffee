@@ -53,7 +53,7 @@ class Chain
             link.command
             link.arguments
             link.context
-          ).generate().call Actions
+          ).execute()
           emit 'commandDidExecute', {link, chain}
           return true
         catch e
