@@ -124,7 +124,7 @@ class Grammar
     [
       @buildMisspellings(command)
       "ss"
-      "a:spokenInteger?"
+      "a:fuzzyInteger?"
       "{return{c:'#{command.id}',a:a}}"
     ].join ' '
 
@@ -132,7 +132,7 @@ class Grammar
     [
       @buildMisspellings(command)
       "ss"
-      "a:(numberRange/spokenInteger)?"
+      "a:(numberRange/fuzzyInteger)?"
       "{return{c:'#{command.id}',a:a}}"
     ].join ' '
 
@@ -147,7 +147,7 @@ class Grammar
     [
       @buildMisspellings(command)
       "ss"
-      "a:(spokenInteger/singleTextArgument)?"
+      "a:(fuzzyInteger/singleTextArgument)?"
       "{return{c:'#{command.id}',a:a}}"
     ].join ' '
 
@@ -237,18 +237,23 @@ class Grammar
       = id:(#{@repeaterIds()}) ss {return Commands.getRepeater(id);}
 
     singleSearchArgument = (
-      findableId /
+      findable /
       nestedText /
       translation /
-      spokenInteger /
+      contextualInteger /
       singleTextArgument
     )
 
-    findableId
-      = id:(#{@findableIds()}) ss {return Commands.getFindable(id);}
+    findable =
+      id:(#{@findableIds()}) ss
+      {return Commands.getFindable(id);}
 
-    singleTextArgument
-      = (translation / phonemeString / word / exactInteger / symbol)
+    singleTextArgument =
+      translation /
+      phonemeString /
+      word /
+      exactInteger /
+      symbol
 
     nestedText
       = id:nestedTextId ss arguments:(word)+
@@ -257,11 +262,9 @@ class Grammar
     unconstrainedText = unconstrainedWord*
     unconstrainedWord = chars:(!ss ch:. {return ch})* ss {return chars.join('')}
 
-    nestedTextId
-      = "shrink" / "treemail" / "trusername" / "trassword"
+    nestedTextId = "shrink" / "treemail" / "trusername" / "trassword"
 
-    translation
-      = id:translationId {return translationReplacement(id);}
+    translation = id:translationId {return translationReplacement(id);}
 
     translationId
       = id:(#{@translationIds()}) ss {return id;}
@@ -270,28 +273,37 @@ class Grammar
 
     ss = " "+
 
-    word = !sentinel text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss {return text.join('')}
+    word =
+      !sentinel
+      text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss
+      {return text.join('')}
 
-    symbol = !sentinel symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s {return symbol}
+    symbol =
+      !sentinel
+      symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s
+      {return symbol}
 
-    numberRange = first:(spokenInteger) "." ss last:(spokenInteger)? {return {first: parseInt(first), last: parseInt(last)};}
+    numberRange = first:(fuzzyInteger) "." ss last:(fuzzyInteger)? {return {first: parseInt(first), last: parseInt(last)};}
 
-    integer "integer"
-      = digits:[0-9]+ s {return g.makeInteger(digits);}
+    numerals = d:[0-9]+ s {return d.join('');}
 
-    spokenInteger
-      = components:(tensPlace / spokenDigit / teen / thousands / integer)+
+    contextualInteger =
+      components:(tensPlace / fuzzyDigit / teen / powers / numerals)+
+      {return components.join('');}
+
+    fuzzyInteger =
+      components:(tensPlace / fuzzyDigit / teen / powers / numerals)+
       {return components.join('');}
 
     exactInteger
-      = start:(tensPlace / exactDigit / teen / thousands / integer) rest:(spokenInteger)*
+      = start:(tensPlace / exactDigit / teen / powers / numerals) rest:(fuzzyInteger)*
       {return start.toString() + rest.join('');}
 
-    spokenDigit = zero / oh / one / to / two / three / for / four / five / six / seven / eight / nine
+    fuzzyDigit = zero / oh / one / to / two / three / for / four / five / six / seven / eight / nine
     exactDigit = zero / one / two / three / four / five / six / seven / eight / nine
     teen = ten / eleven / twelve / thirteen / fourteen / fifteen / sixteen / seventeen / eighteen / nineteen
     tensPlace = twenty / thirty / forty / fifty / sixty / seventy / eighty / ninety
-    thousands = hundred / thousand / million / billion / trillion
+    powers = hundred / thousand / million / billion / trillion
 
     zero = "zero" ss {return 0;}
     oh = "oh" ss {return 0;}
@@ -318,14 +330,15 @@ class Grammar
     eighteen = "eighteen" ss {return 18;}
     nineteen = "nineteen" ss {return 19;}
 
-    twenty = "twenty" ("-" / " ")+ {return 20;}
-    thirty = "thirty" ("-" / " ")+ {return 30;}
-    forty = "forty" ("-" / " ")+ {return 40;}
-    fifty = "fifty" ("-" / " ")+ {return 50;}
-    sixty = "sixty" ("-" / " ")+ {return 60;}
-    seventy = "seventy" ("-" / " ")+ {return 70;}
-    eighty = "eighty" ("-" / " ")+ {return 80;}
-    ninety = "ninety" ("-" / " ")+ {return 90;}
+    dashOrSpace = ("-" / " ")+
+    twenty = "twenty" dashOrSpace {return 20;}
+    thirty = "thirty" dashOrSpace {return 30;}
+    forty = "forty" dashOrSpace {return 40;}
+    fifty = "fifty" dashOrSpace {return 50;}
+    sixty = "sixty" dashOrSpace {return 60;}
+    seventy = "seventy" dashOrSpace {return 70;}
+    eighty = "eighty" dashOrSpace {return 80;}
+    ninety = "ninety" dashOrSpace {return 90;}
 
     hundred = "hundred" ss {return '00';}
     thousand = "thousand" ss {return '000';}

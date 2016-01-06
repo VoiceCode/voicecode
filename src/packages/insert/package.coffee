@@ -55,9 +55,6 @@ pack.commands
       if input?.length
         text = @fuzzyMatch Settings.presetTexts, input.join(" ")
         @paste(text) if text?.length
-
-
-pack.commands
   'date':
     grammarType: 'custom'
     spoken: 'daitler'

@@ -97,7 +97,7 @@ pack.before
   'object.backward': ->
     @key '-', 'control'
 
- 'mouse-combo:insert-hovered': ->
+  'mouse-combo:insert-hovered': ->
     @doubleClick()
     @delay 200
     @copy()

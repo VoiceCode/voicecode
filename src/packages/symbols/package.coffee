@@ -340,7 +340,7 @@ pack.commands
   'minus':
     spoken: 'minus'
     tags: ['symbol', 'minus', 'recommended']
-    misspellings: ['minas']
+    misspellings: ['minas', 'dash']
     repeatable: true
     findable: '-'
     spaceBefore: true
