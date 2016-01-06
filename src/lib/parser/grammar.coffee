@@ -275,7 +275,7 @@ class Grammar
 
     word =
       !sentinel
-      text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / [0-9])+ ss
+      text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / ':' / [0-9])+ ss
       {return text.join('')}
 
     symbol =
