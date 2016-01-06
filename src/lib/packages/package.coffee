@@ -75,7 +75,7 @@ class Package
 
   settings: (options) ->
     if options?
-      _.extend @_settings, options
+      _.deepExtend @_settings, options
     else
       @_settings
 
@@ -83,7 +83,8 @@ class Package
   # (so a user can change package settings that
   # this package's commands depend on)
   ready: (callback) ->
-    Events.once 'userAssetsLoaded', callback.bind(@)
+    # Events.once 'userAssetsLoaded', callback.bind(@)
+    Events.once 'userCommandEditsPerformed', callback.bind(@)
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates

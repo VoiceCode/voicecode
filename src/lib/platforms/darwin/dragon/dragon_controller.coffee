@@ -5,12 +5,14 @@ class DarwinDragonController
     instance = @
     @forever = require "forever-monitor"
     @dragonInstance = null
+    @dragonApplicationName = 'Dragon'
     @dragonApplicationPath = Applescript """
       tell application "Finder"
         POSIX path of (application file id "com.dragon.dictate" as alias)
       end tell
     """
     @dragonApplicationPath = @dragonApplicationPath?.trim()
+    process.on 'exit', => @stop()
     Events.once 'generateParserSuccess', ->
       DragonController.subscribeToEvents()
       DragonController.start()

@@ -22,6 +22,9 @@ class DarwinController
     Events.once 'startupFlowComplete', =>
       unless developmentMode
         @startEventMonitor()
+      else
+        @listenOnSocket "/tmp/voicecode_events2.sock", @systemEventHandler
+
       if Settings.slaveMode
         @listenAsSlave()
       else
@@ -35,11 +38,12 @@ class DarwinController
   startEventMonitor: ->
     @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
     @eventMonitor = forever.start '',
-      # command: "#{projectRoot}/assets/DarwinEventMonitor"
       command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
     @eventMonitor.on 'start', =>
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
+      process.on 'exit', => @eventMonitor.stop()
+      
     @eventMonitor.on 'exit:code', (code) ->
       error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
 
