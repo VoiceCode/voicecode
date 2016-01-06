@@ -22,6 +22,9 @@ class DarwinController
     Events.once 'startupFlowComplete', =>
       unless developmentMode
         @startEventMonitor()
+      else
+        @listenOnSocket "/tmp/voicecode_events2.sock", @systemEventHandler
+
       if Settings.slaveMode
         @listenAsSlave()
       else
@@ -35,7 +38,6 @@ class DarwinController
   startEventMonitor: ->
     @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
     @eventMonitor = forever.start '',
-      # command: "#{projectRoot}/assets/DarwinEventMonitor"
       command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
     @eventMonitor.on 'start', =>
