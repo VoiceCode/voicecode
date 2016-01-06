@@ -24,14 +24,15 @@ class Command
     input = @input
     context = @generateContext()
 
+    Actions.executionStack.unshift true
     unless _.isEmpty @before
-      @extensionStack.unshift true
-      _.each _.reverse(@before), ({action: e, info}) ->
+      _.each @before, ({action: e, info}) ->
         if Scope.active(info) and _.isFunction(e)
-          if @extensionStack[0] is true
-            @extensionStack[0] = false
-            e.call(Actions, input, context)
-          @extensionStack.shift()
+          emit 'beforeActionWillExecute', info
+          e.call(Actions, input, context)
+        Actions.executionStack[0]
+
+    return unless Actions.executionStack[0]
 
     debug 'sorted', @sortedActions()
     _.each @sortedActions(), ({action: e, info}) ->
@@ -39,12 +40,17 @@ class Command
         e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
         return false
+      return true
 
     # after actions
     unless _.isEmpty @after?
-      _.each _.reverse(@after), ({action: e, info}) ->
+      _.each @after, ({action: e, info}) ->
         if Scope.active(info) and _.isFunction(e)
+          emit 'afterActionWillExecute', info
           e.call(Actions, input, context)
+        Actions.executionStack[0]
+
+    Actions.executionStack.shift()
 
   sortedActions: ->
     _.sortBy @actions, ({action: e, info}) ->

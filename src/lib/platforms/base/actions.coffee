@@ -5,19 +5,19 @@
 module.exports = class Actions
   constructor: () ->
     @storage = {}
-    @extensionStack = []
+    @executionStack = []
   stop: () ->
     # @extensionsStopped = true
-    @extensionStack[0] = false
+    @executionStack[0] = false
   continue: () ->
-    @extensionStack[0] = true
+    @executionStack[0] = true
   packageSettings: (packageId) ->
     Packages.get(packageId)?.settings()
   setUndoByDeleting: (amount) ->
     # TODO: implement
   undoByDeleting: ->
     # TODO: implement
-    
+
   breakChain: (reason = 'Unknown reason...') ->
     throw
       name: 'breakChain'
@@ -25,12 +25,7 @@ module.exports = class Actions
 
   # run another command
   do: (name, input=null, context={}) ->
-    command = new Command(name, input, context)
-    command.generate().call(@)
-
-  runCommand: (name, input) ->
-    console.log "Deprecation: 'runCommand()' is deprecated. use '@do()' instead."
-    @do(name, input)
+    command = new Command(name, input, context).execute()
 
   delay: (ms) ->
     fiber = Fiber.current
