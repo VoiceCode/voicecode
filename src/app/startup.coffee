@@ -123,7 +123,6 @@ Events.on 'applicationStart', ->
     global.SlaveController = require './slave_controller'
     global.Alphabet = require '../lib/alphabet'
     global.Repetition = require '../lib/repetition'
-    global.Modifiers = require '../lib/modifiers'
     global.ParserController = require '../lib/parser/parser_controller'
 
     Commands.initialize()
