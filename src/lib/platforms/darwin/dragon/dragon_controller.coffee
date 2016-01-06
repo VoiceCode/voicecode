@@ -12,6 +12,7 @@ class DarwinDragonController
       end tell
     """
     @dragonApplicationPath = @dragonApplicationPath?.trim()
+    process.on 'exit', => @stop()
     Events.once 'generateParserSuccess', ->
       DragonController.subscribeToEvents()
       DragonController.start()

@@ -42,6 +42,8 @@ class DarwinController
       silent: true
     @eventMonitor.on 'start', =>
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
+      process.on 'exit', => @eventMonitor.stop()
+      
     @eventMonitor.on 'exit:code', (code) ->
       error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
 
