@@ -1,3 +1,20 @@
+pack = Packages.register
+  name: 'repetition'
+  description: 'Repetition of current or previous commands or phrases'
+
+# TODO - give an easy way for packages to create vocabulary terms
+
+pack.settings
+  chainRepetitionSuffix: 'way'
+  maxRepetitionCount: 100
+  values:
+    # you can add more repetition commands like this
+    wink: 1
+    soup: 2
+    trace: 3
+    quarr: 4
+    fypes: 5
+
 # If repetition.chain is followed by repetition.command || repetition.X
 # replace repetition.command with appropriate repetition.X.inline
 Chain.preprocess {
@@ -18,16 +35,14 @@ Chain.preprocess {
           chain[index+1].command = chain[index+1].command + '.inline'
     _.compact chain
 
-Commands.createDisabled
-  'repetition.chain':
+pack.commands
+  'chain':
     spoken: 'creek'
     grammarType: "integerCapture"
     description: "Repeat N-th complete spoken phrase in history. Defaults to previous."
     tags: ["voicecode", "repetition", "recommended"]
     bypassHistory: (context) -> true
-    action: (offset, context) ->
-      if not offset?
-        offset = 1
+    action: (offset = 1, context) ->
       if context.chain.length is 1
         HistoryController.hasAmnesia yes
       chain = HistoryController.getChain offset
@@ -37,7 +52,7 @@ Commands.createDisabled
       chain = new Chain().execute chain, false
       HistoryController.hasAmnesia no
 
-  'repetition.command':
+  'command':
     spoken: 'repple'
     grammarType: "integerCapture"
     repeater: "variable"
@@ -45,41 +60,36 @@ Commands.createDisabled
     Right after any command say [repple X] to repeat it X times"
     tags: ["voicecode", "repetition", "recommended"]
     bypassHistory: (context) -> true
-    action: (input = null, context) ->
+    action: (input, context) ->
       times = parseInt(input) or 1
       if times isnt 1 and context.chainLinkIndex > 1
         times--
-      if times > 0 and times < (Settings.maximumRepetitionCount or 100)
+      if times > 0 and times < (pack.settings().maxRepetitionCount or 100)
         commands = HistoryController.getCommands()
         new Chain().execute (_.fill Array(times), commands.pop()), false
 
-class Repetition
-  constructor: ->
-    @words = _.clone Settings.repetitionWords
-    _.each @words, (repetitionCount, word) =>
-      @words["#{word} #{Settings.chainRepetitionSuffix}"] = repetitionCount
-    @build()
-  build: ->
-    _.each @words, (value, key) ->
-      suffix = ''
-      description = 'command'
-      if key.match(new RegExp(Settings.chainRepetitionSuffix))?
-        description = 'chain'
-        suffix = '.inline'
 
-      Commands.createDisabled "repetition.#{value}#{suffix}",
-        spoken: key
-        repeater: value
-        bypassHistory: (context) -> true
-        description: "Repeat previous in-line #{description} #{value} times"
-        tags: ["voicecode", "repetition", "recommended"]
-        action: (input, context) ->
-          if key.match(new RegExp(Settings.chainRepetitionSuffix))?
-            context.repeat = value
-            if context.chainLinkIndex > 1 and value isnt 1
-              context.repeat = value - 1
-            @do "repetition.chain", 0, context
-          else
-            @do "repetition.command", value, context
+# individual repetition commands
+_.each pack.settings().values, (repetitionCount, word) ->
+  pack.command "command-#{repetitionCount}",
+    spoken: word
+    repeater: repetitionCount
+    bypassHistory: (context) -> true
+    description: "Repeat previous individual command #{repetitionCount} times"
+    tags: ["recommended"]
+    action: (input, context) ->
+      @do "repetition:command", repetitionCount, context
 
-module.exports = new Repetition
+# full chain repetition commands
+_.each pack.settings().values, (repetitionCount, word) ->
+  pack.command "chain-#{repetitionCount}-inline",
+    spoken: [word, pack.settings().chainRepetitionSuffix].join ' '
+    repeater: repetitionCount
+    bypassHistory: (context) -> true
+    description: "Repeat previous phrase #{repetitionCount} times"
+    tags: ["recommended"]
+    action: (input, context) ->
+      context.repeat = repetitionCount
+      if context.chainLinkIndex > 1 and repetitionCount isnt 1
+        context.repeat = repetitionCount - 1
+      @do "repetition:chain", 0, context

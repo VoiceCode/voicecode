@@ -44,8 +44,8 @@ class Package
 
     _.extend @_implementations, commands
 
-    _.each commands, (extension, id) ->
-      Commands.implement id, packageOptions, extension
+    _.each commands, (extension, id) =>
+      Commands.implement @normalizeId(id), packageOptions, extension
 
   before: ->
     if arguments[1]?
@@ -89,7 +89,10 @@ class Package
   # the instance should automatically add its
   # package name at the beginning of all commands it creates
   normalizeId: (id) ->
-    [@name, ':', id].join('')
+    if id.indexOf(':') >= 0
+      id
+    else
+      [@name, ':', id].join('')
 
   setDefaultCommandOptions: ->
     @defaultCommandOptions =

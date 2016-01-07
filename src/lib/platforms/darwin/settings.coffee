@@ -28,7 +28,6 @@ _.extend Settings,
   # "name": ["host", "port"]
   }
   userAssetsPath: '~/voicecode_user'
-  maximumRepetitionCount: 100
   # determine if auto spacing should be enabled (called within the default actions context, so you can check @currentApplication or any other context)
   autoSpacingEnabled: ->
     true
@@ -285,14 +284,6 @@ _.extend Settings,
     ']': 'race'
     '[': 'lets'
     '\\': 'pike'
-  chainRepetitionSuffix: 'way'
-  repetitionWords:
-    # you can add more repetition commands like this
-    wink: 1
-    soup: 2
-    trace: 3
-    quarr: 4
-    fypes: 5
   passwords:
     example: "password"
   emails:

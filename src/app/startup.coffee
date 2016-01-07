@@ -122,16 +122,15 @@ Events.on 'applicationStart', ->
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.Alphabet = require '../lib/alphabet'
-    global.Repetition = require '../lib/repetition'
     global.ParserController = require '../lib/parser/parser_controller'
 
     Commands.initialize()
 
-    # EnabledCommandsManager, SettingsManager
-    _.extend global, require './settings_manager'
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
     UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee'
     startupFlow.wait 'user_code_loaded'
+
+    require './enabled_commands_manager'
 
     if developmentMode
       Settings.slaveMode = true

@@ -1,3 +1,5 @@
+SettingsManager = require('../app/settings_manager')
+
 class Alphabet
   # singleton
   instance = null

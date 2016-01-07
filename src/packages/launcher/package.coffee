@@ -1,9 +1,13 @@
-Commands.createDisabledWithDefaults
+pack = Packages.register
+  name: 'launcher'
+  description: 'Open/launch various types of things'
+
+pack.commands
   grammarType: "textCapture"
   inputRequired: true
   tags: ["system", "launching"]
 ,
-  "core.openWebsite":
+  "open-website":
     spoken: 'webs'
     description: "Open a website by name"
     action: (input) ->
@@ -14,25 +18,10 @@ Commands.createDisabledWithDefaults
         @openBrowser()
         @delay(50)
         @newTab()
-  "core.openDirectory":
+  "open-directory":
     spoken: 'dears'
     description: "Open a directory in file browser"
     action: (input) ->
       if input?.length
         directory = @fuzzyMatch Settings.directories, input.join(' ')
         @revealFinderDirectory directory
-  "core.openSystemPreferences":
-    spoken: 'sispref'
-    description: 'Open system preferences'
-    tags: ["system", "launching"]
-    action: (input) ->
-      if input?.length
-        preference = @fuzzyMatch Settings.systemPreferences, input.join(' ')
-        @applescript """
-        tell application "System Preferences"
-          activate
-          reveal pane "#{preference}"
-        end tell
-        """
-      else
-        @openApplication "System Preferences"

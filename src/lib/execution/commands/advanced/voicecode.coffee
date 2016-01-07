@@ -1,3 +1,4 @@
+# TODO move these
 Commands.createDisabled
   "show.history":
     spoken: 'recon'

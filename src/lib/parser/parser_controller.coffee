@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+SettingsManager = require('../../app/settings_manager')
 
 grammarDebug = true
 

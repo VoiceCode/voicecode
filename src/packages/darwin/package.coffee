@@ -20,5 +20,5 @@ pack.implement
     @key 'delete'
   'text-manipulation:delete.word.backward': ->
     @key 'delete', 'option'
-  'text-manipulation:delete.word.forword': ->
+  'text-manipulation:delete.word.forward': ->
     @key 'forwarddelete', 'option'

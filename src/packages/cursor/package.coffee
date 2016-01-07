@@ -46,7 +46,7 @@ pack.commands
     action: ->
       @right()
   'word.left':
-    spoken: 'shunkrim'
+    spoken: 'fame'
     description: 'Move the cursor by word to the left'
     tags: ['cursor', 'recommended']
     repeatable: true
@@ -71,7 +71,7 @@ pack.commands
     action: ->
       @key 'right', 'control'
   'word.right':
-    spoken: 'shunkrish'
+    spoken: 'fish'
     description: 'Move the cursor by word to the right'
     tags: ['cursor', 'recommended']
     repeatable: true

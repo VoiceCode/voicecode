@@ -24,8 +24,7 @@ class Chain
       probably a problem with the license code, email, or internet connection"
 
   execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
-    unless chain?
-      chain = @parse()
+    chain ?= @parse()
 
     if shouldPreprocess
       chain = _.reduce preprocessors, (chain, {identity, callback}) ->
@@ -42,6 +41,7 @@ class Chain
       Commands.monitoringMouseToCancelSpacing = false
       emit 'chainWillExecute', chain
       _.each chain, (link) ->
+        # TODO we might want to track this index count locally so we can decouple history controller into a package?
         chainLinkIndex = HistoryController.getChainLength()
         link.context ?= {}
         _.extend link.context,
