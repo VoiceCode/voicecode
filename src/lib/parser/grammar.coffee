@@ -46,7 +46,7 @@ class Grammar
     .join '/'
 
   buildPhonemeChain: ->
-    _.map Settings.letters, (value, key) ->
+    _.map Packages.get('alphabet').settings().letters, (value, key) ->
       "'#{value}'"
     .join "/"
 
@@ -159,6 +159,11 @@ class Grammar
       "{return{c:'#{command.id}',a:a}}"
     ].join ' '
 
+  singleLetterSuffix: ->
+    Packages.get('alphabet').settings().singleLetterSuffix
+  uppercaseLetterPrefix: ->
+    Packages.get('alphabet').settings().uppercaseLetterPrefix
+
   buildSentinels: ->
     keys = _.union Commands.keys['individual'],
       Commands.keys['oneArgument'],
@@ -189,6 +194,7 @@ class Grammar
     {
       var g = grammarContext;
       var state = new GrammarState();
+      var phonemes = _.invert(Packages.get('alphabet').settings().letters);
     }
 
     start = commands:(command)*
@@ -347,11 +353,11 @@ class Grammar
     trillion = "trillion" ss {return '000000000000';}
 
     phonemeRoot = letter:(#{@buildPhonemeChain()})
-      {return Alphabet.roots[letter];}
+      {return phonemes[letter];}
 
     phonemeIndividual = first:phonemeRoot ss {return first;}
-    phonemeCapital = '#{Settings.uppercaseLetterPrefix}' ss root:phonemeRoot ss {return root.toUpperCase();}
-    phonemeSuffix = root:phonemeRoot ss '#{Settings.singleLetterSuffix}' ss {return root;}
+    phonemeCapital = '#{@uppercaseLetterPrefix()}' ss root:phonemeRoot ss {return root.toUpperCase();}
+    phonemeSuffix = root:phonemeRoot ss '#{@singleLetterSuffix()}' ss {return root;}
     phonemeString =
       phonemes:(phonemeSuffix / phonemeCapital / phonemeIndividual)+
       {return phonemes.join('');}

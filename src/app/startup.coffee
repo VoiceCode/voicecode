@@ -2,7 +2,7 @@
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
-global.developmentMode = true
+global.developmentMode = false
 testing = true
 
 global.projectRoot = require('app-root-path').path
