@@ -71,7 +71,8 @@ pack.commands
     rule: '(modifierPrefix) (modifierSuffix)'
     variables:
       modifierPrefix: -> pack.settings().modifierPrefixes
+      # TODO do we need package dependencies? we are using settings from another packge
       modifierSuffix: -> _.invert _.extend {},
-        Settings.letters, pack.settings().modifierSuffixes
+        Packages.get('alphabet').settings().letters, pack.settings().modifierSuffixes
     action: ({modifierPrefix, modifierSuffix}) ->
       @key modifierSuffix, modifierPrefix
