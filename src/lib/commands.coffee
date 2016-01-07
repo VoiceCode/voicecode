@@ -1,5 +1,3 @@
-CustomGrammar = require './parser/customGrammar'
-
 class Commands
   instance = null
   history = {}
@@ -280,13 +278,6 @@ class Commands
     if options.repeater?
       @keys.repeater.push name
       @repeaterLookup[options.spoken] = options.repeater
-
-    if options.rule?
-      # try
-      options.grammar = new CustomGrammar(options.rule, options.variables)
-      # catch e
-      #   console.log "error parsing custom grammar for command: #{key}"
-      #   console.log e
 
     options
 

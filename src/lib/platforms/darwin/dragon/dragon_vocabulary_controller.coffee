@@ -6,15 +6,12 @@ module.exports = new class DragonVocabularyController
     @repeatable = []
     @spaceBefore = []
     @dynamic = []
-    @generateVocabularies()
 
   loadCommandVocabulary: ->
     for key, value of _.where Commands.mapping, {enabled: true}
       @standard.push value.spoken
       if value.rule?
         @dynamic.push value
-      # if value.vocabulary? # I don't get this
-      #   @alternate[value.vocabulary] = value.spoken
       if value.repeatable
         @repeatable.push value.spoken
       else if value.spaceBefore
@@ -48,7 +45,9 @@ module.exports = new class DragonVocabularyController
       spaced: @createSpaceContent
       sequence: @createSequenceContent
       dynamic: @createDynamicContent
-    _.each contentGenerators, (generator, filename) => @createVocabFile filename, generator.call @
+    _.each contentGenerators,
+    (generator, filename) =>
+      @createVocabFile filename, generator.call @
 
   createVocabFile: (filename, content) ->
     content = """

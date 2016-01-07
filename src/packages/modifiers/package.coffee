@@ -49,7 +49,6 @@ pack.settings
 
 pack.ready ->
   if @settings().dynamicModifiers
-    debug 'whatever', (Commands.get('symbols:left-bracket')?.spoken or 'lets')
     @settings
       modifierSuffixes:
         'return': (Commands.get('common:enter')?.spoken or 'return')

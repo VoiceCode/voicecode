@@ -13,9 +13,10 @@ class DarwinDragonController
     """
     @dragonApplicationPath = @dragonApplicationPath?.trim()
     process.on 'exit', => @stop()
-    Events.once 'generateParserSuccess', ->
-      DragonController.subscribeToEvents()
-      DragonController.start()
+    Events.once 'generateParserSuccess', ({parserChanged}) =>
+      @subscribeToEvents()
+      unless parserChanged
+        @start()
 
   start: ->
     return if Settings.dontMessWithMyDragon
@@ -52,6 +53,7 @@ class DarwinDragonController
       @start()
 
   subscribeToEvents: ->
-    Events.on 'dragonSynchronizingEnded', => @restart()
+    Events.on 'dragonSynchronizingStarted', => @stop()
+    Events.on 'dragonSynchronizingEnded', => @start()
 
 module.exports = new DarwinDragonController

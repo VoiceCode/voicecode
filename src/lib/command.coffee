@@ -1,3 +1,4 @@
+CustomGrammar = require './parser/customGrammar'
 class Command
   constructor: (name, @input = null, @context = {}) ->
     _.extend @, Commands.get name
@@ -15,6 +16,10 @@ class Command
 
   transform: ->
     Transforms[@transform]
+
+  @property 'grammar',
+    get: ->
+      Commands.mapping[@id].grammar = new CustomGrammar(@rule, @variables)
 
   package: ->
     if @packageId?

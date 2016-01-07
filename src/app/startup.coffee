@@ -1,4 +1,8 @@
-global.developmentMode = false
+# https://gist.github.com/dimatter/0206268704609de07119
+Function::property = (prop, desc) ->
+  Object.defineProperty @prototype, prop, desc
+
+global.developmentMode = true
 testing = true
 
 global.projectRoot = require('app-root-path').path
@@ -97,10 +101,10 @@ Events.on 'applicationStart', ->
 
     switch platform
       when "darwin"
-        darwin = path.join '../lib', 'platforms', 'darwin'
-        global.Actions = require "#{darwin}/actions"
-        global.SystemInfo = require "#{darwin}/system_info"
-        global.DarwinController = require "#{darwin}/darwin_controller"
+        _path = path.join '../lib', 'platforms', 'darwin'
+        global.Actions = require "#{_path}/actions"
+        global.SystemInfo = require "#{_path}/system_info"
+        global.DarwinController = require "#{_path}/darwin_controller"
       when "win32"
         global.Actions = require '../lib/platforms/windows/actions'
       when "linux"
@@ -121,7 +125,6 @@ Events.on 'applicationStart', ->
 
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
-    global.Alphabet = require '../lib/alphabet'
     global.ParserController = require '../lib/parser/parser_controller'
 
     Commands.initialize()
@@ -145,8 +148,9 @@ Events.on 'applicationStart', ->
 
     switch platform
       when "darwin"
-        global.DragonController = require '../lib/platforms/darwin/dragon/dragon_controller'
-        global.DragonVocabularyController = require '../lib/platforms/darwin/dragon/dragon_vocabulary_controller'
+        _path = "../lib/platforms/darwin/dragon"
+        global.DragonController = require "#{_path}/dragon_controller"
+        global.DragonVocabularyController = require "#{_path}/dragon_vocabulary_controller"
       # when "win32"
       # when "linux"
 
