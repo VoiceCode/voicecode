@@ -67,3 +67,30 @@ pack.commands
       @paste()
       @repeat height, =>
         @key 'up', 'shift'
+  'delete-lines':
+    spoken: 'snipline'
+    description: 'with no arguments will delete the entire line(s).
+    With a single argument will move to that line and delete it.
+    With a number range will delete the range of lines'
+    grammarType: 'numberRange'
+    tags: ['deleting', 'recommended']
+    misspellings: ['snipeline']
+    inputRequired: false
+    action: ({first, last} = {}) ->
+      @key 'delete'
+      @key 'right', 'command'
+      @key 'delete', 'command'
+  'delete-to-end-of-line':
+    spoken: 'snipper'
+    description: 'will delete everything to the right'
+    tags: ['deleting', 'right', 'recommended']
+    misspellings: ['sniper']
+    action: ->
+      @key 'right', 'command shift'
+      @key 'delete'
+  'delete-to-beginning-of-line':
+    spoken: 'snipple'
+    tags: ['deleting', 'left', 'recommended']
+    description: 'will delete everything to the left'
+    action: ->
+      @key 'delete', 'command'

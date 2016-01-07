@@ -105,10 +105,7 @@ class DragonSynchronizer
     locale = Settings.localeSettings[Settings.locale]
     commandId = @createCommandId()
     bundleId = null if bundleId is 'global'
-    applicationVersion = if bundleId is "global"
-      0
-    else
-      @getApplicationVersion bundleId
+    applicationVersion = @getApplicationVersion bundleId
 
     id = @getNextRecordId()
     username = @getUsername()

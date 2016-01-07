@@ -34,3 +34,8 @@ pack.commands
     spoken: 'freshly'
     description: 'Reload or refresh depending on context'
     tags: ['recommended', 'navigation']
+  'duplicate':
+    spoken: 'jolt'
+    description: 'will duplicate the current thing depending on context'
+    tags: ['recommended']
+    misspellings: ['joel']

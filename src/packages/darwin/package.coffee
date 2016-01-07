@@ -22,3 +22,9 @@ pack.implement
     @key 'delete', 'option'
   'text-manipulation:delete.word.forward': ->
     @key 'forwarddelete', 'option'
+  'object:duplicate': ->
+    @do 'selection:line.text'
+    @copy()
+    @right()
+    @enter()
+    @paste()

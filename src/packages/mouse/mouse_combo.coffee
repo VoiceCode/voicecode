@@ -97,7 +97,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'text-manipulation:delete.all.line'
+      @do 'text-manipulation:delete-lines'
   'click+delete-line-right':
     spoken: 'sapper'
     description: 'click, then delete line to the right'
@@ -105,7 +105,7 @@ pack.commands
     mouseLatency: true
     action: (input, context) ->
       @do 'mouse:click', input, context
-      @do 'text-manipulation:delete.all.right'
+      @do 'text-manipulation:delete-to-end-of-line'
   'click+delete-line-left':
     spoken: 'sapple'
     description: 'click, then delete line to the left'

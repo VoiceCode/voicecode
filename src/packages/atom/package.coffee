@@ -40,12 +40,12 @@ pack.implement
   'object:refresh': ->
     @key 'L', 'control option command'
 
-  'duplicate-selected': ({first, last} = {}) ->
+  'object:duplicate': ->
     # TODO: steal implementation from package
     # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
     @key 'D', 'shift command'
 
-  'text-manipulation:delete.all.line': ({first, last} = {}) ->
+  'text-manipulation:delete-lines': ({first, last} = {}) ->
     if last?
       @runAtomCommand 'selectLineRange',
         from: first

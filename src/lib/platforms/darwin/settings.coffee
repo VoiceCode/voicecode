@@ -542,7 +542,7 @@ _.extend Settings,
     'cursor:right':
       [ 'symbol.comma.padded.right',
         'common:deletion.forward',
-        'text-manipulation:delete.all.right',
+        'text-manipulation:delete-to-end-of-line',
         'format.upper-camel',
         'format.camel',
         'format.snake',
@@ -571,7 +571,7 @@ _.extend Settings,
         'line.move.up',
         'line.move.down',
         'cursor:new-line-below',
-        'text-manipulation:delete.all.line' ]
+        'text-manipulation:delete-lines' ]
     'symbol.dot':
       [ 'clipboard.paste',
         'format.camel',
@@ -579,7 +579,7 @@ _.extend Settings,
         'format.snake',
         'format.lower-no-space' ]
     'mouse.doubleClick':
-      [ 'text-manipulation:delete.all.right',
+      [ 'text-manipulation:delete-to-end-of-line',
         'text-manipulation:delete.all.left',
         'selection:all.right',
         'common:deletion.backward',
@@ -606,7 +606,7 @@ _.extend Settings,
         'line.move.down',
         'common:enter',
         'common:new-line-above',
-        'text-manipulation:delete.all.line' ]
+        'text-manipulation:delete-lines' ]
     'common:deletion.backward': [ 'common:deletion.forward', 'clipboard.paste' ]
     'symbol.surround.parentheses':
       [ 'clipboard.paste',

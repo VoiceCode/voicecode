@@ -15,10 +15,6 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'go to line number then position cursor at end of line.'
     tags: ['cursor']
-    requires: [
-      'editor:move-to-line-number'
-      'cursor.way.right'
-    ]
     action: (input) ->
       @do 'editor:move-to-line-number', input
       if input?
@@ -29,10 +25,6 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'Go to line number then position cursor at beginning of line.'
     tags: ['selection', 'IDE', 'cursor']
-    requires: [
-      'editor:move-to-line-number'
-      'cursor.way.left'
-    ]
     action: (input) ->
       @do 'editor:move-to-line-number', input
       if input?

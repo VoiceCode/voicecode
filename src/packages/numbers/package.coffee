@@ -37,9 +37,12 @@ pack.settings
     ninety: 90
 
 pack.ready ->
-  _.each @settings().numbers, (value, key) =>
-    @command key,
-      spoken: key
+  @commands
+    'number-recognition':
+      description: 'creates a command in dragon to increase recognition accuracy of common numbers'
       needsParsing: false
-      description: "Enters the number: #{value}"
       tags: ['recommended']
+      grammarType: 'custom'
+      rule: '(numbers)'
+      variables:
+        numbers: @settings().numbers

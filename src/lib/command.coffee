@@ -52,21 +52,36 @@ class Command
 
     Actions.executionStack.shift()
 
+  # here we are sorting the actions by specificity - this implementation is crude
+  # but it should work for now
   sortedActions: ->
     _.sortBy @actions, ({action: e, info}) ->
-      result = 0
-      result += 1 if info.applications?.length > 0
-      result += 1 if info.condition?
-      result
+      result = {}
+      if info.scope?
+        unless info.scope is 'global' or info.scope is 'abstract'
+          scope = Scope.get info.scope
+          result.applications = true if scope.applications().length
+          result.condition = true if scope.condition?
+          result.platform = true if scope.platform?
+
+      result.applications = true if info.applications?.length > 0
+      result.condition = true if info.condition?
+      result.platform = true if info.platform?
+
+      _.size(result) * -1
 
   active: ->
     _.any @actions, ({action: e, info}) ->
       Scope.active info
 
   getApplications: ->
-    results = []
-    _.each @actions, (value, key) ->
-      results = _.union results, Scope.applications(value.info.scope)
+    if @scope?
+      _.reduce @actions, (result, value, key) ->
+        _.union result, Scope.applications(value.info.scope)
+      , []
+    else
+      # it's global
+      []
 
   isConditional: ->
     (@scope? and @scope != 'global') or (not _.isEmpty @applications) or @condition?

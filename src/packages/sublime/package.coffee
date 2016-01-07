@@ -61,10 +61,10 @@ pack.implement
   'show-shortcut-markers': ->
     @key ';', 'command'
 
-  'duplicate-selected': ->
+  'object:duplicate': ->
     @key 'd', 'command shift'
 
-  'text-manipulation:delete.all.right': ->
+  'text-manipulation:delete-to-end-of-line': ->
     @key 'k', 'control'
 
   'editor:toggle-comments': ({first, last} = {}) ->
@@ -74,7 +74,7 @@ pack.implement
       @sublime().goToLine(first).execute()
     @key '/', 'command'
 
-  'text-manipulation:delete.all.line': ({first, last} = {}) ->
+  'text-manipulation:delete-lines': ({first, last} = {}) ->
     if last?
       @sublime().selectRange(first, last).execute()
     else if first?
