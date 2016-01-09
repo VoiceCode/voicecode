@@ -2,15 +2,25 @@ class Package
   constructor: (@options) ->
     # these are key for keeping track of this package's changes
     @_commands = {}
+    @_actions = {}
     @_before = {}
     @_after = {}
     @_implementations = {}
     @_settings = @options.settings or {}
-
     {@name, @description, @scope} = @options
+
+
     @registerScope()
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
+
+  actions: (actions) ->
+    _.all actions, (method, name) =>
+      @_actions[name] = method
+      if Actions[name]?
+        warning 'packageOverwritesAction', name,
+        "Package '#{@name}' has overwritten Actions.#{name}"
+      Actions[name] = method.bind Actions
 
   commands: ->
     if arguments[1]?

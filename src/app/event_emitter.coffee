@@ -1,4 +1,3 @@
-# console.log = require 'nslog'
 path = require 'path'
 notifier = require 'node-notifier'
 class EventEmitter extends require('events').EventEmitter
@@ -44,7 +43,7 @@ class EventEmitter extends require('events').EventEmitter
       'commandBeforeAdded'
       'commandMisspellingsAdded'
       'commandSpokenChanged'
-      'userAssetEvent'
+      # 'userAssetEvent'
       'userAssetEvaluated'
       'commandValidationFailed'
       # 'commandValidationError'
@@ -68,49 +67,56 @@ class EventEmitter extends require('events').EventEmitter
   on: (event, callback) ->
     super
 
+  _output: ->
+    args = arguments
+    process.nextTick ->
+      console.time 'printing'
+      do args[0]
+      console.timeEnd 'printing'
+      # console.log.apply console, args
+
   error: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
-      console.log chalk.white.bold.bgRed('  ERROR  '),
-      chalk.white.bgBlack(" #{namespace}:"),
-      chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
-    @emit.apply @, _.toArray arguments
+      @_output ->
+        console.log chalk.white.bold.bgRed('  ERROR  '),
+        chalk.white.bgBlack(" #{namespace}:"),
+        chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
+    @emit.apply @, arguments
 
   log: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
-      console.log chalk.white.bold.bgBlue('   LOG   '),
-      chalk.white.bgBlack(" #{namespace}:"),
-      chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
-    @emit.apply @, _.toArray arguments
+      @_output ->
+        console.log chalk.white.bold.bgBlue('   LOG   '),
+        chalk.white.bgBlack(" #{namespace}:"),
+        chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
+    @emit.apply @, arguments
 
   warning: (event) ->
     unless @debug
       namespace = event || 'VoiceCode'
-      console.log chalk.white.bold.bgYellow(' WARNING '),
-      chalk.white.bgBlack(" #{namespace}:"),
-      chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
-    @emit.apply @, _.toArray arguments
+      @_output ->
+        console.log chalk.white.bold.bgYellow(' WARNING '),
+        chalk.white.bgBlack(" #{namespace}:"),
+        chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
+    @emit.apply @, arguments
 
   notify: (event) ->
     unless @debug
-      if Settings.notificationProvider is "Growl"
-        # TODO: take user settings into consideration
-        # https://github.com/mikaelbr/node-notifier
-        namespace = event || 'VoiceCode'
-        notifier.Growl().notify
-          title: 'VoiceCode'
-          message: _.toArray(arguments)[2]
-          icon: path.join(projectRoot, 'assets', 'vc.png')
-      @log.apply @, _.toArray arguments
-    @emit.apply @, _.toArray arguments
+      @log.apply @, arguments
+    @emit.apply @, arguments
 
   emit: (event) ->
     return unless event?
     if @debug
       unless event in @suppressedDebugEntries
-        console.log "%s %s \n", chalk.white.bold.bgRed('   EVENT   '),
-        chalk.black.bgWhite(" #{event} "),  util.inspect(_.toArray(arguments)[1..], {depth: 3})
+        args = _.toArray(arguments)[1..]
+        @_output ->
+          console.log "%s %s \n",
+          chalk.white.bold.bgRed('   EVENT   '),
+          chalk.black.bgWhite(" #{event} "),
+          util.inspect(args, {depth: 3})
     super
 
   mutate: (event, container={}) ->

@@ -1,17 +1,47 @@
-# TODO: distance parameter must react to repetition command
-# TODO: implement synchronicity. We need to wait for success/failure call back.
-#       The chain must break if something like core.selection:next.wordOccurrence fails
-#       Actions.breakChain: -> emit 'chainLinkBroken', ...
+_pipe = require './pipe'
+_remoteCodeInjector = require './remote_code_injector'
 
 pack = Packages.register
   name: 'atom'
   applications: ['com.github.atom']
   description: 'Atom IDE integration (atom.io)'
+  pipe: _pipe
+  remoteCodeInjector: _remoteCodeInjector
+pack.state ?= {}
 
 Settings.extend "editorApplications", pack.applications()
+Events.on 'atomMessage', ({type, body}) ->
+  if type is 'editor-state'
+    Actions.setCurrentApplication _.extend Actions.currentApplication(),
+    editorFocused: body.focused
+    editorIsMini: body.mini
+
+
+pack.actions
+  runAtomCommand: (method, args) ->
+    pack.options.pipe.send
+      type: 'invocation'
+      body: {method, args}
 
 pack.settings
   modalWindowDelay: 400
+
+pack.implement
+  condition: ->
+    !@currentApplication().editorIsMini
+,
+  'common:enter': ->
+    @runAtomCommand 'editorNewLine'
+
+
+pack.implement
+  condition: ->
+    !!@currentApplication().editorFocused
+,
+  'core:string': (string) ->
+    @runAtomCommand 'editorInsertText', string
+
+
 
 pack.implement
   'line.move.up': ->

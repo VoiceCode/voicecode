@@ -2,7 +2,7 @@
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
-global.developmentMode = false
+global.developmentMode = true
 testing = true
 
 global.projectRoot = require('app-root-path').path
@@ -117,8 +117,9 @@ Events.on 'applicationStart', ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
 
-    requireDirectory module, '../packages/',
-      exclude: /.*node_modules.*/
+    requireDirectory module, '../packages/', # do we need to pass module in here?
+      exclude: (path) ->
+        not /.*package\.js$/.test path
       visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
@@ -130,9 +131,13 @@ Events.on 'applicationStart', ->
     Commands.initialize()
 
     Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
-    UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee'
+    UserAssetsController.getAssets 'packages/**/package.coffee'
+    UserAssetsController.getAssets '**/*.coffee', (path) ->
+      return true if /packages/.test path
+      return true if /settings\.coffee/.test path
+      return true if /generated/.test path
+      return false
     startupFlow.wait 'user_code_loaded'
-
     require './enabled_commands_manager'
 
     if developmentMode
@@ -162,5 +167,15 @@ Events.on 'applicationStart', ->
 
 # needed while developing ui
 Events.once 'startupFlowComplete', -> global.startedUp = true
+
+
+# benchmarking
+Events.on 'chainDidExecute', ->
+  console.timeEnd 'CHAIN'
+Events.on 'chainWillExecute', ->
+  console.time 'CHAIN'
+
+
+
 
 emit 'applicationStart'

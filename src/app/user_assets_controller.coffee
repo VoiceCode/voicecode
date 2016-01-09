@@ -2,7 +2,7 @@ fs = require 'fs'
 os = require 'os'
 chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
-asyncblock = require 'asyncblock'
+ab = require 'asyncblock'
 
 class UserAssetsController
   instance = null
@@ -15,11 +15,6 @@ class UserAssetsController
     @watchers = {}
     @debouncedFinish = null
 
-  readFile: (filePath, callback) ->
-    callback (fs.readFileSync filePath, {encoding: 'utf8'})
-
-  compileCoffeeScript: (data, callback) ->
-    callback coffeeScript.compile data
 
   init: ->
     try
@@ -65,58 +60,67 @@ _.extend Settings,
       error 'userAssetEventError', err, err
     ).on 'ready', ->
 
-  handleFile: (event, fileName) ->
-    if fileName.match(/.coffee$/)?
-      cleanFileName = path.basename fileName, '.coffee'
-      log 'userAssetEvent', {event, fileName},
-      "User asset #{event}: #{fileName}"
-      asyncblock (flow) =>
-        flow.firstArgIsError = false
-        data = flow.sync @readFile fileName, flow.callback()
-        try
-          data = flow.sync @compileCoffeeScript data, flow.callback()
-          pack = Packages.get("user:#{cleanFileName}") or
-          Packages.register
-            name: "user:#{cleanFileName}"
-            description: "User commands and stuff in #{fileName}"
-            tags: ['user', "#{cleanFileName}.coffee"]
+  getJavascriptCode: (fullPath) ->
+    directory = path.dirname fullPath
+    code = fs.readFileSync fullPath, {encoding: 'utf8'}
+    code = @compileCoffeeScript code, directory
+    code
 
-          Commands = {}
-          # _.extend Commands, global.Commands <- does not work, prototypes or whatnot
-          Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
-          Commands.changeSpoken = global.Commands.changeSpoken.bind global.Commands
-          Commands.edit = global.Commands.edit.bind global.Commands
-          Commands.create = (name, options) ->
-            if _.isObject name
-              pack.commands.call pack, name, options
-            else
-              pack.command.call pack, name, options
-          Commands.implement = (name, options) ->
-            if _.isObject name
-              pack.implement.call pack, name
-            else
-              pack.implement.call pack, {"#{name}": options}
-          Commands.before = (name, options) ->
-            if _.isObject name
-              pack.before.call pack, name
-            else
-              pack.before.call pack, {"#{name}": options}
-          Commands.after = (name, options) ->
-            if _.isObject name
-              pack.after.call pack, name
-            else
-              pack.after.call pack, {"#{name}": options}
+  compileCoffeeScript: (coffeeScriptsSource, directory) ->
+    compiled = coffeeScript.compile coffeeScriptsSource
+    compiled.replace /require\(["']\.\/(.*)["']\)/g,
+    (match, fileName) =>
+      @getJavascriptCode "#{directory}/#{fileName}.coffee"
 
-          eval data
-        catch err
-          warning 'userAssetEvaluationError', {err, fileName}, "#{fileName}:\n#{err}"
-        log 'userAssetEvaluated', {event, fileName},
-        "User asset evaluated: #{fileName}"
-        @debouncedFinish ?= _.debounce =>
-          emit 'userAssetsLoaded'
-          @debouncedFinish = null
-        , 500
-        @debouncedFinish()
+  handleFile: (event, fullPath) ->
+    if fullPath.match(/.coffee$/)?
+      fileName = path.basename fullPath, '.coffee'
+      log 'userAssetEvent', {event, fullPath},
+      "User asset #{event}: #{fullPath}"
+      try
+        code = @getJavascriptCode fullPath
+        pack = Packages.get("user:#{fileName}") or
+        Packages.register
+          name: "user:#{fileName}"
+          description: "User commands and stuff in #{fullPath}"
+          tags: ['user', "#{fileName}.coffee"]
+
+        Commands = {}
+        # _.extend Commands, global.Commands <- does not work, prototypes or whatnot
+        Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
+        Commands.changeSpoken = global.Commands.changeSpoken.bind global.Commands
+        Commands.edit = global.Commands.edit.bind global.Commands
+        Commands.create = (name, options) ->
+          if _.isObject name
+            pack.commands.call pack, name, options
+          else
+            pack.command.call pack, name, options
+        Commands.implement = (name, options) ->
+          if _.isObject name
+            pack.implement.call pack, name
+          else
+            pack.implement.call pack, {"#{name}": options}
+        Commands.before = (name, options) ->
+          if _.isObject name
+            pack.before.call pack, name
+          else
+            pack.before.call pack, {"#{name}": options}
+        Commands.after = (name, options) ->
+          if _.isObject name
+            pack.after.call pack, name
+          else
+            pack.after.call pack, {"#{name}": options}
+        __dirname = path.dirname fullPath
+        eval code
+      catch err
+        warning 'userAssetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
+      log 'userAssetEvaluated', {event, fullPath},
+      "User asset evaluated: #{fullPath}"
+      @debouncedFinish ?= _.debounce =>
+        emit 'userAssetsLoaded'
+        @debouncedFinish = null
+      , 500
+      @debouncedFinish()
 
 
 module.exports = new UserAssetsController

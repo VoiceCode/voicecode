@@ -30,3 +30,5 @@ pack.commands
     grammarType: 'integerCapture'
     description: 'decrease the system volume by [0-100] (default 10)'
     tags: ['system', 'recommended']
+
+require "./#{global.platform}"

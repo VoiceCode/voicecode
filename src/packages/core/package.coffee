@@ -2,7 +2,15 @@ pack = Packages.register
   name: 'core'
   description: 'Core VoiceCode commands needed for base functionality'
 
+pack.actions
+  string: (string) ->
+    @do 'core:string', string
+
 pack.commands
+  'string':
+    needsCommand: false
+    needsParsing: false
+
   'literal':
     description: 'words with spaces between. This command is for internal grammar use (not spoken)'
     tags: ['text', 'recommended']

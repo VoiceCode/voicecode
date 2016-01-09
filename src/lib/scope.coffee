@@ -28,7 +28,11 @@ class Scope
     if typeof options is 'string'
       @get(options)?.active()
     else if options.scope?
-      @get(options.scope)?.active()
+      scopeIsActive = @get(options.scope)?.active()
+      conditionPasses = true
+      if options.condition?
+        conditionPasses = @checkCondition(options.condition)
+      scopeIsActive and conditionPasses
     else
       @checkApplications(options.applications) and
       @checkCondition(options.condition)

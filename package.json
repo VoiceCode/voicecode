@@ -30,6 +30,7 @@
     "forever-monitor": "^1.7.0",
     "gulp-rimraf": "^0.2.0",
     "install": "^0.2.3",
+    "json-rpc2": "^1.0.2",
     "lodash": "^3.10.1",
     "menubar": "^2.3.0",
     "natural": "git+https://github.com/NaturalNode/natural.git",

@@ -8,6 +8,25 @@ pack.commands
       @key ',', ['command']
 
 pack.implement
+  'core:string': (string) ->
+    string = string.toString()
+    if string?.length
+      if @_capturingText
+        @_capturedText += string
+      else
+        emit 'charactersTyped', string
+        if string.length > (Settings.maxStringTypingLength or 9)
+          @paste string
+        else
+          for item in string.split('')
+            @delay Settings.characterDelay or 4
+            code = @keys.keyCodesRegular[item]
+            if code?
+              @_pressKey code
+            else
+              code = @keys.keyCodesShift[item]
+              if code?
+                @_pressKey code, ["shift"]
   'cursor:new-line-below': ->
     @key 'right', 'command'
     @enter()
