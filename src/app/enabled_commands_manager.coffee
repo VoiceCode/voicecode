@@ -6,9 +6,8 @@ class EnabledCommandsManager extends require('./settings_manager')
       return instance
     else
       instance = super("generated/enabled_commands")
-      @processSettings()
-      # Events.once 'userAssetsLoading', =>
       @subscribeToEvents()
+      @processSettings()
 
   processSettings: ->
     _.each @settings, (isEnabled, commandName) ->

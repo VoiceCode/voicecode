@@ -154,9 +154,9 @@ pack.implement
     @runAtomCommand 'newLineAbove', null, true
   'os:string': (string) ->
     @runAtomCommand 'editorInsertText', string, true
-  'line.move.up': ->
+  'text-manipulation:move-line-down': ->
     @key 'up', 'control command'
-  'line.move.down': ->
+  'text-manipulation:move-line-up': ->
     @key 'down', 'control command'
   'selection:word.next': (input) ->
     @runAtomCommand 'selectNextWord', input or 1, true

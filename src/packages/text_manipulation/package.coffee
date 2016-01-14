@@ -45,7 +45,7 @@ pack.commands
     tags: ['cursor', 'space', 'deleting', 'left', 'combo', 'recommended']
     repeatable: true
     misspellings: ['nigel']
-  'line.move.up':
+  'move-line-up':
     spoken: 'switchy'
     description: 'move current line (or multiline selection) up'
     tags: ['text-manipulation']
@@ -56,7 +56,7 @@ pack.commands
       @paste()
       @repeat height, =>
         @key 'up', 'shift'
-  'line.move.down':
+  'move-line-down':
     spoken: 'switcho'
     description: 'move current line (or multiline selection) down'
     tags: ['text-manipulation']

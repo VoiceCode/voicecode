@@ -453,137 +453,137 @@ _.extend Settings,
   dragonIncompatibleApplicationDelay: 5000
   notificationProvider: "applescript"
   commonSequences: {
-    'symbol.brackets':
-      [ 'symbol.doubleQuotes.surround',
-        'symbol.singleQuotes.surround' ]
-    'mouse.click':
+    'symbol:brackets':
+      [ 'symbol:surround-single-quotes',
+        'symbol:surround-double-quotes' ]
+    'mouse:click':
       [ 'selection:all',
         'common:deletion.backward',
-        'duplicate-selected',
+        'object:duplicate',
         'common:enter',
         'common:deletion.backward',
         'common:deletion.forward',
-        'symbol.comma.padded.right',
-        'symbol.dot',
-        'common:new-line-above',
-        'mouse.shiftClick',
-        'mouse.click' ]
+        'symbol:comma.padded-right',
+        'symbol:dot',
+        'cursor:new-line-above',
+        'mouse:shift-click',
+        'mouse:click' ]
     'cursor:right':
-      [ 'symbol.comma.padded.right',
+      [ 'symbol:comma.padded-right',
         'common:deletion.forward',
         'text-manipulation:delete-to-end-of-line',
-        'format.upper-camel',
-        'format.camel',
-        'format.snake',
-        'symbols:space' ]
-    'symbol.colon.padded.right':
-      [ 'format.camel',
-        'format.upper-camel',
-        'format.snake',
-        'symbol.doubleQuotes.surround',
-        'symbol.singleQuotes.surround',
-        'word.false',
-        'word.true' ]
-    'symbol.doubleQuotes.surround': [ 'clipboard.paste' ]
-    'symbol.comma': [ 'common:enter' ]
+        'format:upper-camel',
+        'format:camel',
+        'format:snake',
+        'symbol:space' ]
+    'symbol:colon-padded-right':
+      [ 'format:camel',
+        'format:upper-camel',
+        'format:snake',
+        'symbol:surround-double-quotes',
+        'symbol:surround-single-quotes',
+        'word:false',
+        'word:true' ]
+    'symbol:surround-double-quotes': [ 'clipboard:paste' ]
+    'symbol:comma': [ 'common:enter' ]
     'cursor:left':
       [ 'common:deletion.backward',
-        'symbols:space',
-        'symbol.comma.padded.right',
-        'format.upper-camel',
-        'format.camel',
-        'format.snake' ]
+        'symbol:space',
+        'symbol:comma.padded.right',
+        'format:upper-camel',
+        'format:camel',
+        'format:snake' ]
     'cursor:down':
       [ 'common:indentation.left',
         'common:indentation.right',
         'selection:down',
-        'line.move.up',
-        'line.move.down',
+        'text-manipulation:move-line-up',
+        'text-manipulation:move-line-down',
         'cursor:new-line-below',
         'text-manipulation:delete-lines' ]
-    'symbol.dot':
-      [ 'clipboard.paste',
-        'format.camel',
-        'format.upper-camel',
-        'format.snake',
-        'format.lower-no-space' ]
-    'mouse.doubleClick':
+    'symbol:dot':
+      [ 'clipboard:paste',
+        'format:camel',
+        'format:upper-camel',
+        'format:snake',
+        'format:lower-no-space' ]
+    'mouse:doubleClick':
       [ 'text-manipulation:delete-to-end-of-line',
         'text-manipulation:delete.all.left',
         'selection:all.right',
         'common:deletion.backward',
-        'format.camel',
-        'format.upper-camel',
-        'clipboard.cut',
-        'mouse.shiftClick' ]
-    'combo.double-clickThenCopy': [ 'combo.double-clickThenPaste', 'combo.double-clickThenCopy' ]
-    'combo.double-clickThenPaste': [ 'combo.double-clickThenPaste' ]
-    'combo.selectLineUnderMouse': [ 'mouse.shiftClick' ]
-    'combo.selectLineUnderMouseThenCopy':
-      [ 'combo.selectLineUnderMousesAndPaste',
-        'combo.selectLineUnderMouseThenCopy',
-        'combo.double-clickThenPaste' ]
-    'combo.selectLineUnderMousesAndPaste':
-      [ 'combo.selectLineUnderMousesAndPaste',
-        'combo.selectLineUnderMouseThenCopy' ]
-    'mouse.commandClick': [ 'mouse.commandClick' ]
+        'format:camel',
+        'format:upper-camel',
+        'clipboard:cut',
+        'mouse:shiftClick' ]
+    'mouse-combo:double-clickThenCopy': [ 'mouse-combo:double-clickThenPaste', 'mouse-combo:double-clickThenCopy' ]
+    'mouse-combo:double-clickThenPaste': [ 'mouse-combo:double-clickThenPaste' ]
+    'mouse-combo:selectLineUnderMouse': [ 'mouse:shift-click' ]
+    'mouse-combo:selectLineUnderMouseThenCopy':
+      [ 'mouse-combo:selectLineUnderMousesAndPaste',
+        'mouse-combo:selectLineUnderMouseThenCopy',
+        'mouse-combo:double-clickThenPaste' ]
+    'mouse-combo:selectLineUnderMousesAndPaste':
+      [ 'mouse-combo:selectLineUnderMousesAndPaste',
+        'mouse-combo:selectLineUnderMouseThenCopy' ]
+    'mouse:commandClick': [ 'mouse:commandClick' ]
     'cursor:up':
       [ 'common:indentation.left',
         'common:indentation.right',
         'selection:up',
-        'line.move.up',
-        'line.move.down',
+        'text-manipulation:move-line-up',
+        'text-manipulation:move-line-down',
         'common:enter',
-        'common:new-line-above',
+        'cursor:new-line-above',
         'text-manipulation:delete-lines' ]
-    'common:deletion.backward': [ 'common:deletion.forward', 'clipboard.paste' ]
-    'symbol.surround.parentheses':
-      [ 'clipboard.paste',
-        'symbol.doubleQuotes.surround',
-        'symbol.singleQuotes.surround',
-        'symbol.braces.surround' ]
-    'selection:all.right': [ 'clipboard.copy', 'clipboard.cut' ]
+    'common:deletion.backward': [ 'common:deletion.forward', 'clipboard:paste' ]
+    'symbol:surround.parentheses':
+      [ 'clipboard:paste',
+        'symbol:doubleQuotes.surround',
+        'symbol:singleQuotes.surround',
+        'symbol:braces.surround' ]
+    'selection:all.right': [ 'clipboard:copy', 'clipboard:cut' ]
     'cursor:way.right': [ 'common:deletion.backward' ]
     'common:save': [ 'application-control:previous.application', 'common:close.window' ]
-    'selection:line.text': [ 'clipboard.cut' ]
-    'common:enter': [ 'format.camel', 'format.upper-camel', 'common:tab.backward' ]
-    'common:new-line-above': [ 'clipboard.paste' ]
-    'cursor:new-line-below': [ 'clipboard.paste', 'format.camel', 'format.upper-camel' ]
+    'selection:line.text': [ 'clipboard:cut' ]
+    'common:enter': [ 'format:camel', 'format:upper-camel', 'common:tab.backward' ]
+    'cursor:new-line-above': [ 'clipboard:paste' ]
+    'cursor:new-line-below': [ 'clipboard:paste', 'format:camel', 'format:upper-camel' ]
     'selection:up': [ 'common:indentation.left', 'common:indentation.right' ]
     'selection:down': [ 'common:indentation.left', 'common:indentation.right' ]
-    'symbols:space':
-      [ 'format.camel',
-        'format.upper-camel',
-        'core.insertAbbreviation',
-        'format.snake',
-        'format.lower-no-space' ]
-    'clipboard.cut': [ 'application-control:previous.application' ]
-    'clipboard.paste': [ 'common:enter' ]
+    'symbol:space':
+      [ 'format:camel',
+        'format:upper-camel',
+        'insert:abbreviation',
+        'format:snake',
+        'format:lower-no-space' ]
+    'clipboard:cut': [ 'application-control:previous.application' ]
+    'clipboard:paste': [ 'common:enter' ]
     'common:deletion.forward': [ 'common:deletion.backward' ]
-    'symbol.comma.padded.right':
-      [ 'symbol.doubleQuotes.surround',
-        'symbol.singleQuotes.surround',
-        'format.camel',
-        'format.upper-camel',
-        'clipboard.paste',
+    'symbol:comma.padded.right':
+      [ 'symbol:doubleQuotes.surround',
+        'symbol:singleQuotes.surround',
+        'format:camel',
+        'format:upper-camel',
+        'clipboard:paste',
         'word.false',
         'word.true' ]
-    'common:open.tab': [ 'clipboard.paste' ]
+    'common:open.tab': [ 'clipboard:paste' ]
     'text-manipulation:delete.word.backward': [ 'common:deletion.backward', 'cursor:left' ]
     'smart.select':
-      [ 'format.camel',
-        'format.upper-camel',
-        'format.title',
-        'format.snake',
-        'format.upper',
-        'format.lower-no-space',
-        'format.upper-no-space' ]
+      [ 'format:camel',
+        'format:upper-camel',
+        'format:title',
+        'format:snake',
+        'format:upper',
+        'format:lower-no-space',
+        'format:upper-no-space' ]
     'selection:word.next': [ 'common:deletion.backward' ]
     'selection:word.previous': [ 'common:deletion.backward' ]
-    'mouse.shiftClick':
-      [ 'clipboard.copy',
+    'mouse:shift-click':
+      [ 'clipboard:copy',
         'common:deletion.backward',
-        'duplicate-selected',
+        'object:duplicate',
         'common:indentation.left',
         'common:indentation.right' ] }
 
