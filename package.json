@@ -34,6 +34,7 @@
     "lodash": "^3.10.1",
     "menubar": "^2.3.0",
     "natural": "git+https://github.com/NaturalNode/natural.git",
+    "atomic_rpc": "git+https://github.com/dimatter/atomic_rpc.git",
     "node-notifier": "^4.3.1",
     "nodobjc": "git+https://github.com/TooTallNate/NodObjC.git",
     "npm": "^3.3.10",

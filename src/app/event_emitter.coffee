@@ -4,6 +4,7 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
+    @setMaxListeners 1000
     instance = @
     @debug = true
     @frontendSubscriptions = {}
@@ -43,15 +44,16 @@ class EventEmitter extends require('events').EventEmitter
       'commandBeforeAdded'
       'commandMisspellingsAdded'
       'commandSpokenChanged'
-      # 'userAssetEvent'
+      'userAssetEvent'
       'userAssetEvaluated'
       'commandValidationFailed'
-      # 'commandValidationError'
+      'commandValidationError'
       'chainParsed'
       'chainPreprocessed'
       'chainWillExecute'
       'commandDidExecute'
-      # 'chainDidExecute'
+      'chainDidExecute'
+      'commandNotFound'
     ]
 
   frontendOn: (event, callback) ->
@@ -61,8 +63,13 @@ class EventEmitter extends require('events').EventEmitter
 
   frontendClearSubscriptions: ->
     _.all @frontendSubscriptions, (callbacks, event) =>
-      @_events[event] = _.difference @_events[event], callbacks
+      @unsubscribe event, callbacks
     @frontendSubscriptions = {}
+
+  unsubscribe: (event, callbacks) ->
+    if _.isFunction callbacks
+      callbacks = [callbacks]
+    @_events[event] = _.difference @_events[event], callbacks
 
   on: (event, callback) ->
     super
@@ -70,9 +77,7 @@ class EventEmitter extends require('events').EventEmitter
   _output: ->
     args = arguments
     process.nextTick ->
-      console.time 'printing'
       do args[0]
-      console.timeEnd 'printing'
       # console.log.apply console, args
 
   error: (event) ->
@@ -138,4 +143,5 @@ global.log = _.bind Events.log, Events
 global.warning = _.bind Events.warning, Events
 global.notify = _.bind Events.notify, Events
 global.mutate = _.bind Events.mutate, Events
+global.unsubscribe = _.bind Events.unsubscribe, Events
 module.exports = Events

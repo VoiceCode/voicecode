@@ -54,8 +54,9 @@ class Package
 
     _.extend @_implementations, commands
 
-    _.each commands, (extension, id) =>
-      Commands.implement @normalizeId(id), packageOptions, extension
+    Events.once 'commandEditsPerformed', =>
+      _.each commands, (extension, id) =>
+        Commands.implement @normalizeId(id), packageOptions, extension
 
   before: ->
     if arguments[1]?
@@ -94,7 +95,7 @@ class Package
   # this package's commands depend on)
   ready: (callback) ->
     # Events.once 'userAssetsLoaded', callback.bind(@)
-    Events.once 'userCommandEditsPerformed', callback.bind(@)
+    Events.once 'commandEditsPerformed', callback.bind(@)
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates

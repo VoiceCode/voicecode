@@ -2,9 +2,8 @@ fs = require 'fs'
 os = require 'os'
 chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
-ab = require 'asyncblock'
 
-class UserAssetsController
+class AssetsController
   instance = null
   constructor: ->
     return instance if instance?
@@ -43,21 +42,23 @@ _.extend Settings,
         else
           # this is good, file exists
           return
-      log 'assetSettingsFileCreated', "#{@assetsPath}/settings.coffee",
+      log 'userSettingsFileCreated', "#{@assetsPath}/settings.coffee",
       "User settings file created #{@assetsPath}/settings.coffee"
 
-  getAssets: (assetsMask, ignoreMask = false) ->
+  getAssets: (type, assetsMask, ignoreMask = false) ->
     return if @state is "error"
-    emit 'userAssetsLoading', assetsMask
+    emit 'assetsLoading', {type, assetsMask, ignoreMask}
+    emit "#{type}AssetsLoading"
     @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
       persistent: true
       ignored: ignoreMask
     @watchers[assetsMask].on('add', (path) =>
-      @handleFile 'added', path
+      @handleFile type, 'added', path
     ).on('change', (path) =>
-      @handleFile 'changed', path
+      @handleFile type, 'changed', path
     ).on('error', (err) ->
-      error 'userAssetEventError', err, err
+      error 'assetEventError', err, err
+      error "#{type}AssetsEventError", err, err
     ).on 'ready', ->
 
   getJavascriptCode: (fullPath) ->
@@ -72,21 +73,21 @@ _.extend Settings,
     (match, fileName) =>
       @getJavascriptCode "#{directory}/#{fileName}.coffee"
 
-  handleFile: (event, fullPath) ->
+  handleFile: (type, event, fullPath) ->
     if fullPath.match(/.coffee$/)?
       fileName = path.basename fullPath, '.coffee'
-      log 'userAssetEvent', {event, fullPath},
-      "User asset #{event}: #{fullPath}"
+      emit 'assetEvent', {event, fullPath}
+      log "#{type}AssetEvent", {event, fullPath},
+      "Asset type #{type} #{event}: #{fullPath}"
       try
         code = @getJavascriptCode fullPath
         pack = Packages.get("user:#{fileName}") or
         Packages.register
           name: "user:#{fileName}"
-          description: "User commands and stuff in #{fullPath}"
+          description: "User code in #{fullPath}"
           tags: ['user', "#{fileName}.coffee"]
 
         Commands = {}
-        # _.extend Commands, global.Commands <- does not work, prototypes or whatnot
         Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
         Commands.changeSpoken = global.Commands.changeSpoken.bind global.Commands
         Commands.edit = global.Commands.edit.bind global.Commands
@@ -113,14 +114,17 @@ _.extend Settings,
         __dirname = path.dirname fullPath
         eval code
       catch err
-        warning 'userAssetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
-      log 'userAssetEvaluated', {event, fullPath},
-      "User asset evaluated: #{fullPath}"
+        emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
+        warning "#{type}AssetEvaluationError", {err, fullPath}, "#{fullPath}:\n#{err}"
+      emit 'assetEvaluated', {event, fullPath}
+      log "#{type}AssetEvaluated", {event, fullPath},
+      "Asset type #{type} evaluated: #{fullPath}"
       @debouncedFinish ?= _.debounce =>
-        emit 'userAssetsLoaded'
+        emit "#{type}AssetsLoaded"
+        emit 'assetsLoaded'
         @debouncedFinish = null
       , 500
       @debouncedFinish()
 
 
-module.exports = new UserAssetsController
+module.exports = new AssetsController

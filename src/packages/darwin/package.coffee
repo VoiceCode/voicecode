@@ -8,7 +8,10 @@ pack.commands
       @key ',', ['command']
 
 pack.implement
-  'core:string': (string) ->
+  'os:key': ({key, modifiers}) ->
+    @___key key, modifiers
+
+  'os:string': (string) ->
     string = string.toString()
     if string?.length
       if @_capturingText

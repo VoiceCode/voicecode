@@ -29,7 +29,7 @@ class DarwinActions extends Actions
   resolveSuperModifier: ->
     "command"
 
-  key: (key, modifiers) ->
+  ___key: (key, modifiers) ->
     key = key.toString().toLowerCase()
 
     emit 'notUndoable'
@@ -437,7 +437,7 @@ class DarwinActions extends Actions
   transformSelectedText: (transform) ->
     switch @currentApplication().name
       when "Atom"
-        @runAtomCommand "transformSelectedText", transform
+        @runAtomCommand "transformSelectedText", transform, true
       else
         if @isTextSelected()
           contents = @getSelectedText()

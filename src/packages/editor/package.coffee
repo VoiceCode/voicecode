@@ -18,7 +18,7 @@ pack.commands
     action: (input) ->
       @do 'editor:move-to-line-number', input
       if input?
-        @do 'cursor.way.right'
+        @do 'cursor:way.right'
 
   'move-to-line-number+way-left':
     spoken: 'sprinkle'
@@ -28,7 +28,7 @@ pack.commands
     action: (input) ->
       @do 'editor:move-to-line-number', input
       if input?
-        @do 'cursor.way.left'
+        @do 'cursor:way.left'
 
   'insert-under-line-number':
     spoken: 'sprinkoon'

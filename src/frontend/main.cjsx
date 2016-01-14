@@ -14,6 +14,6 @@
     if remote.getGlobal('startedUp')?
       renderMain()
     else
-      Events.on 'startupFlowComplete', => renderMain()
+      Events.on 'startupFlow:complete', => renderMain()
 
 )()

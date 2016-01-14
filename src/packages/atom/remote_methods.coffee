@@ -1,8 +1,49 @@
 {Point, Emitter, TextEditor} = require 'atom'
 {View, TextEditorView} = require 'atom-space-pen-views'
-return new class RemoteMethods
-  constructor: ->
-    @disposables = []
+
+# command = 'duplicate-line-or-selection:duplicate'
+# command = 'duplicate-line-or-selection:duplicate'
+# command = 'tree-view:add-file'
+# console.dir $('atom-workspace atom-text-editor.is-focused')[0].dispatchEvent(new CustomEvent(command, {bubbles: true, cancelable: true}))
+# console.dir $('.tree-view')[0].dispatchEvent(new CustomEvent(command, {bubbles: true, cancelable: true}))
+# option command I
+
+
+# var keyboardEvent = document.createEvent("KeyboardEvent");
+# var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+#
+#
+# keyboardEvent[initMethod](
+#                    "keydown", // event type : keydown, keyup, keypress
+#                     true, // bubbles
+#                     true, // cancelable
+#                     window, // viewArg: should be window
+#                     false, // ctrlKeyArg
+#                     false, // altKeyArg
+#                     false, // shiftKeyArg
+#                     false, // metaKeyArg
+#                     40, // keyCodeArg : unsigned long the virtual key code, else 0
+#                     0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+# );
+# document.dispatchEvent(keyboardEvent);
+# option = shift = meta = control = false
+# key = 13
+# keyboardEvent = document.createEvent('Event')
+# keyboardEvent.type = 'keydown'
+# keyboardEvent.initEvent 'keydown', true, true#, window, control, option, shift, meta, key, 0
+# keyboardEvent.which = key
+# keyboardEvent.keyCode = key
+# keyboardEvent.keyIdentifier = key
+#
+# document.dispatchEvent keyboardEvent
+
+# {buildKeydownEvent} = require('atom-keymap')
+
+
+# buildKeydownEvent 'ctrl-a'
+# atom.keymaps.handleKeyboardEvent atom.keymaps.constructor.buildKeydownEvent 'cmd-a', target: document.body
+# console.log JSON.stringify atom.keymaps.constructor.buildKeydownEvent.toString()
+methods =  {
     # console.log @_editor()
     # console.log atom.views.getView(@_editor())
     # @disposables.push atom.workspace.observeActivePaneItem (item) ->
@@ -40,12 +81,10 @@ return new class RemoteMethods
   cleanup: ->
     _.all @disposables, (disposable) ->
       disposable.dispose()
-  editorNewLine: ->
-    @_editor().insertNewline()
-  editorInsertText: (string) ->
-    @_editor().insertText string
+
   _editor: ->
-    @__editor or null
+    global.voicecode.currentEditor()
+    # the method below does not work on mini editors
     # atom.workspace.getActiveTextEditor()
   _afterRange: (selection, editor) ->
     [selection.getBufferRange().end, editor.getEofBufferPosition()]
@@ -58,24 +97,102 @@ return new class RemoteMethods
   _searchEscape: (expression) ->
     expression.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 
-  trigger: (command) ->
-    atom.views.getView(atom.workspace).dispatchEvent(new CustomEvent(command, {bubbles: true, cancelable: true}))
+  redo: (params, callback = null) ->
+    @_editor().redo()
+    callback null, true
 
-  goToLine: (line) ->
+  undo: (params, callback = null) ->
+    @_editor().undo()
+    callback null, true
+
+  editorNewLine: (params, callback = null)->
+    @_editor().insertNewline()
+    callback null, true
+
+  editorInsertText: (string, callback = null) ->
+    editor = @_editor()
+    if not editor?
+      callback 'NO EDITOR'
+    else
+      editor.insertText string
+      callback null, true
+
+  deleteWordBackward: (times = 1, callback) ->
+    editor = @_editor()
+    _.times times, editor.deleteToBeginningOfWord()
+    callback null, true
+
+  deleteWordForward: (times = 1, callback) ->
+    editor = @_editor()
+    _.times times, editor.deleteToEndOfWord()
+    callback null, true
+
+  deleteToBeginningOfLine: (params, callback) ->
+    editor = @_editor()
+    editor.deleteToBeginningOfLine()
+    callback null, true
+
+  deleteToEndOfLine: (params, callback )->
+    editor = @_editor()
+    editor.deleteToEndOfLine()
+    callback null, true
+
+  moveToEndOfLine: (params, callback) ->
+    editor = @_editor()
+    editor.moveToEndOfLine()
+    callback null, true
+
+  newLineAbove: (params, callback) ->
+    editor = @_editor()
+    if not editor?
+      callback 'NO EDITOR'
+    else
+      editor.insertNewlineAbove()
+      callback null, true
+
+  newLineBelow: (params, callback) ->
+    editor = @_editor()
+    if not editor?
+      callback 'NO EDITOR'
+    else
+      editor.insertNewlineBelow()
+      callback null, true
+
+  deleteBackward: (times, callback) ->
+    editor = @_editor()
+    if not editor?
+      callback 'NO EDITOR'
+    else
+      editor.backspace()
+      callback null, true
+  deleteForward: (times, callback) ->
+    editor = @_editor()
+    if not editor?
+      callback 'NO EDITOR'
+    else
+      editor.delete()
+      callback null, true
+  trigger: ({command, selector}, callback) ->
+    # atom.views.getView(atom.workspace).dispatchEvent(new CustomEvent(command, {bubbles: true, cancelable: true}))
+    $(selector)[0].dispatchEvent(new CustomEvent(command, {bubbles: true, cancelable: true}))
+    callback null, true
+  goToLine: (line, callback) ->
     position = new Point(line - 1, 0)
     editor = @_editor()
+    if not editor?
+      callback 'NO EDITOR'
     editor.scrollToBufferPosition(position)
     editor.setCursorBufferPosition(position)
     editor.moveToFirstCharacterOfLine()
-
-  selectLineRange: (options) ->
+    callback null, true
+  selectLineRange: (options, callback) ->
     from = new Point(options.from - 1, 0)
     to = new Point(options.to, 0)
     editor = @_editor()
     return unless editor
     editor.setSelectedBufferRange([from, to])
-
-  extendSelectionToLine: (line) ->
+    callback null, true
+  extendSelectionToLine: (line, callback) ->
     line = line - 1
     editor = @_editor()
     return unless editor
@@ -95,8 +212,7 @@ return new class RemoteMethods
         [current.start, new Point(line + 1, 0)]
     if range?
       editor.setSelectedBufferRange(range)
-
-  selectNextWord: (distance) ->
+  selectNextWord: (distance, callback) ->
     editor = @_editor()
     return unless editor
     for selection in editor.getSelections()
@@ -111,8 +227,8 @@ return new class RemoteMethods
       if found?
         selection.setBufferRange([found.range.start, found.range.end])
     editor.mergeCursors() # undocumented
-
-  selectPreviousWord: (distance) ->
+    callback null, true
+  selectPreviousWord: (distance, callback) ->
     editor = @_editor()
     return unless editor
     for selection in editor.getSelections()
@@ -127,18 +243,20 @@ return new class RemoteMethods
       if found?
         selection.setBufferRange([found.range.start, found.range.end])
     editor.mergeCursors() # undocumented
-
+    callback null, true
   ###
   options.value => search term
   options.distance => preferred match index
   ###
-  selectNextOccurrence: (options) ->
+  selectNextOccurrence: (options, callback) ->
     editor = @_editor()
     return unless editor
     found = null
     if options.value is null
       options.value = editor.selections[0].getText()
-      return if options.value is ''
+      if options.value is ''
+        callback 'nothing selected'
+        return false
     for selection in editor.getSelections()
       index = 0
       range = @_afterRange(selection, editor)
@@ -149,19 +267,23 @@ return new class RemoteMethods
             result.stop()
       if found?
         selection.setBufferRange([found.range.start, found.range.end])
+      else
+        callback 'wordNotFound'
     editor.mergeCursors() # undocumented
-
+    callback null, true
   ###
   options.value => search term
   options.distance => preferred match index
   ###
-  selectPreviousOccurrence: (options) ->
+  selectPreviousOccurrence: (options, callback) ->
     editor = @_editor()
     return unless editor
     found = null
     if options.value is null
       options.value = editor.selections[0].getText()
-      return if options.value is ''
+      if options.value is ''
+        callback 'nothing selected'
+        return false
     for selection in editor.getSelections()
       index = 0
       range = @_beforeRange(selection)
@@ -172,13 +294,16 @@ return new class RemoteMethods
             result.stop()
       if found?
         selection.setBufferRange([found.range.start, found.range.end])
+      else
+        callback 'wordNotFound'
     editor.mergeCursors() # undocumented
+    callback null, true
 
   ###
   options.value => search term
   options.distance => preferred match index
   ###
-  selectToNextOccurrence: (options) ->
+  selectToNextOccurrence: (options, callback) ->
     editor = @_editor()
     return unless editor
     for selection, index in editor.getSelections()
@@ -193,12 +318,15 @@ return new class RemoteMethods
             result.stop()
       if found?
         selection.setBufferRange([selection.getBufferRange().start, found.range.end])
+      else
+        callback 'wordNotFound'
+      callback null, true
 
   ###
   options.value => search term
   options.distance => preferred match index
   ###
-  selectToPreviousOccurrence: (options) ->
+ selectToPreviousOccurrence: (options, callback) ->
     editor = @_editor()
     return unless editor
     for selection in editor.getSelections()
@@ -212,8 +340,10 @@ return new class RemoteMethods
             result.stop()
       if found?
         selection.setBufferRange([found.range.start, selection.getBufferRange().end])
-
-  selectSurroundedOccurrence: (options) ->
+      else
+        callback 'wordNotFound'
+      callback null, true
+  selectSurroundedOccurrence: (options, callback) ->
     expression = options.expression
     return unless expression.length
     direction = options.direction
@@ -248,10 +378,12 @@ return new class RemoteMethods
               result.stop()
       if found?
         selection.setBufferRange([@_pointAfter(found.range.start), @_pointBefore(found.range.end)])
+      else
+        callback 'wordNotFound'
+      callback null, true
 
   # case transforms
-
-  transformSelectedText: (transform) ->
+  transformSelectedText: (transform, callback) ->
     transformer = new Transformer()
     editor = @_editor()
     return unless editor
@@ -260,10 +392,135 @@ return new class RemoteMethods
       transformed = transformer[transform](text)
       selection.delete()
       selection.insertText(transformed)
-
-  insertContentFromLine: (line) ->
+      callback null, true
+  insertContentFromLine: (line, callback) ->
     editor = @_editor()
     return unless editor
     return unless line
     content = editor.getBuffer().lines[line - 1]?.trim()
     editor.insertText(content)
+    callback null, true
+}
+
+class Transformer
+  hasSpace = /\s/
+  hasSeparator = /[\W_]/
+  separatorSplitter = /[\W_]+(.|$)/g
+  camelSplitter = /(.)([A-Z]+)/g
+  minors = [
+    'a'
+    'an'
+    'and'
+    'as'
+    'at'
+    'but'
+    'by'
+    'en'
+    'for'
+    'from'
+    'how'
+    'if'
+    'in'
+    'neither'
+    'nor'
+    'of'
+    'on'
+    'only'
+    'onto'
+    'out'
+    'or'
+    'per'
+    'so'
+    'than'
+    'that'
+    'the'
+    'to'
+    'until'
+    'up'
+    'upon'
+    'v'
+    'v.'
+    'versus'
+    'vs'
+    'vs.'
+    'via'
+    'when'
+    'with'
+    'without'
+    'yet'
+  ]
+
+  unseparate: (string) ->
+    string.replace separatorSplitter, (m, next) ->
+      if next then ' ' + next else ''
+
+  uncamelize: (string) ->
+    string.replace camelSplitter, (m, previous, uppers) ->
+      previous + ' ' + uppers.toLowerCase().split('').join(' ')
+
+  toNoCase: (string) ->
+    if hasSpace.test(string)
+      return string.toLowerCase()
+    if hasSeparator.test(string)
+      return (@unseparate(string) or string).toLowerCase()
+    @uncamelize(string).toLowerCase()
+
+  identity: (string) ->
+    @toNoCase(string).replace /[\W_]+(.|$)/g, (matches, match) ->
+      if match then ' ' + match else ''
+
+  snake: (string) ->
+    @identity(string).replace /\s/g, '_'
+
+  camel: (string) ->
+    @identity(string).replace /\s(\w)/g, (matches, letter) ->
+      letter.toUpperCase()
+
+  toDotCase: (string) ->
+    @identity(string).replace /\s/g, '.'
+
+  toConstantCase: (string) ->
+    @snake(string).toUpperCase()
+
+  titleFirstSentance: (string) ->
+    @toNoCase(string).replace /[a-z]/i, (letter) ->
+      letter.toUpperCase()
+
+  spine: (string) ->
+    @identity(string).replace /\s/g, '-'
+
+  capital: (string) ->
+    @toNoCase(string).replace /(^|\s)(\w)/g, (matches, previous, letter) ->
+      previous + letter.toUpperCase()
+
+  stud: (string) ->
+    @identity(string).replace /(?:^|\s)(\w)/g, (matches, letter) ->
+      letter.toUpperCase()
+
+  upperCase: (string) ->
+    @identity(string).toUpperCase()
+
+  lowerSlam: (string) ->
+    @identity(string).replace /\s/g, ''
+
+  upperSlam: (string) ->
+    @identity(string).replace(/\s/g, '').toUpperCase()
+
+  upperSnake: (string) ->
+    @snake(string).toUpperCase()
+
+  upperSpine: (string) ->
+    @spine(string).toUpperCase()
+
+  titleSentance: (string) ->
+    escape = (str) ->
+      String(str).replace /([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'
+    escaped = minors.map(escape)
+    minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig')
+    colonMatcher = /:\s*(\w)/g
+    @capital(string).replace(minorMatcher, (minor) ->
+      minor.toLowerCase()
+    ).replace colonMatcher, (letter) ->
+      letter.toUpperCase()
+
+return methods

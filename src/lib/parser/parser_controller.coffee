@@ -16,7 +16,7 @@ class ParserController
     @initialize()
 
   initialize: ->
-    Events.once 'startupFlowComplete', =>
+    Events.once 'startupFlow:complete', =>
       @ready = true
       @generateParser()
 
@@ -85,7 +85,7 @@ class ParserController
     @settingsManager.update data
 
   writeGrammar: ->
-    file = path.resolve(UserAssetsController.assetsPath, "generated/grammar.js")
+    file = path.resolve(AssetsController.assetsPath, "generated/grammar.js")
     fs.writeFile file, @fingerprint.grammar, 'utf8'
 
   loadFromDisk: ->
