@@ -75,10 +75,10 @@ class EventEmitter extends require('events').EventEmitter
       @unsubscribe event, callbacks
     @frontendSubscriptions = {}
 
-  unsubscribe: (event, callbacks) ->
-    if _.isFunction callbacks
-      callbacks = [callbacks]
-    @_events[event] = _.difference @_events[event], callbacks
+  unsubscribe: (event, callback) ->
+    if _.isArray callback
+      _.every callback, (c) => @unsubscribe event, c
+    @removeListener event, callback
 
   on: (event, callback) ->
     super

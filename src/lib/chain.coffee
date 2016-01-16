@@ -45,12 +45,13 @@ class Chain
       Events.once 'breakChain', comboBreaker
       Events.once 'chainDidExecute', ->
         Events.unsubscribe 'breakChain', comboBreaker
+
       Commands.monitoringMouseToCancelSpacing = false
       emit 'chainWillExecute', chain
-      _.each chain, (link) ->
+      _.each chain, (link, index) ->
         if _.isObject chainBroken
           log 'chainBroken', chain,
-          "#{link.command} broke the chain: #{chainBroken.reason}"
+          "#{chain[index-1].command} broke the chain: #{chainBroken.reason}"
           return false
 
         # TODO we might want to track this index count locally so we can decouple history controller into a package?
