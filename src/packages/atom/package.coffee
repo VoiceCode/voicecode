@@ -9,10 +9,8 @@ class AtomRemote
   constructor: () ->
     @remote = new remote {server: true, port: 7777}
     @remote.on 'connect', ({id}) => @injectCode id
-    @remoteCode = {}
-
-    Events.once 'atomRemoteCodeFileEvent', (event) =>
-      Events.on 'atomRemoteCodeFileEvent',  => @injectCode()
+    @remoteCode = ''
+    Events.on 'atomRemoteCodeFileEvent',  => @injectCode()
     @watch()
 
   call: ->
@@ -21,11 +19,12 @@ class AtomRemote
   expose: ->
     @remote.expose.apply @remote, arguments
 
-  injectCode: (code = {}) ->
-    @remoteCode = _.extend @remoteCode, code
+  injectCode: (id = null, code = null) ->
+    code ?= @remoteCode
     @remote.call
+      id: id
       method: 'injectCode'
-      params: {code: @remoteCode}
+      params: {code}
       # callback: (error, result)->
       #   emit 'atomCodeInjected', {id, error, result}
 
@@ -48,7 +47,7 @@ class AtomRemote
     remoteCode = fs.readFileSync fileName, {encoding: 'utf8'}
     try
       remoteCode = @compileCoffeeScript remoteCode
-      @remoteCode = _.extend @remoteCode, remoteCode
+      @remoteCode = remoteCode
     catch err
       warning 'atomRemoteCodeEvaluationError',
       {err, fileName}, "#{fileName}:\n#{err}"
@@ -73,9 +72,6 @@ pack.remote.expose 'updateAppState',
       state.currentSocketId = socketId
     state.editors = {"#{state.editor.id}": state.editor}
     delete state.editor
-  if state.window?.focused is true
-    state.currentSocketId = socketId
-  state.bundleId = 'com.github.atom'
   Actions.setCurrentApplication _.deepExtend Actions.currentApplication(),
   state
 
@@ -86,6 +82,7 @@ pack.actions
     if synchronous
       fiber = Fiber.current
       callback = (err = null, result)->
+        debug arguments
         if err?
           Actions.breakChain err
         fiber.run()
@@ -97,28 +94,29 @@ pack.actions
 pack.settings
   modalWindowDelay: 400
 
-pack.implement
-  condition: ({key, modifiers}) ->
-    unless modifiers?
-      return true if key.length is 1
-    return false
-,
-  'os:key': ({key, modifiers}) ->
-    # modifiers = Actions._normalizeModifiers modifiers
-    # modifiers = modifiers.join ' '
-    # modifiers = modifiers.replace 'control', 'ctrl'
-    # modifiers = modifiers.replace 'option', 'alt'
-    # modifiers = modifiers.replace 'command', 'cmd'
-    # modifiers = modifiers.split ' '
-    # modifiers.push key
-    # keystrokes = _.kebabCase modifiers
-    # debug "KEYSTROKES", keystrokes
-    @runAtomCommand 'editorInsertText', key, true
-
+# pack.implement
+#   condition: ({key, modifiers}) ->
+#     if results = _.findWhere(@currentApplication().editors, {focused: true})?
+#       unless modifiers?
+#         return true if key.length is 1
+#       return false
+# ,
+#   'os:key': ({key, modifiers}) ->
+#     # modifiers = Actions._normalizeModifiers modifiers
+#     # modifiers = modifiers.join ' '
+#     # modifiers = modifiers.replace 'control', 'ctrl'
+#     # modifiers = modifiers.replace 'option', 'alt'
+#     # modifiers = modifiers.replace 'command', 'cmd'
+#     # modifiers = modifiers.split ' '
+#     # modifiers.push key
+#     # keystrokes = _.kebabCase modifiers
+#     # debug "KEYSTROKES", keystrokes
+#     @runAtomCommand 'editorInsertText', key, true
+#
 pack.implement
   condition: ->
     result = _.findWhere @currentApplication().editors, {focused: true}
-    !result?.mini
+    result?.mini is false
 ,
   'common:enter': ->
     @runAtomCommand 'editorNewLine', null, true
@@ -172,9 +170,6 @@ pack.implement
   'editor:move-to-line-number+way-left': true
   'editor:insert-under-line-number': true
   'editor:move-to-line-number+select-line': true
-
-  'object:refresh': ->
-    @key 'L', 'control option command'
 
   'object:duplicate': ->
     # TODO: steal implementation from package
@@ -270,7 +265,7 @@ pack.implement
     @key '/', 'command'
 
   'editor:extend-selection-to-line-number': (input) ->
-    @runAtomCommand 'extendToLine', input, true
+    @runAtomCommand 'extendSelectionToLine', input, true
 
   'editor:insert-from-line-number': (input) ->
     if input?
@@ -292,6 +287,12 @@ pack.implement
         from: first
         to: last
       , true
+
+pack.implement
+  'object:refresh': ->
+    @key 'L', 'control option command'
+
+
 pack.commands
   'connect': # TODO: deprecated?
     spoken: 'connector'

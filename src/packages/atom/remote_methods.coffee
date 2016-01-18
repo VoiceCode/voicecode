@@ -43,7 +43,7 @@
 # buildKeydownEvent 'ctrl-a'
 # atom.keymaps.handleKeyboardEvent atom.keymaps.constructor.buildKeydownEvent 'cmd-a', target: document.body
 # console.log JSON.stringify atom.keymaps.constructor.buildKeydownEvent.toString()
-methods =  {
+methods = {
     # console.log @_editor()
     # console.log atom.views.getView(@_editor())
     # @disposables.push atom.workspace.observeActivePaneItem (item) ->
@@ -111,8 +111,9 @@ methods =  {
 
   editorInsertText: (string, callback = null) ->
     editor = @_editor()
-    if not editor?
-      callback 'NO EDITOR'
+    unless editor?
+      callback 'no editor'
+      return false
     else
       editor.insertText string
       callback null, true
@@ -144,31 +145,35 @@ methods =  {
 
   newLineAbove: (params, callback) ->
     editor = @_editor()
-    if not editor?
-      callback 'NO EDITOR'
+    unless editor?
+      callback 'no editor'
+      return false
     else
       editor.insertNewlineAbove()
       callback null, true
 
   newLineBelow: (params, callback) ->
     editor = @_editor()
-    if not editor?
-      callback 'NO EDITOR'
+    unless editor?
+      callback 'no editor'
+      return false
     else
       editor.insertNewlineBelow()
       callback null, true
 
   deleteBackward: (times, callback) ->
     editor = @_editor()
-    if not editor?
-      callback 'NO EDITOR'
+    unless editor?
+      callback 'no editor'
+      return false
     else
       editor.backspace()
       callback null, true
   deleteForward: (times, callback) ->
     editor = @_editor()
-    if not editor?
-      callback 'NO EDITOR'
+    unless editor?
+      callback 'no editor'
+      return false
     else
       editor.delete()
       callback null, true
@@ -195,7 +200,10 @@ methods =  {
   extendSelectionToLine: (line, callback) ->
     line = line - 1
     editor = @_editor()
-    return unless editor
+    unless editor?
+      callback 'no editor'
+      return false
+
     current = editor.getSelections()[0].getBufferRange()
     range = if line < current.start.row
       [new Point(line, 0), current.end]
@@ -214,7 +222,10 @@ methods =  {
       editor.setSelectedBufferRange(range)
   selectNextWord: (distance, callback) ->
     editor = @_editor()
-    return unless editor
+    unless editor?
+      callback 'no editor'
+      return false
+
     for selection in editor.getSelections()
       index = 0
       found = null
@@ -250,7 +261,10 @@ methods =  {
   ###
   selectNextOccurrence: (options, callback) ->
     editor = @_editor()
-    return unless editor
+    unless editor?
+      callback 'no editor'
+      return false
+
     found = null
     if options.value is null
       options.value = editor.selections[0].getText()
@@ -269,6 +283,7 @@ methods =  {
         selection.setBufferRange([found.range.start, found.range.end])
       else
         callback 'wordNotFound'
+        return false
     editor.mergeCursors() # undocumented
     callback null, true
   ###
@@ -277,7 +292,9 @@ methods =  {
   ###
   selectPreviousOccurrence: (options, callback) ->
     editor = @_editor()
-    return unless editor
+    unless editor?
+      callback 'no editor'
+      return false
     found = null
     if options.value is null
       options.value = editor.selections[0].getText()
@@ -296,6 +313,7 @@ methods =  {
         selection.setBufferRange([found.range.start, found.range.end])
       else
         callback 'wordNotFound'
+        return false
     editor.mergeCursors() # undocumented
     callback null, true
 
@@ -326,7 +344,7 @@ methods =  {
   options.value => search term
   options.distance => preferred match index
   ###
- selectToPreviousOccurrence: (options, callback) ->
+  selectToPreviousOccurrence: (options, callback) ->
     editor = @_editor()
     return unless editor
     for selection in editor.getSelections()
@@ -379,14 +397,14 @@ methods =  {
       if found?
         selection.setBufferRange([@_pointAfter(found.range.start), @_pointBefore(found.range.end)])
       else
-        callback 'wordNotFound'
+        callback "word '#{find}' not found"
       callback null, true
 
   # case transforms
   transformSelectedText: (transform, callback) ->
     transformer = new Transformer()
     editor = @_editor()
-    return unless editor
+    return callback 'no editor' unless editor
     editor.mutateSelectedText (selection) ->
       text = selection.getText()
       transformed = transformer[transform](text)
@@ -395,8 +413,8 @@ methods =  {
       callback null, true
   insertContentFromLine: (line, callback) ->
     editor = @_editor()
-    return unless editor
-    return unless line
+    return callback 'no editor' unless editor
+    return callback 'no line' unless  line
     content = editor.getBuffer().lines[line - 1]?.trim()
     editor.insertText(content)
     callback null, true
