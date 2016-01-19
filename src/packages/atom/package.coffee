@@ -116,7 +116,10 @@ pack.implement
         direction: 1
 
   'editor:expand-selection-to-scope': ->
-    @runAtomCommand "trigger", "expand-selection:expand"
+    # @runAtomCommand "trigger", "expand-selection:expand"
+    # @runAtomCommand "trigger", "expand-selection-to-quotes:toggle"
+    # TODO make good version of this
+    @key "'", 'command'
 
   'editor:toggle-comments': ({first, last} = {}) ->
     if last?
