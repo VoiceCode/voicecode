@@ -4,7 +4,7 @@ path = require 'path'
 module.exports = class SettingsManager
   debouncedSave = null
   constructor: (@name) ->
-    @file = path.resolve(UserAssetsController.assetsPath, "#{@name}.json")
+    @file = path.resolve(AssetsController.assetsPath, "#{@name}.json")
     if @needsCreating()
       @create()
     @loadSettings()

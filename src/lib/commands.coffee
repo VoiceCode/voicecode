@@ -4,10 +4,9 @@ class Commands
   constructor: ->
     return instance if instance?
     instance = @
-    @immediateEdits = false
     @mapping = {}
     @context = "global"
-    @commandEditsFrom = 'code'
+    @immediateEdits = false
     @primaryGrammarTypes = [
       "custom"
       "textCapture"
@@ -37,20 +36,23 @@ class Commands
 
     @delayedEditFunctions = []
     @monitoringMouseToCancelSpacing = true
+    Events.once 'startupFlow:corePackagesLoaded', => @initialize()
 
   initialize: () ->
-    @performCommandEdits() # codeCommandEditsPerformed
+    @performCommandEdits 'corePackages' # corePackagesCommandEditsPerformed
 
-    Events.on 'userAssetsLoaded', =>
-      @commandEditsFrom = 'user'
-      @performCommandEdits() # userCommandEditsPerformed
+    Events.once 'userAssetsLoaded', =>
+      @performCommandEdits 'userCode' # userCodeCommandEditsPerformed
+
+    Events.once 'packageAssetsLoaded', =>
+      @performCommandEdits 'userPackages' # userPackagesCommandEditsPerformed
 
     Events.on 'enableCommand', (commandId) => @enable commandId
     Events.on 'disableCommand', (commandId) => @disable commandId
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
-      @commandEditsFrom = 'settings'
-      @performCommandEdits() # settingsCommandEditsPerformed
-    Events.on 'startupFlowComplete', => @immediateEdits = true
+      # enabledCommandsCommandEditsPerformed
+      @performCommandEdits 'enabledCommands'
+    Events.on 'startupFlow:complete', => @immediateEdits = true
 
   validate: (command, options, editType) ->
     validated = true
@@ -134,14 +136,14 @@ class Commands
 
   createDisabledWithDefaults: (defaults, options) ->
     for key, value of options
-      command = _.extend {}, defaults, value
+      command = _.extenId {}, defaults, value
       command.enabled ?= false
       @create key, command
 
   edit: (name, editType, edition, callback) ->
     @delayedEditFunctions.push {name, editType, edition, callback}
     if @immediateEdits
-      @performCommandEdits('immediate')
+      @performCommandEdits 'immediate'
 
   remove: (name) ->
     # TODO what else needs to be done to clean up?
@@ -169,7 +171,6 @@ class Commands
     return true
 
   performCommandEdits: (invokedBy = null) ->
-    invokedBy ?= @commandEditsFrom
     delayedEditFunctions = _.clone @delayedEditFunctions
     @delayedEditFunctions = []
     _.each delayedEditFunctions, ({name, callback, editType, edition}) =>

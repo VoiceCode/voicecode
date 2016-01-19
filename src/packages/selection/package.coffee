@@ -278,3 +278,5 @@ pack.commands
       else
         return
       Packages.get('selection').selectPreviousOccurrenceWithDistance term, 1
+
+require "./#{global.platform}"

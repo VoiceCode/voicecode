@@ -33,3 +33,5 @@ if global.platform is 'darwin'
           """
         else
           @openApplication "System Preferences"
+
+require "./#{global.platform}"

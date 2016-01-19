@@ -17,7 +17,7 @@ pack.implement
 
   'cursor:new-line-below': ->
     @key "return", "command"
-  'common:new-line-above': ->
+  'cursor:new-line-above': ->
     @key "return", "command shift"
 
   'editor:expand-selection-to-scope': ->
@@ -41,10 +41,10 @@ pack.implement
   'selection:block': ->
     @key 'l', ['command']
 
-  'line.move.down': ->
+  'text-manipulation:move-line-down': ->
     @key 'down', 'control command'
 
-  'line.move.up': ->
+  'text-manipulation:move-line-up': ->
     @key 'up', 'control command'
 
   'editor:move-to-line-number': (input) ->

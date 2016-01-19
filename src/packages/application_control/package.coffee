@@ -46,3 +46,5 @@ pack.commands
     description: 'Switch to previous window in same application'
     tags: ['application', 'window', 'recommended']
     repeatable: true
+
+require "./#{global.platform}"

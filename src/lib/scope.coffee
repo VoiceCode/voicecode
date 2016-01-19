@@ -26,17 +26,22 @@ class Scope
 
   @active: (options) ->
     if typeof options is 'string'
-      @get(options)?.active()
+      @get(options)?.active(options.input)
     else if options.scope?
-      @get(options.scope)?.active()
+      scopeIsActive = @get(options.scope)?.active(options.input)
+      conditionPasses = true
+      if options.condition?
+        conditionPasses = @checkCondition(options.condition, options.input)
+      scopeIsActive and conditionPasses
     else
       @checkApplications(options.applications) and
-      @checkCondition(options.condition)
+      @checkCondition(options.condition, options.input)
 
-  active: ->
+  active: (input) ->
     Scope.active
       applications: @applications()
       condition: @condition
+      input: input
 
   # allow lazy resolving of an application list
   applications: ->
@@ -65,9 +70,9 @@ class Scope
     else
       true
 
-  @checkCondition: (condition) ->
+  @checkCondition: (condition, input) ->
     if _.isFunction condition
-      condition.call(Actions)
+      condition.call(Actions, input)
     else
       true
 

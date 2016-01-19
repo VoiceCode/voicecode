@@ -173,3 +173,5 @@ pack.commands
           quadrant = input % 10
 
       @positionMouse quadrants[quadrant][0], quadrants[quadrant][1], screen
+
+require './mouse_combo'

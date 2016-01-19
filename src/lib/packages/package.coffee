@@ -2,15 +2,25 @@ class Package
   constructor: (@options) ->
     # these are key for keeping track of this package's changes
     @_commands = {}
+    @_actions = {}
     @_before = {}
     @_after = {}
     @_implementations = {}
     @_settings = @options.settings or {}
-
     {@name, @description, @scope} = @options
+
+
     @registerScope()
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
+
+  actions: (actions) ->
+    _.all actions, (method, name) =>
+      @_actions[name] = method
+      if Actions[name]?
+        warning 'packageOverwritesAction', name,
+        "Package '#{@name}' has overwritten Actions.#{name}"
+      Actions[name] = method.bind Actions
 
   commands: ->
     if arguments[1]?
@@ -44,8 +54,9 @@ class Package
 
     _.extend @_implementations, commands
 
-    _.each commands, (extension, id) =>
-      Commands.implement @normalizeId(id), packageOptions, extension
+    Events.once 'commandEditsPerformed', =>
+      _.each commands, (extension, id) =>
+        Commands.implement @normalizeId(id), packageOptions, extension
 
   before: ->
     if arguments[1]?
@@ -84,7 +95,7 @@ class Package
   # this package's commands depend on)
   ready: (callback) ->
     # Events.once 'userAssetsLoaded', callback.bind(@)
-    Events.once 'userCommandEditsPerformed', callback.bind(@)
+    Events.once 'commandEditsPerformed', callback.bind(@)
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates

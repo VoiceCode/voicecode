@@ -14,7 +14,7 @@ class ChromeBrowserPipe
       @webSocket.on 'message', (message) =>
         @receive message
       @webSocket.on 'close', =>
-        @close
+        @close()
     instance = @
 
   isConnected: ->

@@ -19,11 +19,11 @@ class DarwinController
 
     @methodCallTimes = {}
 
-    Events.once 'startupFlowComplete', =>
+    Events.once 'startupFlow:complete', =>
       unless developmentMode
         @startEventMonitor()
       else
-        @listenOnSocket "/tmp/voicecode_events2.sock", @systemEventHandler
+        @listenOnSocket "/tmp/voicecode_events_dev.sock", @systemEventHandler
 
       if Settings.slaveMode
         @listenAsSlave()
@@ -43,12 +43,16 @@ class DarwinController
     @eventMonitor.on 'start', =>
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
       process.on 'exit', => @eventMonitor.stop()
-      
+
     @eventMonitor.on 'exit:code', (code) ->
       error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
 
   applicationChanged: ({event, bundleId, name}) ->
-    Actions.setCurrentApplication {name, bundleId}
+    current = Actions.currentApplication()
+    if current.bundleId is bundleId
+      Actions.setCurrentApplication _.extend current, {name, bundleId}
+    else
+      Actions.setCurrentApplication {name, bundleId}
 
     if Commands.monitoringMouseToCancelSpacing
       Commands.lastCommandOfPreviousPhrase = null
@@ -92,7 +96,8 @@ class DarwinController
       when 'leftClick'
         @mouseHandler event
       when 'recognizedText'
-        @statusWindowTextHandler event
+        unless developmentMode
+          @statusWindowTextHandler event
 
   normalizePhraseComparison: (phrase) ->
     if ParserController.isInitialized()
@@ -196,6 +201,7 @@ class DarwinController
 
   executeChain: (phrase) ->
     Fiber(->
+      FIBER = 'Imstillhere'
       new Chain(phrase).execute()
     ).run()
 

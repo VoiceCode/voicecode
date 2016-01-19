@@ -19,10 +19,7 @@ module.exports = class Actions
     # TODO: implement
 
   breakChain: (reason = 'Unknown reason...') ->
-    throw
-      name: 'breakChain'
-      message: reason
-
+    emit 'breakChain', reason
   # run another command
   do: (name, input=null, context={}) ->
     command = new Command(name, input, context).execute()
@@ -182,7 +179,7 @@ module.exports = class Actions
   switchApplication: ->
     @key 'tab', 'command' ; @
   space: ->
-    @string ' ' ; @
+    @key 'space' ; @
   enter: ->
     @key 'return' ; @
   up: (times) ->

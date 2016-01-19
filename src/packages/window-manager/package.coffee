@@ -13,3 +13,5 @@ pack.commands
     variables:
       digit: -> Settings.digits
       windowPosition: -> Settings.windowPositions
+
+require "./#{global.platform}"

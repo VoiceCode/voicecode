@@ -15,5 +15,5 @@ pack.implement
       @string input
       @delay 100
       @enter()
-  'line.move.up': ->
+  'text-manipulation:move-line-up': ->
     @key '[', 'command option'

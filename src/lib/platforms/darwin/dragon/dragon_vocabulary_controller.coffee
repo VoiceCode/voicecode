@@ -65,7 +65,7 @@ module.exports = new class DragonVocabularyController
     </plist>
     """
     path = require('path')
-    file = path.resolve(UserAssetsController.assetsPath, "generated/#{filename}.xml")
+    file = path.resolve(AssetsController.assetsPath, "generated/#{filename}.xml")
     fs = require('fs')
     fs.writeFileSync file, content, 'utf8'
   createStandardContent: ->

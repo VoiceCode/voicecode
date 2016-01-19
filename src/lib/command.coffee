@@ -27,12 +27,14 @@ class Command
 
   execute: ->
     input = @input
+    id = @id
     context = @generateContext()
 
     Actions.executionStack.unshift true
     unless _.isEmpty @before
       _.each @before, ({action: e, info}) ->
-        if Scope.active(info) and _.isFunction(e)
+        if Scope.active(_.extend {},
+        info, {id, input, context}) and _.isFunction(e)
           emit 'beforeActionWillExecute', info
           e.call(Actions, input, context)
         Actions.executionStack[0]
@@ -41,7 +43,9 @@ class Command
 
     debug 'sorted', @sortedActions()
     _.each @sortedActions(), ({action: e, info}) ->
-      if Scope.active(info) and _.isFunction(e)
+      if Scope.active(_.extend {},
+      info, {id, input, context}) and _.isFunction(e)
+        emit 'actionWillExecute', info
         e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
         return false
@@ -50,14 +54,16 @@ class Command
     # after actions
     unless _.isEmpty @after?
       _.each @after, ({action: e, info}) ->
-        if Scope.active(info) and _.isFunction(e)
+        if Scope.active(_.extend {},
+        info, {id, input, context}) and _.isFunction(e)
           emit 'afterActionWillExecute', info
           e.call(Actions, input, context)
         Actions.executionStack[0]
 
     Actions.executionStack.shift()
 
-  # here we are sorting the actions by specificity - this implementation is crude
+  # here we are sorting the actions by specificity -
+  # this implementation is crude
   # but it should work for now
   sortedActions: ->
     _.sortBy @actions, ({action: e, info}) ->

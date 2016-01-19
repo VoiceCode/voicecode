@@ -38,9 +38,22 @@ class Chain
       chain = @applyAutoSpacing chain
 
     unless _.isEmpty chain
+      chainBroken = false
+      comboBreaker = (reason) ->
+        chainBroken = {reason}
+
+      Events.once 'breakChain', comboBreaker
+      Events.once 'chainDidExecute', ->
+        Events.unsubscribe 'breakChain', comboBreaker
+
       Commands.monitoringMouseToCancelSpacing = false
       emit 'chainWillExecute', chain
-      _.each chain, (link) ->
+      _.each chain, (link, index) ->
+        if _.isObject chainBroken
+          log 'chainBroken', chain,
+          "#{chain[index-1].command} broke the chain: #{chainBroken.reason}"
+          return false
+
         # TODO we might want to track this index count locally so we can decouple history controller into a package?
         chainLinkIndex = HistoryController.getChainLength()
         link.context ?= {}
@@ -57,10 +70,8 @@ class Chain
           emit 'commandDidExecute', {link, chain}
           return true
         catch e
-          if e.name is 'breakChain'
-            log 'chainBroken', chain, "#{link.command} broke the chain: #{e.message}"
-          else
-            error 'chainExecutionError', chain, e
+          error 'commandFailedExecute', link, e
+          error 'chainFailedExecute', {link, chain}, e
           return false
 
       emit 'chainDidExecute', chain

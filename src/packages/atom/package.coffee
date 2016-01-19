@@ -1,34 +1,168 @@
-# TODO: distance parameter must react to repetition command
-# TODO: implement synchronicity. We need to wait for success/failure call back.
-#       The chain must break if something like core.selection:next.wordOccurrence fails
-#       Actions.breakChain: -> emit 'chainLinkBroken', ...
+remote = require 'atomic_rpc'
+coffeeScript = require 'coffee-script'
+chokidar = require 'chokidar'
+fs = require 'fs'
+asyncblock = require 'asyncblock'
+
+
+class AtomRemote
+  constructor: () ->
+    @remote = new remote {server: true, port: 7777}
+    @remote.on 'connect', ({id}) => @injectCode id
+    @remoteCode = ''
+    Events.on 'atomRemoteCodeFileEvent',  => @injectCode()
+    @watch()
+
+  call: ->
+    @remote.call.apply @remote, arguments
+
+  expose: ->
+    @remote.expose.apply @remote, arguments
+
+  injectCode: (id = null, code = null) ->
+    code ?= @remoteCode
+    @remote.call
+      id: id
+      method: 'injectCode'
+      params: {code}
+      # callback: (error, result)->
+      #   emit 'atomCodeInjected', {id, error, result}
+
+  watch: ->
+    @watcher = chokidar.watch "#{__dirname}/remote_methods.coffee",
+      persistent: true
+    @watcher.on('add', (path) =>
+      @handleFile 'added', path
+    ).on('change', (path) =>
+      @handleFile 'changed', path
+    ).on('error', (err) ->
+      error 'atomRemoteCodeFileError', err, err
+    ).on 'ready', ->
+
+
+  compileCoffeeScript: (data) ->
+    coffeeScript.compile data
+
+  handleFile: (event, fileName) ->
+    remoteCode = fs.readFileSync fileName, {encoding: 'utf8'}
+    try
+      remoteCode = @compileCoffeeScript remoteCode
+      @remoteCode = remoteCode
+    catch err
+      warning 'atomRemoteCodeEvaluationError',
+      {err, fileName}, "#{fileName}:\n#{err}"
+    emit 'atomRemoteCodeFileEvent', event
+
+
 
 pack = Packages.register
   name: 'atom'
   applications: ['com.github.atom']
   description: 'Atom IDE integration (atom.io)'
-
+# pack.remote = Fiber(->
+#   new AtomRemote
+# ).run()
+pack.remote = new AtomRemote
 Settings.extend "editorApplications", pack.applications()
+
+pack.remote.expose 'updateAppState',
+(state, socketId) ->
+  if state.editor?
+    if state.editor.focused is true
+      state.currentSocketId = socketId
+    state.editors = {"#{state.editor.id}": state.editor}
+    delete state.editor
+  Actions.setCurrentApplication _.deepExtend Actions.currentApplication(),
+  state
+
+pack.actions
+  injectCode: (code) -> pack.remote.injectCode code
+  runAtomCommand: (method, params, synchronous = false) ->
+    id = Actions.currentApplication().currentSocketId
+    if synchronous
+      fiber = Fiber.current
+      callback = (err = null, result)->
+        debug arguments
+        if err?
+          Actions.breakChain err
+        fiber.run()
+      pack.remote.call {id, method, params, callback}
+      Fiber.yield()
+    else
+      pack.remote.call {id, method, params}
 
 pack.settings
   modalWindowDelay: 400
 
+# pack.implement
+#   condition: ({key, modifiers}) ->
+#     if results = _.findWhere(@currentApplication().editors, {focused: true})?
+#       unless modifiers?
+#         return true if key.length is 1
+#       return false
+# ,
+#   'os:key': ({key, modifiers}) ->
+#     # modifiers = Actions._normalizeModifiers modifiers
+#     # modifiers = modifiers.join ' '
+#     # modifiers = modifiers.replace 'control', 'ctrl'
+#     # modifiers = modifiers.replace 'option', 'alt'
+#     # modifiers = modifiers.replace 'command', 'cmd'
+#     # modifiers = modifiers.split ' '
+#     # modifiers.push key
+#     # keystrokes = _.kebabCase modifiers
+#     # debug "KEYSTROKES", keystrokes
+#     @runAtomCommand 'editorInsertText', key, true
+#
 pack.implement
-  'line.move.up': ->
+  condition: ->
+    result = _.findWhere @currentApplication().editors, {focused: true}
+    result?.mini is false
+,
+  'common:enter': ->
+    @runAtomCommand 'editorNewLine', null, true
+
+pack.implement
+  condition: ->
+    results = _.findWhere(@currentApplication().editors, {focused: true})?
+    results
+,
+  'common:redo': ->
+    @runAtomCommand 'redo', null, true
+  'common:undo': ->
+    @runAtomCommand 'undo', null, true
+  'text-manipulation:delete-to-end-of-line': ->
+    @runAtomCommand 'deleteToEndOfLine', null, true
+  'text-manipulation:delete-to-beginning-of-line': ->
+    @runAtomCommand 'deleteToBeginningOfLine', null, true
+  'text-manipulation:delete.word.forward': ->
+    @runAtomCommand 'deleteWordForward', null, true
+  'text-manipulation:delete.word.backward': ->
+    @runAtomCommand 'deleteWordBackward', null, true
+  'cursor:way.right': ->
+    @runAtomCommand 'moveToEndOfLine', null, true
+  'cursor:way.left': ->
+    @runAtomCommand 'deleteToBeginningOfLine', null, true
+  'common:deletion.backward': (times = 1) ->
+    @runAtomCommand 'deleteBackward', times, true
+  'common:deletion.forward': (times = 1) ->
+    @runAtomCommand 'deleteForward', times, true
+  'cursor:new-line-below': ->
+    @runAtomCommand 'newLineBelow', null, true
+  'cursor:new-line-above': ->
+    @runAtomCommand 'newLineAbove', null, true
+  'os:string': (string) ->
+    @runAtomCommand 'editorInsertText', string, true
+  'text-manipulation:move-line-down': ->
     @key 'up', 'control command'
-
-  'line.move.down': ->
+  'text-manipulation:move-line-up': ->
     @key 'down', 'control command'
-
   'selection:word.next': (input) ->
-    @runAtomCommand 'selectNextWord', input or 1
-
+    @runAtomCommand 'selectNextWord', input or 1, true
   'selection:word.previous': (input) ->
-    @runAtomCommand 'selectPreviousWord', input or 1
-
+    @runAtomCommand 'selectPreviousWord', input or 1, true
   'editor:move-to-line-number': (input) ->
     if input
-      @runAtomCommand 'goToLine', input
+      @runAtomCommand 'goToLine', input, true
     else
       @key 'g', 'control'
 
@@ -37,12 +171,9 @@ pack.implement
   'editor:insert-under-line-number': true
   'editor:move-to-line-number+select-line': true
 
-  'object:refresh': ->
-    @key 'L', 'control option command'
-
   'object:duplicate': ->
     # TODO: steal implementation from package
-    # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate"
+    # @runAtomCommand "trigger", "duplicate-line-or-selection:duplicate", true
     @key 'D', 'shift command'
 
   'text-manipulation:delete-lines': ({first, last} = {}) ->
@@ -50,8 +181,9 @@ pack.implement
       @runAtomCommand 'selectLineRange',
         from: first
         to: last
+      , true
     else if first?
-      @runAtomCommand 'goToLine', first
+      @runAtomCommand 'goToLine', first, true
     @delay 40
     @key 'k', 'control shift'
 
@@ -62,6 +194,7 @@ pack.implement
       @runAtomCommand "selectPreviousOccurrence",
         value: term
         distance: input.distance or 1
+      , true
 
   'selection:next.word-occurrence': (input) ->
     term = input?.value or @storage.nextTrapSearchTerm
@@ -70,7 +203,7 @@ pack.implement
       @runAtomCommand "selectNextOccurrence",
         value: term
         distance: input.distance or 1
-
+      , true
   'selection:extend.next.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
@@ -78,7 +211,7 @@ pack.implement
       @runAtomCommand "selectToNextOccurrence",
         value: term
         distance: input.distance or 1
-
+      , true
   'selection:extend.previous.word-occurrence': (input) ->
     term = input?.value or @storage.previousSearchTerm
     if term?.length
@@ -86,16 +219,17 @@ pack.implement
       @runAtomCommand "selectToPreviousOccurrence",
         value: term
         distance: input.distance or 1
-
+      , true
   'selection:previous.selection-occurrence': ->
     @runAtomCommand "selectPreviousOccurrence",
       value: null
       distance: 1
-
+    , true
   'selection:next.selection-occurrence': ->
     @runAtomCommand "selectNextOccurrence",
       value: null
       distance: 1
+    , true
 
   'selection:previous.word-by-surrounding-characters': (input) ->
     term = input?.value or @storage.previousTrapSearchTerm
@@ -105,7 +239,7 @@ pack.implement
         expression: term
         distance: input.distance or 1
         direction: -1
-
+      , true
   'selection:next.word-by-surrounding-characters': (input) ->
     term = input?.value or @storage.previousTrapSearchTerm
     if term?.length
@@ -114,29 +248,28 @@ pack.implement
         expression: term
         distance: input.distance or 1
         direction: 1
-
+      , true
   'editor:expand-selection-to-scope': ->
-    # @runAtomCommand "trigger", "expand-selection:expand"
-    # @runAtomCommand "trigger", "expand-selection-to-quotes:toggle"
-    # TODO make good version of this
-    @key "'", 'command'
+    @runAtomCommand "trigger", {selector: 'atom-workspace',
+      command: 'expand-selection:expand'}, true
 
   'editor:toggle-comments': ({first, last} = {}) ->
     if last?
       @runAtomCommand 'selectLineRange',
         from: first
         to: last
+      , true
     else if first?
-      @runAtomCommand 'goToLine', first
+      @runAtomCommand 'goToLine', first, true
     @delay 50
     @key '/', 'command'
 
   'editor:extend-selection-to-line-number': (input) ->
-    @runAtomCommand 'extendToLine', input
+    @runAtomCommand 'extendSelectionToLine', input, true
 
   'editor:insert-from-line-number': (input) ->
     if input?
-      @runAtomCommand 'insertContentFromLine', input
+      @runAtomCommand 'insertContentFromLine', input, true
 
   'editor:select-line-number-range': (input) ->
     if input?
@@ -153,6 +286,12 @@ pack.implement
       @runAtomCommand 'selectLineRange',
         from: first
         to: last
+      , true
+
+pack.implement
+  'object:refresh': ->
+    @key 'L', 'control option command'
+
 
 pack.commands
   'connect': # TODO: deprecated?
@@ -165,12 +304,12 @@ pack.commands
     spoken: 'projector'
     description: 'Switch projects in Atom'
     action: ->
-      @runAtomCommand 'trigger', 'project-manager:list-projects'
+      @runAtomCommand 'trigger', 'project-manager:list-projects', true
   'jump-to-symbol.dialogue':
     spoken: 'jumpy'
     description: 'Open jump-to-symbol dialogue'
     action: ->
-      @runAtomCommand 'trigger', 'symbols-view:toggle-file-symbols'
+      @runAtomCommand 'trigger', 'symbols-view:toggle-file-symbols', true
   'search-selection':
     spoken: 'marthis'
     description: 'Use the currently selected text as a search term'

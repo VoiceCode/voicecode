@@ -38,10 +38,15 @@ global.Events = require './event_emitter'
 global.path = require 'path'
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
+global.requireDirectory = require 'require-directory'
 global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
-require '../lib/utility/deep_extension' # _.deepExtend?
+require '../lib/utility/deep_extension' # _.deepExtend
+
+# what kind of sorcery is this?
+global.translationReplacement = (key) ->
+  Settings.translations[key]
 
 mb = require 'menubar'
 global.menubar = mb
@@ -69,9 +74,10 @@ menubar.on 'after-create-window', ->
 process.on 'uncaughtException', (err) ->
   console.log chalk.white.bold.bgRed('   UNCAUGHT EXCEPTION   ')
   console.log err.stack
+  process.emit 'exit'
   process.exit(1)
 
-Events.on 'applicationStart', ->
+Events.on 'applicationShouldStart', ->
   funk = asyncblock.nostack
   if developmentMode
     funk = asyncblock
@@ -87,10 +93,10 @@ Events.on 'applicationStart', ->
 
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
-    global.UserAssetsController = require './user_assets_controller'
-    Events.once 'userAssetsLoaded', startupFlow.add 'user_settings'
-    UserAssetsController.getAssets 'settings.coffee'
-    startupFlow.wait 'user_settings'
+    global.AssetsController = require './assets_controller'
+    Events.once 'settingsAssetsLoaded', startupFlow.add 'settingsAssetsLoaded'
+    AssetsController.getAssets 'settings', 'settings.coffee'
+    startupFlow.wait 'settingsAssetsLoaded'
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -98,6 +104,9 @@ Events.on 'applicationStart', ->
     global.Chain = require '../lib/chain'
     global.HistoryController = require '../lib/history_controller'
     _.extend global, require './shell' # Execute, Applescript
+    Commands.Utility = require '../lib/utility/utility'
+    global.SlaveController = require './slave_controller'
+    global.ParserController = require '../lib/parser/parser_controller'
 
     switch platform
       when "darwin"
@@ -110,28 +119,27 @@ Events.on 'applicationStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-    requireDirectory = require 'require-directory'
-
-    requireDirectory module, '../lib/execution/',
-      visit: (required) ->
-        if (not _.isEmpty required) and _.isObject required
-          _.each required, (value, key) -> global[key] = value
-
     requireDirectory module, '../packages/',
-      exclude: /.*node_modules.*/
+      exclude: (path) ->
+        not /.*package\.js$/.test path
       visit: (required) ->
         if (not _.isEmpty required) and _.isObject required
           _.each required, (value, key) -> global[key] = value
+    emit 'startupFlow:corePackagesLoaded'
 
-    Commands.Utility = require '../lib/utility/utility'
-    global.SlaveController = require './slave_controller'
-    global.ParserController = require '../lib/parser/parser_controller'
+    Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
+    AssetsController.getAssets 'package', 'packages/**/package.coffee'
+    startupFlow.wait 'packageAssetsLoaded'
+    emit 'startupFlow:userPackagesLoaded'
 
-    Commands.initialize()
-
-    Events.once 'userCommandEditsPerformed', startupFlow.add 'user_code_loaded'
-    UserAssetsController.getAssets '**/*.coffee', '**/settings.coffee'
-    startupFlow.wait 'user_code_loaded'
+    Events.once 'userAssetsLoaded', startupFlow.add 'userAssetsLoaded'
+    AssetsController.getAssets 'user', '**/*.coffee', (path) ->
+      return true if /packages/.test path
+      return true if /settings\.coffee/.test path
+      return true if /generated/.test path
+      return false
+    startupFlow.wait 'userAssetsLoaded'
+    emit 'startupFlow:userCodeLoaded'
 
     require './enabled_commands_manager'
 
@@ -158,9 +166,19 @@ Events.on 'applicationStart', ->
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 
-    emit "startupFlowComplete"
+    emit "startupFlow:complete"
 
 # needed while developing ui
-Events.once 'startupFlowComplete', -> global.startedUp = true
+Events.once 'startupFlow:complete', -> global.startedUp = true
 
-emit 'applicationStart'
+
+# benchmarking
+Events.on 'chainDidExecute', ->
+  console.timeEnd 'CHAIN'
+Events.on 'chainWillExecute', ->
+  console.time 'CHAIN'
+
+
+
+
+emit 'applicationShouldStart'

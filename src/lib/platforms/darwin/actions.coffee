@@ -29,7 +29,7 @@ class DarwinActions extends Actions
   resolveSuperModifier: ->
     "command"
 
-  key: (key, modifiers) ->
+  ___key: (key, modifiers) ->
     key = key.toString().toLowerCase()
 
     emit 'notUndoable'
@@ -44,25 +44,7 @@ class DarwinActions extends Actions
         @_pressKey code, @_normalizeModifiers(mods)
         @delay Settings.keyDelay or 8
 
-  string: (string) ->
-    string = string.toString()
-    if string?.length
-      if @_capturingText
-        @_capturedText += string
-      else
-        emit 'charactersTyped', string
-        if string.length > (Settings.maxStringTypingLength or 9)
-          @paste string
-        else
-          for item in string.split('')
-            @delay Settings.characterDelay or 4
-            code = @keys.keyCodesRegular[item]
-            if code?
-              @_pressKey code
-            else
-              code = @keys.keyCodesShift[item]
-              if code?
-                @_pressKey code, ["shift"]
+
   keyDown: (key, modifiers) ->
     code = @keys.keyCodes[key.toLowerCase()]
     if code?
@@ -350,16 +332,6 @@ class DarwinActions extends Actions
     options ?= {silent: true}
     Execute script, options
 
-  runAtomCommand: (name, options) ->
-    info =
-      command: name
-      options: options
-
-    escaped = JSON.stringify(info).replace(/\\/g, '\\\\').replace(/"/g, '\\"')
-    command = """echo "#{escaped}" | nc -U /tmp/voicecode-atom.sock"""
-    debug command
-    @exec command
-
   openMenuBarItem: (item) ->
     emit 'notUndoable'
     @applescript """
@@ -465,7 +437,7 @@ class DarwinActions extends Actions
   transformSelectedText: (transform) ->
     switch @currentApplication().name
       when "Atom"
-        @runAtomCommand "transformSelectedText", transform
+        @runAtomCommand "transformSelectedText", transform, true
       else
         if @isTextSelected()
           contents = @getSelectedText()
