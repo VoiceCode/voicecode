@@ -18,6 +18,7 @@ class DarwinController
     @historyStatusWindow = []
 
     @methodCallTimes = {}
+    @applicationLastChangedAt = Date.now()
 
     Events.once 'startupFlow:complete', =>
       unless developmentMode
@@ -48,6 +49,7 @@ class DarwinController
       error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
 
   applicationChanged: ({event, bundleId, name}) ->
+    @applicationLastChangedAt = Date.now()
     current = Actions.currentApplication()
     if current.bundleId is bundleId
       Actions.setCurrentApplication _.extend current, {name, bundleId}
@@ -167,11 +169,22 @@ class DarwinController
 
   statusWindowTextHandler: (event) ->
     return unless event.phrase?.length
+    # if we recently switched applications then sometimes the status window fires twice
+    # about 2 - 4 seconds apart, so if that's the case ignore the second one
+    if event.phrase is @_statusWindowPreviousPhrase
+      if Date.now() - @applicationLastChangedAt < 4500
+        debug 'statusWindowIgnored', event.phrase, Date.now() - @applicationLastChangedAt
+      else
+        debug 'statusWindowNotIgnored', event.phrase, Date.now() - @applicationLastChangedAt
+      return
+
+    @_statusWindowPreviousPhrase = event.phrase
+
     lastCalled = @methodCallTimes.statusWindowTextHandler
     if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 800)
       @methodCallTimes.statusWindowTextHandler = Date.now()
       phrase = event.phrase
-      debug 'statusWindowPhrase', phrase
+      debug 'statusWindowPhrase', phrase,
       normalized = @normalizePhraseComparison(phrase)
 
       oldDragon = @historyDragon.indexOf normalized

@@ -44,10 +44,6 @@ global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 require '../lib/utility/deep_extension' # _.deepExtend
 
-# what kind of sorcery is this?
-global.translationReplacement = (key) ->
-  Settings.translations[key]
-
 mb = require 'menubar'
 global.menubar = mb
   index: "file://#{projectRoot}/dist/frontend/main.html"
@@ -93,10 +89,12 @@ Events.on 'applicationShouldStart', ->
 
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
+
     global.AssetsController = require './assets_controller'
     Events.once 'settingsAssetsLoaded', startupFlow.add 'settingsAssetsLoaded'
     AssetsController.getAssets 'settings', 'settings.coffee'
     startupFlow.wait 'settingsAssetsLoaded'
+
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -171,14 +169,10 @@ Events.on 'applicationShouldStart', ->
 # needed while developing ui
 Events.once 'startupFlow:complete', -> global.startedUp = true
 
-
 # benchmarking
 Events.on 'chainDidExecute', ->
   console.timeEnd 'CHAIN'
 Events.on 'chainWillExecute', ->
   console.time 'CHAIN'
-
-
-
 
 emit 'applicationShouldStart'

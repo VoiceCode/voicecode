@@ -10,7 +10,7 @@ class AtomRemote
     @remote = new remote {server: true, port: 7777}
     @remote.on 'connect', ({id}) => @injectCode id
     @remoteCode = ''
-    Events.on 'atomRemoteCodeFileEvent',  => @injectCode()
+    Events.on 'atomRemoteCodeFileEvent', => @injectCode()
     @watch()
 
   call: ->
@@ -81,7 +81,7 @@ pack.actions
     id = Actions.currentApplication().currentSocketId
     if synchronous
       fiber = Fiber.current
-      callback = (err = null, result)->
+      callback = (err = null, result) ->
         debug arguments
         if err?
           Actions.breakChain err
@@ -250,8 +250,10 @@ pack.implement
         direction: 1
       , true
   'editor:expand-selection-to-scope': ->
-    @runAtomCommand "trigger", {selector: 'atom-workspace',
-      command: 'expand-selection:expand'}, true
+    @runAtomCommand "trigger",
+      selector: 'atom-workspace',
+      command: 'expand-selection:expand'
+    , true
 
   'editor:toggle-comments': ({first, last} = {}) ->
     if last?
