@@ -36,7 +36,7 @@
     "natural": "git+https://github.com/NaturalNode/natural.git",
     "atomic_rpc": "git+https://github.com/dimatter/atomic_rpc.git",
     "node-notifier": "^4.3.1",
-    "nodobjc": "git+https://github.com/TooTallNate/NodObjC.git",
+    "nodobjc": "git+https://github.com/TooTallNate/NodObjC.git#e4e3e2fac301fb3f5eb0bc4714850f6b7b1db29d",
     "npm": "^3.3.10",
     "nslog": "git+https://github.com/atom/node-nslog.git",
     "react-flexbox": "^3.0.0",
