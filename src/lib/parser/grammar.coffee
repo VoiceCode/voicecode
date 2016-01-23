@@ -170,7 +170,8 @@ class Grammar
       Commands.keys['numberRange'],
       Commands.keys['integerCapture'],
       Commands.keys['singleSearch'],
-      Commands.keys['custom'],
+      # TODO make a function for getting sentinel values from custom commands and add this back
+      # Commands.keys['custom'],
       Commands.keys['textCapture']
 
     results = []

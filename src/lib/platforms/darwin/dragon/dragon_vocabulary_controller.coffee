@@ -1,5 +1,8 @@
 module.exports = new class DragonVocabularyController
+  # singleton
+  instance = null
   constructor: ->
+    return instance if instance?
     instance = @
     @standard = []
     @alternate = {}
@@ -8,14 +11,17 @@ module.exports = new class DragonVocabularyController
     @dynamic = []
 
   loadCommandVocabulary: ->
-    for key, value of _.where Commands.mapping, {enabled: true}
-      @standard.push value.spoken
-      if value.rule?
-        @dynamic.push value
-      if value.repeatable
-        @repeatable.push value.spoken
-      else if value.spaceBefore
-        @spaceBefore.push value.spoken
+    for key, value of Commands.mapping
+      if value.enabled is true
+        unless value.vocabulary is false
+          if value.rule?
+            @dynamic.push key
+          else
+            @standard.push value.spoken
+          if value.repeatable
+            @repeatable.push value.spoken
+          else if value.spaceBefore
+            @spaceBefore.push value.spoken
   loadSettingsVocabulary: ->
     # from vocab list
 
@@ -33,6 +39,12 @@ module.exports = new class DragonVocabularyController
         # filter out misspellings
         unless itemName[0] is "_"
           @standard.push [prefix, itemName].join(' ')
+
+  start: ->
+    @generateVocabularies()
+    # TODO monitor other events and keep the generated files up to date
+    # Event.on '???', @generateVocabularies.bind(@)
+    return @
 
   generateVocabularies: ->
     @loadCommandVocabulary()
@@ -79,9 +91,10 @@ module.exports = new class DragonVocabularyController
     items.join("\n")
   createRepeatableContent: ->
     items = []
+    repetitions = _.keys Packages.get('repetition')?.settings()?.values
     for name in @repeatable
-      for counter, value of Settings.repetitionWords
-        items.push @buildWord [name, counter].join(' ')
+      for spoken in repetitions
+        items.push @buildWord [name, spoken].join(' ')
     items.join("\n")
   createSpaceContent: ->
     items = []
@@ -119,19 +132,21 @@ module.exports = new class DragonVocabularyController
     """
   createDynamicContent: ->
     natural = require 'natural'
-    all = _.map @dynamic, (command) ->
-      tokens = _.clone command.grammar.tokens
-      if command.grammar.includeName
+    all = _.map @dynamic, (id) ->
+      command = new Command(id)
+      grammar = command.grammar
+      tokens = _.clone grammar.tokens
+      if grammar.includeName
         tokens.unshift {text: command.spoken}
       tokens = _.map tokens, (t) ->
         if t.text?
           list = [t.text]
         else
-          if command.grammar.lists[t.list[0]]?
-            if command.grammar.lists[t.list[0]].kind is 'array'
-              list = command.grammar.lists[t.list[0]].items
+          if grammar.lists[t.list[0]]?
+            if grammar.lists[t.list[0]].kind is 'array'
+              list = grammar.lists[t.list[0]].items
             else
-              list = _.keys command.grammar.lists[t.list[0]].items
+              list = _.keys grammar.lists[t.list[0]].items
           else
             list = t.list
         list

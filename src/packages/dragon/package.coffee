@@ -45,6 +45,7 @@ pack.commands
     tags: ["recommended"]
     triggerPhrase: ''
     needsParsing: false
+    vocabulary: false
   "microphone-sleep":
     spoken: 'snore'
     description: "put dragon into sleep mode"

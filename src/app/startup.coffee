@@ -156,7 +156,7 @@ Events.on 'applicationShouldStart', ->
       when "darwin"
         _path = "../lib/platforms/darwin/dragon"
         global.DragonController = require "#{_path}/dragon_controller"
-        global.DragonVocabularyController = require "#{_path}/dragon_vocabulary_controller"
+        global.DragonVocabularyController = require("#{_path}/dragon_vocabulary_controller").start()
       # when "win32"
       # when "linux"
 

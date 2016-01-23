@@ -9,6 +9,7 @@ pack.commands
     tags: ['text', 'recommended']
     needsCommand: false
     needsParsing: false
+    vocabulary: false
     autoSpacing: 'normal normal'
     multiPhraseAutoSpacing: (input) ->
       left = 'normal'
@@ -30,6 +31,7 @@ pack.commands
     enabled: true
     needsParsing: false
     needsCommand: false
+    vocabulary: false
     action: (ms) ->
       @delay ms or 100
   'insert-command-id':
