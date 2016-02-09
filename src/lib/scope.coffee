@@ -25,14 +25,19 @@ class Scope
     @instances = {}
 
   @active: (options) ->
+    # you could pass a scope name
     if typeof options is 'string'
       @get(options)?.active(options.input)
+
+    # you could pass an object with a scope name parameter
     else if options.scope?
       scopeIsActive = @get(options.scope)?.active(options.input)
       conditionPasses = true
       if options.condition?
         conditionPasses = @checkCondition(options.condition, options.input)
       scopeIsActive and conditionPasses
+
+    # you could pass actual applications / conditions
     else
       @checkApplications(options.applications) and
       @checkCondition(options.condition, options.input)

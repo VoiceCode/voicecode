@@ -15,6 +15,7 @@ class Commands
       "numberRange"
       "individual"
       "oneArgument"
+      "commandCapture"
       "unconstrainedText"
     ]
     @keys =
@@ -24,9 +25,10 @@ class Commands
       singleSearch: []
       integerCapture: []
       numberRange: []
-      oneArgument: []
-      unconstrainedText: []
       individual: []
+      oneArgument: []
+      commandCapture: []
+      unconstrainedText: []
       # extra facets to keep track of
       repeater: []
       findable: []
@@ -274,11 +276,11 @@ class Commands
 
     if options.findable?
       @keys.findable.push name
-      @findableLookup[options.spoken] = options.findable
+      @findableLookup[options.id] = options.findable
 
     if options.repeater?
       @keys.repeater.push name
-      @repeaterLookup[options.spoken] = options.repeater
+      @repeaterLookup[options.id] = options.repeater
 
     options
 

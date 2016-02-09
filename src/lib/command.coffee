@@ -19,7 +19,7 @@ class Command
 
   @property 'grammar',
     get: ->
-      Commands.mapping[@id].grammar = new CustomGrammar(@rule, @variables)
+      Commands.mapping[@id].grammar = new CustomGrammar(@spoken, @rule, @variables)
 
   package: ->
     if @packageId?
@@ -45,7 +45,7 @@ class Command
     _.each @sortedActions(), ({action: e, info}) ->
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)
-        emit 'actionWillExecute', info
+        emit 'actionWillExecute', e, info
         e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
         return false

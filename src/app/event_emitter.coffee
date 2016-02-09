@@ -35,6 +35,7 @@ class EventEmitter extends require('events').EventEmitter
     ]
     @suppressedDebugEntries = [
       # 'deprecation'
+      'actionWillExecute'
       'enableCommand'
       'commandCreated'
       'commandEnabled'
@@ -63,6 +64,7 @@ class EventEmitter extends require('events').EventEmitter
       'commandDidExecute'
       'chainDidExecute'
       # 'commandNotFound'
+      'packageAssetEvent'
     ]
 
   frontendOn: (event, callback) ->

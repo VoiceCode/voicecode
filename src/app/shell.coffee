@@ -1,13 +1,10 @@
-Shell = require('shelljs')
+# Shell = require('shelljs')
+cp = require('child_process')
 
-Execute = (script, options = null) ->
-  options ?= {}
-  _.extend options, {silent: true}
+Execute = (script, options = {}) ->
   try
-    result = Shell.exec(script, options)
-    if result.code isnt 0
-      throw Error "Command returned #{result.code}!"
-    return result.output
+    result = cp.execSync(script, options).toString('utf8')
+    result
   catch err
     error null, null, 'CAUGHT: '
     error null, null, err

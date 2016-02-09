@@ -29,26 +29,29 @@ module.exports = (function() {
         cg$startRuleFunctions = { start: cg$parsestart },
         cg$startRuleFunction  = cg$parsestart,
 
-        cg$c0 = function(includeName, tokens) {return {includeName: includeName, tokens: tokens};},
-        cg$c1 = "<spoken>",
-        cg$c2 = { type: "literal", value: "<spoken>", description: "\"<spoken>\"" },
-        cg$c3 = function() {return true;},
-        cg$c4 = "(",
-        cg$c5 = { type: "literal", value: "(", description: "\"(\"" },
-        cg$c6 = ")",
-        cg$c7 = { type: "literal", value: ")", description: "\")\"" },
-        cg$c8 = "*",
-        cg$c9 = { type: "literal", value: "*", description: "\"*\"" },
-        cg$c10 = function(listTokens, optional) {return {name: listTokens.join('').replace(/ /g, ''), list: listTokens, optional: !!optional};},
-        cg$c11 = "/",
-        cg$c12 = { type: "literal", value: "/", description: "\"/\"" },
-        cg$c13 = function(name, separator) {return name.join(' ')},
-        cg$c14 = function(words) {return {text: words.join(' ')};},
-        cg$c15 = " ",
-        cg$c16 = { type: "literal", value: " ", description: "\" \"" },
-        cg$c17 = /^[a-z]/i,
-        cg$c18 = { type: "class", value: "[a-z]i", description: "[a-z]i" },
-        cg$c19 = function(letters) {return letters.join('');},
+        cg$c0 = function(tokens) {return {tokens: tokens};},
+        cg$c1 = "<",
+        cg$c2 = { type: "literal", value: "<", description: "\"<\"" },
+        cg$c3 = ">",
+        cg$c4 = { type: "literal", value: ">", description: "\">\"" },
+        cg$c5 = function(name) { return {kind: 'special', name: name}; },
+        cg$c6 = "(",
+        cg$c7 = { type: "literal", value: "(", description: "\"(\"" },
+        cg$c8 = ")",
+        cg$c9 = { type: "literal", value: ")", description: "\")\"" },
+        cg$c10 = "?",
+        cg$c11 = { type: "literal", value: "?", description: "\"?\"" },
+        cg$c12 = function(name, optional) {return {kind: 'list', inline: false, name: name, optional: !!optional};},
+        cg$c13 = function(first, rest, optional) {return {kind: 'list', inline: true, options: [first.join(' ')].concat(rest), optional: !!optional};},
+        cg$c14 = "/",
+        cg$c15 = { type: "literal", value: "/", description: "\"/\"" },
+        cg$c16 = function(separator, name) {return name.join(' ');},
+        cg$c17 = function(words) {return {kind: 'text', text: words.join(' ')};},
+        cg$c18 = " ",
+        cg$c19 = { type: "literal", value: " ", description: "\" \"" },
+        cg$c20 = /^[a-z]/i,
+        cg$c21 = { type: "class", value: "[a-z]i", description: "[a-z]i" },
+        cg$c22 = function(letters) {return letters.join('');},
 
         cg$currPos          = 0,
         cg$savedPos         = 0,
@@ -236,65 +239,24 @@ module.exports = (function() {
     }
 
     function cg$parsestart() {
-      var s0, s1, s2, s3;
-
-      s0 = cg$currPos;
-      s1 = cg$parseincludeName();
-      if (s1 === cg$FAILED) {
-        s1 = null;
-      }
-      if (s1 !== cg$FAILED) {
-        s2 = [];
-        s3 = cg$parsetoken();
-        if (s3 !== cg$FAILED) {
-          while (s3 !== cg$FAILED) {
-            s2.push(s3);
-            s3 = cg$parsetoken();
-          }
-        } else {
-          s2 = cg$FAILED;
-        }
-        if (s2 !== cg$FAILED) {
-          cg$savedPos = s0;
-          s1 = cg$c0(s1, s2);
-          s0 = s1;
-        } else {
-          cg$currPos = s0;
-          s0 = cg$FAILED;
-        }
-      } else {
-        cg$currPos = s0;
-        s0 = cg$FAILED;
-      }
-
-      return s0;
-    }
-
-    function cg$parseincludeName() {
       var s0, s1, s2;
 
       s0 = cg$currPos;
-      if (input.substr(cg$currPos, 8) === cg$c1) {
-        s1 = cg$c1;
-        cg$currPos += 8;
-      } else {
-        s1 = cg$FAILED;
-        if (cg$silentFails === 0) { cg$fail(cg$c2); }
-      }
-      if (s1 !== cg$FAILED) {
-        s2 = cg$parses();
-        if (s2 !== cg$FAILED) {
-          cg$savedPos = s0;
-          s1 = cg$c3();
-          s0 = s1;
-        } else {
-          cg$currPos = s0;
-          s0 = cg$FAILED;
+      s1 = [];
+      s2 = cg$parsetoken();
+      if (s2 !== cg$FAILED) {
+        while (s2 !== cg$FAILED) {
+          s1.push(s2);
+          s2 = cg$parsetoken();
         }
       } else {
-        cg$currPos = s0;
-        s0 = cg$FAILED;
+        s1 = cg$FAILED;
       }
+      if (s1 !== cg$FAILED) {
+        cg$savedPos = s0;
+        s1 = cg$c0(s1);
+      }
+      s0 = s1;
 
       return s0;
     }
@@ -302,9 +264,62 @@ module.exports = (function() {
     function cg$parsetoken() {
       var s0;
 
-      s0 = cg$parselist();
+      s0 = cg$parsespecial();
       if (s0 === cg$FAILED) {
-        s0 = cg$parsetext();
+        s0 = cg$parseinlineList();
+        if (s0 === cg$FAILED) {
+          s0 = cg$parselist();
+          if (s0 === cg$FAILED) {
+            s0 = cg$parsetext();
+          }
+        }
+      }
+
+      return s0;
+    }
+
+    function cg$parsespecial() {
+      var s0, s1, s2, s3, s4;
+
+      s0 = cg$currPos;
+      if (input.charCodeAt(cg$currPos) === 60) {
+        s1 = cg$c1;
+        cg$currPos++;
+      } else {
+        s1 = cg$FAILED;
+        if (cg$silentFails === 0) { cg$fail(cg$c2); }
+      }
+      if (s1 !== cg$FAILED) {
+        s2 = cg$parseword();
+        if (s2 !== cg$FAILED) {
+          if (input.charCodeAt(cg$currPos) === 62) {
+            s3 = cg$c3;
+            cg$currPos++;
+          } else {
+            s3 = cg$FAILED;
+            if (cg$silentFails === 0) { cg$fail(cg$c4); }
+          }
+          if (s3 !== cg$FAILED) {
+            s4 = cg$parses();
+            if (s4 !== cg$FAILED) {
+              cg$savedPos = s0;
+              s1 = cg$c5(s2);
+              s0 = s1;
+            } else {
+              cg$currPos = s0;
+              s0 = cg$FAILED;
+            }
+          } else {
+            cg$currPos = s0;
+            s0 = cg$FAILED;
+          }
+        } else {
+          cg$currPos = s0;
+          s0 = cg$FAILED;
+        }
+      } else {
+        cg$currPos = s0;
+        s0 = cg$FAILED;
       }
 
       return s0;
@@ -315,38 +330,29 @@ module.exports = (function() {
 
       s0 = cg$currPos;
       if (input.charCodeAt(cg$currPos) === 40) {
-        s1 = cg$c4;
+        s1 = cg$c6;
         cg$currPos++;
       } else {
         s1 = cg$FAILED;
-        if (cg$silentFails === 0) { cg$fail(cg$c5); }
+        if (cg$silentFails === 0) { cg$fail(cg$c7); }
       }
       if (s1 !== cg$FAILED) {
-        s2 = [];
-        s3 = cg$parselistToken();
-        if (s3 !== cg$FAILED) {
-          while (s3 !== cg$FAILED) {
-            s2.push(s3);
-            s3 = cg$parselistToken();
-          }
-        } else {
-          s2 = cg$FAILED;
-        }
+        s2 = cg$parseword();
         if (s2 !== cg$FAILED) {
           if (input.charCodeAt(cg$currPos) === 41) {
-            s3 = cg$c6;
+            s3 = cg$c8;
             cg$currPos++;
           } else {
             s3 = cg$FAILED;
-            if (cg$silentFails === 0) { cg$fail(cg$c7); }
+            if (cg$silentFails === 0) { cg$fail(cg$c9); }
           }
           if (s3 !== cg$FAILED) {
-            if (input.charCodeAt(cg$currPos) === 42) {
-              s4 = cg$c8;
+            if (input.charCodeAt(cg$currPos) === 63) {
+              s4 = cg$c10;
               cg$currPos++;
             } else {
               s4 = cg$FAILED;
-              if (cg$silentFails === 0) { cg$fail(cg$c9); }
+              if (cg$silentFails === 0) { cg$fail(cg$c11); }
             }
             if (s4 === cg$FAILED) {
               s4 = null;
@@ -355,7 +361,7 @@ module.exports = (function() {
               s5 = cg$parses();
               if (s5 !== cg$FAILED) {
                 cg$savedPos = s0;
-                s1 = cg$c10(s2, s4);
+                s1 = cg$c12(s2, s4);
                 s0 = s1;
               } else {
                 cg$currPos = s0;
@@ -381,54 +387,137 @@ module.exports = (function() {
       return s0;
     }
 
-    function cg$parselistToken() {
-      var s0, s1, s2, s3, s4, s5;
+    function cg$parseinlineList() {
+      var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = cg$currPos;
-      s1 = [];
-      s2 = cg$parseword();
-      if (s2 !== cg$FAILED) {
-        while (s2 !== cg$FAILED) {
-          s1.push(s2);
-          s2 = cg$parseword();
+      if (input.charCodeAt(cg$currPos) === 40) {
+        s1 = cg$c6;
+        cg$currPos++;
+      } else {
+        s1 = cg$FAILED;
+        if (cg$silentFails === 0) { cg$fail(cg$c7); }
+      }
+      if (s1 !== cg$FAILED) {
+        s2 = [];
+        s3 = cg$parseword();
+        if (s3 !== cg$FAILED) {
+          while (s3 !== cg$FAILED) {
+            s2.push(s3);
+            s3 = cg$parseword();
+          }
+        } else {
+          s2 = cg$FAILED;
+        }
+        if (s2 !== cg$FAILED) {
+          s3 = [];
+          s4 = cg$parseinlineListOption();
+          if (s4 !== cg$FAILED) {
+            while (s4 !== cg$FAILED) {
+              s3.push(s4);
+              s4 = cg$parseinlineListOption();
+            }
+          } else {
+            s3 = cg$FAILED;
+          }
+          if (s3 !== cg$FAILED) {
+            if (input.charCodeAt(cg$currPos) === 41) {
+              s4 = cg$c8;
+              cg$currPos++;
+            } else {
+              s4 = cg$FAILED;
+              if (cg$silentFails === 0) { cg$fail(cg$c9); }
+            }
+            if (s4 !== cg$FAILED) {
+              if (input.charCodeAt(cg$currPos) === 63) {
+                s5 = cg$c10;
+                cg$currPos++;
+              } else {
+                s5 = cg$FAILED;
+                if (cg$silentFails === 0) { cg$fail(cg$c11); }
+              }
+              if (s5 === cg$FAILED) {
+                s5 = null;
+              }
+              if (s5 !== cg$FAILED) {
+                s6 = cg$parses();
+                if (s6 !== cg$FAILED) {
+                  cg$savedPos = s0;
+                  s1 = cg$c13(s2, s3, s5);
+                  s0 = s1;
+                } else {
+                  cg$currPos = s0;
+                  s0 = cg$FAILED;
+                }
+              } else {
+                cg$currPos = s0;
+                s0 = cg$FAILED;
+              }
+            } else {
+              cg$currPos = s0;
+              s0 = cg$FAILED;
+            }
+          } else {
+            cg$currPos = s0;
+            s0 = cg$FAILED;
+          }
+        } else {
+          cg$currPos = s0;
+          s0 = cg$FAILED;
         }
       } else {
+        cg$currPos = s0;
+        s0 = cg$FAILED;
+      }
+
+      return s0;
+    }
+
+    function cg$parseinlineListOption() {
+      var s0, s1, s2, s3, s4;
+
+      s0 = cg$currPos;
+      s1 = cg$currPos;
+      s2 = cg$parses();
+      if (s2 !== cg$FAILED) {
+        if (input.charCodeAt(cg$currPos) === 47) {
+          s3 = cg$c14;
+          cg$currPos++;
+        } else {
+          s3 = cg$FAILED;
+          if (cg$silentFails === 0) { cg$fail(cg$c15); }
+        }
+        if (s3 !== cg$FAILED) {
+          s4 = cg$parses();
+          if (s4 !== cg$FAILED) {
+            s2 = [s2, s3, s4];
+            s1 = s2;
+          } else {
+            cg$currPos = s1;
+            s1 = cg$FAILED;
+          }
+        } else {
+          cg$currPos = s1;
+          s1 = cg$FAILED;
+        }
+      } else {
+        cg$currPos = s1;
         s1 = cg$FAILED;
       }
       if (s1 !== cg$FAILED) {
-        s2 = cg$currPos;
-        s3 = cg$parses();
+        s2 = [];
+        s3 = cg$parseword();
         if (s3 !== cg$FAILED) {
-          if (input.charCodeAt(cg$currPos) === 47) {
-            s4 = cg$c11;
-            cg$currPos++;
-          } else {
-            s4 = cg$FAILED;
-            if (cg$silentFails === 0) { cg$fail(cg$c12); }
-          }
-          if (s4 !== cg$FAILED) {
-            s5 = cg$parses();
-            if (s5 !== cg$FAILED) {
-              s3 = [s3, s4, s5];
-              s2 = s3;
-            } else {
-              cg$currPos = s2;
-              s2 = cg$FAILED;
-            }
-          } else {
-            cg$currPos = s2;
-            s2 = cg$FAILED;
+          while (s3 !== cg$FAILED) {
+            s2.push(s3);
+            s3 = cg$parseword();
           }
         } else {
-          cg$currPos = s2;
           s2 = cg$FAILED;
-        }
-        if (s2 === cg$FAILED) {
-          s2 = null;
         }
         if (s2 !== cg$FAILED) {
           cg$savedPos = s0;
-          s1 = cg$c13(s1, s2);
+          s1 = cg$c16(s1, s2);
           s0 = s1;
         } else {
           cg$currPos = s0;
@@ -458,7 +547,7 @@ module.exports = (function() {
       }
       if (s1 !== cg$FAILED) {
         cg$savedPos = s0;
-        s1 = cg$c14(s1);
+        s1 = cg$c17(s1);
       }
       s0 = s1;
 
@@ -470,20 +559,20 @@ module.exports = (function() {
 
       s0 = [];
       if (input.charCodeAt(cg$currPos) === 32) {
-        s1 = cg$c15;
+        s1 = cg$c18;
         cg$currPos++;
       } else {
         s1 = cg$FAILED;
-        if (cg$silentFails === 0) { cg$fail(cg$c16); }
+        if (cg$silentFails === 0) { cg$fail(cg$c19); }
       }
       while (s1 !== cg$FAILED) {
         s0.push(s1);
         if (input.charCodeAt(cg$currPos) === 32) {
-          s1 = cg$c15;
+          s1 = cg$c18;
           cg$currPos++;
         } else {
           s1 = cg$FAILED;
-          if (cg$silentFails === 0) { cg$fail(cg$c16); }
+          if (cg$silentFails === 0) { cg$fail(cg$c19); }
         }
       }
 
@@ -495,22 +584,22 @@ module.exports = (function() {
 
       s0 = cg$currPos;
       s1 = [];
-      if (cg$c17.test(input.charAt(cg$currPos))) {
+      if (cg$c20.test(input.charAt(cg$currPos))) {
         s2 = input.charAt(cg$currPos);
         cg$currPos++;
       } else {
         s2 = cg$FAILED;
-        if (cg$silentFails === 0) { cg$fail(cg$c18); }
+        if (cg$silentFails === 0) { cg$fail(cg$c21); }
       }
       if (s2 !== cg$FAILED) {
         while (s2 !== cg$FAILED) {
           s1.push(s2);
-          if (cg$c17.test(input.charAt(cg$currPos))) {
+          if (cg$c20.test(input.charAt(cg$currPos))) {
             s2 = input.charAt(cg$currPos);
             cg$currPos++;
           } else {
             s2 = cg$FAILED;
-            if (cg$silentFails === 0) { cg$fail(cg$c18); }
+            if (cg$silentFails === 0) { cg$fail(cg$c21); }
           }
         }
       } else {
@@ -520,7 +609,7 @@ module.exports = (function() {
         s2 = cg$parses();
         if (s2 !== cg$FAILED) {
           cg$savedPos = s0;
-          s1 = cg$c19(s1);
+          s1 = cg$c22(s1);
           s0 = s1;
         } else {
           cg$currPos = s0;

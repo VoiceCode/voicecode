@@ -24,7 +24,10 @@ class Chain
       probably a problem with the license code, email, or internet connection"
 
   execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
-    chain ?= @parse()
+    try
+      chain ?= @parse()
+    catch e
+      error 'chainParseError', e
 
     if shouldPreprocess
       chain = _.reduce preprocessors, (chain, {identity, callback}) ->

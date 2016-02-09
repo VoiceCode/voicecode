@@ -6,8 +6,8 @@ class EnabledCommandsManager extends require('./settings_manager')
       return instance
     else
       instance = super("generated/enabled_commands")
-      @subscribeToEvents()
       @processSettings()
+      @subscribeToEvents()
 
   processSettings: ->
     _.each @settings, (isEnabled, commandName) ->
@@ -21,11 +21,11 @@ class EnabledCommandsManager extends require('./settings_manager')
     Events.on 'commandEnabled', (success, commandName) =>
       if success
         @enable [commandName]
-        @save()
+
     Events.on 'commandDisabled', (success, commandName) =>
       if success
         @disable [commandName]
-        @save()
+
     Events.on 'commandNotFound', (commandName) =>
       delete @settings[commandName]
       @save()

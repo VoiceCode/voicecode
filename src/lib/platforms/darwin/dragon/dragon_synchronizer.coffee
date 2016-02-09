@@ -84,6 +84,7 @@ class DragonSynchronizer
     LEFT OUTER JOIN ZTRIGGER AS T ON T.Z_PK=C.Z_PK
     """
   createListItem: (name, listId) ->
+    name = name.split(' ').join('-')
     @dynamicDatabase.run "INSERT INTO ZSPECIFICTERM (Z_ENT, Z_OPT, ZNUMERICVALUE, ZGENERALTERM, ZNAME) VALUES (2, 1, 0, $listId, $name)",
       $name: name
       $listId: listId
@@ -150,6 +151,7 @@ class DragonSynchronizer
     if @error
       error 'dragonSynchronizerError', null, "Could not synchronize with Dragon Dictate database"
     else
+      @createMasterCommands()
       @deleteAllStatic()
       @deleteAllDynamic()
       @synchronizeStatic()
@@ -158,6 +160,9 @@ class DragonSynchronizer
       emit 'dragonSynchronizingEnded'
 
   createList: (name, items, bundleId = '#') ->
+    if @error
+      error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
+
     @dynamicDatabase.run "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundleId, $name, $spokenLanguage, 'Alt')",
       $name: name
       $spokenLanguage: Settings.localeSettings[Settings.locale].dragonTriggerSpokenLanguage
@@ -165,11 +170,27 @@ class DragonSynchronizer
     # get the new id
     result = @dynamicDatabase.get "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
     id = result?.Z_PK
-    if @error
-      error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
-    @insertedLists.push "#{bundleId}#{name}"
+
     for item in items
       @createListItem item, id
+
+  createMasterCommands: ->
+    # testing some things
+
+    # p = Packages.register
+    #   name: 'dragon-master'
+    #   description: 'dragon testing'
+    #
+    # p.commands
+    #   'individuals-2':
+    #     grammarType: 'custom'
+    #     rule: '(ic) (ic)?'
+    #     enabled: true
+    #     needsParsing: false
+    #     variables:
+    #       ic: ->
+    #         _.map Commands.keys.individual, (id) ->
+    #           Commands.get(id).spoken
 
   synchronizeStatic: () ->
     if @error
@@ -186,7 +207,8 @@ class DragonSynchronizer
       command = new DragonCommand(id, null)
       continue unless command.needsDragonCommand()
       @commands[id] = command
-      @lists[id] = command.dragonLists if command.dragonLists?
+      if command.rule?
+        @lists[id] = command.dragonLists()
       if Settings.dragonCommandMode is 'pure-vocab'
         continue if id isnt 'dragon:catch-all'
       # if Settings.dragonCommandMode is 'new-school'
@@ -200,7 +222,9 @@ class DragonSynchronizer
         hasChain is no
           continue
 
+        # special case
         continue if id is 'dragon:catch-all' and hasChain is no
+
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         bundleIds = command.getApplications()
@@ -210,8 +234,8 @@ class DragonSynchronizer
           continue unless Actions.checkBundleExistence(bundleId)
           needsCreating.push
             bundleId: bundleId
-            triggerPhrase: dragonName
-            body: dragonBody
+            triggerPhrase: dragonName.trim()
+            body: dragonBody.trim()
 
     debug "needs creating", needsCreating.length
     _.each needsCreating, (item) =>
@@ -221,18 +245,17 @@ class DragonSynchronizer
     if @error
       error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
       return false
-    debug @insertedLists
-    _.each @lists, (lists, commandName) =>
-      _.each lists, (occurrences, variableName) =>
-        _.each occurrences, (sublists, occurrence) =>
-          _.each sublists, (listValues, sub) =>
-            bundleIds = @commands[commandName].getApplications()
-            if _.isEmpty bundleIds
-              bundleIds = ['global']
-            _.each bundleIds, (bundleId) =>
-              return unless Actions.checkBundleExistence(bundleId)
-              bundleId = '#' if bundleId is 'global'
-              unless "#{bundleId}#{variableName}_#{occurrence}_#{sub}" in @insertedLists
-                @createList "#{variableName}_#{occurrence}_#{sub}", listValues, bundleId
+    for id, lists of @lists
+      for listName, speakableList of lists
+        bundleIds = @commands[id].getApplications()
+        if _.isEmpty bundleIds
+          bundleIds = ['global']
+        for bundleId in bundleIds
+          continue unless Actions.checkBundleExistence(bundleId)
+          bundleId = '#' if bundleId is 'global'
+          uniqueName = [bundleId, listName].join('')
+          unless uniqueName in @insertedLists
+            @createList listName, speakableList.speakableValues(), bundleId
+            @insertedLists.push uniqueName
 
 module.exports = new DragonSynchronizer

@@ -117,12 +117,12 @@ Events.on 'applicationShouldStart', ->
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
 
-    requireDirectory module, '../packages/',
-      exclude: (path) ->
-        not /.*package\.js$/.test path
-      visit: (required) ->
-        if (not _.isEmpty required) and _.isObject required
-          _.each required, (value, key) -> global[key] = value
+    # requireDirectory module, '../packages/',
+    #   exclude: (path) ->
+    #     not /.*package\.js$/.test path
+    #   visit: (required) ->
+    #     if (not _.isEmpty required) and _.isObject required
+    #       _.each required, (value, key) -> global[key] = value
     emit 'startupFlow:corePackagesLoaded'
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
@@ -156,7 +156,7 @@ Events.on 'applicationShouldStart', ->
       when "darwin"
         _path = "../lib/platforms/darwin/dragon"
         global.DragonController = require "#{_path}/dragon_controller"
-        global.DragonVocabularyController = require("#{_path}/dragon_vocabulary_controller").start()
+        require("#{_path}/dragon_vocabulary_controller").start()
       # when "win32"
       # when "linux"
 

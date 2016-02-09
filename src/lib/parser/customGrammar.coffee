@@ -2,11 +2,9 @@ customGrammarParser = require './customGrammarParser'
 SpeakableList = require './speakableList'
 
 class CustomGrammar
-  constructor: (@rule, @definitions = {}) ->
-    @parsed = customGrammarParser.parse @rule
-    @tokens = @parsed.tokens
+  constructor: (@spoken, @rule, @variables = {}) ->
+    @tokens = customGrammarParser.parse(@rule).tokens
     @handleDuplicateLists()
-    @includeName = @parsed.includeName
     @initializeSections()
 
   handleDuplicateLists: ->
@@ -29,29 +27,41 @@ class CustomGrammar
     @listNames = []
     @lists = {}
     for token in @tokens
-      if token.list
-        @listNames.push token.uniqueName
-        @lists[token.name] ?= new SpeakableList(@optionsForList(token))
+      switch token.kind
+        # when 'special'
+        # when 'text'
+        when 'list'
+          @listNames.push token.uniqueName
+          @lists[token.name] ?= new SpeakableList(@optionsForList(token))
+        when 'inlineList'
+          @listNames.push token.uniqueName
+          @lists[token.name] ?= new SpeakableList(token.options)
 
   optionsForList: (token) ->
-    if token.list.length > 1
-      token.list
-    else
-      definition = @definitions[token.name]
-      if definition?
-        if _.isFunction definition
-          definition()
-        else
-          definition
+    definition = @variables[token.name]
+    if definition?
+      if _.isFunction definition
+        definition()
       else
-        token.list
+        definition
+    else
+      [token.name]
 
   normalizeInput: (input={}) ->
     results = {}
     for name in @listNames
       spoken = input[name]
+
+      # it might be an array like ['top', '-', 'right'] => 'top right'
+      if _.isArray spoken
+        spoken = spoken.map (word) ->
+          if word is '-'
+            ' '
+          else
+            word
+        .join ' '
+
       if spoken?
-        spokenList =
         results[name] = @lists[@reverseNameLookup[name]].value(spoken)
     results
 
@@ -60,5 +70,29 @@ class CustomGrammar
     for key, value of @lists
       results[key] = value.options(kind)
     results
+
+  speakableCombinations: ->
+    result = ['']
+    for token in @tokens
+      additions = []
+      switch token.kind
+        when 'special'
+          switch token.name
+            when 'spoken'
+              additions = [@spoken]
+            # when 'text'
+              # TODO
+        when 'list', 'inlineList'
+          additions = @lists[token.name].speakableValues()
+        when 'text'
+          additions = [token.text]
+      if token.optional
+        additions.push ''
+      result = _.flatten _.map result, (existing) ->
+        _.map additions, (addition) ->
+          [existing, addition].join(' ')
+
+    _.map result, (item) ->
+      item.toLowerCase().trim().replace /\s+/, ' '
 
 module.exports = CustomGrammar

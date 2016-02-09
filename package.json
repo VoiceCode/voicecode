@@ -41,7 +41,6 @@
     "nslog": "git+https://github.com/atom/node-nslog.git",
     "react-flexbox": "^3.0.0",
     "require-directory": "^2.1.1",
-    "shelljs": "^0.3.0",
     "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git",
     "synchronize": "^0.9.14",
     "underscore.string": "^3.2.2",

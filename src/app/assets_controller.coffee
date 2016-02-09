@@ -2,6 +2,7 @@ fs = require 'fs'
 os = require 'os'
 chokidar = require 'chokidar'
 coffeeScript = require 'coffee-script'
+require 'coffee-script/register'
 
 class AssetsController
   instance = null
@@ -81,38 +82,13 @@ _.extend Settings,
       "Asset type #{type} #{event}: #{fullPath}"
       try
         code = @getJavascriptCode fullPath
-        pack = Packages.get("user:#{fileName}") or
+        global.Package = Packages.get("user:#{fileName}") or
         Packages.register
           name: "user:#{fileName}"
           description: "User code in #{fullPath}"
           tags: ['user', "#{fileName}.coffee"]
 
-        Commands = {}
-        Commands.addMisspellings = global.Commands.addMisspellings.bind global.Commands
-        Commands.changeSpoken = global.Commands.changeSpoken.bind global.Commands
-        Commands.edit = global.Commands.edit.bind global.Commands
-        Commands.create = (name, options) ->
-          if _.isObject name
-            pack.commands.call pack, name, options
-          else
-            pack.command.call pack, name, options
-        Commands.implement = (name, options) ->
-          if _.isObject name
-            pack.implement.call pack, name
-          else
-            pack.implement.call pack, {"#{name}": options}
-        Commands.before = (name, options) ->
-          if _.isObject name
-            pack.before.call pack, name
-          else
-            pack.before.call pack, {"#{name}": options}
-        Commands.after = (name, options) ->
-          if _.isObject name
-            pack.after.call pack, name
-          else
-            pack.after.call pack, {"#{name}": options}
-        __dirname = path.dirname fullPath
-        eval code
+        require fullPath
       catch err
         emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
         warning "#{type}AssetEvaluationError", {err, fullPath}, "#{fullPath}:\n#{err}"

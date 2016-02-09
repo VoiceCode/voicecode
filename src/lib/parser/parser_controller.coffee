@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+cryptojs = require 'crypto-js'
 SettingsManager = require('../../app/settings_manager')
 
 grammarDebug = true
@@ -9,7 +10,6 @@ class ParserController
   constructor: ->
     return instance if instance?
     instance = @
-    @cryptojs = require 'crypto-js'
     @fingerprintHash = null
     @fingerprint = null
     @debouncedGenerateParser = null
@@ -99,7 +99,7 @@ class ParserController
       grammar: Grammar.build()
 
   generateFingerprintHash: (fingerprint = @fingerprint)->
-    @fingerprintHash = @cryptojs.MD5(JSON.stringify(fingerprint)).toString()
+    @fingerprintHash = cryptojs.MD5(JSON.stringify(fingerprint)).toString()
 
   isInitialized: ->
     typeof @parser isnt 'undefined'

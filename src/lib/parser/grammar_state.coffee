@@ -6,7 +6,7 @@ class GrammarState
   found: (info) ->
     # return true if command should be accepted, false if rejected, and keep state for next command in chain
     command = new Command(info.c, info.a)
-    
+
     if command.continuous is false
       return false if @index > 0
 
@@ -31,6 +31,5 @@ class GrammarState
       return command.active()
 
     true
-
 
 module.exports = GrammarState

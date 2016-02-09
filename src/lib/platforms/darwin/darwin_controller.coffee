@@ -52,7 +52,8 @@ class DarwinController
     @applicationLastChangedAt = Date.now()
     current = Actions.currentApplication()
     if current.bundleId is bundleId
-      Actions.setCurrentApplication _.extend current, {name, bundleId}
+      # Actions.setCurrentApplication _.extend current, {name, bundleId}
+      return
     else
       Actions.setCurrentApplication {name, bundleId}
 
@@ -71,7 +72,6 @@ class DarwinController
 
   mouseHandler: (event) ->
     if Commands.monitoringMouseToCancelSpacing
-      log 'autoSpacing', false, "Canceling auto spacing"
       Commands.lastCommandOfPreviousPhrase = null
 
   listen: ->
@@ -91,7 +91,7 @@ class DarwinController
 
   systemEventHandler: (buffer) ->
     event = JSON.parse buffer.toString('utf8')
-    debug event
+    # debug 'systemEventHandler', event
     switch event.event
       when 'applicationChanged'
         @applicationChanged event
@@ -174,9 +174,9 @@ class DarwinController
     if event.phrase is @_statusWindowPreviousPhrase
       if Date.now() - @applicationLastChangedAt < 4500
         debug 'statusWindowIgnored', event.phrase, Date.now() - @applicationLastChangedAt
+        return
       else
         debug 'statusWindowNotIgnored', event.phrase, Date.now() - @applicationLastChangedAt
-      return
 
     @_statusWindowPreviousPhrase = event.phrase
 

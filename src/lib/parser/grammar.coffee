@@ -5,7 +5,11 @@ class Grammar
     instance = @
 
   buildCommands: (kind) ->
-    @buildCommandList Commands.Utility.sortedCommandKeys(kind)
+    result = @buildCommandList Commands.Utility.sortedCommandKeys(kind)
+    if result?.length
+      result
+    else
+      "'xxyyzz'"
 
   buildCommandList: (keys) ->
     results = _.map keys, (id) =>
@@ -31,8 +35,63 @@ class Grammar
               @unconstrainedTextCommand command
     _.compact(results).join('/\n')
 
+  buildIds: (kind) ->
+    ids = Commands.Utility.sortedCommandKeys(kind)
+    results = []
+    for id in ids
+      command = new Command id
+      if command.enabled and command.needsParsing != false
+        section = switch command.grammarType
+          when "custom"
+            @buildId command
+          when "textCapture"
+            @buildId command
+          when "singleSearch"
+            @buildId command
+          when "integerCapture"
+            @buildId command
+          when "numberRange"
+            @buildId command
+          when "individual"
+            @buildId command
+          when "oneArgument"
+            @buildId command
+          when "commandCapture"
+            @buildId command
+          when "unconstrainedText"
+            @buildId command
+        results.push section if section?
+    if results.length
+      results.join('/\n')
+    else
+      # something that should never occur (just to satisfy parser constraints)
+      '"zzyyxx"'
+
+  buildMisspellings: ->
+    results = []
+    for id, command of Commands.mapping
+      command = new Command id
+      if command.enabled and command.needsParsing != false
+        if command.misspellings?.length
+          normalized = command.spoken.replace(/\W+/g, "_")
+          alternates = _.map command.misspellings, (alt) ->
+            "\"#{alt} \""
+          alternates.push "\"#{command.spoken} \""
+          result = [
+            "__#{normalized} = (("
+            alternates.join('/')
+            "){return '#{command.id}';}"
+            ')'
+          ].join('')
+          results.push result
+    results.join('\n')
+
   translationIds: ->
-    _.map(Settings.translations, (value, key) -> "\"#{key}\"").join(" / ")
+    _.sortBy(
+      _.map Settings.translations, (value, key) ->
+        "\"#{key} \""
+    , (e) -> e
+    ).reverse().join("/\n")
 
   findableIds: ->
     @buildRecognizedNameList Commands.Utility.sortedCommandKeys('findable')
@@ -41,52 +100,48 @@ class Grammar
     @buildRecognizedNameList Commands.Utility.sortedCommandKeys('repeater')
 
   buildRecognizedNameList: (ids) ->
-    _.map ids, (id) =>
-      @buildMisspellings Commands.mapping[id], true
-    .join '/'
+    _.map _.unique(ids), (id) =>
+      @buildId Commands.mapping[id]
+    .join '/\n'
 
   buildPhonemeChain: ->
     _.map Packages.get('alphabet').settings().letters, (value, key) ->
       "'#{value}'"
     .join "/"
 
-  buildMisspellings: (command, convergent = false) ->
+  buildId: (command, returnId = true) ->
     name = command.spoken
     if command.misspellings?.length
-      alternates = _.map command.misspellings, (alt) ->
-        "'#{alt}'"
-      alternates.push "'#{name}'"
-      misspellings = _.sortBy(alternates, (e) -> e).reverse()
-      result = [
-        '('
-        misspellings.join(" / ")
-        if convergent
-          "{return '#{name}';}"
-        ')'
-      ].join('')
+      normalized = name.replace(/\W+/g, "_")
+      "__#{normalized}"
     else
-      "'#{name}'"
+      [
+        "\"#{name} \""
+        "{return '#{command.id}';}" if returnId
+      ].join('')
 
   customCommand: (command) ->
     name = command.spoken
-    first = if command.grammar.includeName
-      [@buildMisspellings(command), "ss"]
-    else
-      []
+    first = []
     second = []
     for item in command.grammar.tokens
-      if item.list?
-        if item.optional
-          first.push "_#{item.uniqueName}:(_#{item.name})?"
-        else
-          first.push "_#{item.uniqueName}:(_#{item.name})"
-        second.push "#{item.uniqueName}: _#{item.uniqueName}"
-      else if item.text?
-        if item.optional
-          first.push "('#{item.text}')?"
-        else
-          first.push "('#{item.text}')?"
-        first.push "ss"
+      switch item.kind
+        when 'list', 'inlineList'
+          if item.optional
+            first.push "_#{item.uniqueName}:(_#{item.name})?"
+          else
+            first.push "_#{item.uniqueName}:(_#{item.name})"
+          second.push "#{item.uniqueName}: _#{item.uniqueName}"
+        when 'text'
+          if item.optional
+            first.push "('#{item.text}')?"
+          else
+            first.push "('#{item.text}')?"
+          first.push "ss"
+        when 'special'
+          switch item.name
+            when 'spoken'
+              first.push @buildId(command, false)
     [
       first.join(" ")
       "{return{c:'#{command.id}',a:{#{second.join(",")}}};}"
@@ -98,98 +153,16 @@ class Grammar
   buildCustomList: (items, name) ->
     sorted = _.sortBy(items, (e) -> e).reverse()
     itemString = _.map sorted, (item) ->
-      "\"#{item}\""
-    .join " / "
-    "_#{name}=value:(#{itemString}) ss {return value;}"
-
-  textCaptureCommand: (command) ->
-    [
-      @buildMisspellings(command)
-      "ss"
-      "a:textArgument?"
-      "{return{c:'#{command.id}',a:a}}"
-    ].join ' '
-
-  singleSearchCommand: (command) ->
-    [
-      @buildMisspellings(command)
-      "ss"
-      "r:singleSearchArgument?"
-      "d:repeaterId?"
-      "{return{c:'#{command.id}',a:{value:r,distance:d}}}"
-    ].join ' '
-
-  integerCaptureCommand: (command) ->
-    # TODO parseInt on arg in normalizeOptions
-    [
-      @buildMisspellings(command)
-      "ss"
-      "a:fuzzyInteger?"
-      "{return{c:'#{command.id}',a:a}}"
-    ].join ' '
-
-  numberRangeCommand: (command) ->
-    [
-      @buildMisspellings(command)
-      "ss"
-      "a:(numberRange/fuzzyInteger)?"
-      "{return{c:'#{command.id}',a:a}}"
-    ].join ' '
-
-  individualCommand: (command) ->
-    [
-      @buildMisspellings(command)
-      "ss"
-      "{return{c:'#{command.id}'}}"
-    ].join ' '
-
-  oneArgumentCommand: (command) ->
-    [
-      @buildMisspellings(command)
-      "ss"
-      "a:(fuzzyInteger/singleTextArgument)?"
-      "{return{c:'#{command.id}',a:a}}"
-    ].join ' '
-
-  unconstrainedTextCommand: (command) ->
-    [
-      @buildMisspellings(command)
-      "ss"
-      "a:(unconstrainedText)?"
-      "{return{c:'#{command.id}',a:a}}"
-    ].join ' '
+      _.map item.split(' '), (word) ->
+        "\"#{word}\""
+      .join('sd') + "ss"
+    .join "/\n"
+    "_#{name}=value:(#{itemString}) {return value;}"
 
   singleLetterSuffix: ->
     Packages.get('alphabet').settings().singleLetterSuffix
   uppercaseLetterPrefix: ->
     Packages.get('alphabet').settings().uppercaseLetterPrefix
-
-  buildSentinels: ->
-    keys = _.union Commands.keys['individual'],
-      Commands.keys['oneArgument'],
-      Commands.keys['numberRange'],
-      Commands.keys['integerCapture'],
-      Commands.keys['singleSearch'],
-      # TODO make a function for getting sentinel values from custom commands and add this back
-      # Commands.keys['custom'],
-      Commands.keys['textCapture']
-
-    results = []
-    _.each keys, (key) ->
-      command = new Command key
-      if command.enabled and command.needsParsing != false and command.spoken?
-        conditional = command.isConditional() or command.continuous is false
-        results.push [key, command.spoken, conditional]
-        _.each command.misspellings, (word) ->
-          results.push [key, word, conditional]
-
-    _.map _.sortBy(results, (e) -> e[1]).reverse(), (e) ->
-      value = "'#{e[1]}'"
-      if e[2]
-        value + "&{return state.sen('#{e[0]}')}"
-      else
-        value
-    .join '/'
 
   build: -> """
     {
@@ -201,24 +174,57 @@ class Grammar
     start = commands:(command)*
 
     command =
-      command:customCommand & {return state.found(command)} {return command}/
-      command:textCaptureCommand & {return state.found(command)} {return command}/
-      command:singleSearchCommand & {return state.found(command)} {return command}/
-      command:integerCaptureCommand & {return state.found(command)} {return command}/
-      command:numberRangeCommand & {return state.found(command)} {return command}/
-      command:individualCommand & {return state.found(command)} {return command}/
-      command:oneArgumentCommand & {return state.found(command)} {return command}/
-      command:unconstrainedTextCommand & {return state.found(command)} {return command}/
-      command:literalCommand & {return state.found(command)} {return command}
+      c:customCommand & {return state.found(c)} {return c}/
+      c:textCaptureCommand & {return state.found(c)} {return c}/
+      c:singleSearchCommand & {return state.found(c)} {return c}/
+      c:integerCaptureCommand & {return state.found(c)} {return c}/
+      c:numberRangeCommand & {return state.found(c)} {return c}/
+      c:individualCommand & {return state.found(c)} {return c}/
+      c:oneArgumentCommand & {return state.found(c)} {return c}/
+      c:commandCaptureCommand & {return state.found(c)} {return c}/
+      c:unconstrainedTextCommand & {return state.found(c)} {return c}/
+      c:literalCommand & {return state.found(c)} {return c}
 
-    textCaptureCommand = #{@buildCommands('textCapture')}
+    #{@buildMisspellings()}
+
+    customCommandId = #{@buildIds('custom')}
     customCommand = #{@buildCommands('custom')}
-    singleSearchCommand = #{@buildCommands('singleSearch')}
-    integerCaptureCommand = #{@buildCommands('integerCapture')}
-    numberRangeCommand = #{@buildCommands('numberRange')}
-    individualCommand = #{@buildCommands('individual')}
-    oneArgumentCommand = #{@buildCommands('oneArgument')}
-    unconstrainedTextCommand = #{@buildCommands('unconstrainedText')}
+
+    textCaptureId = #{@buildIds('textCapture')}
+    textCaptureCommand = id:textCaptureId a:textArgument? {return{c:id,a:a}}
+
+    singleSearchId = #{@buildIds('singleSearch')}
+    singleSearchCommand = id:singleSearchId r:singleSearchArgument? d:repeaterId? {return{c:id,a:{value:r,distance:d}}}
+
+    integerCaptureId = #{@buildIds('integerCapture')}
+    integerCaptureCommand = id:integerCaptureId a:fuzzyInteger? {return{c:id,a:a}}
+
+    numberRangeId = #{@buildIds('numberRange')}
+    numberRangeCommand = id:numberRangeId a:(numberRange/fuzzyInteger)? {return{c:id,a:a}}
+
+    individualId = #{@buildIds('individual')}
+    individualCommand = id:individualId {return{c:id}}
+
+    oneArgumentId = #{@buildIds('oneArgument')}
+    oneArgumentCommand = id:oneArgumentId a:(fuzzyInteger/singleTextArgument)? {return{c:id,a:a}}
+
+    commandCaptureId = #{@buildIds('commandCapture')}
+    commandCaptureCommand = id:commandCaptureId a:(commandId)? {return{c:id,a:a}}
+
+    unconstrainedTextId = #{@buildIds('unconstrainedText')}
+    unconstrainedTextCommand = id:unconstrainedTextId a:(unconstrainedText)? {return{c:id,a:a}}
+
+    commandId =
+      customCommandId /
+      textCaptureId /
+      singleSearchId /
+      integerCaptureId /
+      numberRangeId /
+      individualId /
+      oneArgumentId /
+      commandCaptureId /
+      unconstrainedTextId
+
     literalCommand = a:(
       nestedText /
       translation /
@@ -230,7 +236,7 @@ class Grammar
 
     #{@customLists()}
 
-    sentinel = s:(#{@buildSentinels()}) ss
+    sentinel = id:(commandId) &{return state.sen(id)}
 
     textArgument = segments:(
       nestedText /
@@ -241,7 +247,7 @@ class Grammar
     )+ {return g.flatten(segments)}
 
     repeaterId
-      = id:(#{@repeaterIds()}) ss {return Commands.getRepeater(id);}
+      = id:(#{@repeaterIds()}) {return Commands.getRepeater(id);}
 
     singleSearchArgument = (
       findable /
@@ -252,7 +258,7 @@ class Grammar
     )
 
     findable =
-      id:(#{@findableIds()}) ss
+      id:(#{@findableIds()})
       {return Commands.getFindable(id);}
 
     singleTextArgument =
@@ -263,7 +269,7 @@ class Grammar
       symbol
 
     nestedText
-      = id:nestedTextId ss arguments:(word)+
+      = id:nestedTextId arguments:(word)+
       {return g.grammarTransform(id, (arguments));}
 
     unconstrainedText = unconstrainedWord*
@@ -271,10 +277,9 @@ class Grammar
 
     nestedTextId = "shrink" / "treemail" / "trusername" / "trassword"
 
-    translation = id:translationId {return Settings.translations[id];}
+    translation = id:translationId {return Settings.translations[id.trim()];}
 
-    translationId
-      = id:(#{@translationIds()}) ss {return id;}
+    translationId = id:(#{@translationIds()}) {return id;}
 
     s = " "*
 
@@ -337,15 +342,15 @@ class Grammar
     eighteen = "eighteen" ss {return 18;}
     nineteen = "nineteen" ss {return 19;}
 
-    dashOrSpace = ("-" / " ")+
-    twenty = "twenty" dashOrSpace {return 20;}
-    thirty = "thirty" dashOrSpace {return 30;}
-    forty = "forty" dashOrSpace {return 40;}
-    fifty = "fifty" dashOrSpace {return 50;}
-    sixty = "sixty" dashOrSpace {return 60;}
-    seventy = "seventy" dashOrSpace {return 70;}
-    eighty = "eighty" dashOrSpace {return 80;}
-    ninety = "ninety" dashOrSpace {return 90;}
+    sd = ("-" / " ")+
+    twenty = "twenty" sd {return 20;}
+    thirty = "thirty" sd {return 30;}
+    forty = "forty" sd {return 40;}
+    fifty = "fifty" sd {return 50;}
+    sixty = "sixty" sd {return 60;}
+    seventy = "seventy" sd {return 70;}
+    eighty = "eighty" sd {return 80;}
+    ninety = "ninety" sd {return 90;}
 
     hundred = "hundred" ss {return '00';}
     thousand = "thousand" ss {return '000';}

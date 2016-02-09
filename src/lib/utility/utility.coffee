@@ -1,7 +1,10 @@
 module.exports =
   sortedCommandKeys: (kind) ->
-    _.sortBy(Commands.keys[kind], (e) ->
-      Commands.get(e)?.spoken
+    keys = _.filter Commands.keys[kind], (id) ->
+      Commands.get(id)?.enabled
+
+    _.sortBy(keys, (id) ->
+      Commands.get(id)?.spoken
     ).reverse()
 
   allTags: ->

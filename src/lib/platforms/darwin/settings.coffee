@@ -242,15 +242,6 @@ _.extend Settings,
     "get hub": "github"
     "I term": "iTerm"
     "HTTPS": "https"
-  vocabularyListGenerators:
-    fox: "applications"
-    shrink: "abbreviations"
-    shell: "shellCommands"
-    dears: "directories"
-    direct: "directories"
-    windy: "windowPositions"
-    webs: "websites"
-    quinn: "codeSnippets"
   modes:
     global: "global"
     emacs: "emacs"
