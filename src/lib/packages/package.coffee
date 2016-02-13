@@ -15,7 +15,7 @@ class Package
     @setDefaultEditOptions()
 
   actions: (actions) ->
-    _.all actions, (method, name) =>
+    _.each actions, (method, name) =>
       @_actions[name] = method
       if Actions[name]?
         warning 'packageOverwritesAction', name,

@@ -110,27 +110,34 @@ class DarwinController
       null
       # phrase.toLowerCase()
 
+  findPreviousPhrase: (list, name, phrase) ->
+    _.find list, (item) ->
+      item.phrase is phrase and item[name] != true
+
   dragonHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
     debug 'dragonPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
-    oldGrowl = @historyGrowl.indexOf normalized
-    oldStatusWindow = @historyStatusWindow.indexOf normalized
+    oldGrowl = @findPreviousPhrase @historyGrowl, 'dragon', normalized
+    oldStatusWindow = @findPreviousPhrase @historyStatusWindow, 'dragon', normalized
+
     proceed = true
 
-    if oldGrowl != -1
+    if oldGrowl?
       #ignore
-      @historyGrowl.splice oldGrowl, 1
+      oldGrowl.dragon = true
       proceed = false
 
-    if oldStatusWindow != -1
+    if oldStatusWindow?
       #ignore
-      @historyStatusWindow.splice oldStatusWindow, 1
+      oldStatusWindow.dragon = true
       proceed = false
 
     if proceed
-      @historyDragon.unshift normalized
+      @historyDragon.unshift
+        phrase: normalized
+
       if slaveController.isActive()
         slaveController.process phrase
       else
@@ -143,22 +150,23 @@ class DarwinController
     debug 'growlPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
-    oldDragon = @historyDragon.indexOf normalized
-    oldStatusWindow = @historyStatusWindow.indexOf normalized
+    oldDragon = @findPreviousPhrase @historyDragon, 'growl', normalized
+    oldStatusWindow = @findPreviousPhrase @historyStatusWindow, 'growl', normalized
     proceed = true
 
-    if oldDragon != -1
+    if oldDragon?
       #ignore
-      @historyDragon.splice oldDragon, 1
+      oldDragon.growl = true
       proceed = false
 
-    if oldStatusWindow != -1
+    if oldStatusWindow?
       #ignore
-      @historyStatusWindow.splice oldStatusWindow, 1
+      oldStatusWindow.growl = true
       proceed = false
 
     if proceed
-      @historyGrowl.unshift normalized
+      @historyGrowl.unshift
+        phrase: normalized
 
       if slaveController.isActive()
         slaveController.process phrase
@@ -187,21 +195,23 @@ class DarwinController
       debug 'statusWindowPhrase', phrase,
       normalized = @normalizePhraseComparison(phrase)
 
-      oldDragon = @historyDragon.indexOf normalized
-      oldGrowl = @historyGrowl.indexOf normalized
+      oldDragon = @findPreviousPhrase @historyDragon, 'status', normalized
+      oldGrowl = @findPreviousPhrase @historyGrowl, 'status', normalized
+
       proceed = true
-      if oldDragon != -1
+      if oldDragon?
         #ignore
-        @historyDragon.splice oldDragon, 1
+        oldDragon.status = true
         proceed = false
 
-      if oldGrowl != -1
+      if oldGrowl?
         #ignore
-        @historyGrowl.splice oldGrowl, 1
+        oldGrowl.status = true
         proceed = false
 
       if proceed
-        @historyStatusWindow.unshift normalized
+        @historyStatusWindow.unshift
+          phrase: normalized
 
         if slaveController.isActive()
           slaveController.process phrase
