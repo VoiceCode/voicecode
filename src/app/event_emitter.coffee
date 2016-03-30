@@ -83,6 +83,10 @@ class EventEmitter extends require('events').EventEmitter
     @removeListener event, callback
 
   on: (event, callback) ->
+    if _.isArray event
+      _.map event, (e) =>
+        @on e, callback
+      return
     super
 
   _output: ->

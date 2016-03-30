@@ -42,7 +42,7 @@ gulp.task 'serve', [
   'move-js'
   'build-front-end-js'
 ], ->
-  electron.start ['--disable-http-cache']
+  electron.start ['--disable-http-cache', '--enable-transparent-visuals']
   gulp.watch './src/**/*.coffee', ['rebuild-coffee']
   gulp.watch 'src/frontend/**/*.less', [ 'rebuild-css' ]
   gulp.watch 'src/frontend/**/*.cjsx', [ 'rebuild-front-end-js' ]

@@ -7,6 +7,7 @@ class DarwinActions extends Actions
     @undoableKeys = [
       'v command'
     ]
+
   setCurrentApplication: (application) ->
     super
     if @inBrowser()
@@ -15,7 +16,7 @@ class DarwinActions extends Actions
       @monitorBrowserUrl(false)
 
   inBrowser: ->
-    @_currentApplication in Settings.browserApplications
+    @_currentApplication.bundleId in Settings.browserApplications
 
   monitorBrowserUrl: (monitor=true) ->
     if monitor
@@ -420,7 +421,7 @@ class DarwinActions extends Actions
   currentBrowserUrl: ({reset} = {reset: false}) ->
     if reset or !@_currentBrowserUrl?
       # refresh in bg
-      @_getCurrentBrowserUrl (code, url) =>
+      @_getCurrentBrowserUrl (url) =>
         console.log url: url
         @_currentBrowserUrl = url
       @_currentBrowserUrl

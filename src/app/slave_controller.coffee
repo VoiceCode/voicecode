@@ -74,19 +74,4 @@ class SlaveController
   clearTarget: ->
     @target = null
 
-unless Settings.slaveMode
-  invokeWith = if _.isEmpty Settings.slaves
-    'createDisabled'
-  else
-    'create'
-
-  Commands[invokeWith] 'slaveController.target',
-    spoken: "slaver"
-    grammarType: "textCapture"
-    continuous: false
-    description: "Sets slave target if a parameter is given, otherwise returns to master"
-    tags: ['voicecode']
-    action: (input) ->
-      slaveController.setTarget input
-
 module.exports = SlaveController

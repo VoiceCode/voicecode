@@ -10,13 +10,11 @@ class HistoryController
       activeChains++
       if activeChains is 1
         @startNewChain()
-
     Events.on 'chainDidExecute', =>
       activeChains--
       @history[previousContext][0] = _.compact @history[previousContext][0]
       if _.isEmpty @history[previousContext][0]
         @forgetChain 0
-
     Events.on 'commandDidExecute', ({link}) =>
       command = Commands.get link.command
       unless command.bypassHistory?(link.context)
@@ -27,6 +25,12 @@ class HistoryController
         delete arguments[0].link.context
         unless amnesia
           @history[currentContext][0].unshift _.pick link, ['command', 'arguments']
+    Events.on ['microphoneSleep', 'microphoneOff'], ->
+      windowController.get('microphoneState').show()
+    Events.on 'microphoneWakeUp', ->
+      windowController.get('microphoneState').hide()
+
+    @createWindow()
 
   forgetChain: (offset) ->
     delete @history[previousContext][offset]
@@ -68,5 +72,22 @@ class HistoryController
       return @history[@getCurrentContext()][offset].length
     catch
       return 0
+
+  createWindow: ->
+    screen = require 'screen'
+    screenSize = screen.getPrimaryDisplay().workAreaSize
+    microphoneStateWindow = windowController.new 'microphoneState',
+      x: screenSize.width - 90
+      y: screenSize.height - 90
+      width: 90
+      height: 90
+      'always-on-top': true
+      type: "notification"
+      transparent: true
+      frame: false
+      toolbar: false
+      resizable: false
+      show: false
+    microphoneStateWindow.loadUrl("file://#{projectRoot}/dist/frontend/microphone_indicator.html")
 
 module.exports = new HistoryController

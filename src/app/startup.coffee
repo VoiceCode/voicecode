@@ -32,20 +32,20 @@ global.debug = do ->
     console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
     previous = c
 
-
-global.$ = require('nodobjc')
-global.Events = require './event_emitter'
+global.app = require 'app'
+global.$ = require 'nodobjc'
 global.path = require 'path'
 global.Fiber = require 'fibers'
+global.Events = require './event_emitter'
 global.asyncblock = require 'asyncblock'
 global.requireDirectory = require 'require-directory'
 global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
+global.windowController = require '../app/window_controller'
 require '../lib/utility/deep_extension' # _.deepExtend
 
-mb = require 'menubar'
-global.menubar = mb
+global.menubar = require('menubar')
   index: "file://#{projectRoot}/dist/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
   width: 900
@@ -56,7 +56,10 @@ global.menubar = mb
   'always-on-top': true
   showDockIcon: false
 
+
 menubar.on 'ready', ->
+  windowController.set 'main', menubar.window
+  # emit 'mainWindowReady', menubar
   # menubar.showWindow()
 
 menubar.on 'after-create-window', ->
@@ -66,6 +69,9 @@ menubar.on 'after-create-window', ->
   if developmentMode
     client = client.create menubar.window
 
+app.on 'ready', ->
+  # emit 'appReady'#, app
+  emit 'applicationShouldStart'
 
 process.on 'uncaughtException', (err) ->
   console.log chalk.white.bold.bgRed('   UNCAUGHT EXCEPTION   ')
@@ -143,8 +149,7 @@ Events.on 'applicationShouldStart', ->
 
     if developmentMode
       Settings.slaveMode = true
-      Settings.chromeExtension = false
-      # Settings.dontMessWithMyDragon = true
+      Settings.dontMessWithMyDragon = true
 
 
     if Settings.slaveMode or developmentMode
@@ -174,5 +179,3 @@ Events.on 'chainDidExecute', ->
   console.timeEnd 'CHAIN'
 Events.on 'chainWillExecute', ->
   console.time 'CHAIN'
-
-emit 'applicationShouldStart'
