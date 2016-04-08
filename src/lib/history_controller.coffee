@@ -61,7 +61,7 @@ class HistoryController
     previousContext = context
 
   doMaintenance: ->
-    _.all @history, (v, k) => Array::splice.call @history[k], 10
+    _.every @history, (v, k) => Array::splice.call @history[k], 10
     # dump to disk?
 
   getCurrentContext: ->
@@ -81,13 +81,13 @@ class HistoryController
       y: screenSize.height - 90
       width: 90
       height: 90
-      'always-on-top': true
+      alwaysOnTop: true
       type: "notification"
       transparent: true
       frame: false
       toolbar: false
       resizable: false
       show: false
-    microphoneStateWindow.loadUrl("file://#{projectRoot}/dist/frontend/microphone_indicator.html")
+    microphoneStateWindow.loadURL("file://#{projectRoot}/dist/frontend/microphone_indicator.html")
 
 module.exports = new HistoryController

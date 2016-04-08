@@ -89,7 +89,7 @@ class Commands
         if command.enabled is true
           validated = false
       when 'commandSpokenChanged'
-        if _.findWhere(Commands.mapping, {spoken: options})?
+        if _.find(Commands.mapping, {spoken: options})?
           warning 'commandSpokenOverwritten', command,
           "Command #{options}`s spoken parameter overwritten by command with a same name"
 
@@ -165,7 +165,7 @@ class Commands
     command
 
   getEnabled: ->
-    _.pluck (_.where @mapping, {enabled: true}), 'id'
+    _.map (_.where @mapping, {enabled: true}), 'id'
 
   shouldEmitValidationFailed: (editType, command) ->
     if editType is 'commandEnabled'

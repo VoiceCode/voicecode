@@ -106,7 +106,7 @@ module.exports = class Actions
   fuzzyMatch: (list, term) ->
     # array
     if Object::toString.call(list) is '[object Array]'
-      if _.contains list, term
+      if _.includes list, term
         term
       else
         results = {}

@@ -17,6 +17,7 @@ class Command
   transform: ->
     Transforms[@transform]
 
+  # https://gist.github.com/dimatter/0206268704609de07119
   @property 'grammar',
     get: ->
       Commands.mapping[@id].grammar = new CustomGrammar(@spoken, @rule, @variables)
@@ -82,7 +83,7 @@ class Command
       _.size(result) * -1
 
   active: ->
-    _.any @actions, ({action: e, info}) ->
+    _.some @actions, ({action: e, info}) ->
       Scope.active info
 
   getApplications: ->

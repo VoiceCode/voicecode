@@ -39,7 +39,7 @@ module.exports =
 
   scopedCommands: (tag) ->
     _.filter(_.keys(Commands.mapping), (key) ->
-      _.contains (Commands.mapping[key].tags or []), tag
+      _.includes (Commands.mapping[key].tags or []), tag
     )
 
   scopedCommandsWithToggle: (tag, toggle) ->
@@ -57,7 +57,7 @@ module.exports =
     else
       _.filter _.keys(Commands.mapping), (key) ->
         command = Commands.mapping[key]
-        (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.contains((command.tags or []), tag))
+        (enabled is "all" or (command.enabled is enabled)) and (tag is "all" or _.includes((command.tags or []), tag))
 
   customCommandNames: ->
     Commands.keys.custom

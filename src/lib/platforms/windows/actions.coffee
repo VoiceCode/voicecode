@@ -57,7 +57,7 @@ class Platforms.windows.actions extends Actions
     delay = Settings.clipboardLatency[@currentApplication().name] or 200
     @delay delay
   canDetermineSelections: ->
-    not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
+    not _.includes(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
   verticalSelectionExpansion: (number) ->
   symmetricSelectionExpansion: (number) ->
   selectCurrentOccurrence: (input) ->

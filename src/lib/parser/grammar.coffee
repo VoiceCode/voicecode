@@ -100,7 +100,7 @@ class Grammar
     @buildRecognizedNameList Commands.Utility.sortedCommandKeys('repeater')
 
   buildRecognizedNameList: (ids) ->
-    _.map _.unique(ids), (id) =>
+    _.map _.uniq(ids), (id) =>
       @buildId Commands.mapping[id]
     .join '/\n'
 

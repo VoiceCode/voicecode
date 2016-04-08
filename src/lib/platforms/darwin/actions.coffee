@@ -41,7 +41,7 @@ class DarwinActions extends Actions
     else
       code = @keys.keyCodesShift[key]
       if code?
-        mods = _.unique((modifiers or []).concat("shift"))
+        mods = _.uniq((modifiers or []).concat("shift"))
         @_pressKey code, @_normalizeModifiers(mods)
         @delay Settings.keyDelay or 8
 
@@ -87,10 +87,10 @@ class DarwinActions extends Actions
     mask
 
   needsExplicitModifierPresses: ->
-    _.contains Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication().name
+    _.includes Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication().name
 
   contextAllowsArrowKeyTextSelection: ->
-    not _.contains(Settings.applicationsThatWillNotAllowArrowKeyTextSelection, @currentApplication().name)
+    not _.includes(Settings.applicationsThatWillNotAllowArrowKeyTextSelection, @currentApplication().name)
 
   clickDelayRequired: ->
     Settings.clickDelayRequired[@currentApplication().name] or Settings.clickDelayRequired["default"] or 0
@@ -547,7 +547,7 @@ class DarwinActions extends Actions
     @delay delay
 
   canDetermineSelections: ->
-    not _.contains(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
+    not _.includes(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
 
   verticalSelectionExpansion: (number) ->
     emit 'notUndoable'

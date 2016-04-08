@@ -35,7 +35,7 @@ class EventEmitter extends require('events').EventEmitter
     ]
     @suppressedDebugEntries = [
       # 'deprecation'
-      'actionWillExecute'
+      # 'actionWillExecute'
       'enableCommand'
       'commandCreated'
       'commandEnabled'
@@ -58,11 +58,11 @@ class EventEmitter extends require('events').EventEmitter
       'slaveModeEnableAllCommandsCommandEditsPerformed'
       # 'commandValidationFailed'
       # 'commandValidationError'
-      'chainParsed'
-      'chainPreprocessed'
-      'chainWillExecute'
-      'commandDidExecute'
-      'chainDidExecute'
+      # 'chainParsed'
+      # 'chainPreprocessed'
+      # 'chainWillExecute'
+      # 'commandDidExecute'
+      # 'chainDidExecute'
       # 'commandNotFound'
       'packageAssetEvent'
     ]
@@ -73,7 +73,7 @@ class EventEmitter extends require('events').EventEmitter
     @on event, callback
 
   frontendClearSubscriptions: ->
-    _.all @frontendSubscriptions, (callbacks, event) =>
+    _.every @frontendSubscriptions, (callbacks, event) =>
       @unsubscribe event, callbacks
     @frontendSubscriptions = {}
 
@@ -91,9 +91,8 @@ class EventEmitter extends require('events').EventEmitter
 
   _output: ->
     args = arguments
-    process.nextTick ->
-      do args[0]
-      # console.log.apply console, args
+    # process.nextTick ->
+    do args[0]
 
   error: (event) ->
     unless @debug
