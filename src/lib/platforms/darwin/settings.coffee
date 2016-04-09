@@ -20,8 +20,7 @@ w = (commaSeparatedString) ->
   commaSeparatedString.split(/, |\n/)
 
 _.extend Settings,
-  dragonVersion: 4
-  dontMessWithMyDragon: true
+  dragonProcessControl: true
   slaveMode: false
   slaveModePort: 4444
   slaves: {

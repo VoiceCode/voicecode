@@ -52,8 +52,8 @@ global.menubar = require('menubar')
   height: 800
   x: 0
   y: 0
-  'window-position': 'trayRight'
-  'always-on-top': true
+  windowPosition: 'trayRight'
+  alwaysOnTop: true
   showDockIcon: false
 
 
@@ -149,7 +149,7 @@ Events.on 'applicationShouldStart', ->
 
     if developmentMode
       Settings.slaveMode = true
-      Settings.dontMessWithMyDragon = true
+      Settings.dragonProcessControl = true
 
 
     if Settings.slaveMode or developmentMode
@@ -175,7 +175,8 @@ Events.on 'applicationShouldStart', ->
 Events.once 'startupFlow:complete', -> global.startedUp = true
 
 # benchmarking
-Events.on 'chainDidExecute', ->
-  console.timeEnd 'CHAIN'
-Events.on 'chainWillExecute', ->
-  console.time 'CHAIN'
+if developmentMode
+  Events.on 'chainDidExecute', ->
+    console.timeEnd 'CHAIN'
+  Events.on 'chainWillExecute', ->
+    console.time 'CHAIN'

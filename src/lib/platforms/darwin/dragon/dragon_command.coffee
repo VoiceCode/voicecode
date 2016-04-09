@@ -30,8 +30,8 @@ class DragonCommand extends Command
             results.push "((#{token.name}))"
         when 'text'
           if token.optional
-            # TODO make this work with multi-word segments
-            results.push "(//#{token.text}//)"
+            _.every token.text.split(' '), (token) ->
+              results.push "(//#{token}//)"
           else
             results.push token.text
         when 'special'

@@ -1,5 +1,4 @@
 path = require 'path'
-notifier = require 'node-notifier'
 class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->

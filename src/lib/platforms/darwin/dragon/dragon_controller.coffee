@@ -12,18 +12,13 @@ class DarwinDragonController
       end tell
     """
     @dragonApplicationPath = @dragonApplicationPath?.trim()
-    process.on 'exit', => @stop()
-    Events.once 'generateParserSuccess', ({parserChanged}) =>
-      @subscribeToEvents()
-      unless parserChanged
-        @start()
+    @subscribeToEvents()
 
   start: ->
-    return if Settings.dontMessWithMyDragon
+    return if Settings.dragonProcessControl
     if @dragonInstance?
       @restart()
     else
-      Execute "killall #{@dragonApplicationName}"
       @dragonInstance = @forever.start '',
         command: "#{@dragonApplicationPath}Contents/MacOS/#{@dragonApplicationName}"
         silent: true
@@ -42,18 +37,26 @@ class DarwinDragonController
         @dragonInstance.kill()
 
   stop: ->
+    return if Settings.dragonProcessControl
     return unless @dragonInstance?
     @dragonInstance.stop()
 
-  restart: ->
-    return if Settings.dontMessWithMyDragon
+  restart: (force = false) ->
+    return if Settings.dragonProcessControl
     if @dragonInstance?
       @dragonInstance.restart()
     else
-      @start()
-
+      if force
+        Execute "kill #{@dragonApplicationName}"
+        setTimeout =>
+          @start()
+        , 3000
+      else
+        start()
+        
   subscribeToEvents: ->
     Events.on 'dragonSynchronizingStarted', => @stop()
     Events.on 'dragonSynchronizingEnded', => @start()
+    process.on 'exit', => @stop()
 
 module.exports = new DarwinDragonController
