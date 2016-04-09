@@ -37,7 +37,7 @@
     "require-directory": "^2.1.1",
     "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git",
     "synchronize": "^0.9.15",
-    "underscore.string": "^3.3.4",
+    "underscore.string": "^3.3.4"
   },
   "devDependencies": {
     "babelify": "^7.2.0",
