@@ -131,14 +131,14 @@ class Commands
   createDisabled: (name, options) ->
     if typeof name is "object"
       _.each name, (value, key) =>
-        @create key, value
+        @createDisabled key, value
       return
     options.enabled ?= false
     @create name, options
 
   createDisabledWithDefaults: (defaults, options) ->
     for key, value of options
-      command = _.extenId {}, defaults, value
+      command = _.extend {}, defaults, value
       command.enabled ?= false
       @create key, command
 
@@ -165,7 +165,7 @@ class Commands
     command
 
   getEnabled: ->
-    _.map (_.where @mapping, {enabled: true}), 'id'
+    _.map (_.filter @mapping, {enabled: true}), 'id'
 
   shouldEmitValidationFailed: (editType, command) ->
     if editType is 'commandEnabled'
@@ -218,20 +218,20 @@ class Commands
   implement: (commandName, info, action) ->
     @edit commandName, 'commandImplementationAdded', {info, action},
     (command) ->
-      command.actions ?= {}
-      command.actions["#{info.packageId}"] = {info, action}
+      command.implementations ?= {}
+      command.implementations["#{info.packageId}"] = {info, action}
       command
 
   before: (commandName, info, action) ->
     @edit commandName, 'commandBeforeAdded', {info, action}, (command) ->
-      command.before ?= {}
-      command.before["#{info.packageId}"] = {info, action}
+      command.befores ?= {}
+      command.befores["#{info.packageId}"] = {info, action}
       command
 
   after: (commandName, info, action) ->
     @edit commandName, 'commandAfterAdded', {info, action}, (command) ->
-      command.after ?= {}
-      command.after["#{info.packageId}"] = {info, action}
+      command.afters ?= {}
+      command.afters["#{info.packageId}"] = {info, action}
       command
 
   addMisspellings: (name, edition) ->

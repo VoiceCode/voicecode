@@ -32,42 +32,42 @@ class Command
     context = @generateContext()
 
     Actions.executionStack.unshift true
-    unless _.isEmpty @before
-      _.each @before, ({action: e, info}) ->
+    unless _.isEmpty @befores
+      _.each @befores, ({action: e, info}) ->
         if Scope.active(_.extend {},
         info, {id, input, context}) and _.isFunction(e)
-          emit 'beforeActionWillExecute', info
+          emit 'beforeWillExecute', info
           e.call(Actions, input, context)
         Actions.executionStack[0]
 
     return unless Actions.executionStack[0]
 
-    debug 'sorted', @sortedActions()
-    _.each @sortedActions(), ({action: e, info}) ->
+    debug 'sorted implementations', @sortedImplementations()
+    _.each @sortedImplementations(), ({action: e, info}) ->
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)
-        emit 'actionWillExecute', e, info
+        emit 'implementationWillExecute', e, info
         e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
         return false
       return true
 
-    # after actions
-    unless _.isEmpty @after?
-      _.each @after, ({action: e, info}) ->
+    # after
+    unless _.isEmpty @afters?
+      _.each @afters, ({action: e, info}) ->
         if Scope.active(_.extend {},
         info, {id, input, context}) and _.isFunction(e)
-          emit 'afterActionWillExecute', info
+          emit 'afterWillExecute', info
           e.call(Actions, input, context)
         Actions.executionStack[0]
 
     Actions.executionStack.shift()
 
-  # here we are sorting the actions by specificity -
+  # here we are sorting the implementations by specificity -
   # this implementation is crude
   # but it should work for now
-  sortedActions: ->
-    _.sortBy @actions, ({action: e, info}) ->
+  sortedImplementations: ->
+    _.sortBy @implementations, ({action: e, info}) ->
       result = {}
       if info.scope?
         unless info.scope is 'global' or info.scope is 'abstract'
@@ -83,12 +83,12 @@ class Command
       _.size(result) * -1
 
   active: ->
-    _.some @actions, ({action: e, info}) ->
+    _.some @implementations, ({action: e, info}) ->
       Scope.active info
 
   getApplications: ->
     if @scope?
-      _.reduce @actions, (result, value, key) ->
+      _.reduce @implementations, (result, value, key) ->
         _.union result, Scope.applications(value.info.scope)
       , []
     else

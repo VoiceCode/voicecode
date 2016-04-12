@@ -14,6 +14,7 @@ class Packages
 
     instantiated = new Package options
     @packages[options.name] = instantiated
+    log 'packageCreated', instantiated, "Package registered: #{options.name}"
     instantiated
 
   get: (name) ->

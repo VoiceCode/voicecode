@@ -21,6 +21,7 @@ class Package
         warning 'packageOverwritesAction', name,
         "Package '#{@name}' has overwritten Actions.#{name}"
       Actions[name] = method.bind Actions
+      emit 'actionCreated', {name, package: @name}
 
   commands: ->
     if arguments[1]?
@@ -96,6 +97,7 @@ class Package
   ready: (callback) ->
     # Events.once 'userAssetsLoaded', callback.bind(@)
     Events.once 'commandEditsPerformed', callback.bind(@)
+    emit 'packageReady', @
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates

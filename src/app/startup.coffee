@@ -54,13 +54,16 @@ global.menubar = require('menubar')
   y: 0
   windowPosition: 'trayRight'
   alwaysOnTop: true
+  'always-on-top': true
   showDockIcon: false
 
 
 menubar.on 'ready', ->
+  menubar.setOption 'alwaysOnTop', true
   windowController.set 'main', menubar.window
   # emit 'mainWindowReady', menubar
-  # menubar.showWindow()
+  debug 'A MAIN WINDOW ALREADY'
+  menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   menubar.window.openDevTools()
@@ -71,10 +74,11 @@ menubar.on 'after-create-window', ->
 
 app.on 'ready', ->
   # emit 'appReady'#, app
-  emit 'applicationShouldStart'
+
 
 process.on 'uncaughtException', (err) ->
   console.log chalk.white.bold.bgRed('   UNCAUGHT EXCEPTION   ')
+  console.log err
   console.log err.stack
   process.emit 'exit'
   process.exit(1)
@@ -86,7 +90,9 @@ Events.on 'applicationShouldStart', ->
   funk (startupFlow) ->
     startupFlow.firstArgIsError = false
     global.Settings = require "../lib/platforms/#{platform}/settings"
-    Settings.userAssetsPath = '~/voicecode_user_development' # DEVELOPMENT
+    Settings.userAssetsPath = '~/voicecode_user'
+    if developmentMode
+      Settings.userAssetsPath = '~/voicecode_user_development'
     global.Packages = require '../lib/packages/packages'
     # A package for platform specific global commands
     Packages.register

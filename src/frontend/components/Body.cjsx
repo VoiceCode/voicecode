@@ -1,27 +1,13 @@
 React = require 'react'
-Command = require '../components/Command.cjsx'
-
-getFormattedCommands = ->
-  commands = remote.getGlobal('Commands').mapping
-  commands = _.map commands, (command) ->
-    command = _.pick command, [
-      'id', 'spoken', 'description', 'packageId', 'enabled'
-    ]
-    command
-  commands = _.groupBy commands, 'packageId'
+{ bindActionCreators } = require 'redux'
+{ connect } = require 'react-redux'
+PackageListPropMap = (state) ->
+  packages: state.packages
+  
+PackageList = connect(PackageListPropMap)(require '../components/PackageList.cjsx')
 
 
-module.exports = React.createClass
-  displayName: 'CommandsView'
-  updateCommands: ->
-    @setState _.extend @state, commands: getFormattedCommands()
-  componentDidMount: ->
-    # Events.on 'commandEnabled', (command) => @updateCommands()
-    # Events.on 'commandDisabled', (command) => @updateCommands()
-  getInitialState: ->
-    commands: getFormattedCommands()
-  renderCommands: (commands) ->
-    _.map commands, (c, index) =>
-      <Command key={"#{c.id}-command"} command={c} />
+module.exports = class Body extends React.Component
   render: ->
-    ''
+    console.error 'RENDERING BODY'
+    <PackageList />

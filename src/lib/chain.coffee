@@ -51,6 +51,7 @@ class Chain
 
       Commands.monitoringMouseToCancelSpacing = false
       emit 'chainWillExecute', chain
+      chainHasFailed = false
       _.each chain, (link, index) ->
         if _.isObject chainBroken
           log 'chainBroken', chain,
@@ -74,13 +75,14 @@ class Chain
           return true
         catch e
           error 'commandFailedExecute', link, e
-          error 'chainFailedExecute', {link, chain}, e
+          error 'chainFailedExecute', {link, chain}, e, e.stack
+          chainHasFailed = true
           return false
-
-      emit 'chainDidExecute', chain
-      setTimeout ->
-        Commands.monitoringMouseToCancelSpacing = true
-      , 150
+      unless chainHasFailed
+        emit 'chainDidExecute', chain
+        setTimeout -> # what is this sorcery?
+          Commands.monitoringMouseToCancelSpacing = true
+        , 150
 
   generateNestedInterpretation: ->
     results = @parse()

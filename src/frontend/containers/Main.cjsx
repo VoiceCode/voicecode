@@ -1,10 +1,15 @@
 React = require 'react'
+{ connect } = require 'react-redux'
 Header = require '../components/Header.cjsx'
 Body = require '../components/Body.cjsx'
 Footer = require '../components/Footer.cjsx'
-
-module.exports = React.createClass
-  displayName: 'Main'
+module.exports = class Main extends React.Component
+  constructor: ->
+    super
+  componentDidMount: ->
+    emit 'applicationShouldStart'
   render: ->
-    <b>hello world</b>
-    
+    console.error 'RENDERING MAIN'
+    <div>
+      <Body />
+    </div>

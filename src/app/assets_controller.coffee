@@ -61,46 +61,51 @@ _.extend Settings,
       error 'assetEventError', err, err
       error "#{type}AssetsEventError", err, err
     ).on 'ready', ->
+      emit "#{type}AssetsLoaded"
+      emit 'assetsLoaded'
 
-  getJavascriptCode: (fullPath) ->
-    directory = path.dirname fullPath
-    code = fs.readFileSync fullPath, {encoding: 'utf8'}
-    code = @compileCoffeeScript code, directory
-    code
 
-  compileCoffeeScript: (coffeeScriptsSource, directory) ->
-    compiled = coffeeScript.compile coffeeScriptsSource
-    compiled.replace /require\(["']\.\/(.*)["']\)/g,
-    (match, fileName) =>
-      @getJavascriptCode "#{directory}/#{fileName}.coffee"
-
+  # getJavascriptCode: (fullPath) ->
+  #   directory = path.dirname fullPath
+  #   code = fs.readFileSync fullPath, {encoding: 'utf8'}
+  #   code = @compileCoffeeScript code, directory
+  #   code
+  #
+  # compileCoffeeScript: (coffeeScriptsSource, directory) ->
+  #   compiled = coffeeScript.compile coffeeScriptsSource
+  #   compiled.replace /require\(["']\.\/(.*)["']\)/g,
+  #   (match, fileName) =>
+  #     @getJavascriptCode "#{directory}/#{fileName}.coffee"
+  #
   handleFile: (type, event, fullPath) ->
     if fullPath.match(/.coffee$/)?
       fileName = path.basename fullPath, '.coffee'
       emit 'assetEvent', {event, fullPath}
       log "#{type}AssetEvent", {event, fullPath},
-      "Asset type #{type} #{event}: #{fullPath}"
+      "Asset type '#{type}'#{event}: #{fullPath}"
       try
-        code = @getJavascriptCode fullPath
-        global.Package = Packages.get("user:#{fileName}") or
-        Packages.register
-          name: "user:#{fileName}"
-          description: "User code in #{fullPath}"
-          tags: ['user', "#{fileName}.coffee"]
-
+        # code = @getJavascriptCode fullPath
+        unless type is 'package'
+          global.Package = Packages.get("user:#{fileName}") or
+          Packages.register
+            name: "user:#{fileName}"
+            description: "User code in #{fullPath}"
+            tags: ['user', "#{fileName}.coffee"]
+          if event is 'changed'
+            delete require.cache[fullPath]
         require fullPath
       catch err
         emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
         warning "#{type}AssetEvaluationError", {err, fullPath}, "#{fullPath}:\n#{err}"
       emit 'assetEvaluated', {event, fullPath}
       log "#{type}AssetEvaluated", {event, fullPath},
-      "Asset type #{type} evaluated: #{fullPath}"
-      @debouncedFinish ?= _.debounce =>
-        emit "#{type}AssetsLoaded"
-        emit 'assetsLoaded'
-        @debouncedFinish = null
-      , 500
-      @debouncedFinish()
+      "Asset type '#{type}' evaluated: #{fullPath}"
+      # @debouncedFinish ?= _.debounce =>
+      #   emit "#{type}AssetsLoaded"
+      #   emit 'assetsLoaded'
+      #   @debouncedFinish = null
+      # , 500
+      # @debouncedFinish()
 
 
 module.exports = new AssetsController
