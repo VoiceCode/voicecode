@@ -1,10 +1,21 @@
 React = require 'react'
 { bindActionCreators } = require 'redux'
 { connect } = require 'react-redux'
-PackageListPropMap = (state) ->
-  packages: state.packages
-  
-PackageList = connect(PackageListPropMap)(require '../components/PackageList.cjsx')
+
+
+
+
+{ packages, commands } = require '../selectors.coffee'
+stateToProps = (state) ->
+  console.info state
+  return {
+    packages: packages state
+    commands: commands state
+  }
+
+
+
+PackageList = connect(stateToProps)(require '../components/PackageList.cjsx')
 
 
 module.exports = class Body extends React.Component

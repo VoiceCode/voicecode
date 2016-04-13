@@ -9,7 +9,7 @@ CommandList = class CommandList extends React.Component
     {
       output = []
       @props.commands.forEach (command) ->
-        output.push <Command key={ command.get('id') } command={ command } />
+        output.push <Command key={ command.id } command={ command } />
       output
     }
     </div>

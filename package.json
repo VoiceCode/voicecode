@@ -67,8 +67,10 @@
     "redux": "^3.4.0",
     "redux-actions": "^0.9.1",
     "redux-logger": "^2.6.1",
+    "redux-orm": "^0.6.0",
     "redux-thunk": "^2.0.1",
     "replify": "^1.2.0",
+    "reselect": "^2.3.0",
     "tape": "^4.5.1",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"

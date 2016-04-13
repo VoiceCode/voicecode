@@ -12,7 +12,7 @@ PackageList = class PackageList extends React.Component
     {
       output = []
       @props.packages.forEach (pack) ->
-        output.push <Package key={ pack.get('name') } package={ pack } />
+        output.push <Package key={ pack.name } package={ pack } />
       output
     }
     </div>
