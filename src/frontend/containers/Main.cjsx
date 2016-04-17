@@ -1,32 +1,22 @@
 React = require 'react'
+PackageList = require '../components/PackageList'
 { connect } = require 'react-redux'
-# { packages, commands } = require '../selectors.coffee'
-{ Header, Body, Footer } = require '../containers.coffee'
-# ducks =
-#   commands: require '../ducks/command.coffee'
-#   packages: require '../ducks/package.coffee'
-# actionCreators = _.reduce ducks, (actionCreators, duck, id) ->
-#   _.extend actionCreators, duck.actionCreators
-# , {}
-#
-# stateToProps = (state) -> {
-#     packages: packages state
-#     commands: commands state
-#   }
+{ packages, commands } = require '../selectors'
+stateToProps = (state) ->
+    packages: packages state
+    commands: commands state
 
-
+PackageList = connect(stateToProps)(PackageList)
 class Main extends React.Component
-  constructor: ->
-    super
+  @displayName: 'Main'
+  componentWillMount: ->
+    console.info 'Main props', arguments
   componentDidMount: ->
     emit 'applicationShouldStart'
   render: ->
-    console.error 'RENDERING MAIN'
-    <div>
-      <Body />
+    <div style={backgroundColor: 'orange'}>
+      <div>this is just a string</div>
+      <PackageList/>
     </div>
 
-
-
-# module.exports = connect(stateToProps, actionCreators)(Main)
 module.exports = Main

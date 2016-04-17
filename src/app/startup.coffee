@@ -1,9 +1,13 @@
+global.app = require 'app'
+
 # https://gist.github.com/dimatter/0206268704609de07119
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
 global.developmentMode = true
 testing = true
+# app.commandLine.appendSwitch('remote-debugging-port', '9222')
+
 
 global.projectRoot = require('app-root-path').path
 global.platform =
@@ -15,11 +19,11 @@ global.platform =
     when "linux"
       "linux"
 
-if developmentMode or testing
+if testing
   replify = require('replify')
   repl = require('http').createServer()
   replify 'vc', repl
-  client = require('electron-connect').client
+  electronConnect = require('electron-connect').client
 
 global._ = require 'lodash'
 global._s = require 'underscore.string'
@@ -32,7 +36,6 @@ global.debug = do ->
     console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
     previous = c
 
-global.app = require 'app'
 global.$ = require 'nodobjc'
 global.path = require 'path'
 global.Fiber = require 'fibers'
@@ -46,7 +49,7 @@ global.windowController = require '../app/window_controller'
 require '../lib/utility/deep_extension' # _.deepExtend
 
 global.menubar = require('menubar')
-  index: "file://#{projectRoot}/dist/frontend/main.html"
+  index: "file://#{projectRoot}/src/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
   width: 900
   height: 800
@@ -59,18 +62,18 @@ global.menubar = require('menubar')
 
 
 menubar.on 'ready', ->
-  menubar.setOption 'alwaysOnTop', true
-  windowController.set 'main', menubar.window
   # emit 'mainWindowReady', menubar
-  debug 'A MAIN WINDOW ALREADY'
   menubar.showWindow()
 
 menubar.on 'after-create-window', ->
+  windowController.set 'main', menubar.window
+  # menubar.window.webContents.executeJavaScript 'require("coffee-script/register")'
+  # menubar.window.webContents.executeJavaScript 'require("node-cjsx").transform()'
   menubar.window.openDevTools()
   menubar.window.on 'closed', -> return
   menubar.window.on 'reload', -> Events.frontendClearSubscriptions()
-  if developmentMode
-    client = client.create menubar.window
+  if testing
+    electronConnect = electronConnect.create menubar.window
 
 app.on 'ready', ->
   # emit 'appReady'#, app

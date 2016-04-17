@@ -1,6 +1,4 @@
 React = require 'react'
-{ bindActionCreators } = require 'redux'
-{ connect } = require 'react-redux'
 Command = require '../components/Command.cjsx'
 
 CommandList = class CommandList extends React.Component

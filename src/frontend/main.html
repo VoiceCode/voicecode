@@ -2,10 +2,22 @@
 <html>
     <head>
         <title>VoiceCode</title>
-        <link rel="stylesheet" type="text/css" href="main.css">
+        <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
     </head>
     <body>
-        <div id="mount-point"></div>
-        <script src="main.js"></script>
+        <div id="root"></div>
+        <script>
+          require("coffee-script/register")
+          require("node-cjsx").transform()
+          const electronHot = require('electron-hot-loader');
+          electronHot.install({
+            extension: '.cjsx',
+            sourceMapInline: false,
+            higherOrderFunctions: ['connect']
+          });
+          electronHot.watchJsx(['**/*.cjsx']);
+          require('./main.cjsx')
+
+        </script>
     </body>
 </html>

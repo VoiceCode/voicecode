@@ -1,22 +1,20 @@
+_ = require 'lodash'
 React = require 'react'
-{ render } = require 'react-dom'
-window._ = require 'lodash'
-window.remote = window.require 'remote'
-window.Events = {}
-_Events = remote.getGlobal 'Events'
-Events.on = _Events.frontendOn
+ReactDOM = require 'react-dom'
+remote = require 'remote'
+_events = remote.getGlobal 'Events'
 window.emit = remote.getGlobal 'emit'
+window.Events = {on: _events.frontendOn}
+
 { Provider } = require 'react-redux'
-window.nativeRequire = require
-
 { combineReducers, applyMiddleware, createStore, bindActionCreators } = require 'redux'
-thunk = require('redux-thunk').default
-logger = require('redux-logger')()
-{ schema } = require './models.coffee'
-
+thunkMiddleware = require('redux-thunk').default
+loggerMiddleware = require('redux-logger')()
+{ schema } = require './models'
+Main = require './containers/Main'
 rootReducer = combineReducers
   orm: schema.reducer()
-  whatever: (state = {}) -> state # custom reducers go here
+  whatever: (state = {}) -> state
 
 bootstrap = (schema) ->
   state = schema.getDefaultState()
@@ -28,14 +26,14 @@ bootstrap = (schema) ->
     description: 'just a test'
 
   command = Command.create
-      id: 'dummy:command'
+      id: 'bootstrap:command'
       spoken: 'dummy'
       enabled: false
       packageId: 'bootstrap:package'
   return {
     orm: state
   }
-createStoreWithMiddleware = applyMiddleware(thunk, logger)(createStore)
+createStoreWithMiddleware = applyMiddleware(thunkMiddleware, loggerMiddleware)(createStore)
 window.store = createStoreWithMiddleware(rootReducer, bootstrap(schema))
 
 ducks =
@@ -44,20 +42,18 @@ ducks =
 actionCreators = _.reduce ducks, (actionCreators, duck, id) ->
   _.extend actionCreators, duck.actionCreators
 , {}
-
+{ bindActionCreators } = require 'redux'
 store.actions = bindActionCreators actionCreators, store.dispatch
-console.error 'SHOULD BE BOOTSTRAPPED'
-Main = require './containers/Main.cjsx'
 
 subscribeToRemoteActions = ->
   Events.on 'packageCreated', store.actions.createPackage
   Events.on 'commandCreated', store.actions.createCommand
   Events.on 'enableCommand', store.actions.enableCommand
   Events.on 'disableCommand', store.actions.disableCommand
-
-renderMain = ->
-  render <Provider store={ window.store }><Main /></Provider>, document.getElementById 'mount-point'
-
-
 subscribeToRemoteActions()
-renderMain()
+
+ReactDOM.render(
+  <Provider store={ store }>
+    <Main/>
+  </Provider>
+, document.getElementById('root'))

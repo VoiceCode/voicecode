@@ -1,8 +1,6 @@
 fs = require 'fs'
 os = require 'os'
 chokidar = require 'chokidar'
-coffeeScript = require 'coffee-script'
-require 'coffee-script/register'
 
 class AssetsController
   instance = null

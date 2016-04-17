@@ -19,7 +19,7 @@ Command = class Command extends React.Component
     console.log 'RENDERING', this
     <div>
       <input type="checkbox" onClick={ @onClick } />
-      <h1>id: { @props.command.id}</h1>
+      <h4 style={background: 'yellow'}>id: { @props.command.id}</h4>
       <p>spoken: { @props.command.spoken }</p>
       <p>enabled: { @props.command.enabled.toString() }</p>
     </div>

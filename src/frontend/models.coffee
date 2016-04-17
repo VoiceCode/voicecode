@@ -1,4 +1,4 @@
-{Model, Schema, fk, many, oneToOne} = nativeRequire 'redux-orm'
+{Model, Schema, fk, many, oneToOne} = require 'redux-orm'
 { CREATE_COMMAND, ENABLE_COMMAND, DISABLE_COMMAND } = require './ducks/command.coffee'
 { CREATE_PACKAGE } = require './ducks/package.coffee'
 #FML, extending babel/browserify/ES6 classes and CoffeeScript doesn't work

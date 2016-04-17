@@ -5,108 +5,30 @@
 # mv build/Release/fibers.node bin/darwin-x64-v8-4.9/
 
 gulp = require('gulp')
-# https://github.com/gulpjs/gulp/blob/master/docs/recipes/fast-browserify-builds-with-watchify.md
-# watchify = require('watchify')
-browserify = require('browserify')
-babelify = require('babelify')
-source = require('vinyl-source-stream')
-coffee = require 'gulp-coffee'
-reactify = require 'coffee-reactify'
 electron = require('electron-connect').server.create()
-atom = require 'gulp-atom'
 less = require 'gulp-less'
 path = require('path')
-install = require 'gulp-install'
 exec = require 'gulp-exec'
-clean = require 'gulp-rimraf'
 
-gulp.task 'install', ->
-  gulp.src('./package.json')
-    .pipe(gulp.dest('./build'))
-    .pipe(install({production: true}))
 
-gulp.task 'build', ['install'], ->
-  atom
-    srcPath : './dist'
-    releasePath : './build'
-    cachePath : './cache'
-    version : 'v0.34.2'
-    rebuild : true,
-    platforms : ['darwin-x64']
-
-gulp.task 'serve', [
-  'kill-electron'
-  'build-html'
-  'build-css'
-  'build-coffee'
-  'move-js'
-  'build-front-end-js'
-], ->
+gulp.task 'serve', [], ->
   electron.start ['--disable-http-cache', '--enable-transparent-visuals']
-  gulp.watch './src/**/*.coffee', ['rebuild-coffee']
-  gulp.watch 'src/frontend/**/*.less', [ 'rebuild-css' ]
-  gulp.watch 'src/frontend/**/*.cjsx', [ 'rebuild-front-end-js' ]
-  gulp.watch 'src/frontend/**/*.html', [ 'rebuild-html' ]
-
-gulp.task 'kill-electron', ->
-  exec 'killall -9 Electron'
-  return
-  # gulp.src('dist/**/*', {read: false})
-  #   .pipe(clean(force: true))
+  gulp.watch './src/**/*.coffee', ['electron-restart']
+  gulp.watch 'src/frontend/**/*.less', [ 'electron-reload' ]
+  # gulp.watch 'src/frontend/**/*.cjsx', [ 'electron-reload' ]
+  gulp.watch 'src/frontend/**/*.html', [ 'electron-restart' ]
 
 
 gulp.task 'electron-rebuild', ->
   exec './node_modules/.bin/electron-rebuild -v 0.34.2 -n 48'
   return
 
-gulp.task 'rebuild-html', [ 'build-html' ], ->
+gulp.task 'electron-reload', ->
   electron.reload()
   return
 
-gulp.task 'rebuild-css', [ 'build-css' ], ->
-  electron.reload()
-  return
-
-gulp.task 'rebuild-front-end-js', [ 'build-front-end-js' ], ->
-  electron.reload()
-  return
-
-gulp.task 'rebuild-coffee', ['build-coffee', 'kill-electron'], ->
+gulp.task 'electron-restart', ->
   electron.restart ['--disable-http-cache']
-
-gulp.task 'build-package', ->
-  exec 'npm install'
-
-gulp.task 'build-coffee', ->
-  gulp.src './src/**/*.coffee'
-    .pipe coffee()
-    .pipe gulp.dest('./dist')
-
-
-gulp.task 'move-js', ->
-  gulp.src './src/!(frontend)/**/*.js'
-  .pipe gulp.dest('dist/')
-  gulp.src './src/!(frontend)/**/package.json'
-  .pipe gulp.dest('dist/')
-
-gulp.task 'build-front-end-js', ->
-  browserify(
-    entries : ['./src/frontend/main.cjsx']
-    transform : [reactify]
-    debug: true)
-    .transform(babelify)
-    .bundle()
-    .pipe(source('main.js'))
-    .pipe gulp.dest('dist/frontend/')
-
-gulp.task 'build-html', ->
-  gulp.src('src/frontend/**/*.html')
-  .pipe gulp.dest('dist/frontend/')
-
-gulp.task 'build-css', ->
-  gulp.src('src/frontend/styles/*.less')
-  .pipe(less())
-  .pipe gulp.dest('dist/frontend/')
 
 electron.on 'appClosed', ->
   electron.stop ->
