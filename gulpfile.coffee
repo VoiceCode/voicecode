@@ -6,7 +6,6 @@
 
 gulp = require('gulp')
 electron = require('electron-connect').server.create()
-less = require 'gulp-less'
 path = require('path')
 exec = require 'gulp-exec'
 
