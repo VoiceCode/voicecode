@@ -77,7 +77,7 @@ _.extend Settings,
   #
   handleFile: (type, event, fullPath) ->
     if fullPath.match(/.coffee$/)?
-      fileName = path.basename fullPath, '.coffee'
+      fileName = path.basename fullPath, '.coffee' # TODO: handle .js
       emit 'assetEvent', {event, fullPath}
       log "#{type}AssetEvent", {event, fullPath},
       "Asset type '#{type}'#{event}: #{fullPath}"
@@ -87,7 +87,7 @@ _.extend Settings,
           global.Package = Packages.get("user:#{fileName}") or
           Packages.register
             name: "user:#{fileName}"
-            description: "User code in #{fullPath}"
+            description: "User code in #{fileName}.coffee"
             tags: ['user', "#{fileName}.coffee"]
           if event is 'changed'
             delete require.cache[fullPath]

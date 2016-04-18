@@ -61,6 +61,7 @@
     "gulp-rimraf": "^0.2.0",
     "gulp-util": "^3.0.7",
     "gutil": "^1.6.4",
+    "material-ui": "^0.14.4",
     "react": "^15.0.1",
     "react-addons-pure-render-mixin": "^15.0.1",
     "react-dom": "^15.0.1",

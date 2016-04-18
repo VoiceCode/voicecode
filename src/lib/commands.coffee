@@ -216,7 +216,7 @@ class Commands
     Commands.extend is deprecated. Use Commands.before"
 
   implement: (commandName, info, action) ->
-    @edit commandName, 'commandImplementationAdded', {info, action},
+    @edit commandName, 'implementationCreated', {info, action},
     (command) ->
       command.implementations ?= {}
       command.implementations["#{info.packageId}"] = {info, action}

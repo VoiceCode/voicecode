@@ -1,4 +1,4 @@
-{ schema } = require './models.coffee'
+{ schema } = require './models'
 { createSelector } = require 'reselect'
 
 exports.ormSelector = ormSelector = (state) -> state.orm

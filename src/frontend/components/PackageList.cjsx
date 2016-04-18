@@ -1,17 +1,15 @@
 React = require 'react'
 Package = require '../components/Package'
-
+{Paper} = require 'material-ui'
 class PackageList extends React.Component
   render: ->
-    console.error 'RENDERING PACKAGE LIST'
-    <div>
-    <h1>the this even work?</h1>
+    <Paper>
     {
       output = []
       @props.packages.forEach (pack) ->
         output.push <Package key={ pack.name } package={ pack } />
       output
     }
-    </div>
+    </Paper>
 
 module.exports = PackageList

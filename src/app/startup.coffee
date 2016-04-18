@@ -51,8 +51,8 @@ require '../lib/utility/deep_extension' # _.deepExtend
 global.menubar = require('menubar')
   index: "file://#{projectRoot}/src/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
-  width: 900
-  height: 800
+  width: 854
+  height: 666
   x: 0
   y: 0
   windowPosition: 'trayRight'
