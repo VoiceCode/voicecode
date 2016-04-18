@@ -1,7 +1,13 @@
 React = require 'react'
 {ListItem, Toggle} = require 'material-ui'
-Command = class Command extends React.Component
+{ connect } = require 'react-redux'
+{enableCommand, disableCommand} = require('../ducks/command').actionCreators
+mapDispatchToProps = {
+  enableCommand, disableCommand
+}
+class Command extends React.Component
   render: ->
+    {testicle, enableCommand} = @props
     {id, spoken, enabled, packageId} = @props.command
     <ListItem
       primaryText={ spoken }
@@ -9,8 +15,9 @@ Command = class Command extends React.Component
       leftCheckbox={
         <Toggle
           defaultToggled={ enabled }
+          onToggle={ enableCommand }
         /> }
       >
     </ListItem>
 
-module.exports = Command
+module.exports = connect(null, mapDispatchToProps)(Command)

@@ -4,7 +4,7 @@ immutable = require 'immutable'
 {Card, CardText, CardHeader, FlatButton, Avatar} = require 'material-ui'
 Package = class Package extends React.Component
   render: ->
-    {name, description} = @props.package
+    {name, description} = @props
     <Card>
       <CardHeader
         title={ name }
@@ -13,9 +13,8 @@ Package = class Package extends React.Component
         actAsExpander={ true }
         showExpandableButton={ true }
       />
-
       <CardText expandable={ true } initiallyExpanded={ false }>
-        <CommandList commands={ @props.package.commands } />
+        <CommandList commands={ @props.commands } />
       </CardText>
     </Card>
 
