@@ -14,5 +14,8 @@ exports.actionCreators =
 exports.reducer = (implementations, {type, payload}, Implementation, session) =>
   switch type
     when @CREATE_IMPLEMENTATION
-      console.log 'create implementation'
+      packageId = _.difference payload.implementations, _.keys implementations
+      packageId = packageId.pop()
+      implementation = {packageId, commandId: payload.commandId}
+      Implementation.create implementation
   Implementation.getNextState()

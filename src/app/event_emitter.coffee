@@ -41,15 +41,33 @@ class EventEmitter extends require('events').EventEmitter
       # 'packageAssetEvent'
     ]
     @suppressedDebugEntries = []
+
   frontendOn: (event, callback) ->
+    # this is needed because only enumerable properties are accessible
+    # via remote module i.e every object needs to be flattened
+    switch event
+      when 'implementationCreated'
+        _callback = ->
+          implementations = _.keys arguments[0].implementations
+          commandId = arguments[0].id
+          callback.call null, {implementations, commandId}
     @frontendSubscriptions[event] ?= []
-    @frontendSubscriptions[event].push callback
-    @on event, callback
+    @frontendSubscriptions[event].push _callback or callback
+    @on event, (_callback or callback)
+
 
   frontendClearSubscriptions: ->
     _.every @frontendSubscriptions, (callbacks, event) =>
       @unsubscribe event, callbacks
     @frontendSubscriptions = {}
+
+  # frontendEmit: (event) ->
+  #   debug arguments
+  #   debug @frontendSubscriptions
+  #   @emit.apply @, arguments
+  #   return unless @frontendSubscriptions[event]?
+  #   _.every @frontendSubscriptions[event], (callback) =>
+  #     callback.apply @, arguments[1...]
 
   unsubscribe: (event, callback) ->
     if _.isArray callback

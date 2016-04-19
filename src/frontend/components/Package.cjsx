@@ -1,21 +1,20 @@
 React = require 'react'
 CommandList = require './CommandList.cjsx'
-immutable = require 'immutable'
-{Card, CardText, CardHeader, FlatButton, Avatar} = require 'material-ui'
 Package = class Package extends React.Component
   render: ->
     {name, description} = @props
-    <Card>
-      <CardHeader
-        title={ name }
-        subtitle={ description }
-        avatar={ <Avatar>{name[0].toUpperCase()}</Avatar> }
-        actAsExpander={ true }
-        showExpandableButton={ true }
-      />
-      <CardText expandable={ true } initiallyExpanded={ false }>
-        <CommandList commands={ @props.commands } />
-      </CardText>
-    </Card>
+    <div className="item">
+      <div className="content">
+        <div className="header">{ name }</div>
+        <div className="meta">
+          <span>{ description }</span>
+        </div>
+        <div className="description">
+          <CommandList commands={ @props.commands } />
+        </div>
+        <div className="extra">
+        </div>
+      </div>
+    </div>
 
 module.exports = Package

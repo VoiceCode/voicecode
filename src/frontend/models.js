@@ -26,7 +26,7 @@ Implementation.reducer = reducers.implementation
 Implementation.modelName = 'Implementation'
 Implementation.fields = {
   packageId: fk('Package', 'implementations'),
-  commandId: fk('Command', 'commands')
+  commandId: fk('Command', 'implementations')
 }
 
 

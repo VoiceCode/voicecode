@@ -7,6 +7,13 @@ class Main extends React.Component
   componentDidMount: ->
     emit 'applicationShouldStart'
   render: ->
-    <PackageList/>
+    <div>
+      <div className="ui inverted menu">
+          <a className="active item">
+            Packages
+          </a>
+      </div>
+      <PackageList/>
+    </div>
 
 module.exports = Main
