@@ -9,13 +9,18 @@ window.Events = {on: _events.frontendOn}
 Main = require './containers/Main'
 window.store = require './store'
 
-subscribeToRemoteActions = ->
-  Events.on 'packageCreated', store.actions.createPackage
-  Events.on 'commandCreated', store.actions.createCommand
-  Events.on 'commandEnabled', store.actions.enableCommand
-  Events.on 'commandDisabled', store.actions.disableCommand
-  Events.on 'implementationCreated', store.actions.createImplementation
-subscribeToRemoteActions()
+subscribeToRemoteEvents = ->
+  events = {
+    'packageCreated': 'createPackage'
+    'commandCreated': 'createCommand'
+    'commandEnabled': 'enableCommand'
+    'commandDisabled': 'disableCommand'
+    # 'implementationCreated'
+  }
+  _.every events, (handler, event) ->
+    Events.on event, _.partial _.invoke, store, "actions.#{handler}"
+
+subscribeToRemoteEvents()
 
 ReactDOM.render(
   <Provider store={ store }>

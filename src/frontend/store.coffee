@@ -1,34 +1,24 @@
-{ combineReducers, applyMiddleware, createStore, bindActionCreators } = require 'redux'
+{ applyMiddleware, createStore, bindActionCreators } = require 'redux'
 thunkMiddleware = require('redux-thunk').default
 loggerMiddleware = require('redux-logger')()
 requireDirectory = require 'require-directory'
-
-{ schema } = require './models'
-rootReducer = combineReducers
-  orm: schema.reducer()
-  whatever: (state = {}) -> state
-
-bootstrap = (schema) ->
-  state = schema.getDefaultState()
-  session = schema.withMutations state
-  {Package, Command} = session
-
-  pack = Package.create
-    name: 'bootstrap:package'
-    description: 'just a test'
-
-  command = Command.create
-      id: 'bootstrap:command'
-      spoken: 'dummy'
-      enabled: false
-      packageId: 'bootstrap:package'
-  return {
-    orm: state
-  }
-createStoreWithMiddleware = applyMiddleware(thunkMiddleware, loggerMiddleware)(createStore)
-store = createStoreWithMiddleware(rootReducer, bootstrap(schema))
+{combineReducers} = require 'redux-immutable'
+immutable = require 'immutable'
 
 ducks = requireDirectory module, './ducks/'
+reducers = _.reduce ducks, (reducers, duck, id) ->
+  _.extend reducers, (duck.reducers or {})
+, {}
+
+initialState = immutable.Map {}
+rootReducer = combineReducers reducers
+
+createStoreWithMiddleware = applyMiddleware(
+  thunkMiddleware, loggerMiddleware
+  )(createStore)
+
+store = createStoreWithMiddleware(rootReducer, initialState)
+
 actionCreators = _.reduce ducks, (actionCreators, duck, id) ->
   _.extend actionCreators, duck.actionCreators
 , {}

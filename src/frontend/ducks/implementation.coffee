@@ -11,11 +11,13 @@ _.extend exports, constants
 exports.actionCreators =
   createImplementation: createAction(@CREATE_IMPLEMENTATION)
 
-exports.reducer = (implementations, {type, payload}, Implementation, session) =>
-  switch type
-    when @CREATE_IMPLEMENTATION
-      packageId = _.difference payload.implementations, _.keys implementations
-      packageId = packageId.pop()
-      implementation = {packageId, commandId: payload.commandId}
-      Implementation.create implementation
-  Implementation.getNextState()
+exports.reducers =
+  implementations: (implementations = immutable.Map({}), {type, payload}) =>
+    switch type
+      when @CREATE_IMPLEMENTATION
+        packageId = _.difference payload.implementations, _.keys implementations
+        packageId = packageId.pop()
+        implementation = {packageId, commandId: payload.commandId}
+        Implementation.create implementation
+      else
+        implementations

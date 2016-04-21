@@ -1,18 +1,22 @@
 React = require 'react'
 { connect } = require 'react-redux'
 {toggleCommand} = require('../ducks/command').actionCreators
-PureRenderMixin = require('react-addons-pure-render-mixin')
+{commandSelector} = require '../selectors'
+
+mapStateToProps = (state, props) ->
+  command: commandSelector state, props
 
 mapDispatchToProps = {
   toggleCommand
 }
 class Command extends React.Component
-  mixins: [PureRenderMixin]
+  shouldComponentUpdate: (nextProps, nextState) ->
+    @props.command isnt nextProps.command
 
   render: ->
-    {testicle, toggleCommand} = @props
-    {id, spoken, enabled, packageId, implementations} = @props
-    console.warn "RENDERING COMMAND: #{id}"
+    {toggleCommand} = @props
+    {id, spoken, enabled, packageId, implementations} = @props.command.toJS()
+    console.warn "rendering command: #{id}"
     <div className="item">
       <div className="ui fitted checkbox">
         <input
@@ -26,11 +30,8 @@ class Command extends React.Component
       <div className="content">
         <div className="header">{ spoken }</div>
         <div className="meta">{ id }</div>
-        {
-          _.map implementations, (imp) ->
-            <a className="ui mini gray label" key={ imp.id }>{ imp.packageId }</a>
-        }
+        <a className="ui mini gray label"> hello</a>
       </div>
     </div>
 
-module.exports = connect(null, mapDispatchToProps)(Command)
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Command)

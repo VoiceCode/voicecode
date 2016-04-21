@@ -21,13 +21,24 @@ actionCreators.toggleCommand = (id, enabled) ->
       emit 'disableCommand', id
 
 exports.actionCreators = actionCreators
-exports.reducer = (commands, {type, payload}, Command, session) =>
-  switch (type)
-    when @CREATE_COMMAND
-      command = _.pick(payload, ['id', 'spoken', 'enabled', 'packageId', 'description'])
-      Command.create(command)
-    when @ENABLE_COMMAND
-      Command.withId(payload.id).set('enabled', true)
-    when @DISABLE_COMMAND
-      Command.withId(payload.id).set('enabled', false)
-  Command.getNextState()
+
+commandRecord = immutable.Record
+  id: 'unknown'
+  spoken: 'inaudible'
+  enabled: false
+  packageId: 'os'
+  description: 'no description'
+
+exports.reducers =
+  commands: (commands = immutable.Map({}), {type, payload}) =>
+    switch (type)
+      when @CREATE_COMMAND
+        command = new commandRecord payload
+        commands.set payload.id, command
+
+      when @ENABLE_COMMAND
+        commands.setIn [payload.id, 'enabled'], true
+      when @DISABLE_COMMAND
+        commands.setIn [payload.id, 'enabled'], false
+      else
+        commands

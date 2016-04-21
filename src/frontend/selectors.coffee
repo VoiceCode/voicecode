@@ -1,21 +1,20 @@
-{ schema } = require './models'
 { createSelector } = require 'reselect'
 
-exports.ormSelector = ormSelector = (state) -> state.orm
+_packagesSelector = (state, props) ->
+  state.get 'packages'
+packagesSelector = createSelector [_packagesSelector], (packages) ->
+  packages.sortBy (pack) -> pack.get 'name'
+
+commandsSelector = (state, props) -> state.get 'commands'
+commandSelector = (state, props) ->
+  commandsSelector(state).get props.commandId
+
+commandsForPackage = (state, props) ->
+  state.get('package_commands').get props.packageId
 
 
-exports.commands = createSelector ormSelector, schema.createSelector (orm) ->
-  orm.Command.all().map (Command) ->
-    result = _.assign {}, Command.ref
-    result.implementations = Command.implementations.toRefArray()
-    result
-
-exports.packages = createSelector ormSelector, schema.createSelector (orm) ->
-  orm.Package.all().map (Package) ->
-    result = _.assign {}, Package.ref
-    result.commands = Package.commands.map (Command) ->
-      command = _.assign {}, Command.ref
-      command.implementations = Command.implementations.withRefs.all().map (imp) ->
-        imp.packageId
-      command
-    result
+_.extend exports, {
+  packagesSelector
+  commandsForPackage
+  commandSelector
+}
