@@ -1,11 +1,11 @@
 React = require 'react'
 { connect } = require 'react-redux'
 {toggleCommand} = require('../ducks/command').actionCreators
-{commandSelector} = require '../selectors'
-
+{commandSelector, implementationsForCommand} = require '../selectors'
+classNames = require 'classnames'
 mapStateToProps = (state, props) ->
   command: commandSelector state, props
-
+  implementations: implementationsForCommand state, props
 mapDispatchToProps = {
   toggleCommand
 }
@@ -14,23 +14,39 @@ class Command extends React.Component
     @props.command isnt nextProps.command
 
   render: ->
-    {toggleCommand} = @props
-    {id, spoken, enabled, packageId, implementations} = @props.command.toJS()
+    {toggleCommand, implementations} = @props
+    {id, spoken, enabled, packageId, description, locked} = @props.command.toJS()
     console.warn "rendering command: #{id}"
+    iconClasses = classNames
+      'large middle aligned icon': true
+      'toggle on': enabled
+      'toggle off': !enabled
+      'grey': locked
     <div className="item">
-      <div className="ui fitted checkbox">
-        <input
-        type="checkbox"
-        checked={ enabled }
-        onChange={ (event) ->
-          toggleCommand id, event.target.checked }/>
-        <label></label>
-      </div>
-
+      <i className={iconClasses}
+         onClick={
+           if not locked
+             (event) ->
+               toggleCommand id, !enabled
+           }
+      ></i>
       <div className="content">
-        <div className="header">{ spoken }</div>
+        <div className="header">
+        {
+          if id is spoken
+              <i className='tiny grey mute icon'></i>
+        }
+        { spoken }
+        </div>
+
         <div className="meta">{ id }</div>
-        <a className="ui mini gray label"> hello</a>
+        <div className='content'>{ description }</div>
+        <div className='extra'>
+          {
+            implementations.map (imp) ->
+              <a className="ui mini gray label">{ imp }</a>
+          }
+        </div>
       </div>
     </div>
 

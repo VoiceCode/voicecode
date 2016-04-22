@@ -3,7 +3,8 @@ class Chain
   constructor: (@phrase = null) ->
 
   @preprocess: (identity, callback) ->
-    preprocessors = _.reject preprocessors, _.matchesProperty 'identity.name', identity.name
+    preprocessors = _.reject preprocessors
+    , _.matchesProperty 'identity.name', identity.name
     preprocessors.push {identity, callback}
 
   parse: ->
@@ -58,7 +59,6 @@ class Chain
           "#{chain[index-1].command} broke the chain: #{chainBroken.reason}"
           return false
 
-        # TODO we might want to track this index count locally so we can decouple history controller into a package?
         chainLinkIndex = HistoryController.getChainLength()
         link.context ?= {}
         _.extend link.context,

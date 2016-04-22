@@ -63,16 +63,18 @@ global.menubar = require('menubar')
 
 menubar.on 'ready', ->
   # emit 'mainWindowReady', menubar
+  # Events.on 'mainReady', -> emit 'applicationShouldStart'
   menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   windowController.set 'main', menubar.window
   # menubar.window.webContents.executeJavaScript 'require("coffee-script/register")'
   # menubar.window.webContents.executeJavaScript 'require("node-cjsx").transform()'
-  menubar.window.openDevTools()
-  menubar.window.on 'closed', -> return
-  menubar.window.on 'reload', -> Events.frontendClearSubscriptions()
-  if testing
+  menubar.window.on 'closed', -> debug 'window closed, what to do?'
+  if developmentMode
+    menubar.window.on 'reload', ->
+      Events.frontendClearSubscriptions()
+    # menubar.window.openDevTools()
     electronConnect = electronConnect.create menubar.window
 
 app.on 'ready', ->

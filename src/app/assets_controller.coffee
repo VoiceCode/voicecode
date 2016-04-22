@@ -89,8 +89,8 @@ _.extend Settings,
             name: "user:#{fileName}"
             description: "User code in #{fileName}.coffee"
             tags: ['user', "#{fileName}.coffee"]
-          if event is 'changed'
-            delete require.cache[fullPath]
+        if event is 'changed'
+          delete require.cache[fullPath]
         require fullPath
       catch err
         emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"

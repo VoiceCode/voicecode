@@ -39,7 +39,7 @@ class Grammar
     ids = Commands.Utility.sortedCommandKeys(kind)
     results = []
     for id in ids
-      command = new Command id
+      command = Commands.mapping[id]
       if command.enabled and command.needsParsing != false
         section = switch command.grammarType
           when "custom"
@@ -70,7 +70,6 @@ class Grammar
   buildMisspellings: ->
     results = []
     for id, command of Commands.mapping
-      command = new Command id
       if command.enabled and command.needsParsing != false
         if command.misspellings?.length
           normalized = command.spoken.replace(/\W+/g, "_")

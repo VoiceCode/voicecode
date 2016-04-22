@@ -13,7 +13,8 @@ class EventEmitter extends require('events').EventEmitter
       'enableCommand'
       'commandCreated'
       'commandEnabled'
-      # 'commandImplementationAdded'
+      'windowCreated'
+      'commandImplementationAdded'
       # 'commandOverwritten'
       'commandAfterAdded'
       'commandBeforeAdded'
@@ -57,7 +58,7 @@ class EventEmitter extends require('events').EventEmitter
 
 
   frontendClearSubscriptions: ->
-    _.every @frontendSubscriptions, (callbacks, event) =>
+    _.each @frontendSubscriptions, (callbacks, event) =>
       @unsubscribe event, callbacks
     @frontendSubscriptions = {}
 
@@ -66,12 +67,12 @@ class EventEmitter extends require('events').EventEmitter
   #   debug @frontendSubscriptions
   #   @emit.apply @, arguments
   #   return unless @frontendSubscriptions[event]?
-  #   _.every @frontendSubscriptions[event], (callback) =>
+  #   _.each @frontendSubscriptions[event], (callback) =>
   #     callback.apply @, arguments[1...]
 
   unsubscribe: (event, callback) ->
     if _.isArray callback
-      _.every callback, (c) => @unsubscribe event, c
+      _.each callback, (c) => @unsubscribe event, c
     @removeListener event, callback
 
   on: (event, callback) ->

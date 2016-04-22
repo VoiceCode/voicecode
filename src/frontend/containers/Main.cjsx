@@ -5,7 +5,7 @@ class Main extends React.Component
   componentWillMount: ->
     console.info 'Main props', arguments
   componentDidMount: ->
-    emit 'applicationShouldStart'
+    # emit 'applicationShouldStart'
   render: ->
     <div>
       <div className="ui inverted menu">

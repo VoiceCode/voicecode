@@ -8,16 +8,25 @@ constants =
 _.extend @, constants
 _.extend exports, constants
 
-exports.actionCreators =
+actionCreators =
   createImplementation: createAction(@CREATE_IMPLEMENTATION)
 
-exports.reducers =
-  implementations: (implementations = immutable.Map({}), {type, payload}) =>
-    switch type
-      when @CREATE_IMPLEMENTATION
-        packageId = _.difference payload.implementations, _.keys implementations
-        packageId = packageId.pop()
-        implementation = {packageId, commandId: payload.commandId}
-        Implementation.create implementation
-      else
-        implementations
+# thunk
+actionCreators.implementationCreated = ({commandId, implementations}) ->
+  (dispatch, getState) ->
+    state = getState()
+    current = state.get('command_implementations').get(commandId).toJS()
+    added = _.difference implementations, current
+    added = added.pop()
+    if added?
+      dispatch actionCreators.createImplementation
+        packageId: added
+        commandId: commandId
+
+exports.actionCreators = actionCreators
+
+# exports.reducers =
+#   implementations: (implementations = immutable.Map({}), {type, payload}) =>
+#     switch type
+#       else
+#         implementations

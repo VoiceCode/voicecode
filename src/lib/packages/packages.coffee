@@ -11,6 +11,8 @@ class Packages
     # instantiate the package, add it to our internal list of packages
     # I'm sure we will think of more things to be done here
     return false unless @validatePackage options
+    if @packages[options.name]?
+      return @packages[options.name]
 
     instantiated = new Package options
     @packages[options.name] = instantiated
@@ -27,11 +29,15 @@ class Packages
 
   validatePackage: (options) ->
     invalid = unless options.name?.length
-      "[name] is required"
+      "Package [name] is required"
     else unless options.description?.length
-      "[description] is required"
-    else if @packages[options.name]?
-      "package with name [#{options.name}] is already taken"
+      "Package [description] is required"
+
+    warning = if @packages[options.name]?
+      "Package with name [#{options.name}] is already registered"
+
+    if warning?
+      warning 'packageValidationWarning', options, warning
 
     if invalid?
       error 'packageValidationError', options, invalid

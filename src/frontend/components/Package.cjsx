@@ -10,17 +10,18 @@ Package = class Package extends React.Component
   render: ->
     {name, description} = @props.pack.toJS()
     console.info "rendering package: #{name}"
-    <div className="item">
-      <div className="content">
-        <div className="header">{ name }</div>
-        <div className="meta">
-          <span>{ description }</span>
+    <div className=''>
+      <div className="ui top attached huge block header">
+        <i className="cube icon"></i>
+        <div className='content'>
+          { name }
+          <div className="sub header">
+          { description }
+          </div>
         </div>
-        <div className="description">
-          <CommandList packageId={ name } />
-        </div>
-        <div className="extra">
-        </div>
+      </div>
+      <div className="ui attached segment">
+        <CommandList packageId={ name } />
       </div>
     </div>
 

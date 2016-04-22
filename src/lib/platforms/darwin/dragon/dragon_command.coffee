@@ -30,7 +30,7 @@ class DragonCommand extends Command
             results.push "((#{token.name}))"
         when 'text'
           if token.optional
-            _.every token.text.split(' '), (token) ->
+            _.each token.text.split(' '), (token) ->
               results.push "(//#{token}//)"
           else
             results.push token.text

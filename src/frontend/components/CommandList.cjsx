@@ -12,11 +12,21 @@ CommandList = class CommandList extends React.Component
 
   render: ->
     console.info "rendering command list: #{@props.packageId}"
-    <div className="ui relaxed divided list">
-    {
-      @props.commands.map (command, index) ->
-        <Command key={ index } commandId={ command } />
-    }
+    {commands} = @props
+    <div className="ui segment">
+      <div className="ui top left attached label">
+        { commands.size }
+        { if commands.size is 1 then ' command' else ' commands' }
+      </div>
+      { if commands.size
+          <div className="ui relaxed divided list">
+          {
+            commands.map (command, index) ->
+              <Command key={ index } commandId={ command } />
+          }
+          </div>
+      }
     </div>
+
 
 module.exports = connect(makeMapStateToProps)(CommandList)

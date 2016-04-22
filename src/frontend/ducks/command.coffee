@@ -1,5 +1,6 @@
-{ createAction } = require 'redux-actions'
 immutable = require 'immutable'
+{createAction} = require 'redux-actions'
+{CREATE_IMPLEMENTATION} = require './implementation'
 constants =
   ENABLE_COMMAND: 'ENABLE_COMMAND'
   DISABLE_COMMAND: 'DISABLE_COMMAND'
@@ -13,6 +14,7 @@ actionCreators =
   enableCommand: createAction(@ENABLE_COMMAND)
   disableCommand: createAction(@DISABLE_COMMAND)
 
+# thunk
 actionCreators.toggleCommand = (id, enabled) ->
   (dispatch, getState) ->
     if enabled
@@ -23,11 +25,12 @@ actionCreators.toggleCommand = (id, enabled) ->
 exports.actionCreators = actionCreators
 
 commandRecord = immutable.Record
-  id: 'unknown'
+  id: 'how did you manage to do this?'
   spoken: 'inaudible'
   enabled: false
   packageId: 'os'
   description: 'no description'
+  locked: false
 
 exports.reducers =
   commands: (commands = immutable.Map({}), {type, payload}) =>
@@ -42,3 +45,12 @@ exports.reducers =
         commands.setIn [payload.id, 'enabled'], false
       else
         commands
+  command_implementations: (ci = immutable.Map({}), {type, payload}) =>
+    switch type
+      when @CREATE_COMMAND
+        ci.set payload.id, immutable.List []
+      when CREATE_IMPLEMENTATION
+        ci.updateIn [payload.commandId]
+        , (list) -> list.push payload.packageId
+      else
+        ci

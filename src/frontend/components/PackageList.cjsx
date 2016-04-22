@@ -14,7 +14,7 @@ class PackageList extends React.Component
   render: ->
     console.info "rendering package list"
     {packages} = @props
-    <div className="ui items">
+    <div className="">
     {
       packages.map (pack, index) ->
         <Package key={ index } pack={ pack } />

@@ -18,25 +18,7 @@ module.exports = class Actions
   undoByDeleting: ->
     # TODO: implement
 
-  breakChain: (reason = 'Unknown reason...') ->
-    emit 'breakChain', reason
-  # run another command
-  do: (name, input=null, context={}) ->
-    command = new Command(name, input, context).execute()
 
-  delay: (ms) ->
-    fiber = Fiber.current
-    setTimeout (->
-      fiber.run()
-      return
-    ), ms
-    Fiber.yield()
-
-    # sleep = require 'sleep'
-    # sleep.usleep(ms * 1000)
-
-  repeat: (times, callback) ->
-    _.times times, callback
 
   _normalizeModifiers: (modifiers) ->
     if modifiers?.length
@@ -70,18 +52,6 @@ module.exports = class Actions
       @click()
       @_dwellClickOnce = false
 
-  setGlobalMode: (mode) ->
-    Commands.mode = mode
-
-  getGlobalMode: ->
-    Commands.mode
-
-  storeItem: (namespace, itemName, item) ->
-    @storage[namespace] ?= {}
-    @storage[namespace][itemName] = item
-
-  getStoredItem: (namespace, itemName) ->
-    @storage[namespace]?[itemName]
 
   normalizeTextArray: (textArray) ->
     results = []

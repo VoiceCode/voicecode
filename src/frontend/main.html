@@ -8,26 +8,28 @@
         <div id="root"></div>
     </body>
     <script>
-      var headID = document.getElementsByTagName('head')[0];
-      var link = document.createElement('link');
-      link.type = 'text/css';
-      link.rel = 'stylesheet';
-      link.href = require.resolve('semantic-ui-css/semantic.min.css');
-      headID.appendChild(link);
+      this.init = function(){
+        var headID = document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.href = require.resolve('semantic-ui-css/semantic.min.css');
+        headID.appendChild(link);
 
-      window.classNames = require('classnames');
+        require("coffee-react/register")
+        require('react-tap-event-plugin')()
+        if (developmentMode) {
+          const electronHot = require('electron-hot-loader');
+          electronHot.install({
+            extension: '.cjsx',
+            sourceMapInline: false,
+            higherOrderFunctions: ['connect']
+          });
+          electronHot.watchJsx(['**/*.cjsx']);
+          electronHot.watchCss(['**/*.css']);
+        }
+        require('./main.cjsx')
 
-      require("coffee-react/register")
-      require('react-tap-event-plugin')()
-      const electronHot = require('electron-hot-loader');
-      electronHot.install({
-        extension: '.cjsx',
-        sourceMapInline: false,
-        higherOrderFunctions: ['connect']
-      });
-      electronHot.watchJsx(['**/*.cjsx']);
-      // electronHot.watchCss(['**/*.css']);
-      const main = require('./main.cjsx')
-
+      }
     </script>
 </html>

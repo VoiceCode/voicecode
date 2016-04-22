@@ -61,7 +61,7 @@ class HistoryController
     previousContext = context
 
   doMaintenance: ->
-    _.every @history, (v, k) => Array::splice.call @history[k], 10
+    _.each @history, (v, k) => Array::splice.call @history[k], 10
     # dump to disk?
 
   getCurrentContext: ->

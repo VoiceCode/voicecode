@@ -22,6 +22,7 @@ class Package
         "Package '#{@name}' has overwritten Actions.#{name}"
       Actions[name] = method.bind Actions
       emit 'actionCreated', {name, package: @name}
+      true
 
   commands: ->
     if arguments[1]?

@@ -4,6 +4,11 @@ class Command
     _.extend @, Commands.get name
     @normalizeInput()
 
+    # always fall back to a string
+    # this does not take auto spacing into account
+    @implementations = _.assign @implementations
+    , Commands.mapping['core:literal'].implementations
+
   normalizeInput: ->
     if @rule?
       @input = @grammar.normalizeInput(@input)
@@ -42,8 +47,9 @@ class Command
 
     return unless Actions.executionStack[0]
 
-    debug 'sorted implementations', @sortedImplementations()
-    _.each @sortedImplementations(), ({action: e, info}) ->
+    sorted = @sortedImplementations()
+    debug 'sorted implementations', sorted
+    _.each sorted,  ({action: e, info}) ->
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)
         emit 'implementationWillExecute', e, info
@@ -66,8 +72,9 @@ class Command
   # here we are sorting the implementations by specificity -
   # this implementation is crude
   # but it should work for now
+  # also, caching?
   sortedImplementations: ->
-    _.sortBy @implementations, ({action: e, info}) ->
+    @sorted or @sorted = _.sortBy @implementations, ({action: e, info}) ->
       result = {}
       if info.scope?
         unless info.scope is 'global' or info.scope is 'abstract'

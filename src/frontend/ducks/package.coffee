@@ -30,8 +30,9 @@ exports.reducers =
   package_commands: (package_commands = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
-        package_commands.set payload.name, immutable.Set []
+        package_commands.set payload.name, immutable.List []
       when CREATE_COMMAND
-        package_commands.mergeIn [payload.packageId], [payload.id]
+        package_commands.updateIn [payload.packageId]
+        , (list) -> list.push payload.id
       else
         package_commands
