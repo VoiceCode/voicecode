@@ -4,11 +4,6 @@ class Command
     _.extend @, Commands.get name
     @normalizeInput()
 
-    # always fall back to a string
-    # this does not take auto spacing into account
-    @implementations = _.assign @implementations
-    , Commands.mapping['core:literal'].implementations
-
   normalizeInput: ->
     if @rule?
       @input = @grammar.normalizeInput(@input)
@@ -48,7 +43,11 @@ class Command
     return unless Actions.executionStack[0]
 
     sorted = @sortedImplementations()
-    debug 'sorted implementations', sorted
+    # always fall back to a string
+    # this does not take auto spacing into account
+    sorted = _.union @sorted
+    , _.toArray Commands.mapping['core:literal'].implementations
+
     _.each sorted,  ({action: e, info}) ->
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)

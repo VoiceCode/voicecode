@@ -12,6 +12,7 @@ Execute = (script, options = {}) ->
     error null, null, script
 
 Applescript = (content, shouldReturn = true) ->
+  debug content
   script = $.NSAppleScript('alloc')('initWithSource', $(content))
   results = script('executeAndReturnError', null)
   returnValue = if shouldReturn and _.isFunction(results)

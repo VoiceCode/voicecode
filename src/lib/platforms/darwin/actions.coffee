@@ -27,64 +27,7 @@ class DarwinActions extends Actions
       clearInterval @_monitorBrowserUrlInterval
       delete @_monitorBrowserUrlInterval
 
-  resolveSuperModifier: ->
-    "command"
 
-  ___key: (key, modifiers) ->
-    key = key.toString().toLowerCase()
-
-    emit 'notUndoable'
-    code = @keys.keyCodes[key]
-    if code?
-      @_pressKey(code, @_normalizeModifiers(modifiers))
-      @delay Settings.keyDelay or 8
-    else
-      code = @keys.keyCodesShift[key]
-      if code?
-        mods = _.uniq((modifiers or []).concat("shift"))
-        @_pressKey code, @_normalizeModifiers(mods)
-        @delay Settings.keyDelay or 8
-
-
-  keyDown: (key, modifiers) ->
-    code = @keys.keyCodes[key.toLowerCase()]
-    if code?
-      @_keyDown code, @_normalizeModifiers(modifiers)
-  keyUp: (key, modifiers) ->
-    code = @keys.keyCodes[key.toLowerCase()]
-    if code?
-      @_keyUp code, @_normalizeModifiers(modifiers)
-
-  _keyDown: (keyCode, modifiers) ->
-    e = $.CGEventCreateKeyboardEvent(null, keyCode, true)
-    if modifiers?.length
-      $.CGEventSetFlags(e, @_modifierMask(modifiers))
-    else
-      $.CGEventSetFlags(e, 0)
-    $.CGEventPost($.kCGSessionEventTap, e)
-
-  _keyUp: (keyCode, modifiers) ->
-    e = $.CGEventCreateKeyboardEvent(null, keyCode, false)
-    if modifiers
-      $.CGEventSetFlags(e, @_modifierMask(modifiers))
-    else
-      $.CGEventSetFlags(e, 0)
-    $.CGEventPost($.kCGSessionEventTap, e)
-
-  _modifierMask: (modifiers) ->
-    mask = 0
-    for m in modifiers
-      bits = switch m
-        when "shift"
-          $.kCGEventFlagMaskShift
-        when "command"
-          $.kCGEventFlagMaskCommand
-        when "option"
-          $.kCGEventFlagMaskAlternate
-        when "control"
-          $.kCGEventFlagMaskControl
-      mask = mask | bits
-    mask
 
   needsExplicitModifierPresses: ->
     _.includes Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication().name
@@ -94,22 +37,6 @@ class DarwinActions extends Actions
 
   clickDelayRequired: ->
     Settings.clickDelayRequired[@currentApplication().name] or Settings.clickDelayRequired["default"] or 0
-
-  _pressKey: (key, modifiers) ->
-    if modifiers? and @needsExplicitModifierPresses()
-      for m in modifiers
-        @_keyDown @keys.keyCodes[m], [m]
-        @delay Settings.modifierKeyDelay or 2
-
-    @_keyDown key, modifiers
-    @_keyUp key #, modifiers
-
-    if modifiers? and @needsExplicitModifierPresses()
-      # get a copy of the modifiers so we can reverse it
-      mods = modifiers.slice().reverse()
-      for m in mods
-        @_keyUp @keys.keyCodes[m] #, [m]
-        @delay Settings.modifierKeyDelay or 2
 
   getMousePosition: ->
     $.CGEventGetLocation($.CGEventCreate(null))

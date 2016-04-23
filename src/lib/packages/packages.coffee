@@ -37,7 +37,7 @@ class Packages
       "Package with name [#{options.name}] is already registered"
 
     if warning?
-      warning 'packageValidationWarning', options, warning
+      Events.warning 'packageValidationWarning', options, warning
 
     if invalid?
       error 'packageValidationError', options, invalid

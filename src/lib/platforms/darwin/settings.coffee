@@ -11,7 +11,7 @@ Settings.extend = (key, map) ->
   # check if we are extending an object
   else if typeof map is "object"
     Settings[key] ?= {}
-    _.deepExtend Settings[key], map
+    _.marge Settings[key], map
 
 Settings.value = (listName, value) ->
   Settings[listName][value] or Settings[listName]["_#{value}"]

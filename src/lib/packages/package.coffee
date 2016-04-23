@@ -3,6 +3,7 @@ class Package
     # these are key for keeping track of this package's changes
     @_commands = {}
     @_actions = {}
+    @_apis = {}
     @_before = {}
     @_after = {}
     @_implementations = {}
@@ -14,14 +15,17 @@ class Package
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
 
-  actions: (actions) ->
+  api: (actions) ->
+    @actions actions, 'api'
+
+  actions: (actions, type = 'action') ->
     _.each actions, (method, name) =>
-      @_actions[name] = method
+      @["_#{type}s"][name] = method
       if Actions[name]?
         warning 'packageOverwritesAction', name,
         "Package '#{@name}' has overwritten Actions.#{name}"
       Actions[name] = method.bind Actions
-      emit 'actionCreated', {name, package: @name}
+      emit "#{type}Created", {name, package: @name}
       true
 
   commands: ->
@@ -34,6 +38,8 @@ class Package
 
     _.extend @_commands, commands
     _.each commands, (options, id) =>
+      if _.isFunction options
+        options = {action: options}
       @command id, _.defaultsDeep(options, defaults)
 
   command: (id, options) ->
@@ -88,7 +94,7 @@ class Package
 
   settings: (options) ->
     if options?
-      _.deepExtend @_settings, options
+      _.merge @_settings, options
     else
       @_settings
 

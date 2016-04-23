@@ -16,7 +16,6 @@ class Chain
         delete parsedCommand.c
         delete parsedCommand.a
         parsedCommand
-      debug parsed
       @applyMouseLatency parsed
       log 'chainParsed', parsed, JSON.stringify parsed
       parsed
