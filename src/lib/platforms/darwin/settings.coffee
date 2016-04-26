@@ -20,21 +20,8 @@ w = (commaSeparatedString) ->
   commaSeparatedString.split(/, |\n/)
 
 _.extend Settings,
-  dragonProcessControl: true
-  slaveMode: false
-  slaveModePort: 4444
-  slaves: {
-  # "name": ["host", "port"]
-  }
-  userAssetsPath: '~/voicecode_user'
-  # determine if auto spacing should be enabled (called within the default actions context, so you can check @currentApplication or any other context)
-  autoSpacingEnabled: ->
-    true
-  defaultBrowser: 'Safari'
-  defaultTerminal: 'Terminal'
-  terminalApplications: []
-  editorApplications: []
-  browserApplications: []
+
+
   websites:
     "amazon": "http://www.amazon.com"
     "google docs": "http://docs.google.com"
@@ -45,37 +32,8 @@ _.extend Settings,
     "voicecode wiki": "https://github.com/VoiceCode/docs/wiki"
     "voicecode github": "https://github.com/stratogee/voicecode"
     "voicecode": "http://voicecode.io"
-  applications:
-    "app store": "App Store"
-    activity: "Activity Monitor"
-    atom: "Atom"
-    _adam: "Atom" # an alias - it's not what we want to train dragon to hear, but if it hears it, still trigger this item.
-    automate: "Automator"
-    calendar: "Calendar"
-    chrome: "Google Chrome"
-    finder: "Finder"
-    firefox: "Firefox"
-    illustrator: "Adobe Illustrator"
-    logic: "Logic Pro X"
-    mail: "Mail"
-    message: "Messages"
-    pages: "Pages"
-    parallels: "Parallels Desktop"
-    password: "1Password"
-    preview: "Preview"
-    quicktime: "QuickTime Player"
-    safari: "Safari"
-    photoshop: "Adobe Photoshop"
-    simulator: "iOS Simulator"
-    skype: "Skype"
-    smartnav: "SmartNav"
-    sublime: "Sublime Text"
-    system: "System Preferences"
-    term: "iTerm"
-    tree: "SourceTree"
-    tune: "iTunes"
-    web: "Google Chrome"
-    xcode: "Xcode"
+
+
   abbreviations:
     "inc.": "inc"
     administrator: "admin"
@@ -203,21 +161,8 @@ _.extend Settings,
   # this can be changed. tab, return, escape, etc
   codeSnippetCompletions:
     "Sublime Text": "tab"
-  phoneNumbers: {}
-  directories:
-    home: "~"
-    applications: "/Applications"
-    users: "/Users"
-    desktop: "~/Desktop"
-    documents: "~/Documents"
-    music: "~/Music"
-    downloads: "~/Downloads"
-  passwords:
-    example: "password"
-  emails:
-    example: "email@example.com"
-  usernames:
-    example: "username1"
+
+
   translations:
     "january": "January"
     "february": "February"
@@ -241,12 +186,7 @@ _.extend Settings,
     "get hub": "github"
     "I term": "iTerm"
     "HTTPS": "https"
-  modes:
-    global: "global"
-    emacs: "emacs"
-    mate: "textmate"
-  workflows:
-    "workflow test": "yellsnik it worked clamor"
+
   shellCommands:
     permissions: "chmod "
     access: "chmod "
@@ -264,39 +204,8 @@ _.extend Settings,
     list: "ls "
     "list all": "ls -al"
     ls: "ls "
-  menuItemAliases:
-    review: "view"
-  systemPreferences:
-    universal: "com.apple.preference.universalaccess"
-    "app store": "com.apple.preferences.appstore"
-    bluetooth: "com.apple.preferences.Bluetooth"
-    "date time": "com.apple.preference.datetime"
-    desktop: "com.apple.preference.desktopscreeneffect"
-    speech: "com.apple.preference.speech"
-    display: "com.apple.preference.displays"
-    dock: "com.apple.preference.dock"
-    energy: "com.apple.preference.energysaver"
-    extensions: "com.apple.preferences.extensions"
-    general: "com.apple.preference.general"
-    icloud: "com.apple.preferences.icloud"
-    "internet accounts": "com.apple.preferences.internetaccounts"
-    keyboard: "com.apple.preference.keyboard"
-    localization: "com.apple.Localization"
-    expose: "com.apple.preference.expose"
-    mouse: "com.apple.preference.mouse"
-    network: "com.apple.preference.network"
-    notifications: "com.apple.preference.notifications"
-    "parental controls": "com.apple.preferences.parentalcontrols"
-    print: "com.apple.preference.printfax"
-    security: "com.apple.preference.security"
-    sharing: "com.apple.preferences.sharing"
-    sound: "com.apple.preference.sound"
-    audio: "com.apple.preference.sound"
-    spotlight: "com.apple.preference.spotlight"
-    "startup disk": "com.apple.preference.startupdisk"
-    backup: "com.apple.prefs.backup"
-    trackpad: "com.apple.preference.trackpad"
-    users: "com.apple.preferences.users"
+
+
   windowPositions:
     # units <= 1 are proportions
     # units > 1 are absolute
@@ -367,39 +276,7 @@ _.extend Settings,
     seven: 7
     eight: 8
     nine: 9
-  applicationsThatCanNotHandleBlankSelections: [
-    "AppCode"
-    "Atom"
-    "Google Chrome"
-    "IntelliJ IDEA"
-    "iTerm"
-    "Parallels Desktop"
-    "PhpStorm"
-    "PyCharm"
-    "RubyMine"
-    "Sublime Text"
-    "Terminal"
-    "WebStorm"
-    "DrRacket"
-    "Firefox"
-    "Citrix Viewer"
-  ]
-  applicationsThatNeedExplicitModifierPresses: [
-    "Parallels Desktop"
-    "Parallels Access"
-    "iOS Simulator"
-    "Anki"
-  ]
-  applicationsThatWillNotAllowArrowKeyTextSelection: [
-    "Terminal"
-    "iTerm"
-  ]
-  modifierKeyDelay: 2 # ms
-  keyDelay: 8 # ms delay between each key when called individually, like Return, UpArrow, etc.
-  characterDelay: 4 # ms delay between each letter when typing a string of characters
-  applicationsThatNeedLaunchingWithApplescript: [
-    "Atom"
-  ]
+
   clickDelayRequired:
     "Sublime Text": 0
     "Xcode": 100
@@ -407,174 +284,16 @@ _.extend Settings,
   mouseTracking: false
   debugMouseTracking: false
   mouseTrackingFrequency: 100 #ms (I don't recommend changing this)
-  locale: "en"
-  localeSettings:
-    en:
-      dragonOsLanguage: "en_GB"
-      dragonCommandSpokenLanguage: "en_US"
-      dragonTriggerSpokenLanguage: "en_US"
-    de:
-      dragonOsLanguage: "de_DE"
-      dragonCommandSpokenLanguage: "en_US"
-      dragonTriggerSpokenLanguage: "en_US"
 
-  # regex's for selection commands
-  regex:
-    symbols: /[\/\.,\?*&^%$#@:;\|\+\-\!\\]/
-    quotes: /["'`]/
-    parens: /[\(\)\{\}\[\]]/
+  #
+  # # regex's for selection commands
+  # regex:
+  #   symbols: /[\/\.,\?*&^%$#@:;\|\+\-\!\\]/
+  #   quotes: /["'`]/
+  #   parens: /[\(\)\{\}\[\]]/
 
-  # delay for how long the clipboard takes to populate after a copy operation is different in different applications
-  clipboardLatency:
-    "Sublime Text": 300
-    "Mail": 200
-
-  # For JetBrains IDEs and possibly other applications that do not work with Dragon Dictate
-  dragonIncompatibleApplications: [
-    # "AppCode"
-    # "IntelliJ IDEA"
-    # "PhpStorm"
-    # "PyCharm"
-    # "RubyMine"
-    # "WebStorm"
-  ]
   # the delay for how long the stacked up commands may take to execute when switching away from an incompatible application
-  dragonIncompatibleApplicationDelay: 5000
-  notificationProvider: "applescript"
-  commonSequences: {
-    'symbol:brackets':
-      [ 'symbol:surround-single-quotes',
-        'symbol:surround-double-quotes' ]
-    'mouse:click':
-      [ 'selection:all',
-        'common:deletion.backward',
-        'object:duplicate',
-        'common:enter',
-        'common:deletion.backward',
-        'common:deletion.forward',
-        'symbol:comma.padded-right',
-        'symbol:dot',
-        'cursor:new-line-above',
-        'mouse:shift-click',
-        'mouse:click' ]
-    'cursor:right':
-      [ 'symbol:comma.padded-right',
-        'common:deletion.forward',
-        'text-manipulation:delete-to-end-of-line',
-        'format:upper-camel',
-        'format:camel',
-        'format:snake',
-        'symbol:space' ]
-    'symbol:colon-padded-right':
-      [ 'format:camel',
-        'format:upper-camel',
-        'format:snake',
-        'symbol:surround-double-quotes',
-        'symbol:surround-single-quotes',
-        'word:false',
-        'word:true' ]
-    'symbol:surround-double-quotes': [ 'clipboard:paste' ]
-    'symbol:comma': [ 'common:enter' ]
-    'cursor:left':
-      [ 'common:deletion.backward',
-        'symbol:space',
-        'symbol:comma.padded.right',
-        'format:upper-camel',
-        'format:camel',
-        'format:snake' ]
-    'cursor:down':
-      [ 'common:indentation.left',
-        'common:indentation.right',
-        'selection:down',
-        'text-manipulation:move-line-up',
-        'text-manipulation:move-line-down',
-        'cursor:new-line-below',
-        'text-manipulation:delete-lines' ]
-    'symbol:dot':
-      [ 'clipboard:paste',
-        'format:camel',
-        'format:upper-camel',
-        'format:snake',
-        'format:lower-no-space' ]
-    'mouse:doubleClick':
-      [ 'text-manipulation:delete-to-end-of-line',
-        'text-manipulation:delete.all.left',
-        'selection:all.right',
-        'common:deletion.backward',
-        'format:camel',
-        'format:upper-camel',
-        'clipboard:cut',
-        'mouse:shiftClick' ]
-    'mouse-combo:double-clickThenCopy': [ 'mouse-combo:double-clickThenPaste', 'mouse-combo:double-clickThenCopy' ]
-    'mouse-combo:double-clickThenPaste': [ 'mouse-combo:double-clickThenPaste' ]
-    'mouse-combo:selectLineUnderMouse': [ 'mouse:shift-click' ]
-    'mouse-combo:selectLineUnderMouseThenCopy':
-      [ 'mouse-combo:selectLineUnderMousesAndPaste',
-        'mouse-combo:selectLineUnderMouseThenCopy',
-        'mouse-combo:double-clickThenPaste' ]
-    'mouse-combo:selectLineUnderMousesAndPaste':
-      [ 'mouse-combo:selectLineUnderMousesAndPaste',
-        'mouse-combo:selectLineUnderMouseThenCopy' ]
-    'mouse:commandClick': [ 'mouse:commandClick' ]
-    'cursor:up':
-      [ 'common:indentation.left',
-        'common:indentation.right',
-        'selection:up',
-        'text-manipulation:move-line-up',
-        'text-manipulation:move-line-down',
-        'common:enter',
-        'cursor:new-line-above',
-        'text-manipulation:delete-lines' ]
-    'common:deletion.backward': [ 'common:deletion.forward', 'clipboard:paste' ]
-    'symbol:surround.parentheses':
-      [ 'clipboard:paste',
-        'symbol:doubleQuotes.surround',
-        'symbol:singleQuotes.surround',
-        'symbol:braces.surround' ]
-    'selection:all.right': [ 'clipboard:copy', 'clipboard:cut' ]
-    'cursor:way.right': [ 'common:deletion.backward' ]
-    'common:save': [ 'application-control:previous.application', 'common:close.window' ]
-    'selection:line.text': [ 'clipboard:cut' ]
-    'common:enter': [ 'format:camel', 'format:upper-camel', 'common:tab.backward' ]
-    'cursor:new-line-above': [ 'clipboard:paste' ]
-    'cursor:new-line-below': [ 'clipboard:paste', 'format:camel', 'format:upper-camel' ]
-    'selection:up': [ 'common:indentation.left', 'common:indentation.right' ]
-    'selection:down': [ 'common:indentation.left', 'common:indentation.right' ]
-    'symbol:space':
-      [ 'format:camel',
-        'format:upper-camel',
-        'insert:abbreviation',
-        'format:snake',
-        'format:lower-no-space' ]
-    'clipboard:cut': [ 'application-control:previous.application' ]
-    'clipboard:paste': [ 'common:enter' ]
-    'common:deletion.forward': [ 'common:deletion.backward' ]
-    'symbol:comma.padded.right':
-      [ 'symbol:doubleQuotes.surround',
-        'symbol:singleQuotes.surround',
-        'format:camel',
-        'format:upper-camel',
-        'clipboard:paste',
-        'word.false',
-        'word.true' ]
-    'common:open.tab': [ 'clipboard:paste' ]
-    'text-manipulation:delete.word.backward': [ 'common:deletion.backward', 'cursor:left' ]
-    'smart.select':
-      [ 'format:camel',
-        'format:upper-camel',
-        'format:title',
-        'format:snake',
-        'format:upper',
-        'format:lower-no-space',
-        'format:upper-no-space' ]
-    'selection:word.next': [ 'common:deletion.backward' ]
-    'selection:word.previous': [ 'common:deletion.backward' ]
-    'mouse:shift-click':
-      [ 'clipboard:copy',
-        'common:deletion.backward',
-        'object:duplicate',
-        'common:indentation.left',
-        'common:indentation.right' ] }
+
 
 # tens =
 #   ten: 10
@@ -607,5 +326,15 @@ _.extend Settings,
 # _.extend Settings.integerFirst
 #   integerFirst:
 
+  locale: "en"
+  localeSettings:
+    en:
+      dragonOsLanguage: "en_GB"
+      dragonCommandSpokenLanguage: "en_US"
+      dragonTriggerSpokenLanguage: "en_US"
+    de:
+      dragonOsLanguage: "de_DE"
+      dragonCommandSpokenLanguage: "en_US"
+      dragonTriggerSpokenLanguage: "en_US"
 
 module.exports = Settings

@@ -47,23 +47,13 @@ class CustomGrammar
     else
       [token.name]
 
+  # I probably broke something here ⬇️
   normalizeInput: (input={}) ->
-    results = {}
-    for name in @listNames
-      spoken = input[name]
-
-      # it might be an array like ['top', '-', 'right'] => 'top right'
-      if _.isArray spoken
-        spoken = spoken.map (word) ->
-          if word is '-'
-            ' '
-          else
-            word
-        .join ' '
-
-      if spoken?
-        results[name] = @lists[@reverseNameLookup[name]].value(spoken)
-    results
+    _.mapValues input, (values, list) =>
+      spoken = _.reject values, _.isArray
+      debug "spoken: ", spoken
+      spoken = spoken.join ' '
+      @lists[@reverseNameLookup[list]].value(spoken)
 
   listsWithOptions: (kind='spoken') ->
     results = {}

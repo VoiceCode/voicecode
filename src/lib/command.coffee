@@ -33,25 +33,27 @@ class Command
 
     Actions.executionStack.unshift true
     unless _.isEmpty @befores
-      _.each @befores, ({action: e, info}) ->
+      _.each @befores, ({action: e, info}) =>
         if Scope.active(_.extend {},
         info, {id, input, context}) and _.isFunction(e)
-          emit 'beforeWillExecute', info
+          emit 'beforeWillExecute', {@id, e, info}
           e.call(Actions, input, context)
         Actions.executionStack[0]
 
     return unless Actions.executionStack[0]
 
     sorted = @sortedImplementations()
-    # always fall back to a string
-    # this does not take auto spacing into account
-    sorted = _.union @sorted
-    , _.toArray Commands.mapping['core:literal'].implementations
+    # always fall back to a string?
+    # sorted = _.union @sorted
+    # , _.toArray Commands.mapping['core:literal'].implementations
+    if _.isEmpty sorted
+      warning null, null, "#{@id} has no implementations"
 
-    _.each sorted,  ({action: e, info}) ->
+    _.each sorted,  ({action: e, info}) =>
+      debug 'sorted loop', arguments
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)
-        emit 'implementationWillExecute', e, info
+        emit 'implementationWillExecute', {@id, e, info}
         e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
         return false
@@ -59,10 +61,10 @@ class Command
 
     # after
     unless _.isEmpty @afters?
-      _.each @afters, ({action: e, info}) ->
+      _.each @afters, ({action: e, info}) =>
         if Scope.active(_.extend {},
         info, {id, input, context}) and _.isFunction(e)
-          emit 'afterWillExecute', info
+          emit 'afterWillExecute', {@id, e, info}
           e.call(Actions, input, context)
         Actions.executionStack[0]
 
@@ -73,7 +75,7 @@ class Command
   # but it should work for now
   # also, caching?
   sortedImplementations: ->
-    @sorted or @sorted = _.sortBy @implementations, ({action: e, info}) ->
+    _.sortBy @implementations, ({action: e, info}) ->
       result = {}
       if info.scope?
         unless info.scope is 'global' or info.scope is 'abstract'

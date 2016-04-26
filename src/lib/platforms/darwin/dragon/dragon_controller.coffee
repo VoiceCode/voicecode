@@ -5,17 +5,13 @@ class DarwinDragonController
     instance = @
     @forever = require "forever-monitor"
     @dragonInstance = null
-    @dragonApplicationName = 'Dragon'
-    @dragonApplicationPath = Applescript """
-      tell application "Finder"
-        POSIX path of (application file id "com.dragon.dictate" as alias)
-      end tell
-    """
-    @dragonApplicationPath = @dragonApplicationPath?.trim()
-    @subscribeToEvents()
+    @bootstrapped = false
+    if Settings.dragonProcessControl
+      @start()
 
   start: ->
-    return if Settings.dragonProcessControl
+    unless @bootstrapped
+      @bootstrap()
     if @dragonInstance?
       @restart()
     else
@@ -37,13 +33,12 @@ class DarwinDragonController
         @dragonInstance.kill()
 
   stop: ->
-    return if Settings.dragonProcessControl
     return unless @dragonInstance?
     @dragonInstance.stop()
 
   restart: (force = false) ->
     return if Settings.dragonProcessControl
-    if @dragonInstance?
+    if @dragonInstance? # faulty way of checking
       @dragonInstance.restart()
     else
       if force
@@ -53,10 +48,18 @@ class DarwinDragonController
         , 3000
       else
         start()
-        
-  subscribeToEvents: ->
+
+  bootstrap: ->
+    @dragonApplicationName = 'Dragon'
+    @dragonApplicationPath = Applescript """
+      tell application "Finder"
+        POSIX path of (application file id "com.dragon.dictate" as alias)
+      end tell
+    """
+    @dragonApplicationPath = @dragonApplicationPath?.trim()
     Events.on 'dragonSynchronizingStarted', => @stop()
     Events.on 'dragonSynchronizingEnded', => @start()
     process.on 'exit', => @stop()
+    @bootstrapped = true
 
 module.exports = new DarwinDragonController

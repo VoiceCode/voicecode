@@ -3,7 +3,7 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    @setMaxListeners 1000
+    @setMaxListeners 100
     instance = @
     @debug = true
     @frontendSubscriptions = {}
@@ -14,7 +14,7 @@ class EventEmitter extends require('events').EventEmitter
       'commandCreated'
       'commandEnabled'
       'windowCreated'
-      'commandImplementationAdded'
+      'implementationCreated'
       # 'commandOverwritten'
       'commandAfterAdded'
       'commandBeforeAdded'
@@ -27,10 +27,17 @@ class EventEmitter extends require('events').EventEmitter
       # 'userAssetsLoading'
       # 'userAssetsLoaded'
       # 'userAssetEvaluated'
+      'packageReady'
+      'userAssetEvaluated'
+      'userAssetEvent'
+      'packageAssetEvaluated'
+      'packageAssetEvent'
       # 'commandEditsPerformed'
       'userCodeCommandEditsPerformed'
       'enabledCommandsCommandEditsPerformed'
       'slaveModeEnableAllCommandsCommandEditsPerformed'
+      'packageCreated'
+      'assetEvent'
       # 'commandValidationFailed'
       # 'commandValidationError'
       # 'chainParsed'
@@ -39,10 +46,11 @@ class EventEmitter extends require('events').EventEmitter
       # 'commandDidExecute'
       # 'chainDidExecute'
       # 'commandNotFound'
+      'eventMonitorStarted'
+      'dragonStarted'
       # 'packageAssetEvent'
     ]
     @suppressedDebugEntries = []
-
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
     # via remote module i.e every object needs to be flattened
@@ -79,6 +87,20 @@ class EventEmitter extends require('events').EventEmitter
     if _.isArray event
       _.map event, (e) =>
         @on e, callback
+      return
+    super
+
+  once: (event, callback) ->
+    if _.isArray event
+      _.map event, (e) =>
+        @once e, callback
+      return
+    super
+
+  removeListener: (event, callback) ->
+    if _.isArray event
+      _.map event, (e) =>
+        @removeListener e, callback
       return
     super
 
@@ -128,7 +150,7 @@ class EventEmitter extends require('events').EventEmitter
           console.log "%s %s \n",
           chalk.white.bold.bgRed('   EVENT   '),
           chalk.black.bgWhite(" #{event} "),
-          util.inspect(args, {depth: 3})
+          util.inspect(args, {depth: 6, colors: true})
     super
 
   mutate: (event, container={}) ->

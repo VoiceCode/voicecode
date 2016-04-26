@@ -66,7 +66,6 @@ global.menubar = require('menubar')
   'always-on-top': true
   showDockIcon: false
 
-
 menubar.on 'ready', ->
   # emit 'mainWindowReady', menubar
   # Events.on 'mainReady', -> emit 'applicationShouldStart'
@@ -101,9 +100,7 @@ Events.on 'applicationShouldStart', ->
   funk (startupFlow) ->
     startupFlow.firstArgIsError = false
     global.Settings = require "../lib/platforms/#{platform}/settings"
-    Settings.userAssetsPath = '~/voicecode_user'
-    if developmentMode
-      Settings.userAssetsPath = '~/voicecode_user_development'
+    Settings.userAssetsPath = '~/voicecode_user_development'
     global.Packages = require '../lib/packages/packages'
     # A package for platform specific global commands
     Packages.register
@@ -135,7 +132,7 @@ Events.on 'applicationShouldStart', ->
         global.Actions = require "#{_path}/actions"
         global.SystemInfo = require "#{_path}/system_info"
         global.DarwinController = require "#{_path}/darwin_controller"
-      when "win32"
+      when "windows"
         global.Actions = require '../lib/platforms/windows/actions'
       when "linux"
         global.Actions = require '../lib/platforms/linux/actions'
@@ -164,11 +161,6 @@ Events.on 'applicationShouldStart', ->
 
     require './enabled_commands_manager'
 
-    if developmentMode
-      Settings.slaveMode = true
-      Settings.dragonProcessControl = true
-
-
     if Settings.slaveMode or developmentMode
       _.each Commands.mapping, (command, name) ->
         Commands.enable name
@@ -181,6 +173,9 @@ Events.on 'applicationShouldStart', ->
         require("#{_path}/dragon_vocabulary_controller").start()
       # when "win32"
       # when "linux"
+
+    if developmentMode
+      Settings.slaveMode = true
 
     unless Settings.slaveMode
       global.Synchronizer = require './synchronize'

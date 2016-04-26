@@ -25,10 +25,10 @@ actionCreators.toggleCommand = (id, enabled) ->
 exports.actionCreators = actionCreators
 
 commandRecord = immutable.Record
-  id: 'how did you manage to do this?'
-  spoken: 'inaudible'
+  id: null
+  spoken: null
   enabled: false
-  packageId: 'os'
+  packageId: 'unpackaged'
   description: 'no description'
   locked: false
 

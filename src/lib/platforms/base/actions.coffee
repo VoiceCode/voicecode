@@ -2,7 +2,7 @@
 # Actions is the context that every command is called with
 # - so anything that should be available on 'this' within a command should be defined in the actions class
 
-module.exports = class Actions
+class Actions
   constructor: () ->
     @storage = {}
     @executionStack = []
@@ -105,3 +105,9 @@ module.exports = class Actions
 
   openDefaultTerminal: ->
     @openApplication Settings.defaultTerminal
+
+
+
+
+
+module.exports = Actions

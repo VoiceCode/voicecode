@@ -11,8 +11,6 @@ class DarwinController
     @loadFrameworks() # still needed?
     @setDragonInfo()
 
-    @listeningOnMainSocket = true
-
     @historyGrowl = []
     @historyDragon = []
     @historyStatusWindow = []
@@ -50,25 +48,11 @@ class DarwinController
 
   applicationChanged: ({event, bundleId, name}) ->
     @applicationLastChangedAt = Date.now()
-    current = Actions.currentApplication()
-    if current.bundleId is bundleId
-      # Actions.setCurrentApplication _.extend current, {name, bundleId}
-      return
-    else
-      Actions.setCurrentApplication {name, bundleId}
+    Actions.setCurrentApplication {name, bundleId}
 
     if Commands.monitoringMouseToCancelSpacing
       Commands.lastCommandOfPreviousPhrase = null
 
-    if name in Settings.dragonIncompatibleApplications
-      log 'mainSocketListening', false,
-      "Disabling main command socket for compatibility with: #{name}: #{bundleId}"
-      @listeningOnMainSocket = false
-    else unless @listeningOnMainSocket
-      setTimeout =>
-        @listeningOnMainSocket = true
-        log 'mainSocketListening', true, "Re-enabling main command socket"
-      , Settings.dragonIncompatibleApplicationDelay or 5000
 
   mouseHandler: (event) ->
     if Commands.monitoringMouseToCancelSpacing
@@ -237,6 +221,7 @@ class DarwinController
       else
         Settings.dragonApplicationName =
           Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
+    Settings.applications ?= {}
     Settings.applications.dragon = Settings.dragonApplicationName
 
   listenAsSlave: ->

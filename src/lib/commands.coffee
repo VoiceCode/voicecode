@@ -61,22 +61,20 @@ class Commands
     switch editType
       when 'commandCreated'
         validated = @validate command, options, 'commandSpokenChanged'
-        if not options.spoken?
-          unless options.needsParsing is false or options.rule?
-            error 'commandValidationError', command,
-            "Please provide a 'spoken' parameter for command '#{command}'"
-            validated = false
-        if @mapping[command]?
-          if options.action?
-            if options.action.toString() is @mapping[command].action.toString()
-              validated = false # action is the same
-              break
+        # if not options.spoken?
+        #   unless options.needsParsing is false or options.rule?
+        #     error 'commandValidationError', command,
+        #     "Please provide a 'spoken' parameter for command '#{command}'"
+        #     validated = false
+        # if @mapping[command]?
+        #   if options.action?
+        #     if options.action.toString() is @mapping[command].action.toString()
+        #       validated = false # action is the same
+        #       break
           # else
             # this is okay
             # warning 'commandHasNoAction', command, "Command #{command} has no action."
           #   validated = false
-          warning 'commandOverwritten', command,
-          "Command '#{command}' overwritten by a command with a same name"
         if options.rule?.match(/\(.*?\d+.*?\)/g)?
           error 'commandValidationError', command, 'Please don\'t use integers in list names'
           validated = false
@@ -85,13 +83,13 @@ class Commands
           validated = false
       # when 'commandBeforeAdded'
       # when 'commandAfterAdded'
-      when 'commandEnabled'
-        if command.enabled is true
-          validated = false
+      # when 'commandEnabled'
+      #   if command.enabled is true
+      #     validated = false
       when 'commandSpokenChanged'
         if _.find(Commands.mapping, {spoken: options})?
           warning 'commandSpokenOverwritten', command,
-          "Command #{options}`s spoken parameter overwritten by command with a same name"
+          "Command #{options}`s spoken parameter overwritten"
 
     if not validated and @shouldEmitValidationFailed(editType, command)
       emit 'commandValidationFailed', {command, options, editType}
@@ -168,8 +166,6 @@ class Commands
     _.map (_.filter @mapping, {enabled: true}), 'id'
 
   shouldEmitValidationFailed: (editType, command) ->
-    if editType is 'commandEnabled'
-      return false
     return true
 
   performCommandEdits: (invokedBy = null) ->
@@ -260,13 +256,6 @@ class Commands
     options.id = name
     options.grammarType ?= 'individual'
     options.kind ?= 'action'
-
-    # TODO: move everything to packages & remove this
-    unless options.packageId?
-      options.packageId = 'core'
-
-    unless options.spoken?
-      options.spoken = options.id
 
     type = options.grammarType
     if type in @primaryGrammarTypes

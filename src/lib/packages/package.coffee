@@ -19,8 +19,14 @@ class Package
     @actions actions, 'api'
 
   actions: (actions, type = 'action') ->
-    _.each actions, (method, name) =>
-      @["_#{type}s"][name] = method
+    _.each actions, (value, name) =>
+      if _.isFunction value
+        method = value
+      else
+        method = value.action
+
+      delete value.action
+      @["_#{type}s"][name] = value
       if Actions[name]?
         warning 'packageOverwritesAction', name,
         "Package '#{@name}' has overwritten Actions.#{name}"
@@ -95,6 +101,7 @@ class Package
   settings: (options) ->
     if options?
       _.merge @_settings, options
+      Events.once 'packageReady', => _.merge Settings, @_settings
     else
       @_settings
 

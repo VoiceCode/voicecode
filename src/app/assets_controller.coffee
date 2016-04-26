@@ -35,8 +35,8 @@ _.extend Settings,
       if err
         if err.code isnt 'EEXIST'
           # need to explicitly call global.error,
-          # there is an error variable in a closure /sad feelsk
-          global.error 'assetSettingsFileError', err, err
+          # there is an error variable in a closure /sad feels
+          global.error 'assetSettingsFileError', err, err.stacktrace
           @state = "error"
         else
           # this is good, file exists
@@ -94,7 +94,7 @@ _.extend Settings,
         require fullPath
       catch err
         emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
-        warning "#{type}AssetEvaluationError", {err, fullPath}, "#{fullPath}:\n#{err}"
+        warning "#{type}AssetEvaluationError", {error: err.stack, fullPath}, "#{fullPath}:\n#{err}"
       emit 'assetEvaluated', {event, fullPath}
       log "#{type}AssetEvaluated", {event, fullPath},
       "Asset type '#{type}' evaluated: #{fullPath}"

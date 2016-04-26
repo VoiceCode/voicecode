@@ -8,29 +8,20 @@ class DarwinActions extends Actions
       'v command'
     ]
 
-  setCurrentApplication: (application) ->
-    super
-    if @inBrowser()
-      @monitorBrowserUrl(true)
-    else
-      @monitorBrowserUrl(false)
-
-  inBrowser: ->
-    @_currentApplication.bundleId in Settings.browserApplications
-
-  monitorBrowserUrl: (monitor=true) ->
-    if monitor
-      @_monitorBrowserUrlInterval ?= setInterval =>
-        @currentBrowserUrl(reset: true)
-      , 1600
-    else
-      clearInterval @_monitorBrowserUrlInterval
-      delete @_monitorBrowserUrlInterval
-
-
-
-  needsExplicitModifierPresses: ->
-    _.includes Settings.applicationsThatNeedExplicitModifierPresses, @currentApplication().name
+  _modifierMask: (modifiers) ->
+    mask = 0
+    for m in modifiers
+      bits = switch m
+        when "shift"
+          $.kCGEventFlagMaskShift
+        when "command"
+          $.kCGEventFlagMaskCommand
+        when "option"
+          $.kCGEventFlagMaskAlternate
+        when "control"
+          $.kCGEventFlagMaskControl
+      mask = mask | bits
+    mask
 
   contextAllowsArrowKeyTextSelection: ->
     not _.includes(Settings.applicationsThatWillNotAllowArrowKeyTextSelection, @currentApplication().name)
@@ -252,78 +243,7 @@ class DarwinActions extends Actions
       $.CGEventPost($.kCGSessionEventTap, event)
 
 
-  applescript: (content, shouldReturn=true) ->
-    emit 'notUndoable'
-    Applescript content, shouldReturn
 
-  exec: (script, options = null) ->
-    options ?= {silent: true}
-    Execute script, options
-
-  openMenuBarItem: (item) ->
-    emit 'notUndoable'
-    @applescript """
-    tell application "System Events" to tell (process 1 where frontmost is true)
-      click menu bar item "#{item}" of menu bar 1
-    end tell
-    """
-
-  openMenuBarPath: (itemArray) ->
-    emit 'notUndoable'
-    elements = _.map itemArray.reverse(), (item, index) ->
-      if index is 0
-        "click menu item \"#{item}\""
-      else if index != (itemArray.length - 1)
-        "of menu \"#{item}\" of menu item \"#{item}\""
-      else
-        "of menu \"#{item}\" of menu bar item \"#{item}\" of menu bar 1"
-    script = """
-    tell application "System Events" to tell (process 1 where frontmost is true)
-      #{elements.join(" ")}
-    end tell
-    """
-    @applescript script
-
-  scrollDown: (amount) ->
-    emit 'notUndoable'
-    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, -1 * (amount or 1))
-    $.CGEventPost($.kCGHIDEventTap, event)
-
-  scrollUp: (amount) ->
-    emit 'notUndoable'
-    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 1, (amount or 1))
-    $.CGEventPost($.kCGHIDEventTap, event)
-
-  scrollLeft: (amount) ->
-    emit 'notUndoable'
-    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, (amount or 1))
-    $.CGEventPost($.kCGHIDEventTap, event)
-
-  scrollRight: (amount) ->
-    emit 'notUndoable'
-    event = $.CGEventCreateScrollWheelEvent(null, $.kCGScrollEventUnitLine, 2, 0, -1 * (amount or 1))
-    $.CGEventPost($.kCGHIDEventTap, event)
-
-  openApplication: (name) ->
-    emit 'notUndoable'
-    if name in Settings.applicationsThatNeedLaunchingWithApplescript
-      @applescript "tell application \"#{name}\" to activate"
-    else
-      string = $.NSString('stringWithUTF8String', name)
-      w = $.NSWorkspace('sharedWorkspace')
-      w('launchApplication', string)
-
-  openBrowser: ->
-    emit 'notUndoable'
-    defaultBrowser = Settings.defaultBrowser or "Safari"
-    @openApplication(defaultBrowser)
-
-  openURL: (url) ->
-    emit 'notUndoable'
-    string = $.NSString('stringWithUTF8String', url)
-    u = $.NSURL('URLWithString', string)
-    w = $.NSWorkspace('sharedWorkspace')
-    w('openURL', u)
 
   microphoneOff: ->
     @applescript """
@@ -332,14 +252,7 @@ class DarwinActions extends Actions
     end tell
     """, false
 
-  currentApplication: ->
-    if @_currentApplication
-      @_currentApplication
-    else
-      w = $.NSWorkspace('sharedWorkspace')
-      app = w('frontmostApplication')
-      result = app('localizedName').toString()
-      @_currentApplication = {name: result}
+
 
   _getCurrentBrowserUrl: (cb) ->
     container = mutate 'getCurrentBrowserUrl', {url: null}
@@ -453,14 +366,6 @@ class DarwinActions extends Actions
       item.toString()
     else
       ""
-  setClipboard: (text) ->
-    if text.length
-      p = $.NSPasteboard('generalPasteboard')
-      types = $.NSMutableArray('alloc')('init')
-      types('addObject', $('public.utf8-plain-text'))
-      p('declareTypes', types, 'owner', null)
-      p('setString', $(text), 'forType', $('public.utf8-plain-text'))
-
   getSelectedText: ->
     old = @getClipboard()
     @copy()
@@ -526,7 +431,7 @@ class DarwinActions extends Actions
           @key 'right', 'shift'
         else
           @key 'left', 'shift'
-      @key 'delete'
+      @key 'backspace'
 
   notify: (text) ->
     Notify(text)
@@ -557,4 +462,14 @@ class DarwinActions extends Actions
     @delay 300
     @setClipboard old
 
-module.exports = new DarwinActions
+module.exports = do ->
+  isActive = false
+  Events.once 'startupFlow:complete', -> isActive = true
+  return new Proxy (new DarwinActions), {
+    get: (target, property, receiver) ->
+      if not target[property]? and isActive
+        #target.breakChain "Actions.#{property} does not exist."
+        error 'missingDependency'
+        , {property}, "Actions.#{property} does not exist."
+      Reflect.get target, property, receiver
+}

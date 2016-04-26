@@ -33,12 +33,12 @@ class Command extends React.Component
       <div className="content">
         <div className="header">
         {
-          if id is spoken
+          if not spoken
               <i className='tiny grey mute icon'></i>
+          else
+            spoken
         }
-        { spoken }
         </div>
-
         <div className="meta">{ id }</div>
         <div className='content'>{ description }</div>
         <div className='extra'>
