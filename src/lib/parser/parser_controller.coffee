@@ -78,6 +78,8 @@ class ParserController
       else if c is ","
         item = "comma"
       result.push item
+    {phrase: result} = mutate 'willParsePhrase', {phrase: result.join('')}
+    result = result.split('')
     @parser.parse result.join('')
 
   writeToDisk: (data) ->

@@ -50,7 +50,6 @@ class Command
       warning null, null, "#{@id} has no implementations"
 
     _.each sorted,  ({action: e, info}) =>
-      debug 'sorted loop', arguments
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)
         emit 'implementationWillExecute', {@id, e, info}

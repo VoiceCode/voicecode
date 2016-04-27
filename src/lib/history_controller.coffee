@@ -25,12 +25,12 @@ class HistoryController
         delete arguments[0].link.context
         unless amnesia
           @history[currentContext][0].unshift _.pick link, ['command', 'arguments']
-    Events.on ['microphoneSleep', 'microphoneOff'], ->
-      windowController.get('microphoneState').show()
-    Events.on 'microphoneWakeUp', ->
-      windowController.get('microphoneState').hide()
+    # Events.on ['microphoneSleep', 'microphoneOff'], ->
+    #   windowController.get('microphoneState').show()
+    # Events.on 'microphoneWakeUp', ->
+    #   windowController.get('microphoneState').hide()
 
-    @createWindow()
+    # @createWindow()
 
   forgetChain: (offset) ->
     delete @history[previousContext][offset]
