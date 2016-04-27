@@ -431,7 +431,7 @@ class DarwinActions extends Actions
           @key 'right', 'shift'
         else
           @key 'left', 'shift'
-      @key 'backspace'
+      @key 'delete'
 
   notify: (text) ->
     Notify(text)
