@@ -4,7 +4,18 @@ class HistoryController
   activeChains = 0
 
   constructor: ->
+    _this = @
     @history = {}
+    # @history = new Proxy {},
+    #   set: (target, property, value) ->
+    #     Reflect.set target, property, new Proxy value,
+    #       set: (target, property, value) ->
+    #         debug property, value
+    #         if property is '0' and not _.isEmpty value
+    #           emit 'historicChainCreated',
+    #             commands: value
+    #             context: _this.getCurrentContext()
+    #         Reflect.set target, property, value
     maintenanceInterval = setInterval @doMaintenance.bind(@), 900000 # 15 minutes
     Events.on 'chainWillExecute', =>
       activeChains++
@@ -12,8 +23,8 @@ class HistoryController
         @startNewChain()
     Events.on 'chainDidExecute', =>
       activeChains--
-      @history[previousContext][0] = _.compact @history[previousContext][0]
-      if _.isEmpty @history[previousContext][0]
+      # @history[previousContext][0] = _.compact @history[previousContext][0]
+      if _.isEmpty _.compact @history[previousContext][0]
         @forgetChain 0
     Events.on 'commandDidExecute', ({link}) =>
       command = Commands.get link.command
@@ -24,7 +35,15 @@ class HistoryController
         # coffee script is stupid, why make the extra 'arg' variable?
         delete arguments[0].link.context
         unless amnesia
-          @history[currentContext][0].unshift _.pick link, ['command', 'arguments']
+          command =  _.pick link
+          , ['command', 'arguments']
+          @history[currentContext][0].unshift command
+          emit 'historicChainLinkCreated',
+            command: command
+            context: currentContext
+
+
+    @createHistoryWindow()
     # Events.on ['microphoneSleep', 'microphoneOff'], ->
     #   windowController.get('microphoneState').show()
     # Events.on 'microphoneWakeUp', ->
@@ -59,6 +78,7 @@ class HistoryController
     @history[context] ?= []
     @history[context].unshift []
     previousContext = context
+    emit 'historicChainCreated', {context}
 
   doMaintenance: ->
     _.each @history, (v, k) => Array::splice.call @history[k], 10
@@ -73,7 +93,28 @@ class HistoryController
     catch
       return 0
 
-  createWindow: ->
+  createHistoryWindow: ->
+    historyWindow = windowController.new 'history',
+      x: 0
+      y: 0
+      width: 350
+      height: 600
+      # width: 900
+      # height: 1200
+      hasShadow: false
+      # type: "desktop"
+      alwaysOnTop: true
+      transparent: true
+      frame: false
+      toolbar: false
+      resizable: false
+      show: true
+    historyWindow.once 'show', ->
+      historyWindow.hide()
+      # historyWindow.openDevTools()
+    historyWindow.loadURL("file://#{projectRoot}/src/frontend/history.html")
+
+  createMicrophoneStateWindow: ->
     screen = require 'screen'
     screenSize = screen.getPrimaryDisplay().workAreaSize
     microphoneStateWindow = windowController.new 'microphoneState',

@@ -1,25 +1,28 @@
 { createAction } = require 'redux-actions'
 
 # 😂
-# exports.actionCreators = _.reduce {
-#     APP_INIT_START: 'APP_INIT_START'
-#     APP_INIT_FINISH: 'APP_INIT_FINISH'
-# }
-# , (ac, c) =>
-#   ac[_.camelCase(c)] = createAction c
-#   @[c] = c
-#   exports[c] = c
-# , {}
+actionCreators = _.reduce {
+    SET_CURRENT_APPLICATION: 'SET_CURRENT_APPLICATION'
+}
+, (ac, c) =>
+  ac[_.camelCase(c)] = createAction c
+  @[c] = c
+  exports[c] = c
+  ac
+, {}
 
 # thunk
-exports.actionCreators =
-  appStart: ->
-    (dispatch, getState) ->
-      dispatch {type: '__IMMUTABLE'}
+actionCreators.appStart = ->
+  (dispatch, getState) ->
+    dispatch {type: '__IMMUTABLE'}
 
+module.exports.actionCreators = actionCreators
 
-# exports.reducers =
-#   implementations: (implementations = immutable.Map({}), {type, payload}) =>
-#     switch type
-#       else
-#         implementations
+exports.reducers =
+  isImmutable: (state = {isImmutable: false}) -> state
+  currentApplication: (state = '', {type, payload}) =>
+    switch type
+      when @SET_CURRENT_APPLICATION
+        state = payload.name
+      else
+        state

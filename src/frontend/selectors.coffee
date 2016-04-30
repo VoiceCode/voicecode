@@ -1,5 +1,7 @@
 { createSelector } = require 'reselect'
+immutable = require 'immutable'
 
+# main window selectors
 _packagesSelector = (state, props) ->
   state.get 'packages'
 packagesSelector = createSelector [_packagesSelector], (packages) ->
@@ -16,10 +18,26 @@ commandsForPackage = (state, props) ->
 implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
 
-_.extend exports, {
+_.assign exports, {
   packagesSelector
   commandsForPackage
   commandSelector
   implementationsForCommand
 
+}
+
+
+# history window selectors
+currentApplicationSelector = (state) ->
+  state.get('currentApplication')
+chainsSelector = (state) -> state.get('chains')
+activeChainSelector = createSelector currentApplicationSelector, chainsSelector
+, (currentApplication, chains) ->
+  console.debug arguments
+  chains.get currentApplication
+
+
+
+_.assign exports, {
+  activeChainSelector
 }

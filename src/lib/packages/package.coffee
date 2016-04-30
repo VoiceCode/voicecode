@@ -68,9 +68,13 @@ class Package
 
     _.extend @_implementations, commands
 
-    Events.once 'commandEditsPerformed', =>
+    implementCommands = =>
       _.each commands, (extension, id) =>
         Commands.implement @normalizeId(id), packageOptions, extension
+    unless Commands.immediateEdits
+      Events.once 'commandEditsPerformed', implementCommands
+    else
+      implementCommands()
 
   before: ->
     if arguments[1]?
@@ -110,7 +114,8 @@ class Package
   # this package's commands depend on)
   ready: (callback) ->
     # Events.once 'userAssetsLoaded', callback.bind(@)
-    Events.once 'commandEditsPerformed', callback.bind(@)
+    unless _.isFunction callback
+      Events.once 'commandEditsPerformed', callback.bind(@)
     emit 'packageReady', @
 
   # the instance should automatically add its

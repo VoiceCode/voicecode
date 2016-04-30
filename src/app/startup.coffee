@@ -40,7 +40,8 @@ if developmentMode
     previous = Date.now()
     ->
       console.log chalk.white.bold.bgRed('   ' + ((c = Date.now()) - previous) + '   ')
-      console.log util.inspect (_.toArray arguments), {showHidden: false, depth: 10, colors: true}
+      console.log util.inspect (_.toArray arguments)
+      , {showHidden: false, depth: 10, colors: true}
       previous = c
 
 global.$ = require 'nodobjc'
@@ -70,6 +71,7 @@ menubar.on 'ready', ->
   # emit 'mainWindowReady', menubar
   # Events.on 'mainReady', -> emit 'applicationShouldStart'
   menubar.showWindow()
+  menubar.hideWindow()
 
 menubar.on 'after-create-window', ->
   windowController.set 'main', menubar.window
