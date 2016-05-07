@@ -105,7 +105,8 @@ class Package
   settings: (options) ->
     if options?
       _.merge @_settings, options
-      Events.once 'packageReady', => _.merge Settings, @_settings
+      Events.once 'settingsAssetsLoaded', ->
+        _.merge Settings, options
     else
       @_settings
 
@@ -113,9 +114,8 @@ class Package
   # (so a user can change package settings that
   # this package's commands depend on)
   ready: (callback) ->
-    # Events.once 'userAssetsLoaded', callback.bind(@)
-    unless _.isFunction callback
-      Events.once 'commandEditsPerformed', callback.bind(@)
+    if _.isFunction callback
+      Events.once 'userAssetsLoaded', callback.bind(@)
     emit 'packageReady', @
 
   # the instance should automatically add its

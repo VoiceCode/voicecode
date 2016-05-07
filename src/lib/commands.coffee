@@ -115,9 +115,11 @@ class Commands
 
     validated = @validate name, options, 'commandCreated'
     return if not validated
-    @mapping[name] = @normalizeOptions name, options
+    @mapping[name] ?= {}
+    alreadyEnabled = @mapping[name].enabled
+    _.marge @mapping[name], @normalizeOptions name, options
     emit 'commandCreated', options, name
-    if options.enabled is true
+    if (alreadyEnabled or options.enabled) is true
       @enable name
 
   createWithDefaults: (defaults, options) ->

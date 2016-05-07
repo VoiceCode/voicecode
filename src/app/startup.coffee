@@ -27,6 +27,7 @@ if testing
 
 
 global._ = require 'lodash'
+require('../lib/utility/deepExtend')
 global._s = require 'underscore.string'
 global.chalk = require 'chalk'
 global.util = require('util')
@@ -113,10 +114,6 @@ Events.on 'applicationShouldStart', ->
     global.Scope = require '../lib/scope'
 
     global.AssetsController = require './assets_controller'
-    Events.once 'settingsAssetsLoaded', startupFlow.add 'settingsAssetsLoaded'
-    AssetsController.getAssets 'settings', 'settings.coffee'
-    startupFlow.wait 'settingsAssetsLoaded'
-
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -145,12 +142,15 @@ Events.on 'applicationShouldStart', ->
     #   visit: (required) ->
     #     if (not _.isEmpty required) and _.isObject required
     #       _.each required, (value, key) -> global[key] = value
-    emit 'startupFlow:corePackagesLoaded'
+    emit 'startupFlow:corePackagesLoaded' # needed?
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
     AssetsController.getAssets 'package', 'packages/**/package.coffee'
     startupFlow.wait 'packageAssetsLoaded'
-    emit 'startupFlow:userPackagesLoaded'
+
+    Events.once 'settingsAssetsLoaded', startupFlow.add 'settingsAssetsLoaded'
+    AssetsController.getAssets 'settings', 'settings.coffee'
+    startupFlow.wait 'settingsAssetsLoaded'
 
     Events.once 'userAssetsLoaded', startupFlow.add 'userAssetsLoaded'
     AssetsController.getAssets 'user', '**/*.coffee', (path) ->
@@ -159,7 +159,6 @@ Events.on 'applicationShouldStart', ->
       return true if /generated/.test path
       return false
     startupFlow.wait 'userAssetsLoaded'
-    emit 'startupFlow:userCodeLoaded'
 
     require './enabled_commands_manager'
 

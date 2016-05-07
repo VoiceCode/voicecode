@@ -374,9 +374,6 @@ class DarwinActions extends Actions
     @setClipboard(old)
     result
 
-  waitForClipboard: ->
-    delay = Settings.clipboardLatency[@currentApplication().name] or 200
-    @delay delay
 
   canDetermineSelections: ->
     not _.includes(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)

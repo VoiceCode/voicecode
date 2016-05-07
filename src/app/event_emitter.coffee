@@ -154,6 +154,13 @@ class EventEmitter extends require('events').EventEmitter
     super
 
   mutate: (event, container={}) ->
+    unless event in @suppressedDebugEntries
+      args = _.toArray(arguments)[1..]
+      @_output ->
+        console.log "%s %s \n",
+        chalk.white.bold.bgRed('   MUTATION   '),
+        chalk.black.bgWhite(" #{event} "),
+        util.inspect(args, {depth: 6, colors: true})
     return container unless events = @_events[event]
     container.continue = true
     if _.isFunction events

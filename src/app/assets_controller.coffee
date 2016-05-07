@@ -27,7 +27,7 @@ class AssetsController
 
     path =  "#{@assetsPath}/settings.coffee"
     data = """
-_.extend Settings,
+_.merge Settings,
   license: ''
   email: ''
     """
