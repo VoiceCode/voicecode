@@ -49,8 +49,9 @@ class EventEmitter extends require('events').EventEmitter
       'eventMonitorStarted'
       'dragonStarted'
       # 'packageAssetEvent'
+      'currentApplicationWillChange'
+      'currentApplicationChanged'
     ]
-    @suppressedDebugEntries = []
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
     # via remote module i.e every object needs to be flattened

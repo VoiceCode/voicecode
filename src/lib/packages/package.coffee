@@ -104,9 +104,9 @@ class Package
 
   settings: (options) ->
     if options?
-      _.extendDeep @_settings, options
+      _.deepExtend @_settings, options
       Events.once 'settingsAssetsLoaded', ->
-        _.extendDeep Settings, options
+        _.deepExtend Settings, options
     else
       @_settings
 
