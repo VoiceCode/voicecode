@@ -104,9 +104,9 @@ class Package
 
   settings: (options) ->
     if options?
-      _.merge @_settings, options
+      _.extendDeep @_settings, options
       Events.once 'settingsAssetsLoaded', ->
-        _.merge Settings, options
+        _.extendDeep Settings, options
     else
       @_settings
 
