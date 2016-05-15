@@ -39,6 +39,7 @@ class Command
           emit 'beforeWillExecute', {@id, e, info}
           e.call(Actions, input, context)
         Actions.executionStack[0]
+        true
 
     return unless Actions.executionStack[0]
 
@@ -59,13 +60,14 @@ class Command
       return true
 
     # after
-    unless _.isEmpty @afters?
+    unless _.isEmpty @afters
       _.each @afters, ({action: e, info}) =>
         if Scope.active(_.extend {},
         info, {id, input, context}) and _.isFunction(e)
           emit 'afterWillExecute', {@id, e, info}
           e.call(Actions, input, context)
         Actions.executionStack[0]
+        true
 
     Actions.executionStack.shift()
 

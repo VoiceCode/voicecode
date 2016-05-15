@@ -55,9 +55,8 @@ class DarwinController
 
 
   mouseHandler: (event) ->
-    if Commands.monitoringMouseToCancelSpacing
-      Commands.lastCommandOfPreviousPhrase = null
-
+    HistoryController.cancelAutoSpacing()
+    
   listen: ->
     global.slaveController = new SlaveController()
     slaveController.connect()
@@ -208,7 +207,7 @@ class DarwinController
 
   executeChain: (phrase) ->
     Fiber(->
-      FIBER = 'Imstillhere'
+      HAS_FIBER = true
       new Chain(phrase).execute()
     ).run()
 

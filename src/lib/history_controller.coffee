@@ -21,7 +21,7 @@ class HistoryController
       activeChains++
       if activeChains is 1
         @startNewChain()
-    Events.on 'chainDidExecute', =>
+    Events.on ['chainDidExecute', 'chainFailedExecute'], =>
       activeChains--
       # @history[previousContext][0] = _.compact @history[previousContext][0]
       if _.isEmpty _.compact @history[previousContext][0]
@@ -92,6 +92,14 @@ class HistoryController
       return @history[@getCurrentContext()][offset].length
     catch
       return 0
+
+  cancelAutoSpacing: ->
+    context = @getCurrentContext()
+    previousChain = @history[context]?[0]
+    if previousChain?.length
+      command = previousChain[0]
+      if command?
+        command.cancelAutoSpacing = true
 
   createHistoryWindow: ->
     historyWindow = windowController.new 'history',

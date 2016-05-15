@@ -151,6 +151,7 @@ class Chain
     for current, index in commands
       if index is 0
         previous = HistoryController.getCommands().pop()
+        previous = null if previous?.cancelAutoSpacing
         connector = @determineCommandConnector
           previous: previous
           current: current
