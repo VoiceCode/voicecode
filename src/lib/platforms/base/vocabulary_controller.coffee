@@ -42,10 +42,10 @@ module.exports = class VocabularyController
   prepareSequenceVocabulary: ->
     for name, followers of Settings.commonSequences
       command = Commands.get name
-      continue unless command? or command.enabled is false
+      continue if not command? or command.enabled is false
       for suffix in followers
         suffix = Commands.get suffix
-        continue unless suffix? or suffix.enabled is false
+        continue if not suffix? or suffix.enabled is false
         # TODO 'spoken' needs to be more sophisticated here. Need to generalize it.
         # Could be a custom command or anything
         @phrases.sequence.push [command.spoken, suffix.spoken].join(' ')

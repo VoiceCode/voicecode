@@ -107,6 +107,7 @@ class Package
       _.deepExtend @_settings, options
       Events.once 'settingsAssetsLoaded', ->
         _.deepExtend Settings, options
+      @_settings
     else
       @_settings
 

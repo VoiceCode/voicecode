@@ -3,7 +3,7 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    @setMaxListeners 100
+    @setMaxListeners 300
     instance = @
     @debug = true
     @frontendSubscriptions = {}
