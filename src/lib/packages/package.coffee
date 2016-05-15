@@ -15,6 +15,7 @@ class Package
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
 
+
   api: (actions) ->
     @actions actions, 'api'
 
@@ -68,13 +69,8 @@ class Package
 
     _.extend @_implementations, commands
 
-    implementCommands = =>
-      _.each commands, (extension, id) =>
-        Commands.implement @normalizeId(id), packageOptions, extension
-    unless Commands.immediateEdits
-      Events.once 'commandEditsPerformed', implementCommands
-    else
-      implementCommands()
+    _.each commands, (extension, id) =>
+      Commands.implement @normalizeId(id), packageOptions, extension
 
   before: ->
     if arguments[1]?
