@@ -1,9 +1,12 @@
 # Shell = require('shelljs')
 cp = require('child_process')
 
-Execute = (script, options = {}) ->
+Execute = (script, options = {}, callback = null) ->
+  method = 'execSync'
+  if callback?
+    method = 'exec'
   try
-    result = cp.execSync(script, options).toString('utf8')
+    result = cp[method](script, options, callback).toString('utf8')
     result
   catch err
     error null, null, 'CAUGHT: '

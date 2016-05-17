@@ -102,7 +102,7 @@ Events.on 'applicationShouldStart', ->
     funk = asyncblock
   funk (startupFlow) ->
     startupFlow.firstArgIsError = false
-    global.Settings = {extend: (k, v) -> _.extend Settings[k], v}
+    global.Settings = {extend: (k, v) -> _.deepExtend Settings, {"#{k}": v}}
     _.deepExtend Settings, require "../lib/platforms/#{platform}/settings"
     Settings.userAssetsPath = '~/voicecode_user_development'
     global.Packages = require '../lib/packages/packages'

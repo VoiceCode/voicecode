@@ -36,6 +36,14 @@ class DarwinController
 
   startEventMonitor: ->
     @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
+    dragonPID = Execute('pgrep Dragon')
+    setInterval =>
+      Execute('pgrep Dragon', (err, pid) =>
+        if dragonPID isnt pid
+          @eventMonitor.restart()
+          dragonPID = pid
+        )
+    , 20000
     @eventMonitor = forever.start '',
       command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
@@ -56,7 +64,7 @@ class DarwinController
 
   mouseHandler: (event) ->
     HistoryController.cancelAutoSpacing()
-    
+
   listen: ->
     global.slaveController = new SlaveController()
     slaveController.connect()

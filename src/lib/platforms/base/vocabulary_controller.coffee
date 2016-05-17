@@ -67,10 +67,10 @@ module.exports = class VocabularyController
     @setup()
     @generate()
 
-    # TODO monitor other events and keep the generated files up to date
-    # Event.on '???', =>
-    #  @setup()
-    #  @generate
+    Events.on 'generateParserSuccess', ({parserChanged}) =>
+      if parserChanged
+        @setup()
+        @generate
 
     return @
 
