@@ -4,7 +4,7 @@ global.app = require 'app'
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
-global.developmentMode = true
+global.developmentMode = false
 testing = true
 # app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
@@ -33,7 +33,7 @@ global.chalk = require 'chalk'
 global.util = require('util')
 
 global.debug = ->
-if developmentMode
+if developmentMode or testing
   electronConnect = require('electron-connect').client
   global.WHO_IS_CALLING = ->
     console.log chalk.white.bold.bgRed('   ' + arguments.callee.toString() + '   ')
@@ -105,6 +105,7 @@ Events.on 'applicationShouldStart', ->
     global.Settings = {extend: (k, v) -> _.deepExtend Settings, {"#{k}": v}}
     _.deepExtend Settings, require "../lib/platforms/#{platform}/settings"
     Settings.userAssetsPath = '~/voicecode_user_development'
+    # Settings.userAssetsPath = '~/voicecode'
     global.Packages = require '../lib/packages/packages'
     # A package for platform specific global commands
     Packages.register
