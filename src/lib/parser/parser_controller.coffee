@@ -59,6 +59,7 @@ class ParserController
       error 'generateParserFailed', e, 'Failed evaluating new parser.'
 
   parse: (phrase) ->
+    phrase = _.deburr phrase
     result = []
     phrase = phrase + " "
     phrase = phrase.replace /\s+/g, ' '
