@@ -58,12 +58,8 @@ class DarwinController
     @applicationLastChangedAt = Date.now()
     Actions.setCurrentApplication {name, bundleId}
 
-    if Commands.monitoringMouseToCancelSpacing
-      Commands.lastCommandOfPreviousPhrase = null
-
-
-  mouseHandler: (event) ->
-    HistoryController.cancelAutoSpacing()
+  mouseLeftClickHandler: (event) ->
+    emit 'mouse.leftClick', event
 
   listen: ->
     global.slaveController = new SlaveController()
@@ -87,7 +83,7 @@ class DarwinController
       when 'applicationChanged'
         @applicationChanged event
       when 'leftClick'
-        @mouseHandler event
+        @mouseLeftClickHandler event
       when 'recognizedText'
         unless developmentMode
           @statusWindowTextHandler event

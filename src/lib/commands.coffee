@@ -37,7 +37,6 @@ class Commands
     @repeaterLookup = {}
 
     @delayedEditFunctions = []
-    @monitoringMouseToCancelSpacing = true
     Events.once 'startupFlow:corePackagesLoaded', => @initialize()
 
   initialize: () ->

@@ -37,9 +37,6 @@ class Chain
       , chain
       log 'chainPreprocessed', chain, JSON.stringify chain
 
-    if shouldAutoSpace and Settings.autoSpacingEnabled.call(Actions)
-      chain = @applyAutoSpacing chain
-
     unless _.isEmpty chain
       chainBroken = false
       comboBreaker = (reason) ->
@@ -49,7 +46,6 @@ class Chain
       Events.once 'chainDidExecute', ->
         Events.unsubscribe 'breakChain', comboBreaker
 
-      Commands.monitoringMouseToCancelSpacing = false
       emit 'chainWillExecute', chain
       chainHasFailed = false
       _.each chain, (link, index) ->
@@ -79,9 +75,6 @@ class Chain
           return false
       unless chainHasFailed
         emit 'chainDidExecute', chain
-        setTimeout -> # what is this sorcery?
-          Commands.monitoringMouseToCancelSpacing = true
-        , 150
 
   generateNestedInterpretation: ->
     results = @parse()
@@ -145,71 +138,5 @@ class Chain
         current.context.mouseLatencyIndex = latencyIndex
         latencyIndex += 1
     commands
-
-  applyAutoSpacing: (commands) ->
-    results = []
-    for current, index in commands
-      if index is 0
-        previous = HistoryController.getCommands().pop()
-        previous = null if previous?.cancelAutoSpacing
-        connector = @determineCommandConnector
-          previous: previous
-          current: current
-          multiPhrase: true
-      else
-        previous = commands[index - 1]
-        connector = @determineCommandConnector
-          previous: previous
-          current: current
-          multiPhrase: false
-      if connector?
-        results.push
-          command: connector
-      results.push current
-    # apply the last element
-    connector = @determineCommandConnector
-      previous: _.last(commands)
-      current: null
-      multiPhrase: false
-
-    if connector?
-      results.push
-        command: connector
-    results
-
-  determineCommandConnector: ({previous, current, multiPhrase}) ->
-    left = 'undefined'
-    right = 'undefined'
-    if previous?
-      spacing = @getAutoSpacingFromCommand previous, multiPhrase
-      if spacing?
-        left = spacing.split(' ')[1]
-    if current?
-      spacing = @getAutoSpacingFromCommand current, multiPhrase
-      if spacing?
-        right = spacing.split(' ')[0]
-    combined = [left, right].join ' '
-    if combined.indexOf('never') != -1
-      null
-    else if combined.indexOf('always') != -1
-      'symbols:space'
-    else
-      switch combined
-        when 'normal normal'
-          'symbols:space'
-        when 'soft normal', 'normal soft'
-          'symbols:space'
-
-  getAutoSpacingFromCommand: (command, multiPhrase) ->
-    info = Commands.get command.command
-    spacing = if multiPhrase
-      info.multiPhraseAutoSpacing
-    else
-      info.autoSpacing
-    if spacing?
-      if typeof spacing is 'function'
-        spacing.call(Actions, command.arguments, command.context)
-      else
-        spacing
 
 module.exports = Chain

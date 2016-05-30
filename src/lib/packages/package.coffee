@@ -151,6 +151,12 @@ class Package
     else
       @options.condition
 
+  active: ->
+    if @scope?
+      Scope.get(@scope)?.active()
+    else
+      true
+
   remove: ->
     # TODO track commands that were added, and before/after-
     # basically all changes, and then undo them

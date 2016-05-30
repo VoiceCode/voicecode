@@ -224,7 +224,6 @@ class DarwinActions extends Actions
         position.y < (s.origin.y + s.size.height)
           screen = s
 
-
     if screen
       offsetX = if x <= 1
         screen.size.width * x
@@ -242,9 +241,6 @@ class DarwinActions extends Actions
       event = $.CGEventCreateMouseEvent null, $.kCGEventMouseMoved, $.CGPointMake(newOriginX, newOriginY), 0
       $.CGEventPost($.kCGSessionEventTap, event)
 
-
-
-
   microphoneOff: ->
     @applescript """
     tell application id "com.dragon.dictate"
@@ -252,11 +248,8 @@ class DarwinActions extends Actions
     end tell
     """, false
 
-
-
   _getCurrentBrowserUrl: (cb) ->
-    container = mutate 'getCurrentBrowserUrl', {url: null}
-    container.url
+    mutate('getCurrentBrowserUrl', {url: null}).url
 
   currentBrowserUrl: ({reset} = {reset: false}) ->
     if reset or !@_currentBrowserUrl?

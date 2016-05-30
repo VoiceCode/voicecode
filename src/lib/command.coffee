@@ -50,7 +50,7 @@ class Command
     if _.isEmpty sorted
       warning null, null, "#{@id} has no implementations"
 
-    _.each sorted,  ({action: e, info}) =>
+    _.each sorted, ({action: e, info}) =>
       if Scope.active(_.extend {},
       info, {id, input, context}) and _.isFunction(e)
         emit 'implementationWillExecute', {@id, e, info}
