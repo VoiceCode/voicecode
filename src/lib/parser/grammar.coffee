@@ -292,9 +292,9 @@ class Grammar
       {return chars.join('')}
 
     symbol =
-      !sentinel !customCommand (
-        symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s
-      ) {return symbol}
+      !sentinel
+      symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s
+      {return symbol}
 
     numberRange = first:(fuzzyInteger) "." ss last:(fuzzyInteger)? {return {first: parseInt(first), last: parseInt(last)};}
 
