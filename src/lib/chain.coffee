@@ -85,50 +85,6 @@ class Chain
       )
       combined
 
-  # no longer needed after upcoming grammar/parser update
-
-  # normalizeStructure: (commands) ->
-  #   results = []
-  #   _.each commands, (current) =>
-  #     command = Commands.mapping[current.command]
-  #     previous = _.last(results)
-  #     if @needsCustomScope(command)
-  #       if Scope.active(command)
-  #         if Actions.commandPermitted current.command
-  #           results.push current
-  #       else
-  #         if previous
-  #           if previous.command is "core:literal" or
-  #           Commands.mapping[previous.command].grammarType is "textCapture"
-  #             @mergeTextualCommands(previous, current)
-  #           else
-  #             results.push {command: "core:literal", arguments: [current.spoken]}
-  #         else
-  #           results.push {command: "core:literal", arguments: [current.spoken]}
-  #     else if current.command is "core:literal" and previous?.command is "core:literal"
-  #       @mergeLiteralCommands(previous, current)
-  #     else
-  #       if Actions.commandPermitted current.command
-  #         results.push current
-  #   results
-  #
-  # needsCustomScope: (command) ->
-  #   command.applications?.length or command.condition? or command.scope?
-  #
-  # mergeTextualCommands: (previous, current) ->
-  #   previous.arguments ?= []
-  #   previous.arguments.push current.spoken
-  #   if Object.prototype.toString.call(current.arguments) is '[object Array]'
-  #     #concat arrays
-  #     previous.arguments = previous.arguments.concat(current.arguments)
-  #   else
-  #     # if any arg, push it
-  #     previous.arguments.push current.arguments
-  #   previous.arguments = _.compact(previous.arguments)
-  #
-  # mergeLiteralCommands: (previous, current) ->
-  #   previous.arguments = previous.arguments.concat(current.arguments)
-
   applyMouseLatency: (commands) ->
     latencyIndex = 0
     for current in commands by -1

@@ -110,6 +110,7 @@ class Grammar
 
   buildId: (command, returnId = true) ->
     name = command.spoken
+    return unless name?
     if command.misspellings?.length
       normalized = name.replace(/\W+/g, "_")
       "__#{normalized}"
@@ -120,7 +121,6 @@ class Grammar
       ].join('')
 
   customCommand: (command) ->
-    name = command.spoken
     first = []
     second = []
     for item in command.grammar.tokens
@@ -285,14 +285,16 @@ class Grammar
     ss = " "+
 
     word =
-      !sentinel
-      text:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / ':' / [0-9])+ ss
-      {return text.join('')}
+      !sentinel !customCommand text:(characters) {return text}
+
+    characters =
+      chars:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / ':' / [0-9])+ ss
+      {return chars.join('')}
 
     symbol =
-      !sentinel
-      symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s
-      {return symbol}
+      !sentinel !customCommand (
+        symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s
+      ) {return symbol}
 
     numberRange = first:(fuzzyInteger) "." ss last:(fuzzyInteger)? {return {first: parseInt(first), last: parseInt(last)};}
 
