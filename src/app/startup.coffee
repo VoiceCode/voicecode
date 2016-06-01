@@ -104,8 +104,8 @@ Events.on 'applicationShouldStart', ->
     startupFlow.firstArgIsError = false
     global.Settings = {extend: (k, v) -> _.deepExtend Settings, {"#{k}": v}}
     _.deepExtend Settings, require "../lib/platforms/#{platform}/settings"
-    Settings.userAssetsPath = '~/voicecode_user_development'
-    # Settings.userAssetsPath = '~/voicecode'
+    # Settings.userAssetsPath = '~/voicecode_user_development'
+    Settings.userAssetsPath = '~/voicecode'
     global.Packages = require '../lib/packages/packages'
     # A package for platform specific global commands
     Packages.register
@@ -133,6 +133,7 @@ Events.on 'applicationShouldStart', ->
         global.Actions = require "#{_path}/actions"
         global.SystemInfo = require "#{_path}/system_info"
         global.DarwinController = require "#{_path}/darwin_controller"
+        global.VocabularyController = require("#{_path}/dragon/dragon_vocabulary_controller")
       when "windows"
         global.Actions = require '../lib/platforms/windows/actions'
       when "linux"
@@ -144,7 +145,6 @@ Events.on 'applicationShouldStart', ->
     #   visit: (required) ->
     #     if (not _.isEmpty required) and _.isObject required
     #       _.each required, (value, key) -> global[key] = value
-    emit 'startupFlow:corePackagesLoaded' # needed?
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
     AssetsController.getAssets 'package', 'packages/**/package.coffee'
@@ -173,7 +173,7 @@ Events.on 'applicationShouldStart', ->
       when "darwin"
         _path = "../lib/platforms/darwin/dragon"
         global.DragonController = require "#{_path}/dragon_controller"
-        require("#{_path}/dragon_vocabulary_controller").start()
+        VocabularyController.start()
       # when "win32"
       # when "linux"
 

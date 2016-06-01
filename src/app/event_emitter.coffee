@@ -8,8 +8,9 @@ class EventEmitter extends require('events').EventEmitter
     @debug = true
     @frontendSubscriptions = {}
     @suppressedDebugEntries = [
+      'apiCreated'
       # 'deprecation'
-      # 'implementationWillExecute'
+      'implementationWillExecute'
       'enableCommand'
       'commandCreated'
       'commandEnabled'
@@ -20,6 +21,9 @@ class EventEmitter extends require('events').EventEmitter
       'commandBeforeAdded'
       'commandMisspellingsAdded'
       'commandSpokenChanged'
+      'charactersTyped'
+      'historicChainCreated'
+      'historicChainLinkCreated'
       # 'assetEvent'
       # 'assetEvaluated'
       # 'assetsLoaded'
@@ -27,6 +31,7 @@ class EventEmitter extends require('events').EventEmitter
       # 'userAssetsLoading'
       # 'userAssetsLoaded'
       # 'userAssetEvaluated'
+      'mouse.leftClick'
       'packageReady'
       'userAssetEvaluated'
       'userAssetEvent'
@@ -41,16 +46,17 @@ class EventEmitter extends require('events').EventEmitter
       # 'commandValidationFailed'
       # 'commandValidationError'
       # 'chainParsed'
-      # 'chainPreprocessed'
+      'chainPreprocessed'
       # 'chainWillExecute'
-      # 'commandDidExecute'
-      # 'chainDidExecute'
-      # 'commandNotFound'
+      'commandDidExecute'
+      'chainDidExecute'
+      'commandNotFound'
       'eventMonitorStarted'
       'dragonStarted'
       # 'packageAssetEvent'
       'currentApplicationWillChange'
       'currentApplicationChanged'
+      'notUndoable'
     ]
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible

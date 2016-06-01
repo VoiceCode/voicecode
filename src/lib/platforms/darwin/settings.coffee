@@ -141,7 +141,6 @@ module.exports =
     codeSnippetCompletions:
         "Sublime Text": "tab"
 
-
     translations:
         "january": "January"
         "february": "February"
@@ -154,17 +153,6 @@ module.exports =
         "consul": "console"
         "et cetera": "etc."
         "e-mail": "email"
-    vocabulary: [
-        "trello"
-        "auto space"
-        "add misspellings"
-    ]
-    vocabularyAlternate:
-        # "spoken": "result"
-        # "+get hub": "github"
-        "get hub": "github"
-        "I term": "iTerm"
-        "HTTPS": "https"
 
     shellCommands:
         permissions: "chmod "

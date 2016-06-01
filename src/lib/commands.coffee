@@ -37,10 +37,11 @@ class Commands
     @repeaterLookup = {}
 
     @delayedEditFunctions = []
-    Events.once 'startupFlow:corePackagesLoaded', => @initialize()
+    # Events.once 'startupFlow:corePackagesLoaded', => @initialize()
+    @initialize()
 
   initialize: () ->
-    @performCommandEdits 'corePackages' # corePackagesCommandEditsPerformed
+    # @performCommandEdits 'corePackages' # corePackagesCommandEditsPerformed
 
     Events.once 'userAssetsLoaded', =>
       @performCommandEdits 'userCode' # userCodeCommandEditsPerformed
@@ -159,8 +160,8 @@ class Commands
 
   get: (name) ->
     command = @mapping[name]
-    # unless command?
-      # error 'commandNotFound', name
+    unless command?
+      debug 'commandNotFound', name
     command
 
   getEnabled: ->

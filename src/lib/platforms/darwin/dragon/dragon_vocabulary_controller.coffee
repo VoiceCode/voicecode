@@ -6,8 +6,9 @@ VocabularyController = require '../../base/vocabulary_controller'
 class DragonVocabularyController extends VocabularyController
 
   generate: ->
-    for category, phrases of @phrases
-      @createVocabFile category, phrases
+    emit "vocabularyController:willGenerate"
+    for name, generator of @lists
+      @createVocabFile name, generator()
     @createVocabularyTrainingFile()
 
   createVocabularyTrainingFile: ->
