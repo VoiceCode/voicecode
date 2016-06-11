@@ -53,7 +53,10 @@ class CustomGrammar
       spoken = _.reject values, _.isArray
       debug "spoken: ", spoken
       spoken = spoken.join ' '
-      @lists[@reverseNameLookup[list]].value(spoken)
+      if spoken.length > 0
+        @lists[@reverseNameLookup[list]].value(spoken)
+      else
+        null
 
   listsWithOptions: (kind='spoken') ->
     results = {}

@@ -69,10 +69,11 @@ class SpeakableList
     if spoken?
       if @kind is 'object'
         # fyi fuzzyMatch sucks... it could not match 'teek ' => 'teek'
-        @items[spoken] or @misspellings[spoken] or Actions.fuzzyMatch(@items, spoken)
+        @items[spoken] or @misspellings[spoken]
+        #  or Actions.fuzzyMatch(@items, spoken)
       else
         Actions.fuzzyMatch @items, spoken
-    else
-      @defaultValue
+    # else
+    #   @defaultValue
 
 module.exports = SpeakableList
