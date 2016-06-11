@@ -167,6 +167,11 @@ class Commands
   getEnabled: ->
     _.map (_.filter @mapping, {enabled: true}), 'id'
 
+  enableAll: ->
+    _.each @mapping, (command, name) =>
+      @enable name
+    @performCommandEdits('slaveModeEnableAllCommands')
+
   shouldEmitValidationFailed: (editType, command) ->
     return true
 

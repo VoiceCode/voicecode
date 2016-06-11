@@ -232,6 +232,7 @@ class DragonSynchronizer
           bundleIds = ['global']
         for bundleId in bundleIds
           continue unless Actions.checkBundleExistence(bundleId)
+          continue unless dragonName?
           needsCreating.push
             bundleId: bundleId
             triggerPhrase: dragonName.trim()

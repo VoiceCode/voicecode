@@ -184,6 +184,8 @@ class Grammar
       c:unconstrainedTextCommand & {return state.found(c)} {return c}/
       c:literalCommand & {return state.found(c)} {return c}
 
+    nestedCommand = 'bbxxyy '
+
     #{@buildMisspellings()}
 
     customCommandId = #{@buildIds('custom')}
@@ -225,7 +227,7 @@ class Grammar
       unconstrainedTextId
 
     literalCommand = a:(
-      nestedText /
+      nestedCommand /
       translation /
       exactInteger /
       labeledPhonemeString /
@@ -238,7 +240,7 @@ class Grammar
     sentinel = id:(commandId) &{return state.sen(id)}
 
     textArgument = segments:(
-      nestedText /
+      nestedCommand /
       translation /
       exactInteger /
       phonemeString /
@@ -250,7 +252,7 @@ class Grammar
 
     singleSearchArgument = (
       findable /
-      nestedText /
+      nestedCommand /
       translation /
       contextualInteger /
       singleTextArgument
@@ -266,10 +268,6 @@ class Grammar
       word /
       exactInteger /
       symbol
-
-    nestedText
-      = id:nestedTextId arguments:(word)+
-      {return g.grammarTransform(id, (arguments));}
 
     unconstrainedText = unconstrainedWord*
     unconstrainedWord = chars:(!ss ch:. {return ch})* ss {return chars.join('')}

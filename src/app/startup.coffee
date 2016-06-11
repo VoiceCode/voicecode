@@ -165,9 +165,7 @@ Events.on 'applicationShouldStart', ->
     require './enabled_commands_manager'
 
     if Settings.slaveMode or developmentMode
-      _.each Commands.mapping, (command, name) ->
-        Commands.enable name
-      Commands.performCommandEdits('slaveModeEnableAllCommands')
+      Commands.enableAll()
 
     switch platform
       when "darwin"
