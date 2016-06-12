@@ -95,9 +95,9 @@ _.merge Settings,
       catch err
         emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
         warning "#{type}AssetEvaluationError", {error: err.stack, fullPath}, "#{fullPath}:\n#{err}"
-      emit 'assetEvaluated', {event, fullPath}
-      log "#{type}AssetEvaluated", {event, fullPath},
-      "Asset type '#{type}' evaluated: #{fullPath}"
+      emit 'assetEvaluated', {event, type, fullPath, fileName}
+      log "#{type}AssetEvaluated", {event, type, fullPath, fileName},
+      "Asset type '#{type}' evaluated (#{event} event): #{fullPath}"
       # @debouncedFinish ?= _.debounce =>
       #   emit "#{type}AssetsLoaded"
       #   emit 'assetsLoaded'

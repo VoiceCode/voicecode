@@ -39,11 +39,13 @@ class DarwinController
     dragonPID = Execute('pgrep Dragon')
     setInterval =>
       Execute('pgrep Dragon', (err, pid) =>
+        log null, null, "Dragon process id: #{pid}"
         if dragonPID isnt pid
+          log null, null, "Restarting event monitor..."
           @eventMonitor.restart()
           dragonPID = pid
         )
-    , 20000
+    , 15000
     @eventMonitor = forever.start '',
       command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
@@ -224,8 +226,6 @@ class DarwinController
       else
         Settings.dragonApplicationName =
           Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
-    Settings.applications ?= {}
-    Settings.applications.dragon = Settings.dragonApplicationName
 
   listenAsSlave: ->
     socketServer = net.createServer (socket) =>

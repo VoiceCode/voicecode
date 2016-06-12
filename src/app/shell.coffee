@@ -2,6 +2,9 @@
 cp = require('child_process')
 
 Execute = (script, options = {}, callback = null) ->
+  if _.isFunction options
+    callback = options
+    options = {}
   method = 'execSync'
   if callback?
     method = 'exec'

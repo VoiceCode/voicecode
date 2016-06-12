@@ -102,6 +102,7 @@ class Package
     if options?
       _.deepExtend @_settings, options
       Events.once 'settingsAssetsLoaded', ->
+        # TODO: remove
         _.deepExtend Settings, options
       @_settings
     else

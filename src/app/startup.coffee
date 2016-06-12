@@ -4,7 +4,7 @@ global.app = require 'app'
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
-global.developmentMode = false
+global.developmentMode = true
 testing = true
 # app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
