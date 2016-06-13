@@ -47,13 +47,7 @@ class Chain
         Events.unsubscribe 'breakChain', comboBreaker
 
       emit 'chainWillExecute', chain
-      chainHasFailed = false
       _.each chain, (link, index) ->
-        if _.isObject chainBroken
-          log 'chainBroken', chain,
-          "#{chain[index-1].command} broke the chain: #{chainBroken.reason}"
-          return false
-
         chainLinkIndex = HistoryController.getChainLength()
         link.context ?= {}
         _.extend link.context,
@@ -67,13 +61,19 @@ class Chain
             link.context
           ).execute()
           emit 'commandDidExecute', {link, chain}
-          return true
         catch e
           error 'commandFailedExecute', link, e
           error 'chainFailedExecute', {link, chain}, e, e.stack
-          chainHasFailed = true
-          return false
-      unless chainHasFailed
+          chainBroken = {reason: e}
+        finally
+          if _.isObject chainBroken
+            log 'chainBroken', chain,
+            "#{chain[index-1].command} broke the chain: #{chainBroken.reason}"
+            return false
+          return true
+
+
+      unless chainBroken
         emit 'chainDidExecute', chain
 
   generateNestedInterpretation: ->

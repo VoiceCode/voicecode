@@ -11,12 +11,18 @@ class Packages
     # instantiate the package, add it to our internal list of packages
     # I'm sure we will think of more things to be done here
     return false unless @validatePackage options
+
+    # only flies while we develop...
+    # otherwise need 2 cleanup and re-instantiate
     if @packages[options.name]?
       return @packages[options.name]
 
     instantiated = new Package options
     @packages[options.name] = instantiated
     log 'packageCreated', instantiated, "Package registered: #{options.name}"
+    Events.once "assetEvaluated", ->
+      unless instantiated.hasDeferred
+        emit 'packageReady', instantiated
     instantiated
 
   get: (name) ->
@@ -35,7 +41,7 @@ class Packages
 
     warning = if @packages[options.name]?
       "Package with name [#{options.name}] is already registered"
-
+      # should fail validation?
     if warning?
       Events.warning 'packageValidationWarning', options, warning
 
@@ -47,7 +53,6 @@ class Packages
 
   remove: (name) ->
     delete @packages[name]
-
 
 
 module.exports = new Packages

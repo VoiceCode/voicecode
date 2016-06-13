@@ -111,10 +111,11 @@ class Package
   # called after user code has been evaluated
   # (so a user can change package settings that
   # this package's commands depend on)
-  ready: (callback) ->
-    if _.isFunction callback
-      Events.once 'userAssetsLoaded', callback.bind(@)
-    emit 'packageReady', @
+  defer: (callback) ->
+    @hasDeferred = true
+    Events.once 'userAssetsLoaded', =>
+      callback.bind(@)()
+      emit 'packageReady', @
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates
