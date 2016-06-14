@@ -1,3 +1,4 @@
+global.bundleId = 'io.voicecode.app'
 global.app = require 'app'
 
 # https://gist.github.com/dimatter/0206268704609de07119
@@ -34,6 +35,7 @@ global.util = require('util')
 
 global.debug = ->
 if developmentMode or testing
+  global.bundleId = 'com.github.electron'
   electronConnect = require('electron-connect').client
   global.WHO_IS_CALLING = ->
     console.log chalk.white.bold.bgRed('   ' + arguments.callee.toString() + '   ')
@@ -69,8 +71,6 @@ global.menubar = require('menubar')
   showDockIcon: false
 
 menubar.on 'ready', ->
-  # emit 'mainWindowReady', menubar
-  # Events.on 'mainReady', -> emit 'applicationShouldStart'
   menubar.showWindow()
   menubar.hideWindow()
 
@@ -79,9 +79,10 @@ menubar.on 'after-create-window', ->
   windowController.set 'main', window
   window.on 'blur', -> window.hide()
   window.on 'focus', ->
-    global.DarwinController?.applicationChanged
-      bundleId: 'io.voicecode.app'
-      name: 'VoiceCode'
+    if Actions?.setCurrentApplication?
+      Actions.setCurrentApplication
+        bundleId: global.bundleId
+        currentWindow: 'main'
   # window.webContents.executeJavaScript 'require("coffee-script/register")'
   # window.webContents.executeJavaScript 'require("node-cjsx").transform()'
   window.on 'closed', -> debug 'window closed, what to do?'

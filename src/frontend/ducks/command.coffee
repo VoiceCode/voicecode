@@ -27,11 +27,12 @@ exports.actionCreators = actionCreators
 
 commandRecord = immutable.Record
   id: null
+  rule: null
   spoken: null
+  locked: false
   enabled: false
   packageId: 'unpackaged'
   description: 'no description'
-  locked: false
 
 exports.reducers =
   commands: (commands = immutable.Map({}), {type, payload}) =>

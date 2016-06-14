@@ -1,13 +1,26 @@
 _ = require 'lodash'
 React = require 'react'
 ReactDOM = require 'react-dom'
-window.remote = require 'remote'
-_events = remote.getGlobal 'Events'
+window.Remote = require 'remote'
+_events = Remote.getGlobal 'Events'
 window.emit = _events.emit
 window.Events = {on: _events.frontendOn}
-{ Provider } = require 'react-redux'
+{Provider} = require 'react-redux'
+{Router, hashHistory} = require 'react-router'
+{syncHistoryWithStore} = require 'react-router-redux'
+routes = require './routes/main'
 Main = require './containers/Main'
 window.store = require './stores/main'
+history = syncHistoryWithStore hashHistory, store,
+  selectLocationState: do ->
+    previousRouterState = null
+    previousRouterStateJS = null
+    (state) ->
+      routerState = state.get 'router'
+      if previousRouterState isnt routerState
+        previousRouterState = routerState
+        previousRouterStateJS = routerState.toJS()
+      previousRouterStateJS
 
 subscribeToRemoteEvents = ->
   events = {
@@ -18,17 +31,17 @@ subscribeToRemoteEvents = ->
     'commandDisabled': 'disableCommand'
     'implementationCreated': 'implementationCreated'
     'startupFlow:complete': 'appStart'
+    'setPackageFilter': 'setPackageFilter'
+    'focusPackageFilter': 'focusPackageFilter'
   }
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 
 subscribeToRemoteEvents()
 
+
 ReactDOM.render(
-  <Provider store={ store }>
-    <Main/>
+  <Provider store={store}>
+    <Router history={history} routes={routes}/>
   </Provider>
 , document.getElementById('root'))
-
-
-emit 'applicationShouldStart'

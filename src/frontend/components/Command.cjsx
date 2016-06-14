@@ -1,5 +1,5 @@
 React = require 'react'
-{ connect } = require 'react-redux'
+{connect} = require 'react-redux'
 {toggleCommand} = require('../ducks/command').actionCreators
 {commandSelector, implementationsForCommand} = require '../selectors'
 classNames = require 'classnames'
@@ -15,8 +15,7 @@ class Command extends React.Component
 
   render: ->
     {toggleCommand, implementations} = @props
-    {id, spoken, enabled, packageId, description, locked} = @props.command.toJS()
-    console.warn "rendering command: #{id}"
+    {id, spoken, enabled, packageId, description, locked, rule} = @props.command.toJS()
     iconClasses = classNames
       'large middle aligned icon': true
       'toggle on': enabled
@@ -33,10 +32,13 @@ class Command extends React.Component
       <div className="content">
         <div className="header">
         {
-          if not spoken
+          if not spoken? and not rule?
               <i className='tiny grey mute icon'></i>
           else
-            spoken
+            if rule? and spoken?
+              rule.replace('<spoken>', spoken)
+            else
+              rule or spoken
         }
         </div>
         <div className="meta">{ id }</div>

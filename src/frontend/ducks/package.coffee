@@ -16,7 +16,7 @@ exports.actionCreators =
 packageRecord = immutable.Record
   name: 'unknown'
   description: 'no description'
-
+  
 apiRecord = immutable.Record
   name: null
   description: null

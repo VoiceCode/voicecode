@@ -1,28 +1,28 @@
 React = require 'react'
+{IndexLink, Link} = require 'react-router'
 PackageList = require '../components/PackageList'
-MainSearch = require '../components/MainSearch'
+PackageFilter = require '../components/PackageFilter'
 class Main extends React.Component
-  @displayName: 'Main'
-  componentWillMount: ->
-    console.info 'Main props', arguments
   componentDidMount: ->
-    # emit 'applicationShouldStart'
+    emit 'applicationShouldStart'
   render: ->
     <div>
-      <div className="ui inverted menu">
+      <div className="ui top fixed inverted menu">
           <a className="header item">
           VoiceCode
           </a>
-          <a className="active item">
-            Packages
-          </a>
           <div className="right menu">
-              <div className="item">
-                <MainSearch/>
-              </div>
+            <IndexLink to="/" className="item" activeClassName="active">Log</IndexLink>
+            <Link to="/packages" className="item" activeClassName="active">Packages</Link>
+
+            <div className="item">
+              <PackageFilter/>
             </div>
+          </div>
       </div>
-      <PackageList/>
+      <div className='mainBody'>
+        {@props.children}
+      </div>
     </div>
 
 module.exports = Main

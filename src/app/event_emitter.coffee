@@ -55,7 +55,7 @@ class EventEmitter extends require('events').EventEmitter
       'dragonStarted'
       # 'packageAssetEvent'
       'currentApplicationWillChange'
-      'currentApplicationChanged'
+      # 'currentApplicationChanged'
       'notUndoable'
     ]
   frontendOn: (event, callback) ->

@@ -9,7 +9,7 @@ Package = class Package extends React.Component
     @props.pack isnt nextProps.pack
 
   render: ->
-    {name, description} = @props.pack.toJS()
+    {name, description} = @props.pack
     console.info "rendering package: #{name}"
     <div className=''>
       <div className="ui top attached huge block header">

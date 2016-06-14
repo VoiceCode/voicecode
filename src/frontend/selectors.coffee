@@ -2,12 +2,24 @@
 immutable = require 'immutable'
 
 # main window selectors
-_packagesSelector = (state, props) ->
+packagesSelector = (state, props) ->
   state.get 'packages'
-packagesSelector = createSelector [_packagesSelector], (packages) ->
-  packages.sortBy (pack) -> pack.get 'name'
 
-commandsSelector = (state, props) -> state.get 'commands'
+packageFilterSelector = (state, props) ->
+  state.get 'package_filter'
+
+filteredPackagesSelector = createSelector [
+  packagesSelector,
+  packageFilterSelector
+  ], (packages, filter) ->
+    filter = filter.toJS()
+    if filter.query isnt '' and filter.scope is 'packages'
+      packages = packages.filter (pack) ->
+        pack.get('name').indexOf(filter.query) isnt -1
+    packages.sortBy (pack) -> pack.get 'name'
+
+commandsSelector = (state, props) ->
+  state.get 'commands'
 
 commandSelector = (state, props) ->
   commandsSelector(state).get props.commandId
@@ -22,24 +34,27 @@ implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
 
 _.assign exports, {
-  packagesSelector
-  commandsForPackage
   apisForPackage
   commandSelector
+  packagesSelector
+  commandsForPackage
+  packageFilterSelector
+  filteredPackagesSelector
   implementationsForCommand
-
 }
 
 
 # history window selectors
 currentApplicationSelector = (state) ->
   state.get('currentApplication')
-chainsSelector = (state) -> state.get('chains')
+
+chainsSelector = (state) ->
+  state.get('chains')
+
 activeChainSelector = createSelector currentApplicationSelector, chainsSelector
 , (currentApplication, chains) ->
   console.debug arguments
   chains.get currentApplication
-
 
 
 _.assign exports, {

@@ -1,8 +1,8 @@
 _ = require 'lodash'
 React = require 'react'
 ReactDOM = require 'react-dom'
-window.remote = require 'remote'
-_events = remote.getGlobal 'Events'
+window.Remote = require 'remote'
+_events = Remote.getGlobal 'Events'
 window.emit = _events.emit
 window.Events = {on: _events.frontendOn}
 { Provider } = require 'react-redux'

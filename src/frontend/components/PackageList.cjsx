@@ -1,23 +1,20 @@
 React = require 'react'
 Package = require '../components/Package'
 
-{ connect } = require 'react-redux'
-{ packagesSelector } = require '../selectors'
+{connect} = require 'react-redux'
+{filteredPackagesSelector} = require '../selectors'
 stateToProps = (state) ->
-  return {
-    packages: packagesSelector state
-}
-
+  packages: filteredPackagesSelector state
 
 class PackageList extends React.Component
 
   render: ->
-    console.info "rendering package list"
+    
     {packages} = @props
     <div className="">
     {
-      packages.map (pack, index) ->
-        <Package key={ index } pack={ pack } />
+      packages.map (pack) ->
+        <Package key={ pack.get('name') } pack={ pack } />
     }
     </div>
 
