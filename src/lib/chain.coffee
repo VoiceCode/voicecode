@@ -24,9 +24,7 @@ class Chain
       probably a problem with the license code, email, or internet connection"
 
   execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
-    chain ?= @parse()
-    if _.isEmpty chain
-      return
+    return if _.isEmpty chain ?= @parse()
     if shouldPreprocess
       chain = _.reduce preprocessors, (chain, {identity, callback}) ->
         if Scope.active identity
