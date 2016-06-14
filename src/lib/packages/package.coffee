@@ -23,16 +23,17 @@ class Package
     _.each actions, (value, name) =>
       if _.isFunction value
         method = value
+        value = {}
       else
         method = value.action
-
-      delete value.action
+        delete value.action
+      value.name = name
       @["_#{type}s"][name] = value
       if Actions[name]?
         warning 'packageOverwritesAction', name,
         "Package '#{@name}' has overwritten Actions.#{name}"
       Actions[name] = method.bind Actions
-      emit "#{type}Created", {name, package: @name}
+      emit "#{type}Created", {packageId: @name, "#{type}": value}
       true
 
   commands: ->

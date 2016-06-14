@@ -1,7 +1,7 @@
 { createAction } = require 'redux-actions'
 immutable = require 'immutable'
 {CREATE_COMMAND} = require('./command')
-
+{CREATE_API} = require './api'
 constants =
   CREATE_PACKAGE: 'CREATE_PACKAGE'
   UPDATE_PACKAGE: 'UPDATE_PACKAGE'
@@ -17,6 +17,11 @@ packageRecord = immutable.Record
   name: 'unknown'
   description: 'no description'
 
+apiRecord = immutable.Record
+  name: null
+  description: null
+  signature: null
+  shorthandFor: null
 exports.reducers =
   packages: (packages = immutable.Map({}), {type, payload}) =>
     switch type
@@ -36,3 +41,12 @@ exports.reducers =
         , (list) -> list.push payload.id
       else
         package_commands
+  package_apis: (package_apis = immutable.Map({}), {type, payload}) =>
+    switch type
+      when CREATE_API
+        package_apis.updateIn [payload.packageId],
+        (list) ->
+          list ?= immutable.List []
+          list.push new apiRecord payload.api
+      else
+        package_apis

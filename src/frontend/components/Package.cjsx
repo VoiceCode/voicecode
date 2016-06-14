@@ -1,5 +1,6 @@
 React = require 'react'
 CommandList = require './CommandList.cjsx'
+ApiList = require './ApiList.cjsx'
 {connect} = require 'react-redux'
 {getPackage} = require '../selectors'
 
@@ -22,6 +23,9 @@ Package = class Package extends React.Component
       </div>
       <div className="ui attached segment">
         <CommandList packageId={ name } />
+      </div>
+      <div className="ui attached segment">
+        <ApiList packageId={ name } />
       </div>
     </div>
 

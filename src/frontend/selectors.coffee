@@ -15,12 +15,16 @@ commandSelector = (state, props) ->
 commandsForPackage = (state, props) ->
   state.get('package_commands').get props.packageId
 
+apisForPackage = (state, props) ->
+  state.get('package_apis').get props.packageId
+
 implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
 
 _.assign exports, {
   packagesSelector
   commandsForPackage
+  apisForPackage
   commandSelector
   implementationsForCommand
 

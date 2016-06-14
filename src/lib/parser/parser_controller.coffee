@@ -81,7 +81,13 @@ class ParserController
       result.push item
     {phrase: result} = mutate 'willParsePhrase', {phrase: result.join('')}
     result = result.split('')
-    @parser.parse result.join('')
+    try
+      result = @parser.parse result.join('')
+    catch err
+      error 'parsingError', error, error.message
+      result = []
+    finally
+      result
 
   writeToDisk: (data) ->
     @settingsManager ?= new SettingsManager("generated/parser")

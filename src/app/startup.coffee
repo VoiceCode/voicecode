@@ -75,15 +75,21 @@ menubar.on 'ready', ->
   menubar.hideWindow()
 
 menubar.on 'after-create-window', ->
-  windowController.set 'main', menubar.window
-  # menubar.window.webContents.executeJavaScript 'require("coffee-script/register")'
-  # menubar.window.webContents.executeJavaScript 'require("node-cjsx").transform()'
-  menubar.window.on 'closed', -> debug 'window closed, what to do?'
+  window = menubar.window
+  windowController.set 'main', window
+  window.on 'blur', -> window.hide()
+  window.on 'focus', ->
+    global.DarwinController?.applicationChanged
+      bundleId: 'io.voicecode.app'
+      name: 'VoiceCode'
+  # window.webContents.executeJavaScript 'require("coffee-script/register")'
+  # window.webContents.executeJavaScript 'require("node-cjsx").transform()'
+  window.on 'closed', -> debug 'window closed, what to do?'
   if developmentMode
-    menubar.window.on 'reload', ->
+    window.on 'reload', ->
       Events.frontendClearSubscriptions()
-    menubar.window.openDevTools()
-    electronConnect = electronConnect.create menubar.window
+    window.openDevTools()
+    electronConnect = electronConnect.create window
 
 app.on 'ready', ->
   # emit 'appReady'#, app
@@ -104,8 +110,9 @@ Events.on 'applicationShouldStart', ->
     startupFlow.firstArgIsError = false
     global.Settings = {extend: (k, v) -> _.deepExtend Settings, {"#{k}": v}}
     _.deepExtend Settings, require "../lib/platforms/#{platform}/settings"
-    # Settings.userAssetsPath = '~/voicecode_user_development'
     Settings.userAssetsPath = '~/voicecode'
+    if developmentMode
+      Settings.userAssetsPath = '~/voicecode_development'
     global.Packages = require '../lib/packages/packages'
     # A package for platform specific global commands
     Packages.register

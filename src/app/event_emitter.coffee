@@ -8,7 +8,7 @@ class EventEmitter extends require('events').EventEmitter
     @debug = true
     @frontendSubscriptions = {}
     @suppressedDebugEntries = [
-      'apiCreated'
+      # 'apiCreated'
       # 'deprecation'
       'implementationWillExecute'
       'enableCommand'

@@ -24,11 +24,9 @@ class Chain
       probably a problem with the license code, email, or internet connection"
 
   execute: (chain = null, shouldAutoSpace = true, shouldPreprocess = true) ->
-    try
-      chain ?= @parse()
-    catch e
-      error 'chainParseError', e
-
+    chain ?= @parse()
+    if _.isEmpty chain
+      return
     if shouldPreprocess
       chain = _.reduce preprocessors, (chain, {identity, callback}) ->
         if Scope.active identity
@@ -36,45 +34,43 @@ class Chain
         chain
       , chain
       log 'chainPreprocessed', chain, JSON.stringify chain
+    chainBroken = false
+    comboBreaker = (reason) ->
+      chainBroken = {reason}
 
-    unless _.isEmpty chain
-      chainBroken = false
-      comboBreaker = (reason) ->
-        chainBroken = {reason}
+    Events.once 'breakChain', comboBreaker
+    Events.once 'chainDidExecute', ->
+      Events.unsubscribe 'breakChain', comboBreaker
 
-      Events.once 'breakChain', comboBreaker
-      Events.once 'chainDidExecute', ->
-        Events.unsubscribe 'breakChain', comboBreaker
-
-      emit 'chainWillExecute', chain
-      _.each chain, (link, index) ->
-        chainLinkIndex = HistoryController.getChainLength()
-        link.context ?= {}
-        _.extend link.context,
-            chainLinkIndex: ++chainLinkIndex
-            chain: _.cloneDeep chain
-        emit 'commandWillExecute', {link, chain}
-        try
-          new Command(
-            link.command
-            link.arguments
-            link.context
-          ).execute()
-          emit 'commandDidExecute', {link, chain}
-        catch e
-          error 'commandFailedExecute', link, e.message
-          error 'chainFailedExecute', {link, chain}, e, e.stack
-          emit 'breakChain', e.message
-        finally
-          if _.isObject chainBroken
-            log 'chainBroken', chain,
-            "#{chain[index].command} broke the chain: #{chainBroken.reason}"
-            return false
-          return true
+    emit 'chainWillExecute', chain
+    _.each chain, (link, index) ->
+      chainLinkIndex = HistoryController.getChainLength()
+      link.context ?= {}
+      _.extend link.context,
+          chainLinkIndex: ++chainLinkIndex
+          chain: _.cloneDeep chain
+      emit 'commandWillExecute', {link, chain}
+      try
+        new Command(
+          link.command
+          link.arguments
+          link.context
+        ).execute()
+        emit 'commandDidExecute', {link, chain}
+      catch e
+        error 'commandFailedExecute', link, e.message
+        error 'chainFailedExecute', {link, chain}, e, e.stack
+        emit 'breakChain', e.message
+      finally
+        if _.isObject chainBroken
+          log 'chainBroken', chain,
+          "#{chain[index].command} broke the chain: #{chainBroken.reason}"
+          return false
+        return true
 
 
-      unless chainBroken
-        emit 'chainDidExecute', chain
+    unless chainBroken
+      emit 'chainDidExecute', chain
 
   generateNestedInterpretation: ->
     results = @parse()

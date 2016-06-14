@@ -11,6 +11,7 @@ window.store = require './stores/main'
 
 subscribeToRemoteEvents = ->
   events = {
+    'apiCreated': 'createApi'
     'packageCreated': 'createPackage'
     'commandCreated': 'createCommand'
     'commandEnabled': 'enableCommand'

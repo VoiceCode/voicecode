@@ -1,6 +1,7 @@
 immutable = require 'immutable'
 {createAction} = require 'redux-actions'
 {CREATE_IMPLEMENTATION} = require './implementation'
+
 constants =
   ENABLE_COMMAND: 'ENABLE_COMMAND'
   DISABLE_COMMAND: 'DISABLE_COMMAND'
