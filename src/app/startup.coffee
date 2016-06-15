@@ -5,8 +5,8 @@ global.app = require 'app'
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
-global.developmentMode = true
-testing = true
+global.developmentMode = false
+testing = false
 # app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 
@@ -77,7 +77,9 @@ menubar.on 'ready', ->
 menubar.on 'after-create-window', ->
   window = menubar.window
   windowController.set 'main', window
-  window.on 'blur', -> window.hide()
+  window.on 'blur', ->
+    unless developmentMode
+      window.hide()
   window.on 'focus', ->
     if Actions?.setCurrentApplication?
       Actions.setCurrentApplication
