@@ -11,7 +11,16 @@ window.Events = {on: _events.frontendOn}
 routes = require './routes/main'
 Main = require './containers/Main'
 window.store = require './stores/main'
-history = syncHistoryWithStore hashHistory, store
+history = syncHistoryWithStore hashHistory, store,
+  selectLocationState: do ->
+    previousRouterState = null
+    previousRouterStateJS = null
+    (state) ->
+      routerState = state.get 'router'
+      if previousRouterState isnt routerState
+        previousRouterState = routerState
+        previousRouterStateJS = routerState.toJS()
+      previousRouterStateJS
 
 
 subscribeToRemoteEvents = ->

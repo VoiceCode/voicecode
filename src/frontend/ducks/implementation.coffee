@@ -15,7 +15,7 @@ actionCreators =
 actionCreators.implementationCreated = ({commandId, implementations}) ->
   (dispatch, getState) ->
     state = getState()
-    current = state.command_implementations.get(commandId).toJS()
+    current = state.get('command_implementations').get(commandId).toJS()
     added = _.difference implementations, current
     added = added.pop()
     if added?

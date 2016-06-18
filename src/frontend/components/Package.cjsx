@@ -3,8 +3,9 @@ React = require 'react'
 {makeFilteredCommandsForPackage,
 packageFilterSelector,
 packageSelector,
+commandSelector
 } = require '../selectors'
-
+# https://github.com/reactjs/reselect#sharing-selectors-with-props-across-multiple-components
 makeMapStateToProps = (state, props)->
   filteredCommandsForPackage = makeFilteredCommandsForPackage()
   (state, props) ->
@@ -12,7 +13,7 @@ makeMapStateToProps = (state, props)->
     packageFilter: packageFilterSelector state, props
     pack: packageSelector state, props
 CommandList = require './CommandList.cjsx'
-# CommandList = connect(makeMapStateToProps) CommandList
+CommandList = connect(makeMapStateToProps) CommandList
 
 ApiList = require './ApiList.cjsx'
 {connect} = require 'react-redux'
@@ -43,7 +44,7 @@ Package = class Package extends React.Component
           </div>
       }
       <div className="ui attached segment">
-        <CommandList packageId={ name } commands={ commands }/>
+        <CommandList packageId={ name } />
       </div>
       {
         if packageFilter.get('scope') is 'packages'

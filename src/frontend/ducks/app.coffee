@@ -19,7 +19,7 @@ actionCreators.appStart = ->
 
 actionCreators.toggleStickyWindow = ->
   (dispatch, getState) ->
-    shouldStick = not getState().stickyWindow
+    shouldStick = not getState().get 'stickyWindow'
     dispatch actionCreators.setStickyWindow shouldStick
     emit 'toggleStickyWindow',
       id: 'main',
@@ -28,7 +28,7 @@ actionCreators.toggleStickyWindow = ->
 module.exports.actionCreators = actionCreators
 
 exports.reducers =
-  # isImmutable: (state = true) -> state # not a 🐛
+  isImmutable: (state = true) -> state # not a 🐛
   stickyWindow: (state = false, {type, payload}) =>
     if type is @SET_STICKY_WINDOW then payload else state
   currentApplication: (state = '', {type, payload}) =>
