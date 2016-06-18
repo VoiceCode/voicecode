@@ -1,23 +1,26 @@
 React = require 'react'
 {IndexLink, Link} = require 'react-router'
 PackageList = require '../components/PackageList'
-PackageFilter = require '../components/PackageFilter'
+StickyButton = require '../components/StickyButton'
 class Main extends React.Component
   componentDidMount: ->
-    emit 'applicationShouldStart'
+    window.requestAnimationFrame ->
+      setTimeout ->
+        emit 'applicationShouldStart'
+      , 500
+
   render: ->
     <div>
-      <div className="ui top fixed inverted menu">
-          <a className="header item">
+      <div className="ui top fixed inverted menu" style={WebkitAppRegion: "drag"}>
+          <div className="header item" style={WebkitAppRegion: "drag"}>
           VoiceCode
-          </a>
+          </div>
           <div className="right menu">
             <IndexLink to="/" className="item" activeClassName="active">Log</IndexLink>
-            <Link to="/packages" className="item" activeClassName="active">Packages</Link>
+            <Link to="/packages" className="item" activeClassName="active">Commands</Link>
 
-            <div className="item">
-              <PackageFilter/>
-            </div>
+
+            <StickyButton/>
           </div>
       </div>
       <div className='mainBody'>

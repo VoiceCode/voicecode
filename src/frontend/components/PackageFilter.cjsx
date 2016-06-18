@@ -1,17 +1,24 @@
-
 React = require 'react'
 {connect} = require 'react-redux'
+classNames = require 'classnames'
 {setPackageFilter} = require('../ducks/package_filter').actionCreators
 {packageFilterSelector} = require '../selectors'
-mapDispatchToProps = {
-  setPackageFilter
-}
+require('semantic-ui-css/components/transition.js')
+require('semantic-ui-css/components/dropdown.js')
+mapDispatchToProps = {setPackageFilter}
 mapStateToProps = (state, props) ->
   filter: packageFilterSelector state
 
 class PackageFilter extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
-    false
+    @props.filter isnt nextProps.filter
+
+  componentDidMount: ->
+    $('.dropdown').dropdown({
+      transition: 'fade up'
+      onChange: (value, text, $selectedItem) =>
+        @props.setPackageFilter scope: value
+    })
 
   componentWillReceiveProps: (nextProps)->
     if nextProps.filter.get('focused')
@@ -21,19 +28,64 @@ class PackageFilter extends React.Component
   onChange: _.debounce(((event) ->
     @props.setPackageFilter query: event.target.value
     ), 500)
+  iconsFor: (scope, icon = true) ->
+    current = @props.filter.get 'scope'
+    scope ?= current
+    if not icon
+      return "item" + (if scope is current then ' selected active' else '')
+
+    classNames
+      'icon': true
+      'tag': scope is 'tags'
+      'cube': scope is 'packages'
+      'announcement': scope is 'commands'
+      'file text outline': scope is 'descriptions'
 
   render: ->
-    <div className="ui transparent inverted icon input">
-      <i className="search icon"></i>
-      <input
-        type="text"
-        ref="queryInput"
-        placeholder="Search"
-        onChange={
-          (event) =>
-            event.persist()
-            @onChange.bind(@) event
-        }
-      ></input>
+    {setPackageFilter, filter} = @props
+    <div className="ui fixed secondary pointing menu">
+      {
+        ['all', 'enabled', 'disabled'].map (state) =>
+          <a key={ state }
+            className={ classNames(
+              'item': true,
+              'active': filter.get('state') is state) }
+            onClick={ setPackageFilter.bind @, {state} }
+          >
+          { _.capitalize state }
+          </a>
+      }
+
+      <div className="right menu">
+        <div className="item">
+          <div className='ui left labeled small input packageFilter'>
+            <div className='ui dropdown label'>
+              <div className='text'>
+                <i className={ @iconsFor() }></i>
+              </div>
+              <i className='dropdown icon'></i>
+              <div className='menu'>
+                {
+                  ['tags', 'packages', 'commands', 'descriptions'].map (scope) =>
+                    <div key={ scope } className={ @iconsFor scope, false } data-value={ scope }>
+                      <i className={ @iconsFor scope }></i>
+                    </div>
+                }
+              </div>
+            </div>
+            <input
+              type="text"
+              ref="queryInput"
+              placeholder="Search #{filter.get('scope')}"
+              onChange={
+                (event) =>
+                  event.persist()
+                  @onChange.bind(@) event
+              }
+            ></input>
+          </div>
+        </div>
+      </div>
     </div>
+
 module.exports = connect(mapStateToProps, mapDispatchToProps)(PackageFilter)

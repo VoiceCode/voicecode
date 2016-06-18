@@ -3,7 +3,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 window.Remote = require 'remote'
 _events = Remote.getGlobal 'Events'
-window.emit = _events.emit
+window.emit = _events._emit
 window.Events = {on: _events.frontendOn}
 {Provider} = require 'react-redux'
 {Router, hashHistory} = require 'react-router'
@@ -22,18 +22,20 @@ history = syncHistoryWithStore hashHistory, store,
         previousRouterStateJS = routerState.toJS()
       previousRouterStateJS
 
+
 subscribeToRemoteEvents = ->
-  events = {
+  events =
     'apiCreated': 'createApi'
     'packageCreated': 'createPackage'
     'commandCreated': 'createCommand'
     'commandEnabled': 'enableCommand'
     'commandDisabled': 'disableCommand'
     'implementationCreated': 'implementationCreated'
-    'startupFlow:complete': 'appStart'
+    'startupComplete': 'appStart'
     'setPackageFilter': 'setPackageFilter'
     'focusPackageFilter': 'focusPackageFilter'
-  }
+    'logger': 'createLogEntry'
+
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

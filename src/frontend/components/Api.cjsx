@@ -8,7 +8,6 @@ class Api extends React.Component
 
   render: ->
     {name, signature, description, shorthandFor} = @props.api.toJS()
-    console.log @props.api.toJS()
     <div className="item">
       <div className="content">
         <div className="header">

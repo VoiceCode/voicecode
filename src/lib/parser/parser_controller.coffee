@@ -3,8 +3,6 @@ path = require 'path'
 cryptojs = require 'crypto-js'
 SettingsManager = require('../../app/settings_manager')
 
-grammarDebug = true
-
 class ParserController
   instance = null
   constructor: ->
@@ -16,7 +14,7 @@ class ParserController
     @initialize()
 
   initialize: ->
-    Events.once 'startupFlow:complete', =>
+    Events.once 'startupComplete', =>
       @ready = true
       @generateParser()
 
@@ -39,25 +37,24 @@ class ParserController
     if oldFingerprintHash is @fingerprintHash
       @setParser oldParser, false
     else
-      try
-        @writeGrammar() if grammarDebug
-        @getNewParser()
-      catch e
-        @regress e
+      @writeGrammar() if developmentMode
+      @getNewParser()
     @debouncedGenerateParser = null
 
-  regress: (reason) ->
+  regress: (reason, readableReason) ->
+    reason = readableReason unless debugMode
     {content: oldParser} = @loadFromDisk()
-    log 'parserRegression', null, "Regressing to old parser because: #{reason}"
+    warning 'parserRegression', null,
+    "Regressing to old parser because: #{reason}"
     @setParser oldParser, false
 
   setParser: (parserAsAString, parserChanged = true) ->
     try
       @parser = eval parserAsAString
-      log 'generateParserSuccess', {parserChanged}, 'Parser acquired.'
+      notify 'generateParserSuccess', {parserChanged},
+      (if parserChanged then 'Parser updated' else 'Parser acquired')
     catch e
-      error 'generateParserFailed', e, 'Failed evaluating new parser.'
-
+      error 'generateParserFailed', e, 'Failed evaluating new parser'
   parse: (phrase) ->
     phrase = _.deburr phrase
     result = []
@@ -111,7 +108,7 @@ class ParserController
     @fingerprintHash = cryptojs.MD5(JSON.stringify(fingerprint)).toString()
 
   isInitialized: ->
-    typeof @parser isnt 'undefined'
+    @parser?
 
   getNewParser: ->
     @fingerprint ?= @generateFingerprint()
@@ -136,12 +133,12 @@ class ParserController
         try
           newParser = eval data
         catch e
-          error 'generateParserFailed', data?.substring(0, 300),
-          'Failed evaluating new parser.'
+          message = 'Grammar server returned malformed parser'
+          error 'generateParserFailed', data?.substring(0, 300), message
           return
         if newParser.success is false
           error 'generateParserFailed', data?.substring(0, 300),
-          "Parser got no success. #{newParser.message}"
+          "Grammar server says: #{newParser.message}"
           return
         @setParser newParser
         @writeToDisk
@@ -151,7 +148,8 @@ class ParserController
           updatedAt: new Date()
 
     req.on 'error', (e) ->
-      error 'generateParserFailed', e, 'Failed requesting parser: ' + e.message
+      message = 'Failed requesting parser: ' + e.message
+      error 'generateParserFailed', e, message
 
     req.write payload
     req.end()

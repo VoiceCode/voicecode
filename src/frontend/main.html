@@ -8,25 +8,27 @@
         <div id="root"></div>
     </body>
     <script>
+      window.$ = require("jquery")
+      window.jQuery = $
       this.init = function(){
         var headID = document.getElementsByTagName('head')[0];
-        var link = document.createElement('link');
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        link.href = require.resolve('semantic-ui-css/semantic.min.css');
-        headID.appendChild(link);
+        var link = document.createElement('link')
+        link.type = 'text/css'
+        link.rel = 'stylesheet'
+        link.href = require.resolve('semantic-ui-css/semantic.min.css')
+        headID.appendChild(link)
 
         require("coffee-react/register")
         require('react-tap-event-plugin')()
         if (developmentMode) {
-          const electronHot = require('electron-hot-loader');
+          const electronHot = require('electron-hot-loader')
           electronHot.install({
             extension: '.cjsx',
             sourceMapInline: false,
             higherOrderFunctions: ['connect']
           });
-          electronHot.watchJsx(['**/*.cjsx']);
-          electronHot.watchCss(['**/*.css']);
+          electronHot.watchJsx(['**/*.cjsx'])
+          electronHot.watchCss(['**/*.css'])
         }
         require('./main.cjsx')
 

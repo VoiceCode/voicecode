@@ -28,13 +28,17 @@ _createStore = (ducks) ->
     rootReducer.apply @, arguments
 
   router = routerMiddleware(hashHistory)
-  enhancer = applyMiddleware(
+  middleware = [
     thunkMiddleware,
-    router,
-    loggerMiddleware
-    )
+    router
+  ]
+  if developmentMode
+    middleware.push loggerMiddleware
+  enhancer = applyMiddleware.apply null, middleware
 
-  initialState = immutable.Map({}).asMutable()
+  initialState = immutable.Map({})
+  if developmentMode
+    initialState = initialState.asMutable()
   store = createStore(mutationToggler, initialState, enhancer)
 
   actionCreators = _.reduce ducks, (actionCreators, duck, id) ->

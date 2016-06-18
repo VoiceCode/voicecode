@@ -54,7 +54,7 @@ class Commands
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
       # enabledCommandsCommandEditsPerformed
       @performCommandEdits 'enabledCommands'
-    Events.on 'startupFlow:complete', => @immediateEdits = true
+    Events.on 'startupComplete', => @immediateEdits = true
 
   validate: (command, options, editType) ->
     validated = true

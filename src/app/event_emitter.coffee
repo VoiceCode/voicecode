@@ -1,11 +1,19 @@
 path = require 'path'
+utilities = require 'util'
+
 class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
+    process.stdout.write = (chunk, encoding, next = null) =>
+      @stdout _.truncate(chunk, {length: 50}), chunk
+      next?()
+    process.stderr.write = (chunk, encoding, next = null) =>
+      @stderr _.truncate(chunk, {length: 50}), chunk
+      next?()
+
     @setMaxListeners 300
     instance = @
-    @debug = true
     @frontendSubscriptions = {}
     @suppressedDebugEntries = [
       # 'apiCreated'
@@ -58,6 +66,10 @@ class EventEmitter extends require('events').EventEmitter
       # 'currentApplicationChanged'
       'notUndoable'
     ]
+  logEvents: ->
+    global.debugMode
+
+
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
     # via remote module i.e every object needs to be flattened
@@ -80,7 +92,7 @@ class EventEmitter extends require('events').EventEmitter
   # frontendEmit: (event) ->
   #   debug arguments
   #   debug @frontendSubscriptions
-  #   @emit.apply @, arguments
+  #   @_emit.apply @, arguments
   #   return unless @frontendSubscriptions[event]?
   #   _.each @frontendSubscriptions[event], (callback) =>
   #     callback.apply @, arguments[1...]
@@ -111,63 +123,76 @@ class EventEmitter extends require('events').EventEmitter
       return
     super
 
-  _output: ->
-    args = arguments
-    # process.nextTick ->
-    do args[0]
+  logger: (entry) ->
+    process.nextTick =>
+      entry.timestamp = process.hrtime()
+      @emit 'logger', entry
+
+  ___debug: (event) ->
+    args = _.toArray arguments
+    event = 'debug'
+    if _.isString args[0]
+      event = args[0]
+    else
+      args.unshift null
+    args[0] = {type: 'debug', event}
+    @_emit.apply @, args
 
   error: (event) ->
-    unless @debug
-      namespace = event || 'VoiceCode'
-      @_output ->
-        console.log chalk.white.bold.bgRed('  ERROR  '),
-        chalk.white.bgBlack(" #{namespace}:"),
-        chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
-    @emit.apply @, arguments
+    args = _.toArray arguments
+    args[0] = {type: 'error', event}
+    @_emit.apply @, args
+
+  stderr: (event) ->
+    args = _.toArray arguments
+    args[0] = {type: 'stderr', event}
+    @_emit.apply @, args
+
+  stdout: (event) ->
+    args = _.toArray arguments
+    args[0] = {type: 'stdout', event}
+    @_emit.apply @, args
 
   log: (event) ->
-    unless @debug
-      namespace = event || 'VoiceCode'
-      @_output ->
-        console.log chalk.white.bold.bgBlue('   LOG   '),
-        chalk.white.bgBlack(" #{namespace}:"),
-        chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
-    @emit.apply @, arguments
+    args = _.toArray arguments
+    args[0] = {type: 'log', event}
+    @_emit.apply @, args
 
   warning: (event) ->
-    unless @debug
-      namespace = event || 'VoiceCode'
-      @_output ->
-        console.log chalk.white.bold.bgYellow(' WARNING '),
-        chalk.white.bgBlack(" #{namespace}:"),
-        chalk.white.bgBlack(_.toArray(arguments)[2] || _.toArray(arguments)[1])
-    @emit.apply @, arguments
+    args = _.toArray arguments
+    args[0] = {type: 'warning', event}
+    @_emit.apply @, args
 
   notify: (event) ->
-    unless @debug
-      @log.apply @, arguments
-    @emit.apply @, arguments
+    args = _.toArray arguments
+    args[0] = {type: 'notify', event}
+    @_emit.apply @, args
 
-  emit: (event) ->
-    return unless event?
-    if @debug
+  _emit: ({event, type}) ->
+    event ?= arguments[0] if _.isString arguments[0]
+    event ?= 'app'
+    type ?= 'event'
+    args = _.toArray arguments
+    if @logEvents() or type in ['debug', 'stdout', 'stderr']
       unless event in @suppressedDebugEntries
-        args = _.toArray(arguments)[1..]
-        @_output ->
-          console.log "%s %s \n",
-          chalk.white.bold.bgRed('   EVENT   '),
-          chalk.black.bgWhite(" #{event} "),
-          util.inspect(args, {depth: 6, colors: true})
-    super
+        @logger
+          type: type
+          event: event
+          args: utilities.inspect args[1..], {depth: 4, color: false}
+    else unless type in ['event', 'mutate']
+      @logger
+        type: type
+        event: args[2] || "#{event} is missing a human readable message"
+
+    unless type in ['mutate', 'debug', 'stdout', 'stderr']
+      args[0] = event
+      @emit.apply @, args
 
   mutate: (event, container={}) ->
-    unless event in @suppressedDebugEntries
-      args = _.toArray(arguments)[1..]
-      @_output ->
-        console.log "%s %s \n",
-        chalk.white.bold.bgRed('   MUTATION   '),
-        chalk.black.bgWhite(" #{event} "),
-        util.inspect(args, {depth: 6, colors: true})
+    args = _.toArray arguments
+    args[0] = {type: 'mutate', event}
+    @_emit.apply @, args
+
     return container unless events = @_events[event]
     container.continue = true
     if _.isFunction events
@@ -175,12 +200,12 @@ class EventEmitter extends require('events').EventEmitter
     _.reduce events, (container={}, event) ->
       return container unless container.continue
       container = event container
-      debug container
       container
     , container
 
 Events = new EventEmitter
-global.emit = _.bind Events.emit, Events
+global.debug = _.bind Events.___debug, Events
+global.emit = _.bind Events._emit, Events
 global.error = _.bind Events.error, Events
 global.log = _.bind Events.log, Events
 global.warning = _.bind Events.warning, Events

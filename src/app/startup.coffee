@@ -5,8 +5,11 @@ global.app = require 'app'
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
-global.developmentMode = false
-testing = false
+global.developmentMode = process.argv[2]  == 'develop'
+global.debugMode = developmentMode
+testing = true
+unless developmentMode
+  process.env.NODE_ENV = 'production'
 # app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 
@@ -26,26 +29,14 @@ if testing
   replify 'vc', repl
 
 
-
 global._ = require 'lodash'
 require('../lib/utility/deepExtend')
 global._s = require 'underscore.string'
-global.chalk = require 'chalk'
-global.util = require('util')
 
-global.debug = ->
 if developmentMode or testing
   global.bundleId = 'com.github.electron'
   electronConnect = require('electron-connect').client
-  global.WHO_IS_CALLING = ->
-    console.log chalk.white.bold.bgRed('   ' + arguments.callee.toString() + '   ')
-  global.debug = do ->
-    previous = Date.now()
-    ->
-      console.log chalk.white.bold.bgRed('   ' + ((c = Date.now()) - previous) + '   ')
-      console.log util.inspect (_.toArray arguments)
-      , {showHidden: false, depth: 10, colors: true}
-      previous = c
+
 
 global.$ = require 'nodobjc'
 global.path = require 'path'
@@ -72,19 +63,18 @@ global.menubar = require('menubar')
 
 menubar.on 'ready', ->
   menubar.showWindow()
-  menubar.hideWindow()
+  unless developmentMode
+    menubar.hideWindow()
 
 menubar.on 'after-create-window', ->
   window = menubar.window
   windowController.set 'main', window
   window.on 'blur', ->
-    unless developmentMode
+    unless developmentMode or window.isSticky
       window.hide()
-  window.on 'focus', ->
-    if Actions?.setCurrentApplication?
-      Actions.setCurrentApplication
-        bundleId: global.bundleId
-        currentWindow: 'main'
+  Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
+    if id is 'main'
+      window.isSticky = shouldStick
   # window.webContents.executeJavaScript 'require("coffee-script/register")'
   # window.webContents.executeJavaScript 'require("node-cjsx").transform()'
   window.on 'closed', -> debug 'window closed, what to do?'
@@ -99,13 +89,11 @@ app.on 'ready', ->
 
 
 process.on 'uncaughtException', (err) ->
-  console.log chalk.white.bold.bgRed('   UNCAUGHT EXCEPTION   ')
-  console.log err
-  console.log err.stack
-  process.emit 'exit'
-  process.exit(1)
+  error 'UNCAUGHT EXCEPTION', err, err.stack
+  # process.emit 'exit'
+  # process.exit(1)
 
-Events.on 'applicationShouldStart', ->
+Events.once 'applicationShouldStart', ->
   funk = asyncblock.nostack
   if developmentMode
     funk = asyncblock
@@ -192,10 +180,10 @@ Events.on 'applicationShouldStart', ->
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 
-    emit "startupFlow:complete"
+    emit "startupComplete"
 
 # needed while developing ui
-Events.once 'startupFlow:complete', -> global.startedUp = true
+Events.once 'startupComplete', -> global.startedUp = true
 
 # benchmarking
 if developmentMode

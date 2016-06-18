@@ -18,7 +18,7 @@ class DarwinController
     @methodCallTimes = {}
     @applicationLastChangedAt = Date.now()
 
-    Events.once 'startupFlow:complete', =>
+    Events.once 'startupComplete', =>
       unless developmentMode
         @startEventMonitor()
       else
@@ -235,7 +235,8 @@ class DarwinController
         notify 'masterDisconnected', null, "Master disconnected..."
 
     socketServer.listen Settings.slaveModePort, ->
-      log null, null, "Awaiting connection from master on port #{Settings.slaveModePort}"
+      notify 'slaveListening', {port: Settings.slaveModePort},
+      "Awaiting connection from master on port #{Settings.slaveModePort}"
 
   slaveDataHandler: (phrase) ->
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"

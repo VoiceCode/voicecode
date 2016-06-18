@@ -1,9 +1,5 @@
 React = require 'react'
 Command = require '../components/Command.cjsx'
-{connect} = require 'react-redux'
-{commandsForPackage} = require '../selectors'
-makeMapStateToProps = (state, props)->
-    commands: commandsForPackage state, props
 
 
 CommandList = class CommandList extends React.Component
@@ -11,7 +7,7 @@ CommandList = class CommandList extends React.Component
     @props.commands isnt nextProps.commands
 
   render: ->
-    console.info "rendering command list: #{@props.packageId}"
+    console.info "rendering command list"
     {commands} = @props
     <div className="ui segment">
       <div className="ui top left attached label">
@@ -21,12 +17,12 @@ CommandList = class CommandList extends React.Component
       { if commands.size
           <div className="ui relaxed divided list">
           {
-            commands.map (command, index) ->
-              <Command key={ index } commandId={ command } />
+            commands.map (command) ->
+              <Command key={ command.id } commandId={ command.id } />
           }
           </div>
       }
     </div>
 
 
-module.exports = connect(makeMapStateToProps)(CommandList)
+module.exports = CommandList

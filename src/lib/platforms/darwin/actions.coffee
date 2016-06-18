@@ -454,7 +454,7 @@ class DarwinActions extends Actions
 
 module.exports = do ->
   isActive = false
-  Events.once 'startupFlow:complete', -> isActive = true
+  Events.once 'startupComplete', -> isActive = true
   return new Proxy (new DarwinActions), {
     get: (target, property, receiver) ->
       if not target[property]? and isActive

@@ -2,39 +2,42 @@
 immutable = require 'immutable'
 constants =
   SET_PACKAGE_FILTER: 'SET_PACKAGE_FILTER'
-  CLEAR_PACKAGE_FILTER_SCOPE: 'CLEAR_PACKAGE_FILTER_SCOPE'
+  SET_PACKAGE_FILTER_SCOPE: 'SET_PACKAGE_FILTER_SCOPE'
 _.extend @, constants
 _.extend exports, constants
 
 actionCreators =
   setPackageFilter: createAction(@SET_PACKAGE_FILTER)
-  clearPackageFiltersScope: createAction(@CLEAR_PACKAGE_FILTER_SCOPE)
 exports.actionCreators = actionCreators
 
-# # thunk
-actionCreators.focusPackageFilter = (query) ->
-  (dispatch, getState) ->
-    state = getState()
-    state = state.get('package_filter').toJS()
-    state.focused = true
-    dispatch actionCreators.setPackageFilter state
 
+defaultState = immutable.Map
+  scope: 'packages'
+  query: ''
+  focused: false
+  state: 'all'
+scopes =
+  descriptions: new RegExp /^descriptions*:|^d:\W*/
+  commands: new RegExp /^commands*:|^c:\W*/
+  packages: new RegExp /^packages*:|^p:\W*/
+  tags: new RegExp /^tags*:|^t:\W*/
 
-defaultState = immutable.Map({scope: 'packages', query: ''})
 exports.reducers =
   package_filter: (pf = defaultState, {type, payload}) =>
     switch (type)
       when @SET_PACKAGE_FILTER
-        {focused, query} = payload
-        packagesScope = new RegExp /^packages*:|^p:/
-        tagsScope = new RegExp /^tags*:|^t:/
-        if packagesScope.test query
-          pf.set 'scope', 'packages'
-        if tagsScope.test query
-          pf.set 'scope', 'tags'
-        query = query.replace(packagesScope, '')
-        query = query.replace(tagsScope, '')
-        pf = pf.set 'query', query
-        pf = pf.set 'focused', focused
+        {focused, query, scope, state} = payload
+        if not scope? and query?
+          _.each scopes, (expression, scope) ->
+            if expression.test query
+              pf = pf.set 'scope', scope
+              query = query.replace(expression, '')
+              return false
+            return true
+        pf = pf.set 'scope', scope if scope?
+        pf = pf.set 'query', query if query?
+        pf = pf.set 'focused', focused if focused?
+        pf = pf.set 'state', state if state?
+        pf
       else
         pf

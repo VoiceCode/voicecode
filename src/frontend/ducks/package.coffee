@@ -16,17 +16,18 @@ exports.actionCreators =
 packageRecord = immutable.Record
   name: 'unknown'
   description: 'no description'
-  
+
 apiRecord = immutable.Record
   name: null
   description: null
   signature: null
   shorthandFor: null
+
 exports.reducers =
   packages: (packages = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
-        pack = new packageRecord _.pick(payload, ['name', 'description'])
+        pack = new packageRecord payload
         packages.set payload.name, pack
       when @UPDATE_PACKAGE
         packages.mergeDeepIn [payload.name], payload
@@ -37,16 +38,18 @@ exports.reducers =
       when @CREATE_PACKAGE
         package_commands.set payload.name, immutable.List []
       when CREATE_COMMAND
-        package_commands.updateIn [payload.packageId]
-        , (list) -> list.push payload.id
+        {id, spoken, packageId, enabled} = payload
+        package_commands.updateIn [packageId]
+        , (list) -> list.push {id, spoken, enabled}
       else
         package_commands
   package_apis: (package_apis = immutable.Map({}), {type, payload}) =>
     switch type
+      when @CREATE_PACKAGE
+        package_apis.set payload.name, immutable.List []
       when CREATE_API
         package_apis.updateIn [payload.packageId],
         (list) ->
-          list ?= immutable.List []
           list.push new apiRecord payload.api
       else
         package_apis

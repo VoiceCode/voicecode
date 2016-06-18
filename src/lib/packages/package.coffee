@@ -116,7 +116,7 @@ class Package
     @hasDeferred = true
     Events.once 'userAssetsLoaded', =>
       callback.bind(@)()
-      emit 'packageReady', @
+      log 'packageReady', @, "Package ready: #{@name}"
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates

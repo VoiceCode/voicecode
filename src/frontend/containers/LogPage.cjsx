@@ -1,12 +1,25 @@
 React = require 'react'
-
+LogEntry = require '../components/LogEntry'
 {connect} = require 'react-redux'
-
+mapStateToProps = (state) ->
+  logs: state.get 'logs'
+accordion = require('semantic-ui-css/components/accordion.js')
 class LogPage extends React.Component
-
+  componentDidMount: ->
+    unless developmentMode
+      $('.ui.accordion').accordion
+        on: 'mouseover'
   render: ->
     <div className="">
-      <h1>LOGS GO HERE</h1>
+      <div className="ui styled fluid accordion">
+      {
+        @props.logs.map (log) ->
+           <LogEntry
+             key={log.get('timestamp').join('')}
+             log={log}
+           />
+       }
+      </div>
     </div>
 
-module.exports = LogPage
+module.exports = connect(mapStateToProps) LogPage

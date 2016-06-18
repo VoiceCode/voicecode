@@ -63,41 +63,29 @@ _.merge Settings,
       emit 'assetsLoaded'
 
 
-  # getJavascriptCode: (fullPath) ->
-  #   directory = path.dirname fullPath
-  #   code = fs.readFileSync fullPath, {encoding: 'utf8'}
-  #   code = @compileCoffeeScript code, directory
-  #   code
-  #
-  # compileCoffeeScript: (coffeeScriptsSource, directory) ->
-  #   compiled = coffeeScript.compile coffeeScriptsSource
-  #   compiled.replace /require\(["']\.\/(.*)["']\)/g,
-  #   (match, fileName) =>
-  #     @getJavascriptCode "#{directory}/#{fileName}.coffee"
-  #
   handleFile: (type, event, fullPath) ->
-    if fullPath.match(/.coffee$/)?
-      fileName = path.basename fullPath, '.coffee' # TODO: handle .js
+    if coffee = fullPath.match(/.coffee$/) or js = fullPath.match(/.js$/)
+      extension = if coffee then '.coffee' else '.js'
+      fileName = path.basename fullPath, extension
       emit 'assetEvent', {event, fullPath}
-      log "#{type}AssetEvent", {event, fullPath},
-      "Asset type '#{type}'#{event}: #{fullPath}"
+      emit "#{type}AssetEvent", {event, fullPath}
       try
-        # code = @getJavascriptCode fullPath
         unless type is 'package'
           global.Package = Packages.get("user:#{fileName}") or
           Packages.register
             name: "user:#{fileName}"
-            description: "User code in #{fileName}.coffee"
-            tags: ['user', "#{fileName}.coffee"]
+            description: "User code in #{fileName}#{extension}"
+            tags: ['user', "#{fileName}#{extension}"]
         if event is 'changed'
           delete require.cache[fullPath]
         require fullPath
       catch err
         emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
-        warning "#{type}AssetEvaluationError", {error: err.stack, fullPath}, "#{fullPath}:\n#{err}"
+        error "#{type}AssetEvaluationError",
+        {error: err.stack, fullPath}, "#{fullPath}:\n#{err}"
       emit 'assetEvaluated', {event, type, fullPath, fileName}
       log "#{type}AssetEvaluated", {event, type, fullPath, fileName},
-      "Asset type '#{type}' evaluated (#{event} event): #{fullPath}"
+      "Asset type '#{type}' #{event} & evaluated:\n#{fullPath}"
       # @debouncedFinish ?= _.debounce =>
       #   emit "#{type}AssetsLoaded"
       #   emit 'assetsLoaded'

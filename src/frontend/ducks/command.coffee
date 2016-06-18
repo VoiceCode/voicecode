@@ -33,6 +33,7 @@ commandRecord = immutable.Record
   enabled: false
   packageId: 'unpackaged'
   description: 'no description'
+  tags: []
 
 exports.reducers =
   commands: (commands = immutable.Map({}), {type, payload}) =>

@@ -11,7 +11,9 @@ exec = require 'gulp-exec'
 
 
 gulp.task 'serve', [], ->
-  electron.start ['--disable-http-cache', '--enable-transparent-visuals']
+  electron.start ['develop',
+  '--disable-http-cache',
+  '--enable-transparent-visuals']
   gulp.watch './src/**/*.coffee', ['electron-restart']
   gulp.watch 'src/frontend/**/*.less', [ 'electron-reload' ]
   # gulp.watch 'src/frontend/**/*.cjsx', [ 'electron-reload' ]
@@ -27,7 +29,9 @@ gulp.task 'electron-reload', ->
   return
 
 gulp.task 'electron-restart', ->
-  electron.restart ['--disable-http-cache']
+  electron.restart ['develop',
+  '--disable-http-cache',
+  '--enable-transparent-visuals']
 
 electron.on 'appClosed', ->
   electron.stop ->
