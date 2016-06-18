@@ -1,15 +1,17 @@
 { createSelector, createSelectorCreator, defaultMemoize } = require 'reselect'
 immutable = require 'immutable'
 
+stateSelector = (state) -> state
+
 # main window selectors
 packageSelector = (state, props) ->
-  state.getIn ['packages', props.packageId]
+  state.packages.get props.packageId
 
 packagesSelector = (state, props) ->
-  state.get 'packages'
+  state.packages
 
 packageFilterSelector = (state, props) ->
-  state.get 'package_filter'
+  state.package_filter
 
 filteredPackagesSelector = createSelector [
   packagesSelector,
@@ -22,13 +24,13 @@ filteredPackagesSelector = createSelector [
     packages.sortBy (pack) -> pack.get 'name'
 
 commandsSelector = (state) ->
-  state.get 'commands'
+  state.commands
 
 commandSelector = (state, props) ->
   commandsSelector(state).get props.commandId
 
 commandsForPackageSelector = (state, props) ->
-  state.get('package_commands').get props.packageId
+  state.package_commands.get props.packageId
 
 packageFilterQuerySelector = (state, props) ->
   packageFilterSelector(state).get 'query'
@@ -64,10 +66,10 @@ _makeFilteredCommandsForPackage = ->
     commands.sortBy (command) -> command.spoken
 
 apisForPackage = (state, props) ->
-  state.get('package_apis').get props.packageId
+  state.package_apis.get props.packageId
 
 implementationsForCommand = (state, props) ->
-  state.get('command_implementations').get props.commandId
+  state.command_implementations.get props.commandId
 
 _.assign exports, {
   apisForPackage
@@ -83,10 +85,10 @@ _.assign exports, {
 
 # history window selectors
 currentApplicationSelector = (state) ->
-  state.get('currentApplication')
+  state.currentApplication
 
 chainsSelector = (state) ->
-  state.get('chains')
+  state.chains
 
 activeChainSelector = createSelector currentApplicationSelector, chainsSelector
 , (currentApplication, chains) ->

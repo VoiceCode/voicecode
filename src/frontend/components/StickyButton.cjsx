@@ -4,13 +4,12 @@ classNames = require 'classnames'
 {toggleStickyWindow} = require('../ducks/app').actionCreators
 
 stateProps = (state) ->
-  isSticky: state.get 'stickyWindow'
+  isSticky: state.stickyWindow
 dispatchProps = {toggleStickyWindow}
 
 class StickyButton extends React.Component
-  shouldComponentUpdate: ->
-    console.log arguments
-    true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    @props.isSticky isnt nextProps.isSticky
   render: ->
     {isSticky, toggleStickyWindow} = @props
     console.log isSticky
