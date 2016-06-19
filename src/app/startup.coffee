@@ -88,9 +88,7 @@ app.on 'ready', ->
 
 
 process.on 'uncaughtException', (err) ->
-  error 'UNCAUGHT EXCEPTION', err, err.stack
-  # process.emit 'exit'
-  # process.exit(1)
+  error 'UNCAUGHT EXCEPTION', err.stack, err.message
 
 Events.once 'applicationShouldStart', ->
   funk = asyncblock.nostack

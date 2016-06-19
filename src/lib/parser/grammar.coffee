@@ -87,7 +87,7 @@ class Grammar
 
   translationIds: ->
     _.sortBy(
-      _.map Settings.translations, (value, key) ->
+      _.map Packages.get('vocabulary')?.settings().translations, (value, key) ->
         "\"#{key} \""
     , (e) -> e
     ).reverse().join("/\n")
@@ -104,7 +104,7 @@ class Grammar
     .join '/\n'
 
   buildPhonemeChain: ->
-    _.map Packages.get('alphabet').settings().letters, (value, key) ->
+    _.map Packages.get('alphabet')?.settings().letters, (value, key) ->
       "'#{value}'"
     .join "/"
 

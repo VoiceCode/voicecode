@@ -9,18 +9,7 @@ module.exports =
       "voicecode wiki": "https://github.com/VoiceCode/docs/wiki"
       "voicecode github": "https://github.com/stratogee/voicecode"
       "voicecode": "http://voicecode.io"
-    translations:
-      "january": "January"
-      "february": "February"
-      "i'm": "I'm"
-      "i'll": "I'll"
-      "maine": "main"
-      "o'clock": ":00"
-      "adam": "atom"
-      "consol": "console"
-      "consul": "console"
-      "et cetera": "etc."
-      "e-mail": "email"
+
     clickDelayRequired:
       "Sublime Text": 0
       "Xcode": 100

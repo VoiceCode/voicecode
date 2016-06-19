@@ -458,7 +458,7 @@ module.exports = do ->
   return new Proxy (new DarwinActions), {
     get: (target, property, receiver) ->
       if not target[property]? and isActive
-        #target.breakChain "Actions.#{property} does not exist."
+        target.breakChain "Actions.#{property} does not exist."
         error 'missingDependency'
         , {property}, "Actions.#{property} does not exist."
       Reflect.get target, property, receiver
