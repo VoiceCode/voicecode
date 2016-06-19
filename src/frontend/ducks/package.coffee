@@ -40,7 +40,7 @@ exports.reducers =
       when CREATE_COMMAND
         {id, spoken, packageId, enabled} = payload
         package_commands.updateIn [packageId]
-        , (list) -> list.push {id, spoken, enabled}
+        , (list) -> list.push id
       else
         package_commands
   package_apis: (package_apis = immutable.Map({}), {type, payload}) =>

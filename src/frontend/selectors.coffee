@@ -11,15 +11,23 @@ packagesSelector = (state, props) ->
 packageFilterSelector = (state, props) ->
   state.get 'package_filter'
 
+packageFilterQuerySelector = (state, props) ->
+  packageFilterSelector(state).get 'query'
+packageFilterStateSelector = (state) ->
+  packageFilterSelector(state).get 'state'
+packageFilterScopeSelector = (state) ->
+  packageFilterSelector(state).get 'scope'
+
 filteredPackagesSelector = createSelector [
   packagesSelector,
-  packageFilterSelector
-  ], (packages, filter) ->
-    {query, scope} = filter.toJS()
+  packageFilterQuerySelector,
+  packageFilterScopeSelector
+  ], (packages, query, scope) ->
     if query isnt '' and scope is 'packages'
+      query = new RegExp query, 'gi'
       packages = packages.filter (pack) ->
-        pack.get('name').indexOf(query) isnt -1
-    packages.sortBy (pack) -> pack.get 'name'
+        query.test pack.get('name')
+    packages
 
 commandsSelector = (state) ->
   state.get 'commands'
@@ -27,41 +35,53 @@ commandsSelector = (state) ->
 commandSelector = (state, props) ->
   commandsSelector(state).get props.commandId
 
+makeCommandsForPackageSelector = ->
+  createSelector [
+    commandsSelector,
+    commandsForPackageSelector
+    ], (commands, packageCommands) ->
+      packageCommands = packageCommands.map (commandId) ->
+        command = commands.get commandId
+        command = command.toJS()
+        command
+      packageCommands.sortBy (command) ->
+        command.spoken
+
 commandsForPackageSelector = (state, props) ->
   state.get('package_commands').get props.packageId
 
-packageFilterQuerySelector = (state, props) ->
-  packageFilterSelector(state).get 'query'
-
-# here "state" is filtering by enabled/disabled state
-packageFilterStateSelector = (state) ->
-  packageFilterSelector(state).get 'state'
 
 makeFilteredCommandsForPackage = ->
   createSelector [
     packageFilterStateSelector,
     _makeFilteredCommandsForPackage()
-  ], (filter, commands) ->
+  ], (state, commands) ->
     console.log 'filtering state'
-    unless filter is 'all'
+    unless state is 'all'
       return commands.filter (command) ->
-        command.enabled is (filter is 'enabled')
+        command.enabled is (state is 'enabled')
     commands
+scopeMap = {
+  tags: 'tags'
+  commands: 'spoken'
+  descriptions: 'description'
+}
 _makeFilteredCommandsForPackage = ->
   createSelector [
-    commandsForPackageSelector,
     packageFilterQuerySelector,
-  ], (commands, query) ->
-    if query isnt ''
-      console.log 'filtering query'
+    packageFilterScopeSelector
+    makeCommandsForPackageSelector(),
+  ], (query, scope, commands) ->
+    if query isnt '' and scope isnt 'packages'
+      query = new RegExp query, 'gi'
+      scope = scopeMap[scope]
       commands = commands.filter (command) ->
-        {id, spoken} = command
-        if spoken?
-          spoken = spoken.indexOf(query) isnt -1
-        id = id.indexOf(query) isnt -1
-        spoken or id
-    console.log 'sorting'
-    commands.sortBy (command) -> command.spoken
+        if command[scope]?
+          subject = command[scope]
+          unless _.isString subject
+            subject = _.join command[scope], ' '
+          query.test subject
+    commands
 
 apisForPackage = (state, props) ->
   state.get('package_apis').get props.packageId
