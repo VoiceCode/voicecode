@@ -6,7 +6,6 @@ Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
 global.developmentMode = process.argv[2]  == 'develop'
-global.debugMode = developmentMode
 testing = true
 unless developmentMode
   process.env.NODE_ENV = 'production'

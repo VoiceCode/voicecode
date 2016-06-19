@@ -23,10 +23,20 @@ logEntryRecord = immutable.Record
   timestamp: null
   event: null
   args: null
+defaultLogSettings = immutable.Map
+  showingEvents: developmentMode
 
 exports.reducers =
+  log_settings: (log_settings = defaultLogSettings, {type, payload}) =>
+    switch type
+      when @SHOW_EVENTS
+        log_settings.set 'showingEvents', true
+      when @HIDE_EVENTS
+        log_settings.set 'showingEvents', false
+      else
+        log_settings
   logs: (logs = immutable.List([]), {type, payload}) =>
-    switch (type)
+    switch type
       when @CREATE_LOG_ENTRY
         logEntry = new logEntryRecord payload
         logs = logs.insert 0, logEntry

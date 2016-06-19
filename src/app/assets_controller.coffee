@@ -17,8 +17,8 @@ class AssetsController
   init: ->
     try
       fs.mkdirSync @assetsPath
-    catch error
-      if error.code is 'EEXIST'
+    catch err
+      if err.code is 'EEXIST'
         # this is good
       else
         error 'assetDirectoryError', @assetsPath,

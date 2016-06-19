@@ -17,10 +17,10 @@ defaultState = immutable.Map
   focused: false
   state: 'all'
 scopes =
-  descriptions: new RegExp /^descriptions*:|^d:\W*/
-  commands: new RegExp /^commands*:|^c:\W*/
-  packages: new RegExp /^packages*:|^p:\W*/
-  tags: new RegExp /^tags*:|^t:\W*/
+  descriptions: new RegExp /^descriptions*:\W*|^d:\W*/
+  commands: new RegExp /^commands*:\W*|^c:\W*/
+  packages: new RegExp /^packages*:\W*|^p:\W*/
+  tags: new RegExp /^tags*:\W*|^t:\W*/
 
 exports.reducers =
   package_filter: (pf = defaultState, {type, payload}) =>

@@ -8,9 +8,9 @@ stateProps = (state) ->
 dispatchProps = {toggleStickyWindow}
 
 class StickyButton extends React.Component
-  shouldComponentUpdate: ->
-    console.log arguments
-    true
+  shouldComponentUpdate: (nextProps, nextState)->
+    @props.isSticky isnt nextProps.isSticky
+
   render: ->
     {isSticky, toggleStickyWindow} = @props
     console.log isSticky

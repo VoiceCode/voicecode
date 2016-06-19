@@ -11,6 +11,11 @@ class LogPage extends React.Component
         on: 'mouseover'
   render: ->
     <div className="">
+      <div className='ui fixed secondary pointing page menu'>
+        <a className='item'>
+          <i className='bug icon'></i>
+        </a>
+      </div>
       <div className="ui styled fluid accordion">
       {
         @props.logs.map (log) ->

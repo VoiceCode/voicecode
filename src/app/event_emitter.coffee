@@ -15,60 +15,68 @@ class EventEmitter extends require('events').EventEmitter
     @setMaxListeners 300
     instance = @
     @frontendSubscriptions = {}
-    @suppressedDebugEntries = [
-      # 'apiCreated'
-      # 'deprecation'
-      'implementationWillExecute'
-      'enableCommand'
-      'commandCreated'
-      'commandEnabled'
-      'windowCreated'
-      'implementationCreated'
-      # 'commandOverwritten'
-      'commandAfterAdded'
-      'commandBeforeAdded'
-      'commandMisspellingsAdded'
-      'commandSpokenChanged'
-      'charactersTyped'
-      'historicChainCreated'
-      'historicChainLinkCreated'
-      # 'assetEvent'
-      # 'assetEvaluated'
-      # 'assetsLoaded'
-      # 'userAssetEvent'
-      # 'userAssetsLoading'
-      # 'userAssetsLoaded'
-      # 'userAssetEvaluated'
-      'mouse.leftClick'
-      'packageReady'
-      'userAssetEvaluated'
-      'userAssetEvent'
-      'packageAssetEvaluated'
-      'packageAssetEvent'
-      # 'commandEditsPerformed'
-      'userCodeCommandEditsPerformed'
-      'enabledCommandsCommandEditsPerformed'
-      'slaveModeEnableAllCommandsCommandEditsPerformed'
-      'packageCreated'
-      'assetEvent'
-      # 'commandValidationFailed'
-      # 'commandValidationError'
-      # 'chainParsed'
-      'chainPreprocessed'
-      # 'chainWillExecute'
-      'commandDidExecute'
-      'chainDidExecute'
-      'commandNotFound'
-      'eventMonitorStarted'
-      'dragonStarted'
-      # 'packageAssetEvent'
-      'currentApplicationWillChange'
-      # 'currentApplicationChanged'
-      'notUndoable'
-    ]
-  logEvents: ->
-    global.debugMode
-
+    @suppressedDebugEntries = []
+    @subscribeToEvents()
+    if developmentMode
+      @_logEvents = true
+      @suppressedDebugEntries = [
+        # 'apiCreated'
+        # 'deprecation'
+        'implementationWillExecute'
+        'enableCommand'
+        'commandCreated'
+        'commandEnabled'
+        'windowCreated'
+        'implementationCreated'
+        # 'commandOverwritten'
+        'commandAfterAdded'
+        'commandBeforeAdded'
+        'commandMisspellingsAdded'
+        'commandSpokenChanged'
+        'charactersTyped'
+        'historicChainCreated'
+        'historicChainLinkCreated'
+        # 'assetEvent'
+        # 'assetEvaluated'
+        # 'assetsLoaded'
+        # 'userAssetEvent'
+        # 'userAssetsLoading'
+        # 'userAssetsLoaded'
+        # 'userAssetEvaluated'
+        'mouse.leftClick'
+        'packageReady'
+        'userAssetEvaluated'
+        'userAssetEvent'
+        'packageAssetEvaluated'
+        'packageAssetEvent'
+        # 'commandEditsPerformed'
+        'userCodeCommandEditsPerformed'
+        'enabledCommandsCommandEditsPerformed'
+        'slaveModeEnableAllCommandsCommandEditsPerformed'
+        'packageCreated'
+        'assetEvent'
+        # 'commandValidationFailed'
+        # 'commandValidationError'
+        # 'chainParsed'
+        'chainPreprocessed'
+        # 'chainWillExecute'
+        'commandDidExecute'
+        'chainDidExecute'
+        'commandNotFound'
+        'eventMonitorStarted'
+        'dragonStarted'
+        # 'packageAssetEvent'
+        'currentApplicationWillChange'
+        # 'currentApplicationChanged'
+        'notUndoable'
+      ]
+  logEvents: (setter = null)->
+    if setter?
+      @_logEvents = setter
+    @_logEvents
+  subscribeToEvents: ->
+    @on 'logEvents', (setter) =>
+      @logEvents setter
 
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
