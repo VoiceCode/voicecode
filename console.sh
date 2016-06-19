@@ -1,2 +1,2 @@
 #!/bin/bash
-rc /tmp/repl/vc.sock
+rc /tmp/repl/voicecode_development.sock

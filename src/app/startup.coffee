@@ -1,16 +1,16 @@
-global.bundleId = 'io.voicecode.app'
+# global.bundleId = 'io.voicecode.app'
+global.bundleId = 'com.github.electron'
 global.app = require 'app'
 
 # https://gist.github.com/dimatter/0206268704609de07119
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
+process.env.NODE_ENV = 'production' # needed for react
 global.developmentMode = process.argv[2]  == 'develop'
-testing = process.argv[2]  == 'develop'
-unless developmentMode
-  process.env.NODE_ENV = 'production'
-# app.commandLine.appendSwitch('remote-debugging-port', '9222')
-
+if developmentMode
+  process.env.NODE_ENV = 'development'
+  electronConnect = require('electron-connect').client
 
 global.projectRoot = require('app-root-path').path
 global.platform =
@@ -22,21 +22,15 @@ global.platform =
     when "linux"
       "linux"
 
-if testing
-  replify = require('replify')
-  repl = require('http').createServer()
-  replify 'vc', repl
+replify = require('replify')
+repl = require('http').createServer()
+suffix = process.env.NODE_ENV
+replify {name: "voicecode_#{suffix}"}, repl
 
 
 global._ = require 'lodash'
 require('../lib/utility/deepExtend')
-global._s = require 'underscore.string'
-
-if developmentMode or testing
-  global.bundleId = 'com.github.electron'
-  electronConnect = require('electron-connect').client
-
-
+global._s = require 'underscore.string' # ?
 global.$ = require 'nodobjc'
 global.path = require 'path'
 global.Fiber = require 'fibers'
@@ -47,7 +41,6 @@ global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 global.windowController = require '../app/window_controller'
-
 global.menubar = require('menubar')
   index: "file://#{projectRoot}/src/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
