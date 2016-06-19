@@ -6,7 +6,7 @@ Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
 global.developmentMode = process.argv[2]  == 'develop'
-testing = true
+testing = process.argv[2]  == 'develop'
 unless developmentMode
   process.env.NODE_ENV = 'production'
 # app.commandLine.appendSwitch('remote-debugging-port', '9222')
