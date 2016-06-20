@@ -1,46 +1,33 @@
 class HistoryController
-  previousContext = null
-  amnesia = false
-  activeChains = 0
-
   constructor: ->
     _this = @
     @history = {}
-    # @history = new Proxy {},
-    #   set: (target, property, value) ->
-    #     Reflect.set target, property, new Proxy value,
-    #       set: (target, property, value) ->
-    #         debug property, value
-    #         if property is '0' and not _.isEmpty value
-    #           emit 'historicChainCreated',
-    #             commands: value
-    #             context: _this.getCurrentContext()
-    #         Reflect.set target, property, value
-    maintenanceInterval = setInterval @doMaintenance.bind(@), 900000 # 15 minutes
+    @context = null
+    @amnesia = false
+    @activeChains = 0
+    @maintenanceInterval = setInterval @doMaintenance.bind(@), 300000 # 5 minutes
     Events.on 'chainWillExecute', =>
-      activeChains++
-      if activeChains is 1
+      @activeChains++
+      previous = @history[@context]
+      # console.log 'previous exists: ' + previous?
+      # console.log 'not empty: ' + _.isEmpty previous[0]
+      if @activeChains is 1 and not (previous? and _.isEmpty previous[0])
         @startNewChain()
     Events.on ['chainDidExecute', 'chainFailedExecute'], =>
-      activeChains--
-      # @history[previousContext][0] = _.compact @history[previousContext][0]
-      if _.isEmpty _.compact @history[previousContext][0]
-        @forgetChain 0
+      @activeChains--
+
     Events.on 'commandDidExecute', ({link}) =>
+      console.log 'active chains: ' + @activeChains
       command = Commands.get link.command
       unless command.bypassHistory?(link.context)
-        currentContext = @getCurrentContext()
-        if previousContext isnt currentContext
-          @startNewChain currentContext
-        # coffee script is stupid, why make the extra 'arg' variable?
         delete arguments[0].link.context
-        unless amnesia
+        unless @amnesia
           command =  _.pick link
           , ['command', 'arguments']
-          @history[currentContext][0].unshift command
+          @history[@context][0].unshift command
           emit 'historicChainLinkCreated',
             command: command
-            context: currentContext
+            context: @context
 
 
     @createHistoryWindow()
@@ -52,8 +39,8 @@ class HistoryController
     # @createWindow()
 
   forgetChain: (offset) ->
-    delete @history[previousContext][offset]
-    @history[previousContext] = _.values _.compact @history[previousContext]
+    delete @history[@context][offset]
+    @history[@context] = _.values _.compact @history[@context]
 
   getCommands: (chainOffset = 0, offset = 0, count = 1, context = null) ->
     context ?= @getCurrentContext()
@@ -68,24 +55,25 @@ class HistoryController
     context ?= @getCurrentContext()
     chain = @history[context][offset]
     chain = _.cloneDeep @history[context][offset]
-    chain.reverse()
+    chain.reverse() # TODO: do this in between chains for performance?
 
   hasAmnesia: (yesNo) ->
-    amnesia = yesNo
+    @amnesia = yesNo
 
   startNewChain: (context = null) ->
-    context ?= @getCurrentContext()
+    context ?= @getCurrentContext true
     @history[context] ?= []
     @history[context].unshift []
-    previousContext = context
     emit 'historicChainCreated', {context}
 
   doMaintenance: ->
     _.each @history, (v, k) => Array::splice.call @history[k], 10
     # dump to disk?
 
-  getCurrentContext: ->
-    Actions.currentApplication().name
+  getCurrentContext: (update = false)->
+    if update
+      @context = Actions.currentApplication().name
+    @context
 
   getChainLength: (offset = 0) ->
     try
