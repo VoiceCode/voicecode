@@ -1,6 +1,21 @@
-# global.bundleId = 'io.voicecode.app'
-global.bundleId = 'com.github.electron'
+global.bundleId = 'io.voicecode.app'
+# global.bundleId = 'com.github.electron'
 global.app = require 'app'
+
+global.Reflect = require 'harmony-reflect'
+global.Settings = Object.create new Proxy {
+  userAssetsPath: '~/voicecode'
+  },
+  get: (target, property, receiver) ->
+    if pack = Packages.get property
+      pack.settings()
+    else
+      Reflect.get target, property, receiver
+  set: (target, property, value, receiver) ->
+    if pack = Packages?.get property
+      pack.settings value
+    else
+      Reflect.set target, property, value, receiver
 
 # https://gist.github.com/dimatter/0206268704609de07119
 Function::property = (prop, desc) ->
@@ -89,9 +104,7 @@ Events.once 'applicationShouldStart', ->
     funk = asyncblock
   funk (startupFlow) ->
     startupFlow.firstArgIsError = false
-    global.Settings = {extend: (k, v) -> _.deepExtend Settings, {"#{k}": v}}
-    _.deepExtend Settings, require "../lib/platforms/#{platform}/settings"
-    Settings.userAssetsPath = '~/voicecode'
+
     if developmentMode
       Settings.userAssetsPath = '~/voicecode_development'
     global.Packages = require '../lib/packages/packages'
@@ -150,23 +163,17 @@ Events.once 'applicationShouldStart', ->
       return false
     startupFlow.wait 'userAssetsLoaded'
 
-    require './enabled_commands_manager'
+    global.EnabledCommandsManager = require './enabled_commands_manager'
 
-    if Settings.slaveMode or developmentMode
+    if Settings.core.slaveMode or developmentMode
       Commands.enableAll()
 
-    switch platform
-      when "darwin"
-        _path = "../lib/platforms/darwin/dragon"
-        global.DragonController = require "#{_path}/dragon_controller"
-        VocabularyController.start()
-      # when "win32"
-      # when "linux"
+    VocabularyController.start()
 
     if developmentMode
-      Settings.slaveMode = true
+      Settings.core.slaveMode = true
 
-    unless Settings.slaveMode
+    unless Settings.core.slaveMode
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 

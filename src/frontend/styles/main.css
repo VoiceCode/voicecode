@@ -83,5 +83,6 @@ body {
 .page.ui.secondary.menu {
     background: white!important;
     top: 40px;
+    height: 46px;
     box-shadow: 0 0 20px
 }

@@ -34,6 +34,7 @@ subscribeToRemoteEvents = ->
     'startupComplete': 'appStart'
     'setPackageFilter': 'setPackageFilter'
     'focusPackageFilter': 'focusPackageFilter'
+    'changePage': 'changePage'
     'logger': 'createLogEntry'
 
   _.each events, (handler, event) ->

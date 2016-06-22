@@ -7,9 +7,12 @@ class Package
     @_before = {}
     @_after = {}
     @_implementations = {}
-    @_settings = @options.settings or {}
+    @_settings = mutationNotifier (@options.settings or {})
+    , 'packageSettingsChanged', {pack: @}, true
     {@name, @description, @scope} = @options
 
+    Events.on 'commandCreated', (command, name) =>
+      @_commands[name] = command
 
     @registerScope()
     @setDefaultCommandOptions()
@@ -44,7 +47,6 @@ class Package
       defaults = {}
       commands = arguments[0]
 
-    _.extend @_commands, commands
     _.each commands, (options, id) =>
       if _.isFunction options
         options = {action: options}
@@ -102,9 +104,9 @@ class Package
   settings: (options) ->
     if options?
       _.deepExtend @_settings, options
-      Events.once 'settingsAssetsLoaded', ->
+      # Events.once 'settingsAssetsLoaded', ->
         # TODO: remove
-        _.deepExtend Settings, options
+        # _.deepExtend Settings, options
       @_settings
     else
       @_settings

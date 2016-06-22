@@ -2,7 +2,7 @@
 thunkMiddleware = require('redux-thunk').default
 loggerMiddleware = require('redux-logger')()
 {hashHistory} = require('react-router')
-{routerMiddleware, LOCATION_CHANGE, push} = require('react-router-redux')
+{routerMiddleware, LOCATION_CHANGE} = require('react-router-redux')
 {combineReducers} = require 'redux-immutable'
 immutable = require 'immutable'
 initialRouterState = immutable.fromJS
@@ -44,9 +44,6 @@ _createStore = (ducks) ->
   actionCreators = _.reduce ducks, (actionCreators, duck, id) ->
     _.extend actionCreators, duck.actionCreators
   , {}
-  _.extend actionCreators, changePage: (page = '/') ->
-    (dispatch, getState) ->
-      dispatch push "/#{page}".replace '/', ''
 
   { bindActionCreators } = require 'redux'
   store.actions = bindActionCreators actionCreators, store.dispatch

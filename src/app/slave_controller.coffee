@@ -9,8 +9,8 @@ class SlaveController
     @target = null
 
   connect: ->
-    return if _.isEmpty Settings.slaves
-    for name, uri of Settings.slaves
+    return if _.isEmpty Settings.core.slaves
+    for name, uri of Settings.core.slaves
       [host, port] = uri
       @createSocket name, host, port
 
@@ -31,7 +31,7 @@ class SlaveController
 
   process: (commandPhrase) ->
     commandPhrase = commandPhrase.toLowerCase()
-    if commandPhrase.replace(/\s+/g, '') is 'slaver'
+    if commandPhrase.replace(/\s+/g, '') is Commands.mapping['core:slave-control'].spoken
       notify 'slaveModeToggle', null, 'Slave mode off'
       @clearTarget()
     else
@@ -55,7 +55,7 @@ class SlaveController
       , 3000, true
     throttledLog()
     @clearTarget()
-    [host, port] = Settings.slaves[slaveSocket.name]
+    [host, port] = Settings.core.slaves[slaveSocket.name]
     reconnect = setTimeout =>
       @createSocket slaveSocket.name, host, port
       slaveSocket.destroy()
@@ -66,9 +66,9 @@ class SlaveController
     @target?
 
   setTarget: (name) ->
-    return if _.isEmpty Settings.slaves
+    return if _.isEmpty Settings.core.slaves
     return if _.isEmpty name
-    @target = Actions.fuzzyMatchKey Settings.slaves, name
+    @target = Actions.fuzzyMatchKey Settings.core.slaves, name
     notify 'slaveModeToggle', @target, "Slave mode on: #{@target}"
 
   clearTarget: ->

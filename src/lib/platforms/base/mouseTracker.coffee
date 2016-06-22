@@ -1,6 +1,6 @@
 module.exports = class MouseTracker
   constructor: () ->
-    @frequency = Settings.mouseTrackingFrequency or 100
+    @frequency = Packages.('core').settings().mouseTrackingFrequency or 100
     @dwellings = []
     @lastFixedPoint = {x: 0, y: 0}
     @potential = false

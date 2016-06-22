@@ -5,12 +5,12 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    process.stdout.write = (chunk, encoding, next = null) =>
-      @stdout _.truncate(chunk, {length: 50}), chunk
-      next?()
-    process.stderr.write = (chunk, encoding, next = null) =>
-      @stderr _.truncate(chunk, {length: 50}), chunk
-      next?()
+    # process.stdout.write = (chunk, encoding, next = null) =>
+    #   @stdout _.truncate(chunk, {length: 50}), chunk
+    #   next?()
+    # process.stderr.write = (chunk, encoding, next = null) =>
+    #   @stderr _.truncate(chunk, {length: 50}), chunk
+    #   next?()
 
     @setMaxListeners 300
     instance = @
@@ -74,6 +74,7 @@ class EventEmitter extends require('events').EventEmitter
     if setter?
       @_logEvents = setter
     @_logEvents
+
   subscribeToEvents: ->
     @on 'logEvents', (setter) =>
       @logEvents setter
@@ -136,7 +137,7 @@ class EventEmitter extends require('events').EventEmitter
       entry.timestamp = process.hrtime()
       @emit 'logger', entry
 
-  ___debug: (event) ->
+  debug: (event) ->
     args = _.toArray arguments
     event = 'debug'
     if _.isString args[0]
@@ -181,7 +182,7 @@ class EventEmitter extends require('events').EventEmitter
     event ?= 'app'
     type ?= 'event'
     args = _.toArray arguments
-    if @logEvents() or type in ['debug', 'stdout', 'stderr']
+    if @logEvents() or type in ['stdout', 'stderr']
       unless event in @suppressedDebugEntries
         @logger
           type: type
@@ -212,7 +213,7 @@ class EventEmitter extends require('events').EventEmitter
     , container
 
 Events = new EventEmitter
-global.debug = _.bind Events.___debug, Events
+global.debug = _.bind Events.debug, Events
 global.emit = _.bind Events._emit, Events
 global.error = _.bind Events.error, Events
 global.log = _.bind Events.log, Events
@@ -221,3 +222,31 @@ global.notify = _.bind Events.notify, Events
 global.mutate = _.bind Events.mutate, Events
 global.unsubscribe = _.bind Events.unsubscribe, Events
 module.exports = Events
+
+global.mutationNotifier = (target, event, args, deep = false) ->
+  new Proxy target,
+    set: (target, property, value, receiver) ->
+      if value isnt target[property]
+        payload = _.assign {}, args, {
+          property,
+          old: target[property],
+          new: value
+        }
+        emit event, payload
+        # emit "#{event}Set", payload
+        # emit "#{event}#{target}", payload
+        # emit "#{event}#{target}Set", payload
+        if deep and _.isObjectLike value
+          value = mutationNotifier value, event, args, true
+      Reflect.set target, property, value, receiver
+    deleteProperty: (target, property) ->
+      payload = _.assign {}, args, {
+        property,
+        old: target[property],
+        new: undefined
+      }
+      emit event, payload
+      # emit "#{event}Delete", payload
+      # emit "#{event}#{target}", payload
+      # emit "#{event}#{target}Delete", payload
+      Reflect.deleteProperty target, property

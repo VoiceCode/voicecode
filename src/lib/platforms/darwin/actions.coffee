@@ -424,7 +424,7 @@ class DarwinActions extends Actions
       @key 'delete'
 
   notify: (text) ->
-    Notify(text)
+    notify text
 
   checkBundleExistence: do ->
     cache = {global: true}

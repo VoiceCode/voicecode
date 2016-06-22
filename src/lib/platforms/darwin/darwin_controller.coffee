@@ -8,8 +8,7 @@ class DarwinController
     return instance if instance?
     instance = @
 
-    @loadFrameworks() # still needed?
-    @setDragonInfo()
+    @loadFrameworks()
 
     @historyGrowl = []
     @historyDragon = []
@@ -36,16 +35,7 @@ class DarwinController
 
   startEventMonitor: ->
     @listenOnSocket "/tmp/voicecode_events.sock", @systemEventHandler
-    dragonPID = Execute('pgrep Dragon')
-    setInterval =>
-      Execute('pgrep Dragon', (err, pid) =>
-        log null, null, "Dragon process id: #{pid}"
-        if dragonPID isnt pid
-          log null, null, "Restarting event monitor..."
-          @eventMonitor.restart()
-          dragonPID = pid
-        )
-    , 15000
+
     @eventMonitor = forever.start '',
       command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
@@ -217,29 +207,6 @@ class DarwinController
       new Chain(phrase).execute()
     ).run()
 
-  setDragonInfo: ->
-    Settings.dragonVersion = SystemInfo.applicationMajorVersionFromBundle('com.dragon.dictate')
-    switch Settings.dragonVersion
-      when 5
-        Settings.dragonApplicationName =
-          Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon"
-      else
-        Settings.dragonApplicationName =
-          Settings.localeSettings[Settings.locale].dragonApplicationName or "Dragon Dictate"
 
-  listenAsSlave: ->
-    socketServer = net.createServer (socket) =>
-      notify 'masterConnected', null, "Master connected!"
-      socket.on 'data', @slaveDataHandler.bind(@)
-      socket.on 'end', (socket) ->
-        notify 'masterDisconnected', null, "Master disconnected..."
-
-    socketServer.listen Settings.slaveModePort, ->
-      notify 'slaveListening', {port: Settings.slaveModePort},
-      "Awaiting connection from master on port #{Settings.slaveModePort}"
-
-  slaveDataHandler: (phrase) ->
-    log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
-    @executeChain(phrase)
 
 module.exports = new DarwinController

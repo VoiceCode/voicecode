@@ -42,7 +42,7 @@ class ParserController
     @debouncedGenerateParser = null
 
   regress: (reason, readableReason) ->
-    reason = readableReason unless debugMode
+    reason = readableReason unless developmentMode
     {content: oldParser} = @loadFromDisk()
     warning 'parserRegression', null,
     "Regressing to old parser because: #{reason}"

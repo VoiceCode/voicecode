@@ -58,11 +58,12 @@ class Chain
       catch e
         error 'commandFailedExecute', link, e.message
         error 'chainFailedExecute', {link, chain}, e, e.stack
-        emit 'breakChain', e.message
       finally
         if _.isObject chainBroken
-          log 'chainBroken', chain,
-          "#{chain[index].command} broke the chain: #{chainBroken.reason}"
+          log 'chainBroken', {link, chain},
+          "#{link.command} broke the chain: #{chainBroken.reason}"
+          error 'chainFailedExecute', {link, chain}
+          , "Chain did not execute: #{chainBroken.reason}"
           return false
         return true
 

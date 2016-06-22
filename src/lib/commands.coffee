@@ -1,3 +1,4 @@
+CustomGrammar = require './parser/customGrammar'
 class Commands
   instance = null
   history = {}
@@ -41,8 +42,6 @@ class Commands
     @initialize()
 
   initialize: () ->
-    # @performCommandEdits 'corePackages' # corePackagesCommandEditsPerformed
-
     Events.once 'userAssetsLoaded', =>
       @performCommandEdits 'userCode' # userCodeCommandEditsPerformed
 
@@ -54,7 +53,14 @@ class Commands
     Events.on 'EnabledCommandsManagerSettingsProcessed', =>
       # enabledCommandsCommandEditsPerformed
       @performCommandEdits 'enabledCommands'
-    Events.on 'startupComplete', => @immediateEdits = true
+    Events.on 'startupComplete', =>
+      @immediateEdits = true
+      # Events.on 'packageSettingsChanged', ({pack}) ->
+      #   process.nextTick ->
+      #     _.each pack._commands, (command, id) ->
+      #       if command.grammar?
+      #         {spoken, rule, variables} = command
+      #         command.grammar = new CustomGrammar spoken, rule, variables
 
   validate: (command, options, editType) ->
     validated = true
@@ -118,7 +124,7 @@ class Commands
     @mapping[name] ?= {}
     alreadyEnabled = @mapping[name].enabled
     _.deepExtend @mapping[name], @normalizeOptions name, options
-    emit 'commandCreated', options, name
+    emit 'commandCreated', @mapping[name], name
     if (alreadyEnabled or options.enabled) is true
       @enable name
 
