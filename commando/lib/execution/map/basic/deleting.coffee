@@ -14,9 +14,9 @@ Commands.createDisabled
       current = @currentApplication()
       if current is 'Sublime Text'
         @key 'delete', 'control'
-      else if current is 'iTerm' and @mode is 'vim'
+      else if current in ['iTerm', 'iTerm2'] and @mode is 'vim'
         @key 'delete', 'option'
-      else if current is 'Emacs' or (current is 'iTerm' and @mode is 'emacs')
+      else if current is 'Emacs' or (current in ['iTerm', 'iTerm2'] and @mode is 'emacs')
         @key 'delete', 'option'
       else
         @deletePartialWord('left')

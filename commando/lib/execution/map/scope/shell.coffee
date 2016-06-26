@@ -2,7 +2,7 @@ Commands.createDisabled
   'cd':
     description: 'change directory'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
+    triggerScopes: ['iTerm', 'iTerm2', 'Terminal']
     continuous: false
     action: ->
       @string 'cd ; ls'
@@ -10,7 +10,7 @@ Commands.createDisabled
   'engage':
     description: 'hover your mouse over a directory name output from a "ls" command in the terminal, and this command will "cd" to that directory'
     tags: ['domain-specific', 'shell']
-    triggerScope: 'iTerm'
+    triggerScopes: ['iTerm', 'iTerm2']
     continuous: false
     action: ->
       @rightClick()
@@ -23,7 +23,7 @@ Commands.createDisabled
     grammarType: 'textCapture'
     description: 'list directory contents (takes dynamic arguments)'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
+    triggerScopes: ['iTerm', 'iTerm2', 'Terminal']
     continuous: false
     action: (input) ->
       options = _.map((input or []), (item) ->
@@ -36,7 +36,7 @@ Commands.createDisabled
     grammarType: 'numberCapture'
     description: 'display the last [n](default all) shell commands executed'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
+    triggerScopes: ['iTerm', 'iTerm2', 'Terminal']
     continuous: false
     action: (input) ->
       @string "history #{input or ''}"
@@ -44,7 +44,7 @@ Commands.createDisabled
   'shell recall':
     description: 'hovering the mouse over the left-hand number of a result from the history output, this will re-execute the command'
     tags: ['domain-specific', 'shell']
-    triggerScope: 'iTerm'
+    triggerScopes: ['iTerm', 'iTerm2']
     continuous: false
     action: ->
       @rightClick()
@@ -55,7 +55,7 @@ Commands.createDisabled
   'shell edit':
     description: 'open file in editor'
     tags: ['domain-specific', 'shell']
-    triggerScope: 'iTerm'
+    triggerScopes: ['iTerm', 'iTerm2']
     continuous: false
     action: ->
       @rightClick()
@@ -66,7 +66,7 @@ Commands.createDisabled
   'durrup':
     description: 'navigate to the parent directory'
     tags: ['domain-specific', 'shell']
-    triggerScopes: ['iTerm', 'Terminal']
+    triggerScopes: ['iTerm', 'iTerm2', 'Terminal']
     action: ->
       @string 'cd ..; ls'
       @enter()
@@ -79,7 +79,7 @@ Commands.createDisabled
       if input?.length
         current = @currentApplication()
         directory = @fuzzyMatch Settings.directories, input.join(' ')
-        if current is 'iTerm' or current is 'Terminal'
+        if current in ['iTerm', 'iTerm2'] or current is 'Terminal'
           @string "cd #{directory} ; ls \n"
         else
           @openApplication('iTerm')

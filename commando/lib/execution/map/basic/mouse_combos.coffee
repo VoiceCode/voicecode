@@ -102,7 +102,7 @@ Commands.createDisabled
     tags: ['mouse', 'combo', 'clipboard']
     action: () ->
       switch @currentApplication()
-        when "iTerm"
+        when "iTerm", "iTerm2"
           @rightClick()
           @rightClick()
           @paste()

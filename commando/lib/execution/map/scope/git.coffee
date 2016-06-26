@@ -12,7 +12,7 @@ git =
     action: ->
       @string 'git status'
       switch @currentApplication()
-        when 'iTerm', 'Terminal'
+        when 'iTerm', 'iTerm2', 'Terminal'
           @enter()
 
   'jet commit':
@@ -60,6 +60,6 @@ _.each git, (value, key) ->
     description: output
     action: ->
       @string output
-  
+
   # the defaults are overridden if any option is specified
   Commands.createDisabled key, _.extend(defaults, value)
