@@ -24,10 +24,10 @@ class DarwinActions extends Actions
     mask
 
   contextAllowsArrowKeyTextSelection: ->
-    not _.includes(Settings.applicationsThatWillNotAllowArrowKeyTextSelection, @currentApplication().name)
+    not _.includes(Settings.os.applicationsThatWillNotAllowArrowKeyTextSelection, @currentApplication().name)
 
   clickDelayRequired: ->
-    Settings.clickDelayRequired[@currentApplication().name] or Settings.clickDelayRequired["default"] or 0
+    Settings.os.clickDelayRequired[@currentApplication().name] or Settings.os.clickDelayRequired["default"] or 0
 
   getMousePosition: ->
     $.CGEventGetLocation($.CGEventCreate(null))
@@ -55,7 +55,8 @@ class DarwinActions extends Actions
     @delay(@clickDelayRequired())
 
   clickAtPosition: (pos) ->
-    console.log "clicking at", pos
+    if developmentMode
+      console.log "clicking at", pos
     @moveMouseAndReturn pos, (position) =>
       @click(position)
 
@@ -369,7 +370,7 @@ class DarwinActions extends Actions
 
 
   canDetermineSelections: ->
-    not _.includes(Settings.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
+    not _.includes(Settings.os.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
 
   verticalSelectionExpansion: (number) ->
     emit 'notUndoable'

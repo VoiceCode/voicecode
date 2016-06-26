@@ -3,7 +3,10 @@ SpeakableList = require './speakableList'
 
 class CustomGrammar
   constructor: (@spoken, @rule, @variables = {}) ->
-    @tokens = customGrammarParser.parse(@rule).tokens
+    try
+      @tokens = customGrammarParser.parse(@rule).tokens
+    catch
+      debug arguments
     @handleDuplicateLists()
     @initializeSections()
 
@@ -51,7 +54,6 @@ class CustomGrammar
   normalizeInput: (input={}) ->
     _.mapValues input, (values, list) =>
       spoken = _.reject values, _.isArray
-      debug "spoken: ", spoken
       spoken = spoken.join ' '
       if spoken.length > 0
         @lists[@reverseNameLookup[list]].value(spoken)

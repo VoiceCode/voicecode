@@ -103,7 +103,7 @@ class DragonSynchronizer
     id
 
   createCommand: ({bundleId, triggerPhrase, body}) ->
-    locale = Settings.localeSettings[Settings.locale]
+    locale = Settings.dragon.localeSettings[Settings.core.locale]
     commandId = @createCommandId()
     bundleId = null if bundleId is 'global'
     applicationVersion = @getApplicationVersion bundleId
@@ -134,7 +134,8 @@ class DragonSynchronizer
     os = require 'os'
     home = os.homedir()
     file = [home, "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
-    # file = [home, "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/") # FOR DEVELOPMENT ONLY
+    if developmentMode
+      file = [home, "Documents/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
     file
 
   deleteAllDynamic: ->
@@ -165,7 +166,7 @@ class DragonSynchronizer
 
     @dynamicDatabase.run "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundleId, $name, $spokenLanguage, 'Alt')",
       $name: name
-      $spokenLanguage: Settings.localeSettings[Settings.locale].dragonTriggerSpokenLanguage
+      $spokenLanguage: Settings.dragon.localeSettings[Settings.core.locale].dragonTriggerSpokenLanguage
       $bundleId: bundleId
     # get the new id
     result = @dynamicDatabase.get "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
@@ -198,9 +199,7 @@ class DragonSynchronizer
       return false
     needsCreating = []
 
-    chainedYesNo = [yes]
-    if Settings.dragonVersion is 5
-      chainedYesNo = [yes, no]
+    chainedYesNo = [yes, no]
     DragonCommand = require './dragon_command'
     debug "enabled commands count", Commands.getEnabled().length
     for id in Commands.getEnabled()
@@ -209,19 +208,9 @@ class DragonSynchronizer
       @commands[id] = command
       if command.rule?
         @lists[id] = command.dragonLists()
-      if Settings.dragonCommandMode is 'pure-vocab'
+      if Settings.dragon.dragonCommandMode is 'pure-vocab'
         continue if id isnt 'dragon:catch-all'
-      # if Settings.dragonCommandMode is 'new-school'
-      #   continue unless command.grammarType in ['custom', 'textCapture', 'oneArgument'] or
-      #   command.kind is 'recognition'
       for hasChain in chainedYesNo
-        # assume input always required for textCapture
-        # exceptions will be handled by new school recognition command
-        if Settings.dragonCommandMode is 'new-school' and
-        command.grammarType is 'textCapture' and
-        hasChain is no
-          continue
-
         # special case
         continue if id is 'dragon:catch-all' and hasChain is no
 
@@ -238,7 +227,7 @@ class DragonSynchronizer
             triggerPhrase: dragonName.trim()
             body: dragonBody.trim()
 
-    debug "needs creating", needsCreating.length
+    debug "Commands to create: " + needsCreating.length
     _.each needsCreating, (item) =>
       @createCommand item
 

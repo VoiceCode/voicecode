@@ -23,6 +23,7 @@ logEntryRecord = immutable.Record
   timestamp: null
   event: null
   args: null
+
 defaultLogSettings = immutable.Map
   showingEvents: developmentMode
 
@@ -40,7 +41,7 @@ exports.reducers =
       when @CREATE_LOG_ENTRY
         logEntry = new logEntryRecord payload
         logs = logs.insert 0, logEntry
-        if logs.size is 51
+        if logs.size is 9999 and not developmentMode
           return logs.setSize 50
         logs
       when @CLEAR_LOG

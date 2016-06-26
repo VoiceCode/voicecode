@@ -89,11 +89,15 @@ apisForPackage = (state, props) ->
 implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
 
+showingEventsSelector = (state, props) ->
+  state.get('log_settings').get 'showingEvents'
+
 _.assign exports, {
   apisForPackage
   commandSelector
   packageSelector
   packagesSelector
+  showingEventsSelector
   packageFilterSelector
   filteredPackagesSelector
   commandsForPackageSelector

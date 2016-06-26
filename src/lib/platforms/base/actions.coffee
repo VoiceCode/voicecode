@@ -12,7 +12,7 @@ class Actions
   continue: () ->
     @executionStack[0] = true
   packageSettings: (packageId) ->
-    Packages.get(packageId)?.settings()
+    Settings[packageId]
   setUndoByDeleting: (amount) ->
     # TODO: implement
   undoByDeleting: ->
@@ -100,11 +100,6 @@ class Actions
     new Contexts.Sublime()
 
 
-  inTerminal: ->
-    @currentApplication().name in Settings.terminalApplications
-
-  openDefaultTerminal: ->
-    @openApplication Settings.defaultTerminal
 
 
 

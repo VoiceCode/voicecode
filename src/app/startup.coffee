@@ -3,26 +3,33 @@ global.bundleId = 'io.voicecode.app'
 global.app = require 'app'
 
 global.Reflect = require 'harmony-reflect'
-global.Settings = Object.create new Proxy {
+global.Settings = Object.create new Proxy
   userAssetsPath: '~/voicecode'
-  },
+  license: ''
+  email: ''
+,
   get: (target, property, receiver) ->
     if pack = Packages.get property
       pack.settings()
     else
       Reflect.get target, property, receiver
   set: (target, property, value, receiver) ->
-    if pack = Packages?.get property
-      pack.settings value
-    else
+    if target[property]?
       Reflect.set target, property, value, receiver
+    else if Packages? and p = Packages.get property
+      p.settings value
+    else
+      Events.once "#{property}PackageReady", ({pack})->
+        pack.settings {"#{property}": value}
 
 # https://gist.github.com/dimatter/0206268704609de07119
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
 
 process.env.NODE_ENV = 'production' # needed for react
+
 global.developmentMode = process.argv[2]  == 'develop'
+
 if developmentMode
   process.env.NODE_ENV = 'development'
   electronConnect = require('electron-connect').client
@@ -68,6 +75,11 @@ global.menubar = require('menubar')
   'always-on-top': true
   showDockIcon: false
 
+
+unless developmentMode
+  _.each process.mainModule.paths, (path) ->
+    require('module').globalPaths.push path
+
 menubar.on 'ready', ->
   menubar.showWindow()
   unless developmentMode
@@ -99,6 +111,7 @@ process.on 'uncaughtException', (err) ->
   error 'UNCAUGHT EXCEPTION', err.stack, err.message
 
 Events.once 'applicationShouldStart', ->
+  platformLib = path.join '../lib', 'platforms', platform
   funk = asyncblock.nostack
   if developmentMode
     funk = asyncblock
@@ -115,7 +128,7 @@ Events.once 'applicationShouldStart', ->
 
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
-
+    global.Actions = require "#{platformLib}/actions"
     global.AssetsController = require './assets_controller'
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
@@ -127,25 +140,7 @@ Events.once 'applicationShouldStart', ->
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.ParserController = require '../lib/parser/parser_controller'
-
-    switch platform
-      when "darwin"
-        _path = path.join '../lib', 'platforms', 'darwin'
-        global.Actions = require "#{_path}/actions"
-        global.SystemInfo = require "#{_path}/system_info"
-        global.DarwinController = require "#{_path}/darwin_controller"
-        global.VocabularyController = require("#{_path}/dragon/dragon_vocabulary_controller")
-      when "windows"
-        global.Actions = require '../lib/platforms/windows/actions'
-      when "linux"
-        global.Actions = require '../lib/platforms/linux/actions'
-
-    # requireDirectory module, '../packages/',
-    #   exclude: (path) ->
-    #     not /.*package\.js$/.test path
-    #   visit: (required) ->
-    #     if (not _.isEmpty required) and _.isObject required
-    #       _.each required, (value, key) -> global[key] = value
+    global.VocabularyController = require("#{platformLib}/dragon/dragon_vocabulary_controller")
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
     AssetsController.getAssets 'package', 'packages/**/package.coffee'
@@ -168,12 +163,15 @@ Events.once 'applicationShouldStart', ->
     if Settings.core.slaveMode or developmentMode
       Commands.enableAll()
 
-    VocabularyController.start()
 
     if developmentMode
       Settings.core.slaveMode = true
 
+    global.MainController = require "#{platformLib}/main_controller"
+
     unless Settings.core.slaveMode
+      global.SystemInfo = require "#{platformLib}/system_info"
+      VocabularyController.start()
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 

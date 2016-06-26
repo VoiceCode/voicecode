@@ -20,6 +20,7 @@
     "url": "https://github.com/dimatter/voicecode/issues"
   },
   "build": {
+    "asar": false,
     "appId": "io.voicecode.app",
     "app-category-type": "public.app-category.productivity"
   },
@@ -32,7 +33,6 @@
     "coffee-react": "^5.0.0",
     "coffee-script": "^1.10.0",
     "crypto-js": "^3.1.6",
-    "electron-settings": "^1.0.4",
     "events": "^1.1.0",
     "fibers": "git+https://github.com/laverdet/node-fibers.git",
     "forever": "^0.15.1",
@@ -58,7 +58,7 @@
     "replify": "^1.2.0",
     "require-directory": "^2.1.1",
     "reselect": "^2.3.0",
-    "robotjs": "^0.4.1",
+    "robotjs": "^0.4.4",
     "semantic-ui-css": "^2.1.8",
     "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git",
     "synchronize": "^0.9.15",

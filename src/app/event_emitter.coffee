@@ -5,24 +5,25 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    # process.stdout.write = (chunk, encoding, next = null) =>
-    #   @stdout _.truncate(chunk, {length: 50}), chunk
-    #   next?()
-    # process.stderr.write = (chunk, encoding, next = null) =>
-    #   @stderr _.truncate(chunk, {length: 50}), chunk
-    #   next?()
+    process.stdout.write = (chunk, encoding, next = null) =>
+      @stdout _.truncate(chunk, {length: 50}), chunk
+      next?()
+    process.stderr.write = (chunk, encoding, next = null) =>
+      @stderr _.truncate(chunk, {length: 50}), chunk
+      next?()
 
     @setMaxListeners 300
     instance = @
     @frontendSubscriptions = {}
-    @suppressedDebugEntries = []
+    @suppressedLogEntries = []
     @subscribeToEvents()
     if developmentMode
-      @_logEvents = true
-      @suppressedDebugEntries = [
-        # 'apiCreated'
+      @_logEvents = developmentMode
+      @suppressedLogEntries = [
+        'apiCreated'
         # 'deprecation'
         'implementationWillExecute'
+        'packageSettingsChanged'
         'enableCommand'
         'commandCreated'
         'commandEnabled'
@@ -36,13 +37,13 @@ class EventEmitter extends require('events').EventEmitter
         'charactersTyped'
         'historicChainCreated'
         'historicChainLinkCreated'
-        # 'assetEvent'
-        # 'assetEvaluated'
-        # 'assetsLoaded'
-        # 'userAssetEvent'
-        # 'userAssetsLoading'
-        # 'userAssetsLoaded'
-        # 'userAssetEvaluated'
+        'assetEvent'
+        'assetEvaluated'
+        'assetsLoaded'
+        'userAssetEvent'
+        'userAssetsLoading'
+        'userAssetsLoaded'
+        'userAssetEvaluated'
         'mouse.leftClick'
         'packageReady'
         'userAssetEvaluated'
@@ -69,7 +70,16 @@ class EventEmitter extends require('events').EventEmitter
         'currentApplicationWillChange'
         # 'currentApplicationChanged'
         'notUndoable'
+        /.*PackageCreated$/
+        /.*PackageReady$/
+        /.*SettingsChanged$/
       ]
+      @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
+        if _.isString entry
+          new RegExp "^#{entry}$"
+        else
+          entry
+
   logEvents: (setter = null)->
     if setter?
       @_logEvents = setter
@@ -91,7 +101,6 @@ class EventEmitter extends require('events').EventEmitter
     @frontendSubscriptions[event] ?= []
     @frontendSubscriptions[event].push _callback or callback
     @on event, (_callback or callback)
-
 
   frontendClearSubscriptions: ->
     _.each @frontendSubscriptions, (callbacks, event) =>
@@ -183,15 +192,21 @@ class EventEmitter extends require('events').EventEmitter
     type ?= 'event'
     args = _.toArray arguments
     if @logEvents() or type in ['stdout', 'stderr']
-      unless event in @suppressedDebugEntries
+      unless (_.some @suppressedLogEntries
+      , (suppressed) -> suppressed.test event)
         @logger
           type: type
           event: event
-          args: utilities.inspect args[1..], {depth: 4, color: false}
-    else unless type in ['event', 'mutate']
-      @logger
-        type: type
-        event: args[2] || "#{event} is missing a human readable message"
+          args: (utilities.inspect args[1..]
+            , {depth: 5, color: false}).replace "\\n", "\n"
+    else
+      unless type in ['event', 'mutate', 'debug']
+        @logger
+          type: type
+          # event: args[2] || "#{event} is missing a human readable message"
+          event: event
+          args: (utilities.inspect args[1..]
+          , {depth: 5, color: false}).replace "\\n", "\n"
 
     unless type in ['mutate', 'debug', 'stdout', 'stderr']
       args[0] = event
@@ -229,8 +244,8 @@ global.mutationNotifier = (target, event, args, deep = false) ->
       if value isnt target[property]
         payload = _.assign {}, args, {
           property,
-          old: target[property],
-          new: value
+          oldValue: target[property],
+          value: value
         }
         emit event, payload
         # emit "#{event}Set", payload
@@ -242,8 +257,8 @@ global.mutationNotifier = (target, event, args, deep = false) ->
     deleteProperty: (target, property) ->
       payload = _.assign {}, args, {
         property,
-        old: target[property],
-        new: undefined
+        oldValue: target[property],
+        value: undefined
       }
       emit event, payload
       # emit "#{event}Delete", payload

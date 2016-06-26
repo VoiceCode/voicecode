@@ -6,7 +6,7 @@ Platforms.osx.applescript =
     end tell
     """
   openWebsite: (name) ->
-    address = Actions.fuzzyMatch Settings.websites, name
+    address = Actions.fuzzyMatch Settings.web.websites, name
     keystroke = if name.length and address?
       """
       keystroke "#{address}"
@@ -15,7 +15,7 @@ Platforms.osx.applescript =
     else
       ""
     """
-    tell application "#{Settings.defaultBrowser}" to activate
+    tell application "#{Settings.os.defaultBrowser}" to activate
     delay 0.2
     tell application "System Events"
     keystroke "t" using {command down}
@@ -24,7 +24,7 @@ Platforms.osx.applescript =
     """
   openWebTab: (name) ->
     """
-    tell application "#{Settings.defaultBrowser}" to activate
+    tell application "#{Settings.os.defaultBrowser}" to activate
     delay 0.1
     tell application "System Events"
     keystroke "t" using {command down}
@@ -150,7 +150,7 @@ Platforms.osx.applescript =
         when "\r"
           "\\r"
   openApplication: (name) ->
-    application = Actions.fuzzyMatch Settings.applications, name
+    application = Actions.fuzzyMatch Settings.os.applications, name
     """
     tell application "#{application}" to activate
     """

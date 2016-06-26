@@ -13,7 +13,6 @@ class StickyButton extends React.Component
 
   render: ->
     {isSticky, toggleStickyWindow} = @props
-    console.log isSticky
     stickyWindowIconClasses = classNames
       'inverted icon zeroMargin': true
       'lock': isSticky

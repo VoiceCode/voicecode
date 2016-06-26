@@ -8,13 +8,7 @@ Transforms =
     .replace(/\s'\s/, "'")
     .replace(/-\s/, "-")
   literal: (textArray) ->
-    switch Settings.defaultLiteralTransform
-      when "snake"
-        Transforms.snake(textArray)
-      when "camel"
-        Transforms.camel(textArray)
-      else
-        Transforms.identity(textArray)
+    Transforms[Settings.core.defaultLiteralTransform](textArray)
   snake: (textArray) ->
     textArray.join('_').replace(/_\._/g, ".").replace(/\._/, ".")
   camel: (textArray) ->

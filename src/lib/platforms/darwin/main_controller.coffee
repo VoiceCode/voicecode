@@ -2,7 +2,7 @@ net = require 'net'
 fs = require 'fs'
 forever = require 'forever'
 
-class DarwinController
+class MainController
   instance = null
   constructor: ->
     return instance if instance?
@@ -23,7 +23,7 @@ class DarwinController
       else
         @listenOnSocket "/tmp/voicecode_events_dev.sock", @systemEventHandler
 
-      if Settings.slaveMode
+      if Settings.core.slaveMode
         @listenAsSlave()
       else
         @listen()
@@ -207,6 +207,20 @@ class DarwinController
       new Chain(phrase).execute()
     ).run()
 
+  listenAsSlave: ->
+    socketServer = net.createServer (socket) =>
+      notify 'masterConnected', null, "Master connected!"
+      socket.on 'data', @slaveDataHandler.bind(@)
+      socket.on 'end', (socket) ->
+        notify 'masterDisconnected', null, "Master disconnected..."
+
+    socketServer.listen Settings.core.slaveModePort, ->
+      notify 'slaveListening', {port: Settings.core.slaveModePort},
+      "Awaiting connection from master on port #{Settings.core.slaveModePort}"
+
+  slaveDataHandler: (phrase) ->
+    log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
+    @executeChain(phrase)
 
 
-module.exports = new DarwinController
+module.exports = new MainController

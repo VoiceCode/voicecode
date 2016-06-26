@@ -40,13 +40,14 @@ class Chain
     Events.once 'chainDidExecute', ->
       Events.unsubscribe 'breakChain', comboBreaker
 
+    passableChain = _.cloneDeep chain
     emit 'chainWillExecute', chain
     _.each chain, (link, index) ->
       chainLinkIndex = HistoryController.getChainLength()
       link.context ?= {}
       _.extend link.context,
           chainLinkIndex: ++chainLinkIndex
-          chain: _.cloneDeep chain
+          chain: passableChain
       emit 'commandWillExecute', {link, chain}
       try
         new Command(

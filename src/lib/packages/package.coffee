@@ -11,9 +11,6 @@ class Package
     , 'packageSettingsChanged', {pack: @}, true
     {@name, @description, @scope} = @options
 
-    Events.on 'commandCreated', (command, name) =>
-      @_commands[name] = command
-
     @registerScope()
     @setDefaultCommandOptions()
     @setDefaultEditOptions()
@@ -103,10 +100,10 @@ class Package
 
   settings: (options) ->
     if options?
-      _.deepExtend @_settings, options
-      # Events.once 'settingsAssetsLoaded', ->
-        # TODO: remove
-        # _.deepExtend Settings, options
+      if _.isFunction options
+        do options.bind @
+      else
+        _.deepExtend @_settings, options
       @_settings
     else
       @_settings
@@ -117,8 +114,9 @@ class Package
   defer: (callback) ->
     @hasDeferred = true
     Events.once 'userAssetsLoaded', =>
-      callback.bind(@)()
-      log 'packageReady', @, "Package ready: #{@name}"
+      do callback.bind @
+      emit "#{@name}PackageCreated", {pack: @}
+      emit 'packageReady', {pack: @}, "Package ready: #{@name}"
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates

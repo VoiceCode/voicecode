@@ -6,6 +6,9 @@ class Packages
     return instance if instance?
     instance = @
     @packages = {}
+    Events.on 'commandCreated', (command, name) =>
+      @get(command.packageId)._commands[name] = command
+
   register: (options) ->
     # validate the options
     # instantiate the package, add it to our internal list of packages
@@ -23,7 +26,9 @@ class Packages
     emit 'packageCreated', instantiated
     Events.once "assetEvaluated", ->
       unless instantiated.hasDeferred
-        log 'packageReady', instantiated, "Package ready: #{instantiated.name}"
+        emit "#{instantiated.name}PackageCreated", {pack: instantiated}
+        emit 'packageReady', {pack: instantiated}
+        , "Package ready: #{instantiated.name}"
     instantiated
 
   get: (name) ->
