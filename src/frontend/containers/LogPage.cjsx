@@ -19,8 +19,8 @@ class LogPage extends React.Component
   render: ->
     {showingEvents, toggleLogEvents} = @props
     logEventsClasses = classNames
-      item: true
       active: showingEvents
+      item: true
 
     <div className="logPage">
       <div className='ui fixed secondary pointing page menu'>

@@ -16,11 +16,9 @@ class MainController
 
     @methodCallTimes = {}
     @applicationLastChangedAt = Date.now()
-
+    Events.once 'dragonStarted', @startEventMonitor.bind @
     Events.once 'startupComplete', =>
-      unless developmentMode
-        @startEventMonitor()
-      else
+      if developmentMode
         @listenOnSocket "/tmp/voicecode_events_dev.sock", @systemEventHandler
 
       if Settings.core.slaveMode
@@ -42,9 +40,10 @@ class MainController
     @eventMonitor.on 'start', =>
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
       process.on 'exit', => @eventMonitor.stop()
-
+      Events.on 'dragonStarted', => @eventMonitor.restart()
     @eventMonitor.on 'exit:code', (code) ->
-      error 'eventMonitorStopped', code, "Event monitor stopped with code: #{code}"
+      error 'eventMonitorStopped', code
+      , "Event monitor stopped with code: #{code}"
 
   applicationChanged: ({event, bundleId, name}) ->
     @applicationLastChangedAt = Date.now()

@@ -124,7 +124,7 @@ Events.once 'applicationShouldStart', ->
     # A package for platform specific global commands
     Packages.register
       name: global.platform
-      description: "#{_.startCase global.platform} "
+      description: "#{_.startCase global.platform}"
 
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
@@ -140,7 +140,7 @@ Events.once 'applicationShouldStart', ->
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.ParserController = require '../lib/parser/parser_controller'
-    global.VocabularyController = require("#{platformLib}/dragon/dragon_vocabulary_controller")
+    global.VocabularyController = require "#{platformLib}/dragon/dragon_vocabulary_controller"
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
     AssetsController.getAssets 'package', 'packages/**/package.coffee'
