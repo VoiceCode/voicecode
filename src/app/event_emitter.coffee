@@ -98,8 +98,8 @@ class EventEmitter extends require('events').EventEmitter
           implementations = _.keys arguments[0].implementations
           commandId = arguments[0].id
           callback.call null, {implementations, commandId}
-    @frontendSubscriptions[event] ?= []
-    @frontendSubscriptions[event].push _callback or callback
+    # @frontendSubscriptions[event] ?= []
+    # @frontendSubscriptions[event].push _callback or callback
     @on event, (_callback or callback)
 
   frontendClearSubscriptions: ->

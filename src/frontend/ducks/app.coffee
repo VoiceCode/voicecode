@@ -42,7 +42,7 @@ module.exports.actionCreators = actionCreators
 
 exports.reducers =
   isImmutable: (state = true) -> state # not a 🐛
-  logEvents: (state = false, {type, payload}) =>
+  logEvents: (state = developmentMode, {type, payload}) =>
     if type is @SET_LOG_EVENTS then payload else state
   stickyWindow: (state = false, {type, payload}) =>
     if type is @SET_STICKY_WINDOW then payload else state

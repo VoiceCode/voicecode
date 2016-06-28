@@ -20,7 +20,7 @@ global.Settings = Object.create new Proxy
       p.settings value
     else
       Events.once "#{property}PackageReady", ({pack})->
-        pack.settings {"#{property}": value}
+        pack.settings value
 
 # https://gist.github.com/dimatter/0206268704609de07119
 Function::property = (prop, desc) ->

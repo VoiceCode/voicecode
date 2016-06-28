@@ -31,7 +31,7 @@ class LogEntry extends React.Component
       {
         if args?
           <div className={ contentClasses }>
-            <pre className="ui grey message">
+            <pre className="ui inverted message">
             { args }
             </pre>
           </div>

@@ -115,7 +115,7 @@ class Package
     @hasDeferred = true
     Events.once 'userAssetsLoaded', =>
       do callback.bind @
-      emit "#{@name}PackageCreated", {pack: @}
+      emit "#{@name}PackageReady", {pack: @}
       emit 'packageReady', {pack: @}, "Package ready: #{@name}"
 
   # the instance should automatically add its

@@ -13,7 +13,10 @@ class DragonSynchronizer
     @lists = {}
     @insertedLists = []
     @error = false
-
+    Events.once 'dragonSynchronizingEnded', =>
+      Events.on 'generatesParserSuccess', ({parserChanged}) =>
+        if parserChanged
+          @synchronize()
   connectMain: ->
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)

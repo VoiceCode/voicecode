@@ -4,6 +4,7 @@ immutable = require 'immutable'
 constants =
   CREATE_LOG_ENTRY: 'CREATE_LOG_ENTRY'
   CLEAR_LOG: 'CLEAR_LOG'
+
 _.extend @, constants
 _.extend exports, constants
 
@@ -15,6 +16,10 @@ actionCreators =
 actionCreators.toggleEventDebug = (id, enabled) ->
   (dispatch, getState) ->
     emit 'toggleEventDebug'
+    if showingEventsSelector getState()
+      dispatch actionCreators.hideEvents
+    else
+      dispatch actionCreators.showEvents
 
 exports.actionCreators = actionCreators
 
@@ -24,18 +29,7 @@ logEntryRecord = immutable.Record
   event: null
   args: null
 
-defaultLogSettings = immutable.Map
-  showingEvents: developmentMode
-
 exports.reducers =
-  log_settings: (log_settings = defaultLogSettings, {type, payload}) =>
-    switch type
-      when @SHOW_EVENTS
-        log_settings.set 'showingEvents', true
-      when @HIDE_EVENTS
-        log_settings.set 'showingEvents', false
-      else
-        log_settings
   logs: (logs = immutable.List([]), {type, payload}) =>
     switch type
       when @CREATE_LOG_ENTRY

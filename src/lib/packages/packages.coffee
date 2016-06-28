@@ -26,7 +26,7 @@ class Packages
     emit 'packageCreated', instantiated
     Events.once "assetEvaluated", ->
       unless instantiated.hasDeferred
-        emit "#{instantiated.name}PackageCreated", {pack: instantiated}
+        emit "#{instantiated.name}PackageReady", {pack: instantiated}
         emit 'packageReady', {pack: instantiated}
         , "Package ready: #{instantiated.name}"
     instantiated

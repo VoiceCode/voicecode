@@ -56,11 +56,11 @@ _.merge Settings,
     ).on('change', (path) =>
       @handleFile type, 'changed', path
     ).on('error', (err) ->
-      error 'assetEventError', err, err
-      error "#{type}AssetsEventError", err, err
+      error 'assetEventError', {type, err}, err
+      error "#{type}AssetsEventError", {type, err}, err
     ).on 'ready', ->
       emit "#{type}AssetsLoaded"
-      emit 'assetsLoaded'
+      emit 'assetsLoaded', type
 
 
   handleFile: (type, event, fullPath) ->

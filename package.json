@@ -1,5 +1,5 @@
 {
-  "name": "voicecode",
+  "name": "VoiceCode",
   "version": "1.0.2",
   "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
   "website": "http://voicecode.io",
@@ -20,6 +20,7 @@
     "url": "https://github.com/dimatter/voicecode/issues"
   },
   "build": {
+    "appname": "VoiceCode",
     "asar": false,
     "appId": "io.voicecode.app",
     "app-category-type": "public.app-category.productivity"
