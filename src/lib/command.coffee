@@ -44,13 +44,8 @@ class Command
     return unless Actions.executionStack[0]
 
     sorted = @sortedImplementations()
-
     if _.isEmpty sorted
       warning null, null, "#{@id} has no implementations"
-
-    # primitive fall back to string
-    sorted = _.union sorted
-    , _.toArray Commands.mapping['core:literal'].implementations
 
     _.each sorted, ({action: e, info}) =>
       if Scope.active(_.extend {},
