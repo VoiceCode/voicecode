@@ -218,11 +218,11 @@ class Commands
 
   override: (name, action) ->
     error 'deprecation', "Failed overriding '#{name}'.
-    Commands.override is deprecated. Use Commands.extend"
+    Commands.override is deprecated. Use Package.implement"
 
   extend: (name, edition) ->
     error 'deprecation', "Failed extending '#{name}'.
-    Commands.extend is deprecated. Use Commands.before"
+    Commands.extend is deprecated. Use Package.before || .after"
 
   implement: (commandName, info, action) ->
     @edit commandName, 'implementationCreated', {info, action},
