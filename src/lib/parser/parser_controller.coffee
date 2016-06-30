@@ -81,7 +81,7 @@ class ParserController
     try
       result = @parser.parse result.join('')
     catch err
-      error 'parserError', err, err.message
+      error 'parserError', err.stack, err.message
       result = []
     finally
       result

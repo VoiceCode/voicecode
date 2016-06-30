@@ -274,7 +274,7 @@ class Grammar
 
     nestedTextId = "shrink" / "treemail" / "trusername" / "trassword"
 
-    translation = id:translationId {return Settings.translations[id.trim()];}
+    translation = id:translationId {return Settings.vocabulary.translations[id.trim()];}
 
     translationId = id:(#{@translationIds()}) {return id;}
 
