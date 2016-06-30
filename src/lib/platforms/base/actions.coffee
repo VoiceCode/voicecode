@@ -36,25 +36,7 @@ class Actions
       @_dwellClickOnce = false
 
 
-  normalizeTextArray: (textArray) ->
-    results = []
-    _.each textArray, (item) ->
-      if typeof item is "object"
-        results.push item.text
-      else
-        switch item
-          when "'s"
-            if results.length > 0
-              results[results.length - 1] += "'s"
-            # doesn't seem like it should be possible for the first item in a text array to be "'s", so don't add it
-            # else
-            #   results.push "'s"
-          else
-            results.push item
-    if results.length
-      results
-    else
-      null
+  
 
   fuzzyMatch: (list, term) ->
     # array

@@ -44,9 +44,6 @@ class Command
     return unless Actions.executionStack[0]
 
     sorted = @sortedImplementations()
-    # always fall back to a string?
-    # sorted = _.union @sorted
-    # , _.toArray Commands.mapping['core:literal'].implementations
     if _.isEmpty sorted
       warning null, null, "#{@id} has no implementations"
 

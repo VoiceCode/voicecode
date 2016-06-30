@@ -47,7 +47,7 @@ class Package
     _.each commands, (options, id) =>
       if _.isFunction options
         options = {action: options}
-      @command id, _.defaultsDeep(options, defaults)
+      @command id, _.defaultsDeep(options, defaults, @defaultCommandOptions)
 
   command: (id, options) ->
     if options.action?

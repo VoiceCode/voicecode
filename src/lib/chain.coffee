@@ -46,7 +46,7 @@ class Chain
       chainLinkIndex = HistoryController.getChainLength()
       link.context ?= {}
       _.extend link.context,
-          chainLinkIndex: ++chainLinkIndex
+          chainLinkIndex: chainLinkIndex++
           chain: passableChain
       emit 'commandWillExecute', {link, chain}
       try
