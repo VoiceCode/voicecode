@@ -75,6 +75,7 @@ class Command
   sortedImplementations: ->
     _.sortBy @implementations, ({action: e, info}) ->
       result = {}
+      result.weight = info.weight or 0
       if info.scope?
         unless info.scope is 'global' or info.scope is 'abstract'
           scope = Scope.get info.scope
@@ -86,7 +87,7 @@ class Command
       result.condition = true if info.condition?
       result.platform = true if info.platform?
 
-      _.size(result) * -1
+      (_.size(result) + (-1 * result.weight)) * -1
 
   active: ->
     _.some @implementations, ({action: e, info}) ->

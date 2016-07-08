@@ -453,14 +453,15 @@ class DarwinActions extends Actions
     @delay 300
     @setClipboard old
 
-module.exports = do ->
-  isActive = false
-  Events.once 'startupComplete', -> isActive = true
-  return new Proxy (new DarwinActions), {
-    get: (target, property, receiver) ->
-      if not target[property]? and isActive
-        target.breakChain "Actions.#{property} does not exist."
-        error 'missingDependency'
-        , {property}, "Actions.#{property} does not exist."
-      Reflect.get target, property, receiver
-}
+# module.exports = do ->
+#   isActive = false
+#   Events.once 'startupComplete', -> isActive = true
+#   return new Proxy (new DarwinActions), {
+#     get: (target, property, receiver) ->
+#       if not target[property]? and isActive
+#         target.breakChain "Actions.#{property} does not exist."
+#         error 'missingAction'
+#         , {property}, "Actions.#{property} does not exist."
+#       Reflect.get target, property, receiver
+# }
+module.exports = new DarwinActions

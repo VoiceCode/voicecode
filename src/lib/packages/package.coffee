@@ -141,18 +141,20 @@ class Package
     if @options.applications? or @options.condition?
       Scope.register @options
       @scope = @name
+    else
+      @scope = 'global'
 
   applications: ->
     if @scope?
-      @_scope ?= Scope.get @scope
-      @_scope?.applications()
+      Scope.get(@scope).applications()
+    else
+      true
 
   condition: ->
     if @scope?
-      @_scope ?= Scope.get @scope
-      @_scope?.condition
+      Scope.get(@scope).condition()
     else
-      @options.condition
+      true
 
   active: ->
     if @scope?

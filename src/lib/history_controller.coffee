@@ -13,7 +13,7 @@ class HistoryController
       # console.log 'not empty: ' + _.isEmpty previous[0]
       if @activeChains is 1 and not (previous? and _.isEmpty previous[0])
         @startNewChain()
-    Events.on ['chainFailedExecute', 'chainDidExecute'], =>
+    Events.on ['chainFailedExecute', 'chainDidExecute', 'chainBroken'], =>
       @activeChains--
 
     Events.on 'commandDidExecute', ({link}) =>

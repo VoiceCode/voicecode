@@ -57,17 +57,22 @@ class Chain
         ).execute()
         emit 'commandDidExecute', {link, chain}
       catch e
-        error 'commandFailedExecute', link, e.message
-        error 'chainFailedExecute', {link, chain}, e, e.stack
+        error 'commandFailedExecute'
+        , {link, chaine, stack: e.stack}
+        , e.message or e
+        chainBroken = {reason: e.message or e, error: e}
       finally
         if _.isObject chainBroken
-          log 'chainBroken', {link, chain},
-          "#{link.command} broke the chain: #{chainBroken.reason}"
-          error 'chainFailedExecute', {link, chain}
-          , "Chain did not execute: #{chainBroken.reason}"
+          unless chainBroken.error?
+            log 'chainBroken', {link, chain},
+            "#{link.command} broke the chain:\n
+            #{chainBroken.reason}"
+          else
+            error 'chainFailedExecute'
+            , {link, chaine, stack: e.stack}
+            , e.message or e
           return false
         return true
-
 
     unless chainBroken
       emit 'chainDidExecute', chain

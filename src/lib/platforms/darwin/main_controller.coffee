@@ -10,7 +10,6 @@ class MainController
 
     @loadFrameworks()
 
-    @historyGrowl = []
     @historyDragon = []
     @historyStatusWindow = []
 
@@ -43,6 +42,7 @@ class MainController
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
       process.on 'exit', => @eventMonitor.stop()
       Events.on 'dragonStarted', => @eventMonitor.restart()
+      Events.on 'dragonRestarted', => @eventMonitor.restart()
     @eventMonitor.on 'exit:code', (code) ->
       error 'eventMonitorStopped', code
       , "Event monitor stopped with code: #{code}"
@@ -62,7 +62,6 @@ class MainController
     slaveController.connect()
 
     @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
-    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
@@ -103,21 +102,17 @@ class MainController
     debug 'dragonPhrase', phrase
     normalized = @normalizePhraseComparison(phrase)
 
-    oldGrowl = @findPreviousPhrase @historyGrowl, 'dragon', normalized
-    oldStatusWindow = @findPreviousPhrase @historyStatusWindow, 'dragon', normalized
+    oldStatusWindow = @findPreviousPhrase @historyStatusWindow
+    , 'dragon', normalized
 
     proceed = true
-
-    if oldGrowl?
-      #ignore
-      oldGrowl.dragon = true
-      proceed = false
 
     if oldStatusWindow?
       #ignore
       oldStatusWindow.dragon = true
       proceed = false
 
+    warning 'dragonHandlerProceed ' + proceed
     if proceed
       @historyDragon.unshift
         phrase: normalized
@@ -129,35 +124,6 @@ class MainController
 
     @historyDragon.splice(10) # don't accrue too much history
 
-  growlHandler: (data) ->
-    phrase = data.toString('utf8').replace("\n", "")
-    debug 'growlPhrase', phrase
-    normalized = @normalizePhraseComparison(phrase)
-
-    oldDragon = @findPreviousPhrase @historyDragon, 'growl', normalized
-    oldStatusWindow = @findPreviousPhrase @historyStatusWindow, 'growl', normalized
-    proceed = true
-
-    if oldDragon?
-      #ignore
-      oldDragon.growl = true
-      proceed = false
-
-    if oldStatusWindow?
-      #ignore
-      oldStatusWindow.growl = true
-      proceed = false
-
-    if proceed
-      @historyGrowl.unshift
-        phrase: normalized
-
-      if slaveController.isActive()
-        slaveController.process phrase
-      else
-        @executeChain(phrase)
-
-    @historyGrowl.splice(10) # don't accrue too much history
 
   statusWindowTextHandler: (event) ->
     return unless event.phrase?.length
@@ -180,17 +146,12 @@ class MainController
       normalized = @normalizePhraseComparison(phrase)
 
       oldDragon = @findPreviousPhrase @historyDragon, 'status', normalized
-      oldGrowl = @findPreviousPhrase @historyGrowl, 'status', normalized
 
+      warning 'statusHandlerProceed ' + proceed
       proceed = true
       if oldDragon?
         #ignore
         oldDragon.status = true
-        proceed = false
-
-      if oldGrowl?
-        #ignore
-        oldGrowl.status = true
         proceed = false
 
       if proceed
