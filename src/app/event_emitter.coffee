@@ -64,10 +64,11 @@ class EventEmitter extends require('events').EventEmitter
         'commandDidExecute'
         'chainDidExecute'
         'commandNotFound'
-        'eventMonitorStarted'
+        # 'eventMonitorStarted'
         'dragonStarted'
         # 'packageAssetEvent'
         'currentApplicationWillChange'
+        # 'systemEventHandler'
         # 'currentApplicationChanged'
         'notUndoable'
         /.*PackageCreated$/

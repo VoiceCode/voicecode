@@ -16,7 +16,9 @@ class MainController
 
     @methodCallTimes = {}
     @applicationLastChangedAt = Date.now()
-    Events.once 'dragonStarted', @startEventMonitor.bind @
+    # Events.once 'dragonStarted', @startEventMonitor.bind @
+    # this never fires if not using dragon process control
+    @startEventMonitor()
     Events.once 'startupComplete', =>
       if developmentMode
         @listenOnSocket "/tmp/voicecode_events_dev.sock", @systemEventHandler
@@ -52,6 +54,9 @@ class MainController
   mouseLeftClickHandler: (event) ->
     emit 'mouse.leftClick', event
 
+  keyUpHandler: (event) ->
+    emit 'keyboard.keyUp', event
+
   listen: ->
     global.slaveController = new SlaveController()
     slaveController.connect()
@@ -69,12 +74,13 @@ class MainController
 
   systemEventHandler: (buffer) ->
     event = JSON.parse buffer.toString('utf8')
-    # debug 'systemEventHandler', event
     switch event.event
       when 'applicationChanged'
         @applicationChanged event
       when 'leftClick'
         @mouseLeftClickHandler event
+      when 'keyUp'
+        @keyUpHandler event
       when 'recognizedText'
         unless developmentMode
           @statusWindowTextHandler event
