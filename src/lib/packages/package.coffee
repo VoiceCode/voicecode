@@ -143,17 +143,18 @@ class Package
       @scope = @name
     else
       @scope = 'global'
-  # applications: ->
-  #   if @scope?
-  #     Scope.get(@scope).applications()
-  #   else
-  #     true6
 
-  # condition: ->
-  #   if @scope?
-  #     Scope.get(@scope).condition()
-  #   else
-  #     true
+  applications: ->
+    if @scope?
+      Scope.get(@scope).applications()
+    else
+      true
+
+  condition: ->
+    if @scope?
+      Scope.get(@scope).condition()
+    else
+      true
 
   active: ->
     if @scope?
