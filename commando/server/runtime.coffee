@@ -21,7 +21,7 @@ detectProjectRoot = ->
 
 switch platform
   when "darwin"
-    @$ = Meteor.npmRequire('nodobjc')
+    @$ = require('nodobjc')
     @Actions = new Platforms.osx.actions()
     @darwinController = new DarwinController()
   when "win32"

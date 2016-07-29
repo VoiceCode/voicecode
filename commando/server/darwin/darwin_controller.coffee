@@ -21,7 +21,7 @@ class @DarwinController
 
   tock: ->
     event = undefined
-    while event = @app('nextEventMatchingMask', $.NSAnyEventMask.toString(), 'untilDate', null, 'inMode', $('kCFRunLoopDefaultMode'), 'dequeue', 1)
+    while event = @app('nextEventMatchingMask', parseInt($.NSAnyEventMask.toString()), 'untilDate', null, 'inMode', $('kCFRunLoopDefaultMode'), 'dequeue', 1)
       @app 'sendEvent', event
     # app 'updateWindows'
     Meteor.setTimeout @tock.bind(@), 100
@@ -30,10 +30,10 @@ class @DarwinController
     $.framework 'Foundation'
     $.framework 'Quartz'
     $.framework 'AppKit'
-    # uvcf = Meteor.npmRequire('uvcf')
+    # uvcf = require('uvcf')
     # $.framework 'PFAssistive'
-    global.net = Meteor.npmRequire("net")
-    global.fs = Meteor.npmRequire("fs")
+    global.net = require("net")
+    global.fs = require("fs")
 
   initialize: ->
     @sharedWorkspace = $.NSWorkspace('sharedWorkspace')

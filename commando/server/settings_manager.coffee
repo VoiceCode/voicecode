@@ -1,5 +1,5 @@
-fs = Meteor.npmRequire('fs')
-path = Meteor.npmRequire('path')
+fs = require('fs')
+path = require('path')
 
 class @SettingsManager
   constructor: (@name) ->

@@ -3,5 +3,6 @@ config/my_user_settings.coffee
 user/my_commands.coffee
 user/*.json
 user/*.xml
+node_modules
 vocabularyTraining.txt
 snippets

@@ -2,9 +2,9 @@ class UserAssetsController
   instance = null
   constructor: ->
     return instance if instance?
-    @fs = Meteor.npmRequire 'fs'
-    @path = Meteor.npmRequire 'path'
-    @coffeeScript = Meteor.npmRequire 'coffee-script'
+    @fs = require 'fs'
+    @path = require 'path'
+    @coffeeScript = require 'coffee-script'
     @assetsPath = Settings.userAssetsPath.replace /^~/, @getUserHome()
     console.log @assetsPath
     instance = @

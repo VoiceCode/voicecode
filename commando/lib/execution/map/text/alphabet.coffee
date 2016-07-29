@@ -69,8 +69,8 @@ class @Alphabet
     </dict>
     </plist>
     """
-    fs = Meteor.npmRequire('fs')
-    path = Meteor.npmRequire('path')
+    fs = require('fs')
+    path = require('path')
     file = path.resolve(projectRoot, 'user', 'alphabet.xml')
     fs.writeFileSync file, content, 'utf8'
   createVocabComboContent: ->

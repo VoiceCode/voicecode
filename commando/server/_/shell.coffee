@@ -1,4 +1,4 @@
-@Shell = Meteor.npmRequire('shelljs')
+@Shell = require('shelljs')
 @Execute = Meteor.wrapAsync(Shell.exec, Shell)
 
 @Applescript = (script) ->

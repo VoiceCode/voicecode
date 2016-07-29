@@ -1,0 +1,25 @@
+{
+  "name": "VoiceCode",
+  "version": "0.8.1",
+  "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
+  "website": "http://voicecode.io",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stratogee/voicecode"
+  },
+  "author": "Ben Meyer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stratogee/voicecode/issues"
+  },
+  "dependencies": {
+    "coffee-script": "^1.10.0",
+    "fs": "0.0.2",
+    "nodobjc": "git+https://github.com/unboundmusic/NodObjC.git#336a87a06d801ca450bff99a0ffe704b803d31d0",
+    "path": "^0.12.7",
+    "shelljs": "0.3.0",
+    "sqlite3": "git+https://github.com/mapbox/node-sqlite3.git"
+  },
+  "devDependencies": {}
+}

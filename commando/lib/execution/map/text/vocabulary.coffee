@@ -63,9 +63,9 @@ class @Vocabulary
     </dict>
     </plist>
     """
-    path = Meteor.npmRequire('path')
+    path = require('path')
     file = path.resolve(projectRoot, "user", "vocabulary.xml")
-    fs = Meteor.npmRequire('fs')
+    fs = require('fs')
     fs.writeFileSync file, content, 'utf8'
   createStandardContent: ->
     _.map @standard, (value) =>
