@@ -11,6 +11,7 @@ class MainController
     @loadFrameworks()
 
     @historyDragon = []
+    @historyGrowl = []
     @historyStatusWindow = []
 
     @methodCallTimes = {}
@@ -62,6 +63,7 @@ class MainController
     slaveController.connect()
 
     @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
+    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
@@ -104,12 +106,17 @@ class MainController
 
     oldStatusWindow = @findPreviousPhrase @historyStatusWindow
     , 'dragon', normalized
+    oldGrowl = @findPreviousPhrase @historyGrowl, 'dragon', normalized
 
     proceed = true
 
     if oldStatusWindow?
       #ignore
       oldStatusWindow.dragon = true
+      proceed = false
+    if oldGrowl?
+      #ignore
+      oldGrowl.dragon = true
       proceed = false
 
     warning 'dragonHandlerProceed ' + proceed
@@ -124,6 +131,35 @@ class MainController
 
     @historyDragon.splice(10) # don't accrue too much history
 
+  growlHandler: (data) ->
+    phrase = data.toString('utf8').replace("\n", "")
+    debug 'growlPhrase', phrase
+    normalized = @normalizePhraseComparison(phrase)
+
+    oldDragon = @findPreviousPhrase @historyDragon, 'growl', normalized
+    oldStatusWindow = @findPreviousPhrase @historyStatusWindow, 'growl', normalized
+    proceed = true
+
+    if oldDragon?
+      #ignore
+      oldDragon.growl = true
+      proceed = false
+
+    if oldStatusWindow?
+      #ignore
+      oldStatusWindow.growl = true
+      proceed = false
+
+    if proceed
+      @historyGrowl.unshift
+        phrase: normalized
+
+      if slaveController.isActive()
+        slaveController.process phrase
+      else
+        @executeChain(phrase)
+
+    @historyGrowl.splice(10) # don't accrue too much history
 
   statusWindowTextHandler: (event) ->
     return unless event.phrase?.length
@@ -146,13 +182,18 @@ class MainController
       normalized = @normalizePhraseComparison(phrase)
 
       oldDragon = @findPreviousPhrase @historyDragon, 'status', normalized
-
-      warning 'statusHandlerProceed ' + proceed
+      oldGrowl = @findPreviousPhrase @historyGrowl, 'status', normalized
       proceed = true
       if oldDragon?
         #ignore
         oldDragon.status = true
         proceed = false
+      if oldGrowl?
+        #ignore
+        oldGrowl.status = true
+        proceed = false
+
+      warning 'statusHandlerProceed ' + proceed
 
       if proceed
         @historyStatusWindow.unshift
@@ -164,8 +205,6 @@ class MainController
           @executeChain(phrase)
 
       @historyStatusWindow.splice(10) # don't accrue too much history
-    else
-      # skip
 
   executeChain: (phrase) ->
     Fiber(->
