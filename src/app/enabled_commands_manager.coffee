@@ -6,13 +6,17 @@ class EnabledCommandsManager extends require('./settings_manager')
       return instance
     else
       instance = super("generated/enabled_commands")
-      Events.on 'commandNotFound', (commandName) =>
-        delete @settings[commandName]
-        @save()
-
+      # @watchForInvalidCommands()
       @processSettings()
       @subscribeToEvents()
-
+  watchForInvalidCommands: ->
+    # If you get a syntax error in a package,
+    # it disables all those commands if they are referenced anywhere else
+    # need a more sophisticated check - maybe the first time, it sets a timestamp
+    # and then later, if that timestamp is more than a day or 2 old it deletes the setting
+    Events.on 'commandNotFound', (commandName) =>
+      delete @settings[commandName]
+      @save()
   processSettings: ->
     _.each @settings, (isEnabled, commandName) ->
       if isEnabled
