@@ -9,11 +9,11 @@ class Package
     @_implementations = {}
     @_settings = mutationNotifier (@options.settings or {})
     , 'packageSettingsChanged', {pack: @}, true
-    {@name, @description, @scope} = @options
-
-    @registerScope()
-    @setDefaultCommandOptions()
-    @setDefaultEditOptions()
+    {@name, @description, @scope, @installed} = @options
+    if @installed
+      @registerScope()
+      @setDefaultCommandOptions()
+      @setDefaultEditOptions()
 
 
   api: (actions) ->

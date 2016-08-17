@@ -9,35 +9,46 @@ class AssetsController
     instance = @
     @assetsPath = Settings.userAssetsPath.replace /^~/, os.homedir()
     log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
-    @init()
     @watchers = {}
-    @debouncedFinish = null
-
+    process.nextTick @init.bind @
 
   init: ->
+    @createDirectory @assetsPath
+    @createSettingsFile()
+    @createDirectory @assetsPath + '/packages', (err, created) =>
+      return if err
+      if created
+        PackagesManager.downloadBasePackages @assetsPath + '/packages/'
+        , ->
+          emit 'assetsControllerReady'
+      else
+        emit 'assetsControllerReady'
+
+  createDirectory: (path, callback) ->
+    callback ?= ->
     try
-      fs.mkdirSync @assetsPath
+      fs.mkdirSync path
+      if callback?
+        callback null, true
     catch err
       if err.code is 'EEXIST'
         # this is good
+        callback null, false
       else
-        error 'assetDirectoryError', @assetsPath,
-         "Could not create user assets directory: #{@assetsPath}"
-        @state = "error"
-
+        error 'assetDirectoryError', path
+        , "Could not create user assets directory: #{err.message}"
+        callback err
+  createSettingsFile: ->
     path =  "#{@assetsPath}/settings.coffee"
     data = """
-_.merge Settings,
-  license: ''
-  email: ''
+    _.merge Settings,
+    license: ''
+    email: ''
     """
     fs.writeFile path, data, {flag: 'wx'}, (err) =>
       if err
         if err.code isnt 'EEXIST'
-          # need to explicitly call global.error,
-          # there is an error variable in a closure /sad feels
           global.error 'assetSettingsFileError', err, err.stacktrace
-          @state = "error"
         else
           # this is good, file exists
           return
@@ -86,12 +97,6 @@ _.merge Settings,
       emit 'assetEvaluated', {event, type, fullPath, fileName}
       emit "#{type}AssetEvaluated", {event, type, fullPath, fileName},
       "Asset type '#{type}' #{event} & evaluated:\n#{fullPath}"
-      # @debouncedFinish ?= _.debounce =>
-      #   emit "#{type}AssetsLoaded"
-      #   emit 'assetsLoaded'
-      #   @debouncedFinish = null
-      # , 500
-      # @debouncedFinish()
 
 
 module.exports = new AssetsController

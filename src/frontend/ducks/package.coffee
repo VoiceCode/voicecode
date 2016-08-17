@@ -12,11 +12,18 @@ _.extend exports, constants
 exports.actionCreators =
   createPackage: createAction @CREATE_PACKAGE
   updatePackage: createAction @UPDATE_PACKAGE
+  installPackage: (name) ->
+    (dispatch, getState) ->
+      emit 'installPackage', name
+  removePackage: (name) ->
+    (dispatch, getState) ->
+      emit 'removePackage', name
 
 packageRecord = immutable.Record
   name: 'unknown'
   description: 'no description'
-
+  installed: false
+  repo: ''
 apiRecord = immutable.Record
   name: null
   description: null

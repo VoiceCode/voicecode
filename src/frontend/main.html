@@ -9,6 +9,7 @@
     </body>
     <script>
       window.$ = require("jquery")
+      window._ = require('lodash')
       window.jQuery = $
       this.init = function(){
         var headID = document.getElementsByTagName('head')[0];
@@ -20,7 +21,7 @@
 
         require("coffee-react/register")
         require('react-tap-event-plugin')()
-        if (developmentMode) {
+        if (developmentMode !== undefined) {
           const electronHot = require('electron-hot-loader')
           electronHot.install({
             extension: '.cjsx',

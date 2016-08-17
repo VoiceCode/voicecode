@@ -1,4 +1,3 @@
-_ = require 'lodash'
 React = require 'react'
 ReactDOM = require 'react-dom'
 window.Remote = require 'remote'

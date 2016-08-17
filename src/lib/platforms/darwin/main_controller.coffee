@@ -16,12 +16,12 @@ class MainController
 
     @methodCallTimes = {}
     @applicationLastChangedAt = Date.now()
-    # Events.once 'dragonStarted', @startEventMonitor.bind @
-    # this never fires if not using dragon process control
-    @startEventMonitor()
+    
     Events.once 'startupComplete', =>
       if developmentMode
         @listenOnSocket "/tmp/voicecode_events_dev.sock", @systemEventHandler
+      else
+        @startEventMonitor()
 
       if Settings.core.slaveMode
         @listenAsSlave()

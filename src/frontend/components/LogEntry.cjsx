@@ -7,7 +7,7 @@ class LogEntry extends React.Component
     console.log 'rendering log'
     {timestamp, event, type, args} = @props.log.toJS()
     iconClasses = classNames
-      'icon inverted circular mini': true
+      'icon inverted circular small': true
       'yellow wizard': type is 'mutate'
       'orange warning sign': type is 'warning'
       'purple announcement': type is 'notify'

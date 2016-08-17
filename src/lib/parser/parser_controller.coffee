@@ -49,8 +49,9 @@ class ParserController
     @setParser oldParser, false
 
   setParser: (parserAsAString, parserChanged = true) ->
+    indirect = eval # need to use vm instead
     try
-      @parser = eval parserAsAString
+      @parser = indirect parserAsAString
       notify 'generateParserSuccess', {parserChanged},
       (if parserChanged then 'Parser updated' else 'Parser acquired')
     catch e

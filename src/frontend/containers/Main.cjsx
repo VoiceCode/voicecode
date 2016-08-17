@@ -17,7 +17,8 @@ class Main extends React.Component
           </div>
           <div className="right menu">
             <IndexLink to="/" className="item" activeClassName="active">Log</IndexLink>
-            <Link to="/packages" className="item" activeClassName="active">Commands</Link>
+            <Link to="/commands" className="item" activeClassName="active">Commands</Link>
+            <Link to="/packages" className="item" activeClassName="active">Packages</Link>
 
 
             <StickyButton/>

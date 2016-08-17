@@ -1,27 +1,3 @@
-global.bundleId = 'io.voicecode.app'
-# global.bundleId = 'com.github.electron'
-global.app = require 'app'
-
-global.Reflect = require 'harmony-reflect'
-global.Settings = Object.create new Proxy
-  userAssetsPath: '~/voicecode'
-  license: ''
-  email: ''
-,
-  get: (target, property, receiver) ->
-    if pack = Packages.get property
-      pack.settings()
-    else
-      Reflect.get target, property, receiver
-  set: (target, property, value, receiver) ->
-    if target[property]?
-      Reflect.set target, property, value, receiver
-    else if Packages? and p = Packages.get property
-      p.settings value
-    else
-      Events.once "#{property}PackageReady", ({pack})->
-        pack.settings value
-
 # https://gist.github.com/dimatter/0206268704609de07119
 Function::property = (prop, desc) ->
   Object.defineProperty @prototype, prop, desc
@@ -50,31 +26,55 @@ suffix = process.env.NODE_ENV
 replify {name: "voicecode_#{suffix}"}, repl
 
 
+global.bundleId = 'io.voicecode.app'
+global.app = require 'app'
+global.Fiber = require 'fibers'
+global.asyncblock = require 'asyncblock'
+global.Reflect = require 'harmony-reflect'
+settings =
+  userAssetsPath: '~/voicecode_'
+  license: ''
+  email: ''
+global.Settings = Object.create new Proxy settings,
+  get: (target, property, receiver) ->
+    if pack = Packages.get property
+      pack.settings()
+    else
+      Reflect.get target, property, receiver
+  set: (target, property, value, receiver) ->
+    if target[property]?
+      Reflect.set target, property, value, receiver
+    else if Packages? and p = Packages.get property
+      p.settings value
+    else
+      Events.once "#{property}PackageReady", ({pack})->
+        pack.settings value
+
+global._s = require 'underscore.string' # ?
 global._ = require 'lodash'
 require('../lib/utility/deepExtend')
-global._s = require 'underscore.string' # ?
-global.$ = require 'nodobjc'
 global.path = require 'path'
-global.Fiber = require 'fibers'
+global.$ = require 'nodobjc'
 global.Events = require './event_emitter'
-global.asyncblock = require 'asyncblock'
+global.PackagesManager = require './packages_manager'
 global.requireDirectory = require 'require-directory'
 global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 global.windowController = require '../app/window_controller'
-global.menubar = require('menubar')
+menubarOptions =
   index: "file://#{projectRoot}/src/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
-  width: 854
-  height: 666
-  x: 0
-  y: 0
+  width: 800
+  height: 600
+  # x: 0
+  # y: 0
   windowPosition: 'trayRight'
   alwaysOnTop: true
   'always-on-top': true
   showDockIcon: false
 
+global.menubar = require('menubar') menubarOptions
 
 unless developmentMode
   _.each process.mainModule.paths, (path) ->
@@ -129,7 +129,9 @@ Events.once 'applicationShouldStart', ->
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"
+    Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
     global.AssetsController = require './assets_controller'
+    startupFlow.wait 'assetsControllerReady'
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -177,12 +179,29 @@ Events.once 'applicationShouldStart', ->
 
     emit "startupComplete"
 
-# needed while developing ui
-Events.once 'startupComplete', -> global.startedUp = true
-
 # benchmarking
 if developmentMode
   Events.on 'chainDidExecute', ->
     console.timeEnd 'CHAIN'
   Events.on 'chainWillExecute', ->
     console.time 'CHAIN'
+
+
+# auto update
+unless developmentMode
+  autoUpdater = require 'auto-updater'
+  version = app.getVersion()
+  _platform = if platform is 'darwin' then 'osx' else 'win'
+  autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{version}"
+  global.checkForUpdates = do ->
+    lastCheck = Date.now()
+    ->
+      # if last checked more than 24 hours ago
+      if Date.now() - lastCheck >= 86400
+        log 'checkingForUpdates'
+        if autoUpdater.checkForUpdates()
+          autoUpdater.quitAndInstall()
+        lastCheck = Date.now()
+
+  checkForUpdates()
+  setInterval checkForUpdates, 86400

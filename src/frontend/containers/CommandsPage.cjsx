@@ -7,7 +7,8 @@ class PackagesPage extends React.Component
   shouldComponentUpdate: -> false
   render: ->
     <div className='packagesPage'>
-      <PackageList viewMode='packages' />
+      <PackageFilter/>
+      <PackageList viewMode='commands' />
     </div>
 
 module.exports = PackagesPage
