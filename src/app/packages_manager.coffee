@@ -61,6 +61,10 @@ class PackagesManager
           true
         cloneFlow.wait()
         callback null, true
+  installAllPackages: ->
+    _.every @registry.all, (info, name) ->
+      emit 'installPackage', name
+      true
 
 
 # class PackageSettingsManager extends require('./settings_manager')
