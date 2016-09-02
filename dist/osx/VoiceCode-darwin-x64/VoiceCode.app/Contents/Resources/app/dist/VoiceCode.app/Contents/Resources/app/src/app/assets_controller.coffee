@@ -1,0 +1,102 @@
+fs = require 'fs'
+os = require 'os'
+chokidar = require 'chokidar'
+
+class AssetsController
+  instance = null
+  constructor: ->
+    return instance if instance?
+    instance = @
+    @assetsPath = Settings.userAssetsPath.replace /^~/, os.homedir()
+    log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
+    @watchers = {}
+    process.nextTick @init.bind @
+
+  init: ->
+    @createDirectory @assetsPath
+    @createSettingsFile()
+    @createDirectory @assetsPath + '/packages', (err, created) =>
+      return if err
+      if created
+        PackagesManager.downloadBasePackages @assetsPath + '/packages/'
+        , ->
+          emit 'assetsControllerReady'
+      else
+        emit 'assetsControllerReady'
+
+  createDirectory: (path, callback) ->
+    callback ?= ->
+    try
+      fs.mkdirSync path
+      if callback?
+        callback null, true
+    catch err
+      if err.code is 'EEXIST'
+        # this is good
+        callback null, false
+      else
+        error 'assetDirectoryError', path
+        , "Could not create user assets directory: #{err.message}"
+        callback err
+  createSettingsFile: ->
+    path =  "#{@assetsPath}/settings.coffee"
+    data = """
+    _.merge Settings,
+    license: ''
+    email: ''
+    """
+    fs.writeFile path, data, {flag: 'wx'}, (err) =>
+      if err
+        if err.code isnt 'EEXIST'
+          global.error 'assetSettingsFileError', err, err.stacktrace
+        else
+          # this is good, file exists
+          return
+      log 'userSettingsFileCreated', "#{@assetsPath}/settings.coffee",
+      "User settings file created #{@assetsPath}/settings.coffee"
+
+  getAssets: (type, assetsMask, ignoreMask = false) ->
+    return if @state is "error"
+    emit 'assetsLoading', {type, assetsMask, ignoreMask}
+    emit "#{type}AssetsLoading"
+    @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
+      persistent: true
+      ignored: ignoreMask
+    @watchers[assetsMask].on('add', (path) =>
+      @handleFile type, 'added', path
+    ).on('change', (path) =>
+      @handleFile type, 'changed', path
+    ).on('error', (err) ->
+      error 'assetEventError', {type, err}, err
+      error "#{type}AssetsEventError", {type, err}, err
+    ).on 'ready', ->
+      emit "#{type}AssetsLoaded"
+      emit 'assetsLoaded', type
+
+
+  handleFile: (type, event, fullPath) ->
+    if coffee = fullPath.match(/.coffee$/) or js = fullPath.match(/.js$/)
+      extension = if coffee then '.coffee' else '.js'
+      fileName = path.basename fullPath, extension
+      emit 'assetEvent', {event, fullPath}
+      emit "#{type}AssetEvent", {event, fullPath}
+      try
+        unless type is 'package'
+          global.Package = Packages.get("user:#{fileName}") or
+          Packages.register
+            name: "user:#{fileName}"
+            description: "User code in #{fileName}#{extension}"
+            tags: ['user', "#{fileName}#{extension}"]
+        if event is 'changed'
+          delete require.cache[fullPath]
+        require fullPath
+      catch err
+        emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
+        error "#{type}AssetEvaluationError",
+        {error: err.stack, fullPath}, "#{fullPath}:\n#{err}"
+      emit 'assetEvaluated', {event, type, fullPath, fileName}
+      emit "#{type}AssetEvaluated", {event, type, fullPath, fileName},
+      "Asset type '#{type}' #{event} & evaluated:\n#{fullPath}"
+
+
+module.exports = new AssetsController

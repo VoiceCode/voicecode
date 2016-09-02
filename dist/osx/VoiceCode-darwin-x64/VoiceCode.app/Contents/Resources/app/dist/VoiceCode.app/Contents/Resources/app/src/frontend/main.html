@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VoiceCode</title>
+        <link rel="stylesheet" type="text/css" href="./styles/main.css">
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+    <script>
+      window.$ = require("jquery")
+      window._ = require('lodash')
+      window.jQuery = $
+      this.init = function(){
+        var headID = document.getElementsByTagName('head')[0];
+        var link = document.createElement('link')
+        link.type = 'text/css'
+        link.rel = 'stylesheet'
+        link.href = require.resolve('semantic-ui-css/semantic.min.css')
+        headID.appendChild(link)
+
+        require("coffee-react/register")
+        require('react-tap-event-plugin')()
+        if (developmentMode !== undefined) {
+          const electronHot = require('electron-hot-loader')
+          electronHot.install({
+            extension: '.cjsx',
+            sourceMapInline: false,
+            higherOrderFunctions: ['connect']
+          });
+          electronHot.watchJsx(['**/*.cjsx'])
+          electronHot.watchCss(['**/*.css'])
+        }
+        require('./main.cjsx')
+
+      }
+    </script>
+</html>
