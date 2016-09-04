@@ -17,7 +17,6 @@ class HistoryController
       @activeChains--
 
     Events.on 'commandDidExecute', ({link}) =>
-      console.log 'active chains: ' + @activeChains
       command = Commands.get link.command
       unless command.bypassHistory?(link.context)
         delete arguments[0].link.context

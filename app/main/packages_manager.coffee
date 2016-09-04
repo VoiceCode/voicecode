@@ -7,10 +7,17 @@ class PackagesManager
     Events.on 'installPackage', (name) =>
       Packages.remove name
       repo = @registry.all[name].repo
-      git.clone AssetsController.assetsPath + "/packages/#{name}", repo, (err) ->
+      git.clone AssetsController.assetsPath + "/packages/#{name}"
+      , repo, (err) ->
         if err then return error 'installPackageFailed', err, err.message
+        Execute "cd " +
+        AssetsController.assetsPath + "/packages/#{name}/ && npm i"
+        , (err) ->
+          if err
+            return error 'installPackageFailed', err, err.message
     Events.on 'removePackage', (name) ->
-      fs.remove AssetsController.assetsPath + "/packages/#{name}/", (err) ->
+      fs.remove AssetsController.assetsPath + "/packages/#{name}/"
+      , (err) ->
         if err then return error 'removePackageFailed', err, err.message
         else log 'packageRemoved', name, "Package removed: #{name}"
     Events.once 'packageAssetsLoaded', =>
