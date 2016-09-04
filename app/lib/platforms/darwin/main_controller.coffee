@@ -48,9 +48,9 @@ class MainController
       Events.on 'dragonStarted', => @eventMonitor.restart()
       Events.on 'dragonRestarted', => @eventMonitor.restart()
     @eventMonitor.on 'exit:code', (code) =>
-      error 'eventMonitorStopped', code
+      warning 'eventMonitorStopped', code
       , "Event monitor stopped with code: #{code}"
-      @eventMonitored.restart()
+      @eventMonitor.restart()
   applicationChanged: ({event, bundleId, name}) ->
     @applicationLastChangedAt = Date.now()
     Actions.setCurrentApplication {name, bundleId}
