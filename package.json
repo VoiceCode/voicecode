@@ -3,7 +3,7 @@
   "scripts": {
     "fixfibers": "./fixfibers.sh",
     "develop": "gulp",
-    "run": "./node_modules/electron-prebuilt/dist/Electron.app/Contents/MacOS/Electron app.js production",
+    "run": "./node_modules/electron-prebuilt/dist/Electron.app/Contents/MacOS/Electron app/app.js production",
     "dist": "build"
   },
   "build": {

@@ -27,7 +27,7 @@
         "jquery": "^3.1.0",
         "lodash": "^4.7.0",
         "menubar": "^4.1.0",
-        "nodobjc": "git+https://github.com/TooTallNate/NodObjC.git#e4e3e2fac301fb3f5eb0bc4714850f6b7b1db29d",
+        "nodobjc": "git+https://github.com/unboundmusic/NodObjC.git#207153980f6ffc35313224a260c4783ab44b0cf2",
         "npm": "^3.8.5",
         "react": "^15.0.1",
         "react-dom": "^15.0.1",
