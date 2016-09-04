@@ -1,11 +1,5 @@
-# /node_modules/.bin/electron-rebuild -v v0.37.3 -n 48
-# cd node_modules/fibers
-# HOME=~/.electron-gyp node-gyp rebuild --target=0.37.3 --arch=x64 --dist-url=https://atom.io/download/atom-shell
-# mkdir ./bin/darwin-x64-v8-4.9/
-# mv build/Release/fibers.node bin/darwin-x64-v8-4.9/
-
 # cd node_modules/robotjs
-# HOME=~/.electron-gyp node-gyp rebuild --target=0.37.3 --arch=x64 --dist-url=https://atom.io/download/atom-shell
+# HOME=~/.electron-gyp node-gyp rebuild --target=0.37.8 --arch=x64 --dist-url=https://atom.io/download/atom-shell
 
 gulp = require('gulp')
 electron = require('electron-connect').server.create()
