@@ -11,10 +11,10 @@ gulp.task 'serve', [], ->
   electron.start ['develop',
   '--disable-http-cache',
   '--enable-transparent-visuals']
-  gulp.watch './src/**/*.coffee', ['electron-restart']
-  gulp.watch 'src/frontend/**/*.less', [ 'electron-reload' ]
+  gulp.watch 'app/**/*.coffee', ['electron-restart']
+  gulp.watch 'app/frontend/**/*.less', [ 'electron-reload' ]
   # gulp.watch 'src/frontend/**/*.cjsx', [ 'electron-reload' ]
-  gulp.watch 'src/frontend/**/*.html', [ 'electron-restart' ]
+  gulp.watch 'app/frontend/**/*.html', [ 'electron-restart' ]
 
 
 gulp.task 'electron-rebuild', ->
