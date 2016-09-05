@@ -117,7 +117,7 @@ Events.once 'applicationShouldStart', ->
     funk = asyncblock
   funk (startupFlow) ->
     startupFlow.firstArgIsError = false
-
+    _.extend global, require './shell' # Execute, Applescript
     if developmentMode
       Settings.userAssetsPath = '~/voicecode_development'
     global.Packages = require '../lib/packages/packages'
@@ -138,7 +138,6 @@ Events.once 'applicationShouldStart', ->
     global.Grammar = require '../lib/parser/grammar'
     global.Chain = require '../lib/chain'
     global.HistoryController = require '../lib/history_controller'
-    _.extend global, require './shell' # Execute, Applescript
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.ParserController = require '../lib/parser/parser_controller'

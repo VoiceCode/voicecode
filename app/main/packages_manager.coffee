@@ -4,17 +4,8 @@ fs = require 'fs-extra'
 
 class PackagesManager
   constructor: ->
-    Events.on 'installPackage', (name) =>
-      Packages.remove name
-      repo = @registry.all[name].repo
-      git.clone AssetsController.assetsPath + "/packages/#{name}"
-      , repo, (err) ->
-        if err then return error 'installPackageFailed', err, err.message
-        Execute "cd " +
-        AssetsController.assetsPath + "/packages/#{name}/ && npm i"
-        , (err) ->
-          if err
-            return error 'installPackageFailed', err, err.message
+    Events.on 'installPackage', @installPackage.bind(@)
+
     Events.on 'removePackage', (name) ->
       fs.remove AssetsController.assetsPath + "/packages/#{name}/"
       , (err) ->
@@ -29,6 +20,22 @@ class PackagesManager
             pack ?= Packages.register {name, description, installed: false}
             pack.repo = repo
             true
+  installPackage: (name, callback) ->
+    Packages.remove name
+    repo = @registry.all[name].repo
+    destination = AssetsController.assetsPath + "/packages/#{name}"
+    temporary = "/tmp/voicecode/packages/#{name}"
+    git.clone temporary, repo, (err) ->
+      if err
+        error 'installPackageFailed', err, err.message
+        return callback? err
+      Execute "mkdir -p #{temporary}/node_modules && npm install --prefix " +
+      temporary + " && mv #{temporary} #{destination}"
+      , (err) ->
+        if err
+          error 'installPackageFailed', err, err.message
+          return callback? err
+        callback? null, true
   getPackageRegistry: (callback) ->
     callback ?= ->
     http.get(
@@ -53,7 +60,7 @@ class PackagesManager
       callback e
     )
   downloadBasePackages: (path, callback) ->
-    @getPackageRegistry (err, registry) ->
+    @getPackageRegistry (err, registry) =>
       if err?
         error 'getPackageRegistry', e
         , 'Failed getting list of packages: ' + e.message
@@ -61,10 +68,9 @@ class PackagesManager
       funk = asyncblock.nostack
       if developmentMode
         funk = asyncblock
-      funk (cloneFlow) ->
-        _.every registry.base, (basePackageName) ->
-          git.clone path + basePackageName
-          , registry.all[basePackageName].repo, cloneFlow.add()
+      funk (cloneFlow) =>
+        _.every registry.base, (name) =>
+          @installPackage name, cloneFlow.add()
           true
         cloneFlow.wait()
         callback null, true
