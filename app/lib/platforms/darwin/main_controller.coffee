@@ -28,6 +28,7 @@ class MainController
       else
         global.slaveController = new SlaveController()
         slaveController.connect()
+        @listenOnSocket "/tmp/voicecode_devices.sock", @deviceHandler
         unless Settings.dragon.tailing
           @listen()
 
@@ -130,6 +131,14 @@ class MainController
         @executeChain(phrase)
 
     @historyDragon.splice(10) # don't accrue too much history
+
+  deviceHandler: (data) ->
+    phrase = data.toString('utf8').replace("\n", "")
+    debug 'devicePhrase', phrase
+    if slaveController.isActive()
+      slaveController.process phrase
+    else
+      @executeChain(phrase)
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
