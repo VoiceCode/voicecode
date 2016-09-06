@@ -79,11 +79,11 @@ class EventEmitter extends require('events').EventEmitter
         /.*PackageReady$/
         /.*SettingsChanged$/
       ]
-      @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
-        if _.isString entry
-          new RegExp "^#{entry}$"
-        else
-          entry
+    @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
+      if _.isString entry
+        new RegExp "^#{entry}$"
+      else
+        entry
 
   logEvents: (setter = null)->
     if setter?
