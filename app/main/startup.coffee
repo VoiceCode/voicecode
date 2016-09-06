@@ -101,7 +101,7 @@ menubar.on 'after-create-window', ->
     window.on 'reload', ->
       Events.frontendClearSubscriptions()
     electronConnect = electronConnect.create window
-  window.openDevTools()
+    window.openDevTools()
 
 app.on 'ready', ->
   # emit 'appReady'#, app

@@ -15,11 +15,15 @@ class EventEmitter extends require('events').EventEmitter
     @setMaxListeners 300
     instance = @
     @frontendSubscriptions = {}
-    @suppressedLogEntries = []
+    @suppressedLogEntries = [
+      'dragonInterfaceData'
+      'willParsePhrase'
+    ]
     @subscribeToEvents()
     if developmentMode
       @_logEvents = developmentMode
       @suppressedLogEntries = [
+        'dragonInterfaceData'
         'apiCreated'
         # 'deprecation'
         'implementationWillExecute'

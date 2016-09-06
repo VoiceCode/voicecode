@@ -6,6 +6,8 @@ class HistoryController
     @amnesia = false
     @activeChains = 0
     @maintenanceInterval = setInterval @doMaintenance.bind(@), 300000 # 5 minutes
+    Events.on 'historyControllerAmnesia', (yesNo) =>
+      @hasAmnesia yesNo
     Events.on 'chainWillExecute', =>
       @activeChains++
       previous = @history[@context]
@@ -57,6 +59,7 @@ class HistoryController
     chain.reverse() # TODO: do this in between chains for performance?
 
   hasAmnesia: (yesNo) ->
+    yesNo ?= @amnesia
     @amnesia = yesNo
 
   startNewChain: (context = null) ->
