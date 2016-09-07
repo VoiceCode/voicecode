@@ -146,9 +146,10 @@ class EventEmitter extends require('events').EventEmitter
     super
 
   logger: (entry) ->
-    process.nextTick =>
-      entry.timestamp = process.hrtime()
-      @emit 'logger', entry
+    unless @radioSilence
+      process.nextTick =>
+        entry.timestamp = process.hrtime()
+        @emit 'logger', entry
 
   debug: (event) ->
     args = _.toArray arguments
