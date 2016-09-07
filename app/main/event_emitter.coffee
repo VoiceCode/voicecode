@@ -251,7 +251,8 @@ global.mutationNotifier = (target, event, args, deep = false) ->
           oldValue: target[property],
           value: value
         }
-        emit event, payload
+        process.nextTick ->
+          emit event, payload
         # emit "#{event}Set", payload
         # emit "#{event}#{target}", payload
         # emit "#{event}#{target}Set", payload
@@ -264,7 +265,9 @@ global.mutationNotifier = (target, event, args, deep = false) ->
         oldValue: target[property],
         value: undefined
       }
-      emit event, payload
+      process.nextTick ->
+        emit event, payload
+
       # emit "#{event}Delete", payload
       # emit "#{event}#{target}", payload
       # emit "#{event}#{target}Delete", payload
