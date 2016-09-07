@@ -7,7 +7,8 @@ class SlaveController
     instance = @
     @connectedSlaves = {}
     @target = null
-
+    Events.once 'corePackageReady', @connect.bind(@)
+    Events.on 'slaveControllerTarget', @setTarget.bind(@)
   connect: ->
     return if _.isEmpty Settings.core.slaves
     for name, uri of Settings.core.slaves
@@ -15,7 +16,8 @@ class SlaveController
       @createSocket name, host, port
 
   onConnect: (slaveSocket) ->
-    notify 'slaveConnected', slaveSocket.name, "Connected to: #{slaveSocket.name}"
+    notify 'slaveConnected', slaveSocket.name
+    , "Connected to: #{slaveSocket.name}"
     @connectedSlaves[slaveSocket.name] = slaveSocket
 
   createSocket: (name, host, port) ->
@@ -51,7 +53,8 @@ class SlaveController
   onClose: (slaveSocket) ->
     unless throttledLog?
       throttledLog = _.debounce ->
-        notify 'slaveDisconnected', slaveSocket.name, "Connection closed: #{slaveSocket.name}"
+        notify 'slaveDisconnected', slaveSocket.name
+        , "Connection closed: #{slaveSocket.name}"
       , 3000, true
     throttledLog()
     @clearTarget()
@@ -65,13 +68,14 @@ class SlaveController
   isActive: ->
     @target?
 
-  setTarget: (name) ->
+  setTarget: (name = null) ->
+    return @clearTarget() if _.isEmpty name
     return if _.isEmpty Settings.core.slaves
-    return if _.isEmpty name
     @target = Actions.fuzzyMatchKey Settings.core.slaves, name
     notify 'slaveModeToggle', @target, "Slave mode on: #{@target}"
 
   clearTarget: ->
+    notify 'slaveModeToggle', null, "Slave mode off"
     @target = null
 
-module.exports = SlaveController
+module.exports = new SlaveController

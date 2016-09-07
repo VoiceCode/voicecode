@@ -1,8 +1,11 @@
 Events.on 'chainShouldExecute', (phrase) ->
-  Fiber(->
-    HAS_FIBER = true
-    new Chain(phrase).execute()
-  ).run()
+  if SlaveController.isActive()
+    SlaveController.process phrase
+  else
+    Fiber(->
+      HAS_FIBER = true
+      new Chain(phrase).execute()
+    ).run()
 
 class Chain
   preprocessors = []

@@ -71,7 +71,6 @@ menubarOptions =
   # y: 0
   windowPosition: 'trayRight'
   alwaysOnTop: true
-  'always-on-top': true
   showDockIcon: false
 
 global.menubar = require('menubar') menubarOptions
@@ -167,7 +166,6 @@ Events.once 'applicationShouldStart', ->
 
     if developmentMode
       Settings.core.slaveMode = true
-
     global.MainController = require "#{platformLib}/main_controller"
 
     unless Settings.core.slaveMode

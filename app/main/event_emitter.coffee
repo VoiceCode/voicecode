@@ -91,8 +91,7 @@ class EventEmitter extends require('events').EventEmitter
     @_logEvents
 
   subscribeToEvents: ->
-    @on 'logEvents', (setter) =>
-      @logEvents setter
+    @on 'logEvents', @logEvents.bind(@)
 
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
