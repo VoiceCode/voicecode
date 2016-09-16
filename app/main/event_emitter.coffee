@@ -15,11 +15,15 @@ class EventEmitter extends require('events').EventEmitter
     @setMaxListeners 300
     instance = @
     @frontendSubscriptions = {}
-    @suppressedLogEntries = []
+    @suppressedLogEntries = [
+      'dragonInterfaceData'
+      'willParsePhrase'
+    ]
     @subscribeToEvents()
     if developmentMode
       @_logEvents = developmentMode
       @suppressedLogEntries = [
+        'dragonInterfaceData'
         'apiCreated'
         # 'deprecation'
         'implementationWillExecute'
@@ -75,11 +79,11 @@ class EventEmitter extends require('events').EventEmitter
         /.*PackageReady$/
         /.*SettingsChanged$/
       ]
-      @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
-        if _.isString entry
-          new RegExp "^#{entry}$"
-        else
-          entry
+    @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
+      if _.isString entry
+        new RegExp "^#{entry}$"
+      else
+        entry
 
   logEvents: (setter = null)->
     if setter?
@@ -87,8 +91,7 @@ class EventEmitter extends require('events').EventEmitter
     @_logEvents
 
   subscribeToEvents: ->
-    @on 'logEvents', (setter) =>
-      @logEvents setter
+    @on 'logEvents', @logEvents.bind(@)
 
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
@@ -143,9 +146,10 @@ class EventEmitter extends require('events').EventEmitter
     super
 
   logger: (entry) ->
-    process.nextTick =>
-      entry.timestamp = process.hrtime()
-      @emit 'logger', entry
+    unless @radioSilence
+      process.nextTick =>
+        entry.timestamp = process.hrtime()
+        @emit 'logger', entry
 
   debug: (event) ->
     args = _.toArray arguments
@@ -248,7 +252,8 @@ global.mutationNotifier = (target, event, args, deep = false) ->
           oldValue: target[property],
           value: value
         }
-        emit event, payload
+        process.nextTick ->
+          emit event, payload
         # emit "#{event}Set", payload
         # emit "#{event}#{target}", payload
         # emit "#{event}#{target}Set", payload
@@ -261,7 +266,9 @@ global.mutationNotifier = (target, event, args, deep = false) ->
         oldValue: target[property],
         value: undefined
       }
-      emit event, payload
+      process.nextTick ->
+        emit event, payload
+
       # emit "#{event}Delete", payload
       # emit "#{event}#{target}", payload
       # emit "#{event}#{target}Delete", payload

@@ -26,8 +26,7 @@ class MainController
       if Settings.core.slaveMode
         @listenAsSlave()
       else
-        global.slaveController = new SlaveController()
-        slaveController.connect()
+        @listenOnSocket "/tmp/voicecode_devices.sock", @deviceHandler
         unless Settings.dragon.tailing
           @listen()
 
@@ -124,12 +123,14 @@ class MainController
       @historyDragon.unshift
         phrase: normalized
 
-      if slaveController.isActive()
-        slaveController.process phrase
-      else
-        @executeChain(phrase)
+      @executeChain(phrase)
 
     @historyDragon.splice(10) # don't accrue too much history
+
+  deviceHandler: (data) ->
+    phrase = data.toString('utf8').replace("\n", "")
+    debug 'devicePhrase', phrase
+    @executeChain(phrase)
 
   growlHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
@@ -154,10 +155,7 @@ class MainController
       @historyGrowl.unshift
         phrase: normalized
 
-      if slaveController.isActive()
-        slaveController.process phrase
-      else
-        @executeChain(phrase)
+      @executeChain(phrase)
 
     @historyGrowl.splice(10) # don't accrue too much history
 
@@ -199,18 +197,12 @@ class MainController
         @historyStatusWindow.unshift
           phrase: normalized
 
-        if slaveController.isActive()
-          slaveController.process phrase
-        else
-          @executeChain(phrase)
+        @executeChain(phrase)
 
       @historyStatusWindow.splice(10) # don't accrue too much history
 
   executeChain: (phrase) ->
-    Fiber(->
-      HAS_FIBER = true
-      new Chain(phrase).execute()
-    ).run()
+    emit 'chainShouldExecute', phrase
 
   listenAsSlave: ->
     socketServer = net.createServer (socket) =>
