@@ -31,7 +31,7 @@ class PackagesManager
       if err
         error 'installPackageFailed', err, err.message
         return callback? err
-      npmPath = projectRoot + '/node_modules/npm/bin/npm-cli.js'
+      npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
       npmSettings = [
         'npm_config_target=0.37.8'
         'npm_config_arch=x64'
@@ -40,7 +40,7 @@ class PackagesManager
         'npm_config_build_from_source=true'
         'HOME=~/.electron-gyp'
       ].join ' '
-      Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmPath} install --silent --prefix " +
+      Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmCommand} install --silent --prefix " +
       temporary + " && mv #{temporary} #{destination}"
       , (err) ->
         if err
