@@ -2,6 +2,8 @@ http = require 'http'
 git = require 'gitty'
 fs = require 'fs-extra'
 
+npm = require 'npm'
+
 class PackagesManager
   constructor: ->
     Events.on 'installPackage', @installPackage.bind(@)
@@ -24,12 +26,21 @@ class PackagesManager
     Packages.remove name
     repo = @registry.all[name].repo
     destination = AssetsController.assetsPath + "/packages/#{name}"
-    temporary = "/tmp/voicecode/packages/#{name}"
+    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
     git.clone temporary, repo, (err) ->
       if err
         error 'installPackageFailed', err, err.message
         return callback? err
-      Execute "mkdir -p #{temporary}/node_modules && npm install --prefix " +
+      npmPath = projectRoot + '/node_modules/npm/bin/npm-cli.js'
+      npmSettings = [
+        'npm_config_target=0.37.8'
+        'npm_config_arch=x64'
+        'npm_config_disturl=https://atom.io/download/atom-shell'
+        'npm_config_runtime=electron'
+        'npm_config_build_from_source=true'
+        'HOME=~/.electron-gyp'
+      ].join ' '
+      Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmPath} install --silent --prefix " +
       temporary + " && mv #{temporary} #{destination}"
       , (err) ->
         if err
