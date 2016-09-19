@@ -10,7 +10,6 @@ class PackageList extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
     @props.packages isnt nextProps.packages
   render: ->
-    console.log 'rendering package list'
     {packages, viewMode} = @props
     <div className="">
     {

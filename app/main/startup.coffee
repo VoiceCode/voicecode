@@ -71,6 +71,7 @@ menubarOptions =
   # y: 0
   windowPosition: 'trayRight'
   alwaysOnTop: true
+  'always-on-top': true
   showDockIcon: false
 
 global.menubar = require('menubar') menubarOptions

@@ -12,7 +12,6 @@ ApiList = class ApiList extends React.Component
     @props.apis isnt nextProps.apis
 
   render: ->
-    console.info "rendering api list"
     {apis} = @props
     return null unless apis?
     <div className="ui segment">

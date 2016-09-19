@@ -4,12 +4,13 @@ LogEntry = require '../components/LogEntry'
 accordion = require('semantic-ui-css/components/accordion.js')
 {showingEventsSelector} = require('../selectors')
 {toggleLogEvents} = require('../ducks/app').actionCreators
+{clearLog} = require('../ducks/log').actionCreators
 classNames = require 'classnames'
 
 mapStateToProps = (state) ->
   logs: state.get 'logs'
   showingEvents: showingEventsSelector state
-mapDispatchToProps = {toggleLogEvents}
+mapDispatchToProps = {toggleLogEvents, clearLog}
 
 class LogPage extends React.Component
   componentDidMount: ->
@@ -17,7 +18,7 @@ class LogPage extends React.Component
       $('.ui.accordion').accordion
         on: 'click'
   render: ->
-    {showingEvents, toggleLogEvents} = @props
+    {showingEvents, toggleLogEvents, clearLog} = @props
     logEventsClasses = classNames
       active: showingEvents
       item: true
@@ -26,6 +27,9 @@ class LogPage extends React.Component
       <div className='ui fixed secondary pointing page menu'>
         <a className={ logEventsClasses } onClick={ toggleLogEvents }>
           <i className='lab icon'></i>
+        </a>
+        <a className={ 'item' } onClick={ clearLog }>
+          <i className='trash outline icon'></i>
         </a>
       </div>
       <div className="ui styled fluid accordion">

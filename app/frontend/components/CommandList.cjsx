@@ -7,7 +7,6 @@ CommandList = class CommandList extends React.Component
     @props.commands isnt nextProps.commands
 
   render: ->
-    console.info "rendering command list"
     {commands} = @props
     <div className="ui segment">
       <div className="ui top left attached label">

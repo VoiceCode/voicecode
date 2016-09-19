@@ -17,7 +17,6 @@ class Command extends React.Component
     @props.command isnt nextProps.command
 
   render: ->
-    console.log 'rendering command'
     {toggleCommand, implementations, setPackageFilter} = @props
     {id, spoken, enabled, packageId,
     description, locked, rule, tags} = @props.command.toJS()

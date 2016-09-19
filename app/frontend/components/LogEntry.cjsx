@@ -4,7 +4,6 @@ classNames = require 'classnames'
 class LogEntry extends React.Component
   shouldComponentUpdate: -> false
   render: ->
-    console.log 'rendering log'
     {timestamp, event, type, args} = @props.log.toJS()
     iconClasses = classNames
       'icon inverted circular small': true

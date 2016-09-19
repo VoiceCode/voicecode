@@ -29,7 +29,6 @@ Package = class Package extends React.Component
   render: ->
     {name, description, installed} = @props.pack
     {packageFilter, commands, viewMode, installPackage, removePackage} = @props
-    console.info "rendering package"
     <div className=''>
     {
       if packageFilter.get('scope') is 'packages' or viewMode isnt 'commands'
