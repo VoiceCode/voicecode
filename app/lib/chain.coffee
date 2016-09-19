@@ -7,6 +7,17 @@ Events.on 'chainShouldExecute', (phrase) ->
       new Chain(phrase).execute()
     ).run()
 
+Events.on 'commandsShouldExecute', (chain) ->
+  if SlaveController.isActive()
+    # SlaveController.process phrase
+    # FIXME
+  else
+    Fiber(->
+      HAS_FIBER = true
+      console.log 'commandsShouldExecute', chain
+      new Chain().execute(chain, false, true)
+    ).run()
+
 class Chain
   preprocessors = []
   constructor: (@phrase = null) ->
