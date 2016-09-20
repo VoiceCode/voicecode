@@ -106,7 +106,7 @@ class DragonSynchronizer
     id
 
   createCommand: ({bundleId, triggerPhrase, body}) ->
-    locale = Settings.dragon.localeSettings[Settings.core.locale]
+    locale = Settings.dragon_darwin.localeSettings[Settings.core.locale]
     commandId = @createCommandId()
     bundleId = null if bundleId is 'global'
     applicationVersion = @getApplicationVersion bundleId
@@ -169,7 +169,7 @@ class DragonSynchronizer
 
     @dynamicDatabase.run "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundleId, $name, $spokenLanguage, 'Alt')",
       $name: name
-      $spokenLanguage: Settings.dragon.localeSettings[Settings.core.locale].dragonTriggerSpokenLanguage
+      $spokenLanguage: Settings.dragon_darwin.localeSettings[Settings.core.locale].dragonTriggerSpokenLanguage
       $bundleId: bundleId
     # get the new id
     result = @dynamicDatabase.get "SELECT * FROM ZGENERALTERM WHERE ZNAME = '#{name}' LIMIT 1"
@@ -211,11 +211,11 @@ class DragonSynchronizer
       @commands[id] = command
       if command.rule?
         @lists[id] = command.dragonLists()
-      if Settings.dragon.dragonCommandMode is 'pure-vocab'
-        continue if id isnt 'dragon:catch-all'
+      if Settings.dragon_darwin.dragonCommandMode is 'pure-vocab'
+        continue if id isnt 'dragon_darwin:catch-all'
       for hasChain in chainedYesNo
         # special case
-        continue if id is 'dragon:catch-all' and hasChain is no
+        continue if id is 'dragon_darwin:catch-all' and hasChain is no
 
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
