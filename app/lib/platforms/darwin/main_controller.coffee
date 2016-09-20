@@ -2,20 +2,9 @@ net = require 'net'
 fs = require 'fs'
 forever = require 'forever'
 
-class MainController
-  instance = null
+module.exports = new class MainController
   constructor: ->
-    return instance if instance?
-    instance = @
-
     @loadFrameworks()
-
-    @historyDragon = []
-    @historyGrowl = []
-    @historyStatusWindow = []
-
-    @methodCallTimes = {}
-    @applicationLastChangedAt = Date.now()
 
     Events.once 'startupComplete', =>
       if developmentMode
@@ -27,8 +16,7 @@ class MainController
         @listenAsSlave()
       else
         @listenOnSocket "/tmp/voicecode_devices.sock", @deviceHandler
-        unless Settings.dragon.tailing
-          @listen()
+
 
   loadFrameworks: ->
     $.framework 'Foundation'
@@ -44,12 +32,11 @@ class MainController
     @eventMonitor.on 'start', =>
       log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
       process.on 'exit', => @eventMonitor.stop()
-      Events.on 'dragonStarted', => @eventMonitor.restart()
-      Events.on 'dragonRestarted', => @eventMonitor.restart()
-    @eventMonitor.on 'exit:code', (code) =>
+    @eventMonitor.on 'exit:code', (code) ->
       warning 'eventMonitorStopped', code
       , "Event monitor stopped with code: #{code}"
-      @eventMonitor.restart()
+      # @eventMonitor.restart()
+
   applicationChanged: ({event, bundleId, name}) ->
     @applicationLastChangedAt = Date.now()
     Actions.setCurrentApplication {name, bundleId}
@@ -59,10 +46,6 @@ class MainController
 
   keyUpHandler: (event) ->
     emit 'keyboard.keyUp', event
-
-  listen: ->
-    @listenOnSocket "/tmp/voicecode.sock", @dragonHandler
-    @listenOnSocket "/tmp/voicecode2.sock", @growlHandler
 
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
@@ -81,125 +64,11 @@ class MainController
         @mouseLeftClickHandler event
       when 'keyUp'
         @keyUpHandler event
-      when 'recognizedText'
-        unless developmentMode or Settings.dragon.tailing
-          @statusWindowTextHandler event
-
-  normalizePhraseComparison: (phrase) ->
-    if ParserController.isInitialized()
-      JSON.stringify ParserController.parse(phrase.toLowerCase() + " ")
-    else
-      error 'chainMissingParser', null, "The parser is not initialized -
-      probably a problem with the license code, email, or internet connection"
-      null
-      # phrase.toLowerCase()
-
-  findPreviousPhrase: (list, name, phrase) ->
-    _.find list, (item) ->
-      item.phrase is phrase and item[name] != true
-
-  dragonHandler: (data) ->
-    phrase = data.toString('utf8').replace("\n", "")
-    debug 'dragonPhrase', phrase
-    normalized = @normalizePhraseComparison(phrase)
-
-    oldStatusWindow = @findPreviousPhrase @historyStatusWindow
-    , 'dragon', normalized
-    oldGrowl = @findPreviousPhrase @historyGrowl, 'dragon', normalized
-
-    proceed = true
-
-    if oldStatusWindow?
-      #ignore
-      oldStatusWindow.dragon = true
-      proceed = false
-    if oldGrowl?
-      #ignore
-      oldGrowl.dragon = true
-      proceed = false
-
-    warning 'dragonHandlerProceed ' + proceed
-    if proceed
-      @historyDragon.unshift
-        phrase: normalized
-
-      @executeChain(phrase)
-
-    @historyDragon.splice(10) # don't accrue too much history
 
   deviceHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
     debug 'devicePhrase', phrase
     @executeChain(phrase)
-
-  growlHandler: (data) ->
-    phrase = data.toString('utf8').replace("\n", "")
-    debug 'growlPhrase', phrase
-    normalized = @normalizePhraseComparison(phrase)
-
-    oldDragon = @findPreviousPhrase @historyDragon, 'growl', normalized
-    oldStatusWindow = @findPreviousPhrase @historyStatusWindow, 'growl', normalized
-    proceed = true
-
-    if oldDragon?
-      #ignore
-      oldDragon.growl = true
-      proceed = false
-
-    if oldStatusWindow?
-      #ignore
-      oldStatusWindow.growl = true
-      proceed = false
-
-    if proceed
-      @historyGrowl.unshift
-        phrase: normalized
-
-      @executeChain(phrase)
-
-    @historyGrowl.splice(10) # don't accrue too much history
-
-  statusWindowTextHandler: (event) ->
-    return unless event.phrase?.length
-    # if we recently switched applications then sometimes the status window fires twice
-    # about 2 - 4 seconds apart, so if that's the case ignore the second one
-    if event.phrase is @_statusWindowPreviousPhrase
-      if Date.now() - @applicationLastChangedAt < 4500
-        debug 'statusWindowIgnored', event.phrase, Date.now() - @applicationLastChangedAt
-        return
-      else
-        debug 'statusWindowNotIgnored', event.phrase, Date.now() - @applicationLastChangedAt
-
-    @_statusWindowPreviousPhrase = event.phrase
-
-    lastCalled = @methodCallTimes.statusWindowTextHandler
-    if (not lastCalled?) or (lastCalled? and (Date.now() - lastCalled) > 800)
-      @methodCallTimes.statusWindowTextHandler = Date.now()
-      phrase = event.phrase
-      debug 'statusWindowPhrase', phrase,
-      normalized = @normalizePhraseComparison(phrase)
-
-      oldDragon = @findPreviousPhrase @historyDragon, 'status', normalized
-      oldGrowl = @findPreviousPhrase @historyGrowl, 'status', normalized
-      proceed = true
-      if oldDragon?
-        #ignore
-        oldDragon.status = true
-        proceed = false
-      if oldGrowl?
-        #ignore
-        oldGrowl.status = true
-        proceed = false
-
-      warning 'statusHandlerProceed ' + proceed
-
-      if proceed
-        @historyStatusWindow.unshift
-          phrase: normalized
-
-        @executeChain(phrase)
-
-      @historyStatusWindow.splice(10) # don't accrue too much history
 
   executeChain: (phrase) ->
     emit 'chainShouldExecute', phrase
@@ -218,6 +87,3 @@ class MainController
   slaveDataHandler: (phrase) ->
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
     @executeChain(phrase)
-
-
-module.exports = new MainController
