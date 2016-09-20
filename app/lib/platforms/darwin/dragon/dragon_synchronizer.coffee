@@ -212,10 +212,10 @@ class DragonSynchronizer
       if command.rule?
         @lists[id] = command.dragonLists()
       if Settings.dragon.dragonCommandMode is 'pure-vocab'
-        continue if id isnt 'dragon:catch-all'
+        continue if id isnt 'dragon_darwin:catch-all'
       for hasChain in chainedYesNo
         # special case
-        continue if id is 'dragon:catch-all' and hasChain is no
+        continue if id is 'dragon_darwin:catch-all' and hasChain is no
 
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
