@@ -6,14 +6,13 @@ Api = require '../components/Api.cjsx'
 makeMapStateToProps = (state, props) ->
     apis: apisForPackage state, props
 
-
-ApiList = class ApiList extends React.Component
+class ApiList extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
     @props.apis isnt nextProps.apis
 
   render: ->
     {apis} = @props
-    return null unless apis?
+    return null unless apis.size
     <div className="ui segment">
       <div className="ui top left attached label">
         { apis.size }

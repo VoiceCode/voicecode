@@ -6,7 +6,11 @@ packageSelector = (state, props) ->
   state.getIn ['packages', props.packageId]
 
 packagesSelector = (state, props) ->
-  state.get 'packages'
+  packages = state.get 'packages'
+  if props.viewMode is 'commands'
+    packages = packages.filter (pack) ->
+      pack.get 'installed'
+  packages
 
 packageFilterSelector = (state, props) ->
   state.get 'package_filter'

@@ -8,6 +8,7 @@ CommandList = class CommandList extends React.Component
 
   render: ->
     {commands} = @props
+    return null unless commands.size
     <div className="ui segment">
       <div className="ui top left attached label">
         { commands.size }
