@@ -73,8 +73,12 @@ class SlaveController
   setTarget: (name = null) ->
     return @clearTarget() if _.isEmpty name
     return if _.isEmpty Settings.core.slaves
-    @target = Actions.fuzzyMatchKey Settings.core.slaves, name
-    notify 'slaveModeToggle', @target, "Slave mode on: #{@target}"
+    target = Actions.fuzzyMatchKey Settings.core.slaves, name
+    if @connectedSlaves[target]?
+      @target = target
+      notify 'slaveModeToggle', @target, "Slave mode on: #{@target}"
+    else
+      notify 'slaveModeToggleFailed', target, "Slave mode failed: #{target}"
 
   clearTarget: ->
     @target = null

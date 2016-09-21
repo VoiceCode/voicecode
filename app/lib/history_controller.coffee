@@ -110,7 +110,7 @@ class HistoryController
     historyWindow.once 'show', ->
       historyWindow.hide()
       # historyWindow.openDevTools()
-    historyWindow.loadURL("file://#{projectRoot}/src/frontend/history.html")
+    historyWindow.loadURL("file://#{projectRoot}/frontend/history.html")
 
   createMicrophoneStateWindow: ->
     screen = require 'screen'
