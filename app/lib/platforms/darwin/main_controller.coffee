@@ -85,5 +85,6 @@ module.exports = new class MainController
       "Awaiting connection from master on port #{Settings.core.slaveModePort}"
 
   slaveDataHandler: (phrase) ->
+    phrase = phrase.toString()
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
     @executeChain(phrase)

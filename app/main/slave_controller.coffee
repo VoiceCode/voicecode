@@ -19,12 +19,13 @@ class SlaveController
     @createSocket slaveId, host, port
 
   onConnect: (slaveSocket) ->
+    @connectedSlaves[slaveSocket.name] = slaveSocket
+
     notify 'slaveConnected', slaveSocket.name
     , "Connected to: #{slaveSocket.name}"
-    slaveSocket.once 'close',
+    slaveSocket.once 'close', ->
       notify 'slaveDisconnected', slaveSocket.name
       , "Connection closed: #{slaveSocket.name}"
-    @connectedSlaves[slaveSocket.name] = slaveSocket
 
   createSocket: (name, host, port) ->
     slaveSocket = new require('net').Socket()
