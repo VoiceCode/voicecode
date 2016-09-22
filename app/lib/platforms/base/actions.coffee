@@ -7,7 +7,6 @@ class Actions
     @storage = {}
     @executionStack = []
   stop: () ->
-    # @extensionsStopped = true
     @executionStack[0] = false
   continue: () ->
     @executionStack[0] = true

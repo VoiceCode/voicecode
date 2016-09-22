@@ -28,19 +28,19 @@ class Command
 
   execute: ->
     input = @input
-    id = @id
-    context = @generateContext()
+    context = @context
 
     Actions.executionStack.unshift true
+
     unless _.isEmpty @befores
       _.each @befores, ({action: e, info}) =>
-        if Scope.active(_.extend {},
-        info, {id, input, context}) and _.isFunction(e)
+        options = _.extend {}, info, {input, context}
+        if Scope.active(options) and _.isFunction(e)
           emit 'beforeWillExecute', {@id, e, info}
           e.call(Actions, input, context)
-        Actions.executionStack[0]
         true
 
+    # one of the befores called @stop()
     return unless Actions.executionStack[0]
 
     sorted = @sortedImplementations()
@@ -48,8 +48,8 @@ class Command
       warning null, null, "#{@id} has no implementations"
 
     _.each sorted, ({action: e, info}) =>
-      if Scope.active(_.extend {},
-      info, {id, input, context}) and _.isFunction(e)
+      options = _.extend {}, info, {input, context}
+      if Scope.active(options) and _.isFunction(e)
         emit 'implementationWillExecute', {@id, e, info}
         e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
@@ -59,11 +59,10 @@ class Command
     # after
     unless _.isEmpty @afters
       _.each @afters, ({action: e, info}) =>
-        if Scope.active(_.extend {},
-        info, {id, input, context}) and _.isFunction(e)
+        options = _.extend {}, info, {input, context}
+        if Scope.active(options) and _.isFunction(e)
           emit 'afterWillExecute', {@id, e, info}
           e.call(Actions, input, context)
-        Actions.executionStack[0]
         true
 
     Actions.executionStack.shift()
@@ -73,40 +72,35 @@ class Command
   # but it should work for now
   # also, caching?
   sortedImplementations: ->
-    _.sortBy @implementations, ({action: e, info}) ->
-      result = {}
-      result.weight = info.weight or 0
+    _.sortBy @implementations, ({info}) ->
+      result = 0
+      weight = info.weight or 0
       if info.scope?
         unless info.scope is 'global' or info.scope is 'abstract'
           scope = Scope.get info.scope
-          result.applications = true if scope.applications().length
-          result.condition = true if scope.condition?
-          result.platform = true if scope.platform?
 
-      result.applications = true if info.applications?.length > 0
-      result.condition = true if info.condition?
-      result.platform = true if info.platform?
+          if scope.applications().length
+            result += 1
+          if scope.conditions().length
+            result += 1
+            # tiebreaker if multiple conditions
+            result += (scope.conditions().length - 1) / 10
+          if scope.platform?
+            result += 0.5
 
-      (_.size(result) + (-1 * result.weight)) * -1
+      (result - weight) * -1
 
   active: ->
-    _.some @implementations, ({action: e, info}) ->
+    _.some @implementations, ({info}) ->
       Scope.active info
 
-  getApplications: ->
-    if @scope?
-      _.reduce @implementations, (result, value, key) ->
-        _.union result, Scope.applications(value.info.scope)
-      , []
-    else
-      # it's global
-      []
+  scopes: ->
+    _.compact _.uniq _.map @implementations, ({info}) =>
+      info.scope
 
-  isConditional: ->
-    (@scope? and @scope != 'global') or (not _.isEmpty @applications) or @condition?
-
-  generateContext: ->
-    @context
+  applications: ->
+    _.compact _.uniq _.flattenDeep _.map @scopes(), (scope) =>
+      Scope.get(scope)?.applications()
 
   normalizeNumberRange: (input) ->
     if typeof input is "object"

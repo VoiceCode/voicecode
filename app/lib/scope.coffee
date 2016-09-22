@@ -6,11 +6,22 @@
 class Scope
   @instances = {}
 
-  # applications: list of applications where this scope is valid
-  # condition: a function that returns true or false whether
-  # or not this scope is valid
-  constructor: ({@name, applications, @condition}) ->
-    @_applications = applications
+  # applications: list of applications where this scope is active
+  # conditions: a list of functions which must all return true
+  # for this scope to be active
+
+  # application: shorthand for applications: ['single']
+  # condition: shorthand for conditions: [->]
+  constructor: ({@name, applications, condition, application, conditions}) ->
+    @_applications = if applications
+      applications
+    else if application
+      [application]
+
+    @_conditions = if conditions
+      conditions
+    else if condition
+      [condition]
 
   @register: (options) ->
     if @instances[options.name]?
@@ -24,62 +35,47 @@ class Scope
   @resetAll: ->
     @instances = {}
 
+  # class method Scope.active('atom')
   @active: (options) ->
+    return true unless options
     # you could pass a scope name
     if typeof options is 'string'
-      @get(options)?.active(options.input)
-
+      @get(options)?.active()
     # you could pass an object with a scope name parameter
     else if options.scope?
-      scopeIsActive = @get(options.scope)?.active(options.input)
-      conditionPasses = true
-      if options.condition?
-        conditionPasses = @checkCondition(options.condition, options.input)
-      scopeIsActive and conditionPasses
-
-    # you could pass actual applications / conditions
+      @get(options.scope)?.active(options)
     else
-      @checkApplications(options.applications) and
-      @checkCondition(options.condition, options.input)
+      true
 
-  active: (input) ->
-    Scope.active
-      applications: @applications()
-      condition: @condition
-      input: input
+  active: (options={}) ->
+    return true if @name is 'global'
+    {input, context} = options
+    @checkApplications() and @checkConditions({input, context})
 
   # allow lazy resolving of an application list
   applications: ->
-    if _.isFunction @_applications
-      @_applications() or []
-    else
-      @_applications or []
-
-  @applications: (scopes) ->
-    unless _.isArray scopes
-      scopes = [scopes]
-    scopes = _.compact _.flattenDeep _.map scopes, (s) => @get(s)?.applications()
-    return scopes or []
-
-  @checkApplications: (applications) ->
-    apps = if applications?
-      if _.isFunction applications
-        applications()
+    return [] unless @_applications
+    _.compact _.uniq _.flattenDeep _.map @_applications, (a) =>
+      if _.isFunction a
+        a.call(Actions)
       else
-        applications
-    if apps?.length
-      switch global.platform
-        when 'darwin'
-          Actions.currentApplication().bundleId in apps
-        # windows, linux
-    else
-      true
+        a
 
-  @checkCondition: (condition, input) ->
-    if _.isFunction condition
-      condition.call(Actions, input)
-    else
-      true
+  conditions: ->
+    @_conditions or []
+
+  checkApplications: ->
+    # switch global.platform
+    # when 'darwin'
+    # windows, linux
+    Actions.currentApplication().bundleId in @applications()
+
+  checkConditions: ({input, context}) ->
+    # all conditions must be true
+    return true unless @conditions().length
+
+    _.all @conditions(), (condition) ->
+      condition.call(Actions, input, context)
 
 # this is just for easy access to a global version
 Scope.global = Scope.register

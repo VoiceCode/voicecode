@@ -10,8 +10,8 @@ class GrammarState
     if command.continuous is false
       return false if @index > 0
 
-    if command.isConditional()
-      return command.active()
+    unless command.active()
+      return false
 
     if command.nested?
       if command.nested is true
@@ -44,7 +44,7 @@ class GrammarState
   getNest: (info) ->
     # return true if command should be accepted as a nested command, false if it should break out
     command = new Command(info.c, info.a)
-    if !command.text?
+    unless command.text?
       return false
 
     if _.isString(command.text)
@@ -64,8 +64,8 @@ class GrammarState
       # if it gets here it must be nested inside a phrase
       return false
 
-    if command.isConditional()
-      return command.active()
+    unless command.active()
+      return false
 
     true
 

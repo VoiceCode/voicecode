@@ -219,8 +219,10 @@ class DragonSynchronizer
 
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
-        bundleIds = command.getApplications()
-        if _.isEmpty bundleIds
+        bundleIds = command.applications()
+        # if a command has none, or more than 1 implementation,
+        # consider it global
+        if _.isEmpty(bundleIds) or bundleIds.length > 1
           bundleIds = ['global']
         for bundleId in bundleIds
           continue unless Actions.checkBundleExistence(bundleId)
@@ -240,8 +242,8 @@ class DragonSynchronizer
       return false
     for id, lists of @lists
       for listName, speakableList of lists
-        bundleIds = @commands[id].getApplications()
-        if _.isEmpty bundleIds
+        bundleIds = @commands[id].applications()
+        if _.isEmpty(bundleIds) or bundleIds.length > 1
           bundleIds = ['global']
         for bundleId in bundleIds
           continue unless Actions.checkBundleExistence(bundleId)

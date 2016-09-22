@@ -54,10 +54,11 @@ class Package
       funk = options.action
       delete options.action
     id = @normalizeId(id)
-    commandOptions = _.defaultsDeep(options, @defaultCommandOptions)
+    commandOptions = _.defaultsDeep options, @defaultCommandOptions
+    packageOptions = _.defaultsDeep options, @defaultEditOptions
     Commands.createDisabled id, commandOptions
     if funk?
-      @implement _.pick(commandOptions, 'packageId', 'scope'), {"#{id}": funk}
+      @implement packageOptions, {"#{id}": funk}
 
   implement: ->
     if arguments[1]?
@@ -138,29 +139,26 @@ class Package
       packageId: @name
 
   registerScope: ->
-    if @options.applications? or @options.condition?
+    if @shouldCreateScope()
       Scope.register @options
       @scope = @name
     else
-      @scope = 'global'
+      @scope = @options.scope or 'global'
 
-  applications: ->
-    if @scope?
-      Scope.get(@scope).applications()
-    else
-      true
+  shouldCreateScope: ->
+    # if it uses a scope already declared return false
+    return false if @options.scope
 
-  condition: ->
-    if @scope?
-      Scope.get(@scope).condition()
-    else
-      true
+    @options.applications? or
+    @options.conditions? or
+    @options.application? or
+    @options.condition
 
   active: ->
-    if @scope?
-      Scope.get(@scope)?.active()
-    else
-      true
+    Scope.active @scope
+
+  applications: ->
+    Scope.get(@scope).applications()
 
   remove: ->
     # TODO track commands that were added, and before/after-
