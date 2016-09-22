@@ -132,6 +132,7 @@ Events.once 'applicationShouldStart', ->
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
     global.AssetsController = require './assets_controller'
     startupFlow.wait 'assetsControllerReady'
+    PackagesManager.updateAll startupFlow
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'

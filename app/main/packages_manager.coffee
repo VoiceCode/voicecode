@@ -89,8 +89,19 @@ class PackagesManager
     _.every @registry.all, (info, name) ->
       emit 'installPackage', name
       true
-
-
+  updateAll: (flow) ->
+    packagePath = AssetsController.assetsPath + "/packages/"
+    installed = fs.readdirSync packagePath
+    _.each installed, (repo) ->
+      adder = flow.add()
+      git("#{packagePath}#{repo}").pull 'origin', 'master', (err, suc) ->
+        if err
+          error 'packagesManagerUpdateError', err
+        else
+          log 'packageUpdated', repo
+        adder(true)
+      true
+    flow.wait()
 # class PackageSettingsManager extends require('./settings_manager')
 #   # singleton
 #   instance = null
