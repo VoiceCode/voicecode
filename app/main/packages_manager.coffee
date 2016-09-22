@@ -95,11 +95,11 @@ class PackagesManager
     _.each installed, (repo) ->
       return true if repo[0] is '.' # TODO any other weird files to ignore?
       adder = flow.add()
-      git("#{packagePath}#{repo}").pull 'origin', 'master', (err, suc) ->
+      git("#{packagePath}#{repo}").pull 'origin', 'master', (err) ->
         if err
           error 'packagesManagerUpdateError', err
         else
-          log 'packageUpdated', repo
+          emit 'packageUpdated', repo
         adder(true)
       true
     flow.wait()
