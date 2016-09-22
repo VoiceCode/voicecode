@@ -121,7 +121,7 @@ class EventEmitter extends require('events').EventEmitter
 
   unsubscribe: (event, callback) ->
     if _.isArray callback
-      _.each callback, (c) => @unsubscribe event, c
+      return _.each callback, (c) => @unsubscribe event, c
     @removeListener event, callback
 
   on: (event, callback) ->

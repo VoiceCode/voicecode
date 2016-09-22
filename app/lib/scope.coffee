@@ -14,7 +14,10 @@ class Scope
   # condition: shorthand for conditions: [->]
   constructor: ({@name, applications, condition, application, conditions}) ->
     @_applications = if applications
-      applications
+      if _.isFunction applications
+        [applications]
+      else
+        applications
     else if application
       [application]
 
@@ -55,7 +58,7 @@ class Scope
   # allow lazy resolving of an application list
   applications: ->
     return [] unless @_applications
-    _.compact _.uniq _.flattenDeep _.map @_applications, (a) =>
+    _.compact _.uniq _.flattenDeep _.map @_applications, (a) ->
       if _.isFunction a
         a.call(Actions)
       else
@@ -68,13 +71,11 @@ class Scope
     # switch global.platform
     # when 'darwin'
     # windows, linux
+    return true if _.isEmpty @applications()
     Actions.currentApplication().bundleId in @applications()
 
   checkConditions: ({input, context}) ->
-    # all conditions must be true
-    return true unless @conditions().length
-
-    _.all @conditions(), (condition) ->
+    _.every @conditions(), (condition) ->
       condition.call(Actions, input, context)
 
 # this is just for easy access to a global version
