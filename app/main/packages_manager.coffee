@@ -94,11 +94,11 @@ class PackagesManager
     installed = fs.readdirSync packagePath
     _.each installed, (repo) ->
       adder = flow.add()
-      git("#{packagePath}#{repo}").pull 'origin', 'master', (err, suc) ->
+      git("#{packagePath}#{repo}").pull 'origin', 'master', (err) ->
         if err
           error 'packagesManagerUpdateError', err
         else
-          log 'packageUpdated', repo
+          emit 'packageUpdated', repo
         adder(true)
       true
     flow.wait()
