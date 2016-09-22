@@ -241,6 +241,8 @@ global.warning = _.bind Events.warning, Events
 global.notify = _.bind Events.notify, Events
 global.mutate = _.bind Events.mutate, Events
 global.unsubscribe = _.bind Events.unsubscribe, Events
+global.subscribe = _.bind Events.on, Events
+global.once = _.bind Events.once, Events
 module.exports = Events
 
 global.mutationNotifier = (target, event, args, deep = false) ->
