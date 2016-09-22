@@ -93,6 +93,7 @@ class PackagesManager
     packagePath = AssetsController.assetsPath + "/packages/"
     installed = fs.readdirSync packagePath
     _.each installed, (repo) ->
+      return true if repo[0] is '.' # TODO any other weird files to ignore?
       adder = flow.add()
       git("#{packagePath}#{repo}").pull 'origin', 'master', (err, suc) ->
         if err
