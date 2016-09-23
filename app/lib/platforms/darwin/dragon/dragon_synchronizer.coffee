@@ -216,13 +216,13 @@ class DragonSynchronizer
       for hasChain in chainedYesNo
         # special case
         continue if id is 'dragon_darwin:catch-all' and hasChain is no
-        continue if _.isEmpty command.implementations
+        # continue if _.isEmpty command.implementations
         dragonName = command.generateCommandName hasChain
         dragonBody = command.generateCommandBody hasChain
         bundleIds = command.applications()
         # if a command has none, or more than 1 implementation,
         # consider it global
-        if command.isGlobal()
+        if command.isGlobal() or _.isEmpty(bundleIds)
           bundleIds = ['global']
         for bundleId in bundleIds
           continue unless Actions.checkBundleExistence(bundleId)
@@ -243,9 +243,9 @@ class DragonSynchronizer
     for id, lists of @lists
       for listName, speakableList of lists
         command = @commands[id]
-        continue if _.isEmpty command.implementations
+        # continue if _.isEmpty command.implementations
         bundleIds = command.applications()
-        if command.isGlobal()
+        if command.isGlobal() or _.isEmpty(bundleIds)
           bundleIds = ['global']
         for bundleId in bundleIds
           continue unless Actions.checkBundleExistence(bundleId)
