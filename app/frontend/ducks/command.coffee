@@ -33,6 +33,7 @@ commandRecord = immutable.Record
   enabled: false
   packageId: 'unpackaged'
   description: 'no description'
+  internal: false
   tags: []
 
 exports.reducers =

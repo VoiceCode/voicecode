@@ -22,7 +22,6 @@ actionCreators.appStart = ->
 actionCreators.toggleStickyWindow = ->
   (dispatch, getState) ->
     shouldStick = not getState().get 'stickyWindow'
-    dispatch actionCreators.setStickyWindow shouldStick
     emit 'toggleStickyWindow',
       id: 'main',
       shouldStick: shouldStick
@@ -45,7 +44,7 @@ exports.reducers =
   logEvents: (state = developmentMode, {type, payload}) =>
     if type is @SET_LOG_EVENTS then payload else state
   stickyWindow: (state = false, {type, payload}) =>
-    if type is @SET_STICKY_WINDOW then payload else state
+    if type is @SET_STICKY_WINDOW then payload.shouldStick else state
   currentApplication: (state = '', {type, payload}) =>
     switch type
       when @SET_CURRENT_APPLICATION

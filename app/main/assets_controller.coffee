@@ -42,8 +42,8 @@ class AssetsController
     path =  "#{@assetsPath}/settings.coffee"
     data = """
     _.merge Settings,
-    license: ''
-    email: ''
+      license: ''
+      email: ''
     """
     fs.writeFile path, data, {flag: 'wx'}, (err) =>
       if err
@@ -59,9 +59,17 @@ class AssetsController
     return if @state is "error"
     emit 'assetsLoading', {type, assetsMask, ignoreMask}
     emit "#{type}AssetsLoading"
-    @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
+    watcherSettings =
       persistent: true
       ignored: ignoreMask
+    if type is 'package' # I don't like this, just testing
+      _.assign watcherSettings,
+        useFsEvents: false
+        usePolling: true
+        interval: 10000
+
+    @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
+      watcherSettings
     @watchers[assetsMask].on('add', (path) =>
       @handleFile type, 'added', path
     ).on('change', (path) =>

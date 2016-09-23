@@ -38,7 +38,6 @@ module.exports = new class MainController
       # @eventMonitor.restart()
 
   applicationChanged: ({event, bundleId, name}) ->
-    @applicationLastChangedAt = Date.now()
     Actions.setCurrentApplication {name, bundleId}
 
   mouseLeftClickHandler: (event) ->

@@ -35,7 +35,7 @@ subscribeToRemoteEvents = ->
     'focusPackageFilter': 'focusPackageFilter'
     'changePage': 'changePage'
     'logger': 'createLogEntry'
-
+    'toggleStickyWindow': 'setStickyWindow'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 
