@@ -49,5 +49,15 @@ class DragonCommand extends Command
   dragonLists: ->
     @grammar.lists
 
+  # a dragon command is global if any implementation is global OR
+  # if it has more than 1 application implementation OR
+  # if any implementation has a scope with no applications
+  # (in that case the scope is determined by just conditions)
+  isGlobal: ->
+    'global' in @scopes() or
+    @applications().length > 1 or
+    _.some @implementations, (imp) ->
+      _.isEmpty Scope.get(imp.info.scope)?.applications()
+
 
 module.exports = DragonCommand
