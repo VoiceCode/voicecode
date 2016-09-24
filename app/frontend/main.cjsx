@@ -35,6 +35,9 @@ subscribeToRemoteEvents = ->
     'changePage': 'changePage'
     'logger': 'createLogEntry'
     'toggleStickyWindow': 'setStickyWindow'
+    'logEvents': 'setLogEvents'
+    'radioSilence': 'setRadioSilence'
+    
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

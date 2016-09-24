@@ -59,8 +59,8 @@ Package = class Package extends React.Component
         <div className="ui attached segment">
         {
           if installed
-            <button className="ui red tiny icon button" onClick={ removePackage.bind null, name }>
-              <i className="trash outline icon"></i>
+            <button className="ui black tiny icon button" onClick={ removePackage.bind null, name }>
+              <i className="trash icon"></i>
             </button>
           else
             <button className="ui green tiny icon button" onClick={ installPackage.bind null, name }>

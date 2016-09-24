@@ -7,6 +7,9 @@ packageSelector = (state, props) ->
 
 packagesSelector = (state, props) ->
   packages = state.get 'packages'
+  packages = packages.sort (a, b) ->
+    a.get('name').localeCompare(b.get('name'))
+
   if props.viewMode is 'commands'
     packages = packages.filter (pack) ->
       pack.get 'installed'
@@ -95,12 +98,15 @@ implementationsForCommand = (state, props) ->
 
 showingEventsSelector = (state, props) ->
   state.get('logEvents')
+radioSilenceSelector = (state, props) ->
+  state.get('radioSilence')
 
 _.assign exports, {
   apisForPackage
   commandSelector
   packageSelector
   packagesSelector
+  radioSilenceSelector
   showingEventsSelector
   packageFilterSelector
   filteredPackagesSelector

@@ -22,7 +22,6 @@ class EventEmitter extends require('events').EventEmitter
     ]
     @subscribeToEvents()
     if developmentMode
-      @_logEvents = developmentMode
       @suppressedLogEntries = [
         'dragonInterfaceData'
         'apiCreated'
@@ -87,17 +86,23 @@ class EventEmitter extends require('events').EventEmitter
       else
         entry
 
-  logEvents: (setter = null)->
+  logEvents: (setter = null) ->
     if setter?
       @_logEvents = setter
-    @_logEvents
+    @_logEvents ?= developmentMode
+
+  radioSilence: (setter = null) ->
+    if setter?
+      @_radioSilence = setter
+    @_radioSilence ?= false
 
   subscribeToEvents: ->
     @on 'logEvents', @logEvents.bind(@)
+    @on 'radioSilence', @radioSilence.bind(@)
 
   frontendOn: (event, callback) ->
     # this is needed because only enumerable properties are accessible
-    # via remote module i.e every object needs to be flattened
+    # via remote module i.e must strip all functions
     switch event
       when 'implementationCreated'
         _callback = ->
@@ -148,7 +153,7 @@ class EventEmitter extends require('events').EventEmitter
     super
 
   logger: (entry) ->
-    unless @radioSilence
+    unless @radioSilence()
       process.nextTick =>
         entry.timestamp = process.hrtime()
         @emit 'logger', entry
@@ -213,7 +218,7 @@ class EventEmitter extends require('events').EventEmitter
           # event: args[2] || "#{event} is missing a human readable message"
           event: event
           args: (utilities.inspect args[1..]
-          , {depth: 5, color: false}).replace "\\n", "\n"
+          , {depth: 5, color: false}).replace /\\n/gm, "\n"
 
     unless type in ['mutate', 'debug', 'stdout', 'stderr']
       args[0] = event

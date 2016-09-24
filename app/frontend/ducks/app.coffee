@@ -6,6 +6,7 @@ actionCreators = _.reduce {
   SET_CURRENT_APPLICATION: 'SET_CURRENT_APPLICATION'
   SET_STICKY_WINDOW: 'SET_STICKY_WINDOW'
   SET_LOG_EVENTS: 'SET_LOG_EVENTS'
+  SET_RADIO_SILENCE: 'SET_RADIO_SILENCE'
 }
 , (ac, c) =>
   ac[_.camelCase(c)] = createAction c
@@ -29,8 +30,12 @@ actionCreators.toggleStickyWindow = ->
 actionCreators.toggleLogEvents = ->
   (dispatch, getState) ->
     logEvents = not getState().get 'logEvents'
-    dispatch actionCreators.setLogEvents logEvents
     emit 'logEvents', logEvents
+
+actionCreators.toggleRadioSilence = ->
+  (dispatch, getState) ->
+    radioSilence = not getState().get 'radioSilence'
+    emit 'radioSilence', radioSilence
 
 _.extend actionCreators, changePage: (page = '/') ->
   (dispatch, getState) ->
@@ -43,6 +48,8 @@ exports.reducers =
   isImmutable: (state = true) -> state # not a 🐛
   logEvents: (state = developmentMode, {type, payload}) =>
     if type is @SET_LOG_EVENTS then payload else state
+  radioSilence: (state = false, {type, payload}) =>
+    if type is @SET_RADIO_SILENCE then payload else state
   stickyWindow: (state = false, {type, payload}) =>
     if type is @SET_STICKY_WINDOW then payload.shouldStick else state
   currentApplication: (state = '', {type, payload}) =>
