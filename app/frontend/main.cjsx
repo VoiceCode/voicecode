@@ -32,7 +32,6 @@ subscribeToRemoteEvents = ->
     'implementationCreated': 'implementationCreated'
     'startupComplete': 'appStart'
     'setPackageFilter': 'setPackageFilter'
-    'focusPackageFilter': 'focusPackageFilter'
     'changePage': 'changePage'
     'logger': 'createLogEntry'
     'toggleStickyWindow': 'setStickyWindow'
