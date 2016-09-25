@@ -192,15 +192,13 @@ unless developmentMode
   version = app.getVersion()
   _platform = if platform is 'darwin' then 'osx' else 'win'
   autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{version}"
-  global.checkForUpdates = do ->
-    lastCheck = Date.now()
-    ->
-      # if last checked more than 24 hours ago
-      if Date.now() - lastCheck >= 86400
-        log 'checkingForUpdates'
-        if autoUpdater.checkForUpdates()
-          autoUpdater.quitAndInstall()
-        lastCheck = Date.now()
+  autoUpdater.on 'update-not-available'
+  , -> log 'updatesNotAvailable', null, "You are running the latest release: #{version}"
+  autoUpdater.on 'update-available'
+  , -> log 'updateAvailable', null, "Update available"
+  autoUpdater.on 'update-downloaded'
+  , ->
+    log 'updateDownloaded', null, "Update downloaded"
+    autoUpdater.quitAndInstall()
 
-  checkForUpdates()
-  setInterval checkForUpdates, 86400
+  autoUpdater.checkForUpdates()
