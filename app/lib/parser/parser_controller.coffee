@@ -5,28 +5,23 @@ SettingsManager = require('../../main/settings_manager')
 
 class ParserController
   instance = null
+  debouncedGenerateParser = null
   constructor: ->
     return instance if instance?
     instance = @
     @fingerprintHash = null
     @fingerprint = null
-    @debouncedGenerateParser = null
-    @initialize()
-
-  initialize: ->
+    debouncedGenerateParser = _.debounce @generateParser.bind(@)
+    , 3000, {trailing: true, leading: false}
     Events.once 'startupComplete', =>
       @ready = true
       @generateParser()
 
-    Events.on 'generateParserFailed', _.bind @regress, @
-    Events.on 'commandEditsPerformed', =>
-      @generateParser()
+    Events.on 'generateParserFailed', _.bind @regress,@
+    Events.on 'commandEditsPerformed', debouncedGenerateParser
+    Events.on 'customGrammarUpdated', debouncedGenerateParser
 
   generateParser: ->
-    @debouncedGenerateParser ?= _.debounce @_generateParser.bind(@), 3000
-    @debouncedGenerateParser()
-
-  _generateParser: ->
     return unless @ready
     @generateFingerprint()
     @generateFingerprintHash()
@@ -56,6 +51,7 @@ class ParserController
       (if parserChanged then 'Parser updated' else 'Parser acquired')
     catch e
       error 'generateParserFailed', e, 'Failed evaluating new parser'
+
   parse: (phrase) ->
     phrase = _.deburr phrase
     result = []
