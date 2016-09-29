@@ -67,10 +67,11 @@ class AssetsController
         useFsEvents: false
         usePolling: true
         interval: 10000
-
-    @watchers[assetsMask] = chokidar.watch "#{@assetsPath}/#{assetsMask}",
-      watcherSettings
-    @watchers[assetsMask].on('add', (path) =>
+    unless _.isArray assetsMask
+      assetsMask = [assetsMask]
+    assetsMask = _.map assetsMask, (mask) => "#{@assetsPath}/#{mask}"
+    @watchers[assetsMask.join('|')] = chokidar.watch assetsMask, watcherSettings
+    @watchers[assetsMask.join('|')].on('add', (path) =>
       @handleFile type, 'added', path
     ).on('change', (path) =>
       @handleFile type, 'changed', path

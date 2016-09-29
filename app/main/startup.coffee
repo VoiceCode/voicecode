@@ -71,7 +71,7 @@ menubarOptions =
   windowPosition: 'trayRight'
   alwaysOnTop: true
   'always-on-top': true
-  showDockIcon: false
+  showDockIcon: true
 
 global.menubar = require('menubar') menubarOptions
 
@@ -95,7 +95,6 @@ menubar.on 'after-create-window', ->
       window.isSticky = shouldStick
   # window.webContents.executeJavaScript 'require("coffee-script/register")'
   # window.webContents.executeJavaScript 'require("node-cjsx").transform()'
-  window.on 'closed', -> debug 'window closed, what to do?'
   if developmentMode
     window.on 'reload', ->
       Events.frontendClearSubscriptions()
@@ -152,7 +151,7 @@ Events.once 'applicationShouldStart', ->
     startupFlow.wait 'settingsAssetsLoaded'
 
     Events.once 'userAssetsLoaded', startupFlow.add 'userAssetsLoaded'
-    AssetsController.getAssets 'user', '**/*.coffee', (path) ->
+    AssetsController.getAssets 'user', ['**/*.coffee', '**/*.js'], (path) ->
       return true if /packages/.test path
       return true if /settings\.coffee/.test path
       return true if /generated/.test path

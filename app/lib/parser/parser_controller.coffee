@@ -34,7 +34,6 @@ class ParserController
     else
       @writeGrammar() if developmentMode
       @getNewParser()
-    @debouncedGenerateParser = null
 
   regress: (reason, readableReason) ->
     reason = readableReason unless developmentMode
