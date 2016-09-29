@@ -8,7 +8,7 @@ class AssetsController
     return instance if instance?
     instance = @
     @assetsPath = Settings.userAssetsPath.replace /^~/, os.homedir()
-    log 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
+    emit 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
     @watchers = {}
     process.nextTick @init.bind @
 
