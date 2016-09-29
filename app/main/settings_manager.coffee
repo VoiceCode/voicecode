@@ -31,7 +31,6 @@ module.exports = class SettingsManager
     @save()
   _save: ->
     fs.writeFile @file, JSON.stringify(@settings, null, 4), 'utf8'
-    debouncedSave = null
     emit "#{@constructor.name}SettingsSaved", {@file}
   save: ->
     unless debouncedSave?

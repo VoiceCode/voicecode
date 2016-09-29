@@ -30,7 +30,7 @@ module.exports = new class MainController
       command: "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
       silent: true
     @eventMonitor.on 'start', =>
-      log 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
+      emit 'eventMonitorStarted', @eventMonitor, "Monitoring system events"
       process.on 'exit', => @eventMonitor.stop()
     @eventMonitor.on 'exit:code', (code) ->
       warning 'eventMonitorStopped', code

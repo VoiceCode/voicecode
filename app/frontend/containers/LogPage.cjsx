@@ -1,7 +1,7 @@
 React = require 'react'
 LogEntry = require '../components/LogEntry'
 {connect} = require 'react-redux'
-accordion = require('semantic-ui-css/components/accordion.js')
+# accordion = require('semantic-ui-css/components/accordion.js')
 {showingEventsSelector, radioSilenceSelector} = require('../selectors')
 {toggleLogEvents, toggleRadioSilence} = require('../ducks/app').actionCreators
 {clearLog} = require('../ducks/log').actionCreators
@@ -14,10 +14,10 @@ mapStateToProps = (state) ->
 mapDispatchToProps = {toggleLogEvents, clearLog, toggleRadioSilence}
 
 class LogPage extends React.Component
-  componentDidMount: ->
-    unless developmentMode
-      $('.ui.accordion').accordion
-        on: 'click'
+  # componentDidMount: ->
+    # unless developmentMode
+      # $('.ui.accordion').accordion
+      #   on: 'click'
   render: ->
     {showingEvents
     , toggleLogEvents

@@ -18,10 +18,10 @@ class LogEntry extends React.Component
       'red terminal': type is 'stderr'
     titleClasses = classNames
       'title': true
-      'active': developmentMode
+      'active': true
     contentClasses = classNames
       'content': true
-      'active': developmentMode
+      'active': true
     <div className="">
       <div className={ titleClasses }>
         <i className={ iconClasses }></i>

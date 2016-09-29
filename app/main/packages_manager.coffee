@@ -97,7 +97,8 @@ class PackagesManager
       adder = flow.add()
       git("#{packagePath}#{repo}").pull 'origin', 'master', (err) ->
         if err
-          error 'packagesManagerUpdateError', err
+          error 'packagesManagerUpdateError', {repo, err}
+          , "Failed to update package: #{repo}"
         else
           emit 'packageUpdated', repo
         adder(true)
