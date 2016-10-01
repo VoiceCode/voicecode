@@ -52,6 +52,7 @@ global.Settings = Object.create new Proxy settings,
 
 global._s = require 'underscore.string' # ?
 global._ = require 'lodash'
+require('../lib/utility/deepExtend')
 global.path = require 'path'
 global.$ = require 'nodobjc'
 global.Events = require './event_emitter'
