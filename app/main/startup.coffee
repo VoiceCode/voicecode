@@ -52,6 +52,7 @@ global.Settings = Object.create new Proxy settings,
 
 global._s = require 'underscore.string' # ?
 global._ = require 'lodash'
+require('../lib/utility/deepExtend')
 global.path = require 'path'
 global.$ = require 'nodobjc'
 global.Events = require './event_emitter'
@@ -155,6 +156,7 @@ Events.once 'applicationShouldStart', ->
       return true if /packages/.test path
       return true if /settings\.coffee/.test path
       return true if /generated/.test path
+      return true if /node_modules/.test path
       return false
     startupFlow.wait 'userAssetsLoaded'
 

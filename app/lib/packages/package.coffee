@@ -104,7 +104,7 @@ class Package
       if _.isFunction options
         do options.bind @
       else
-        _.merge @_settings, options
+        _.deepExtend @_settings, options
       @_settings
     else
       @_settings

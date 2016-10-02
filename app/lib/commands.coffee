@@ -123,7 +123,7 @@ class Commands
     return if not validated
     @mapping[name] ?= {}
     alreadyEnabled = @mapping[name].enabled
-    _.merge @mapping[name], @normalizeOptions name, options
+    _.deepExtend @mapping[name], @normalizeOptions name, options
     emit 'commandCreated', @mapping[name], name
     if (alreadyEnabled or options.enabled) is true
       @enable name
