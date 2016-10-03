@@ -27,6 +27,8 @@ replify {name: "voicecode_#{suffix}"}, repl
 
 
 global.bundleId = 'io.voicecode.app'
+if developmentMode
+  global.bundleId = 'com.github.electron'
 global.app = require 'app'
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
