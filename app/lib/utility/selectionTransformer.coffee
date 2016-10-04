@@ -45,6 +45,8 @@ class SelectionTransformer
     'without'
     'yet'
   ]
+  escaped = minors.map(escape)
+  minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig')
 
   unseparate: (string) ->
     string.replace separatorSplitter, (m, next) ->
@@ -114,8 +116,6 @@ class SelectionTransformer
   titleSentance: (string) ->
     escape = (str) ->
       String(str).replace /([.*+?=^!:${}()|[\]\/\\])/g, '\\$1'
-    escaped = minors.map(escape)
-    minorMatcher = new RegExp('[^^]\\b(' + escaped.join('|') + ')\\b', 'ig')
     colonMatcher = /:\s*(\w)/g
     @capital(string).replace(minorMatcher, (minor) ->
       minor.toLowerCase()
