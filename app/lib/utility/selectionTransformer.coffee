@@ -84,8 +84,7 @@ class SelectionTransformer
     @snake(string).toUpperCase()
 
   titleFirstSentance: (string) ->
-    @noCase(string).replace /[a-z]/i, (letter) ->
-      letter.toUpperCase()
+    _.startCase string
 
   spine: (string) ->
     @identity(string).replace /\s/g, '-'
