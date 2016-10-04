@@ -13,17 +13,14 @@ class DragonSynchronizer
     @lists = {}
     @insertedLists = []
     @error = false
-    Events.once 'dragonSynchronizingEnded', =>
-      Events.on 'generatesParserSuccess', ({parserChanged}) =>
-        if parserChanged
-          @synchronize()
   connectMain: ->
     file = @databaseFile("ddictatecommands")
     exists = fs.existsSync(file)
     if exists
       @database = new sqlite3.Database file, sqlite3.OPEN_READWRITE, (err) =>
         if err?
-          error 'aredragonSynchronizerError', err, "Could not connect to Dragon Dictate command database"
+          error 'dragonSynchronizerError'
+          , err, "Could not connect to Dragon Dictate command database"
           @error = true
       sync @database, 'all'
       sync @database, 'get'
@@ -37,9 +34,11 @@ class DragonSynchronizer
     file = @databaseFile("ddictatedynamic")
     exists = fs.existsSync(file)
     if exists
-      @dynamicDatabase = new sqlite3.Database file, sqlite3.OPEN_READWRITE, (err) =>
+      @dynamicDatabase = new sqlite3.Database file
+      , sqlite3.OPEN_READWRITE, (err) =>
         if err?
-          error 'dragonSynchronizerError', err, "Could not connect to Dragon Dictate dynamic database"
+          error 'dragonSynchronizerError'
+          , err, "Could not connect to Dragon Dictate dynamic database"
           @error = true
       sync @dynamicDatabase, 'all'
       sync @dynamicDatabase, 'get'
@@ -153,9 +152,9 @@ class DragonSynchronizer
   synchronize: ->
     emit 'dragonSynchronizingStarted'
     if @error
-      error 'dragonSynchronizerError', null, "Could not synchronize with Dragon Dictate database"
+      error 'dragonSynchronizerError'
+      , null, "Could not synchronize with Dragon Dictate database"
     else
-      @createMasterCommands()
       @deleteAllStatic()
       @deleteAllDynamic()
       @synchronizeStatic()
@@ -165,7 +164,8 @@ class DragonSynchronizer
 
   createList: (name, items, bundleId = '#') ->
     if @error
-      error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
+      error 'dragonSynchronizeDynamicError'
+      , null, "Dragon database not connected"
 
     @dynamicDatabase.run "INSERT INTO ZGENERALTERM (Z_ENT, Z_OPT, ZBUNDLEIDENTIFIER, ZNAME, ZSPOKENLANGUAGE, ZTERMTYPE) VALUES (1, 1, $bundleId, $name, $spokenLanguage, 'Alt')",
       $name: name
@@ -178,27 +178,10 @@ class DragonSynchronizer
     for item in items
       @createListItem item, id
 
-  createMasterCommands: ->
-    # testing some things
-
-    # p = Packages.register
-    #   name: 'dragon-master'
-    #   description: 'dragon testing'
-    #
-    # p.commands
-    #   'individuals-2':
-    #     grammarType: 'custom'
-    #     rule: '(ic) (ic)?'
-    #     enabled: true
-    #     needsParsing: false
-    #     variables:
-    #       ic: ->
-    #         _.map Commands.keys.individual, (id) ->
-    #           Commands.get(id).spoken
-
   synchronizeStatic: () ->
     if @error
-      error 'dragonSynchronizeStaticError', null, "Dragon database not connected"
+      error 'dragonSynchronizeStaticError'
+      , null, "Dragon database not connected"
       return false
     needsCreating = []
 
@@ -238,7 +221,8 @@ class DragonSynchronizer
 
   synchronizeDynamic: ->
     if @error
-      error 'dragonSynchronizeDynamicError', null, "Dragon database not connected"
+      error 'dragonSynchronizeDynamicError'
+      , null, "Dragon database not connected"
       return false
     for id, lists of @lists
       for listName, speakableList of lists
