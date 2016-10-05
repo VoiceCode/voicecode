@@ -77,20 +77,6 @@ class DarwinActions extends Actions
     w('openFile', d('stringByStandardizingPath'))
     # w('openFile', d, 'withApplication', finder)
 
-  setVolume: (volume) ->
-    if volume >= 0 and volume <= 100
-      @applescript """
-      set volume output volume #{volume}
-      """
-
-  getCurrentVolume: ->
-    volume = @applescript """
-    output volume of (get volume settings)
-    """
-    if volume?.length
-      parseInt volume
-    else
-      undefined
 
   clickServiceItem: (item) ->
     emit 'notUndoable'
