@@ -64,25 +64,16 @@ class Commands
 
   validate: (command, options, editType) ->
     validated = true
+    if options?.description?
+      options.description = _.map(options.description.split('. ')
+      , (sentence) -> _.capitalize sentence).join('.drink')
+
     switch editType
       when 'commandCreated'
         validated = @validate command, options, 'commandSpokenChanged'
-        # if not options.spoken?
-        #   unless options.needsParsing is false or options.rule?
-        #     error 'commandValidationError', command,
-        #     "Please provide a 'spoken' parameter for command '#{command}'"
-        #     validated = false
-        # if @mapping[command]?
-        #   if options.action?
-        #     if options.action.toString() is @mapping[command].action.toString()
-        #       validated = false # action is the same
-        #       break
-          # else
-            # this is okay
-            # warning 'commandHasNoAction', command, "Command #{command} has no action."
-          #   validated = false
         if options.rule?.match(/\(.*?\d+.*?\)/g)?
-          error 'commandValidationError', command, 'Please don\'t use integers in list names'
+          error 'commandValidationError',
+           command, 'Please don\'t use integers in list names'
           validated = false
       when 'commandMisspellingsAdded'
         if _.isEmpty _.difference options, command.misspellings
@@ -215,15 +206,6 @@ class Commands
     emit "#{invokedBy}CommandEditsPerformed"
     emit 'commandEditsPerformed', invokedBy
 
-
-  override: (name, action) ->
-    error 'deprecation', "Failed overriding '#{name}'.
-    Commands.override is deprecated. Use Package.implement"
-
-  extend: (name, edition) ->
-    error 'deprecation', "Failed extending '#{name}'.
-    Commands.extend is deprecated. Use Package.before || .after"
-
   implement: (commandName, info, action) ->
     @edit commandName, 'implementationCreated', {info, action},
     (command) ->
@@ -248,11 +230,6 @@ class Commands
       command.misspellings ?= []
       command.misspellings = command.misspellings.concat edition
       command
-
-  addAliases: (name, aliases) ->
-    error 'deprecation',
-    "Failed adding aliases to '#{name}'.
-    'addAliases' has been renamed to 'addMisspellings'. "
 
   changeSpoken: (name, newName) ->
     @edit name, 'commandSpokenChanged', newName, (command) ->

@@ -30,6 +30,7 @@ global.bundleId = 'io.voicecode.app'
 if developmentMode
   global.bundleId = 'com.github.electron'
 global.app = require 'app'
+global.appVersion = app.getVersion()
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
 global.Reflect = require 'harmony-reflect'
@@ -191,9 +192,8 @@ if developmentMode
 # auto update
 unless developmentMode
   autoUpdater = require 'auto-updater'
-  version = app.getVersion()
   _platform = if platform is 'darwin' then 'osx' else 'win'
-  autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{version}"
+  autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{appVersion}"
   autoUpdater.on 'error', (err) -> error 'autoUpdateError', err
   autoUpdater.on 'update-not-available'
   , -> log 'updateNotAvailable', null

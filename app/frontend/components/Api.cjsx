@@ -13,9 +13,9 @@ class Api extends React.Component
         <div className="header">
         {
           if shorthandFor
-              <i className='tiny grey external square icon'></i>
+              <i className='small grey external square icon'></i>
             else
-              <i className='tiny grey plug icon'></i>
+              <i className='small grey plug icon'></i>
         }
         { signature or "#{name}: signature missing" }
         </div>

@@ -37,7 +37,7 @@ subscribeToRemoteEvents = ->
     'toggleStickyWindow': 'setStickyWindow'
     'logEvents': 'setLogEvents'
     'radioSilence': 'setRadioSilence'
-    
+    'commandSpokenChanged': 'changeSpoken'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

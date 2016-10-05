@@ -19,8 +19,12 @@ class PackagesManager
         unless err
           _.each registry.all, ({repo, description}, name) ->
             pack = Packages.get name
-            pack ?= Packages.register {name, description, installed: false}
-            pack.repo = repo
+            pack ?= Packages.register {
+              name,
+              description,
+              installed: false,
+              repo
+            }
             true
   installPackage: (name, callback) ->
     Packages.remove name

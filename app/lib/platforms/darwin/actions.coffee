@@ -69,14 +69,6 @@ class DarwinActions extends Actions
           transformed = SelectionTransformer[transform](contents)
           @string transformed
 
-  revealFinderDirectory: (directory) ->
-    emit 'notUndoable'
-    w = $.NSWorkspace('sharedWorkspace')
-    d = $.NSString('stringWithUTF8String', directory)
-    # finder = $.NSString('stringWithUTF8String', "Finder")
-    w('openFile', d('stringByStandardizingPath'))
-    # w('openFile', d, 'withApplication', finder)
-
 
   clickServiceItem: (item) ->
     emit 'notUndoable'

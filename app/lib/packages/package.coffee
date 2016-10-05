@@ -1,5 +1,5 @@
 class Package
-  constructor: (@options) ->
+  constructor: (@options) -> #TODO: RE- FACTOR
     # these are key for keeping track of this package's changes
     @_commands = {}
     @_actions = {}
@@ -9,7 +9,7 @@ class Package
     @_implementations = {}
     @_settings = mutationNotifier (@options.settings or {})
     , 'packageSettingsChanged', {pack: @}, true
-    {@name, @description, @scope, @installed} = @options
+    {@name, @description, @scope, @installed, @repo} = @options #TODO: RE- FACTOR
     if @installed
       @registerScope()
       @setDefaultCommandOptions()
