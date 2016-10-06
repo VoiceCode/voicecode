@@ -5,21 +5,20 @@ SettingsManager = require('../../main/settings_manager')
 
 class ParserController
   instance = null
-  debouncedGenerateParser = null
   constructor: ->
     return instance if instance?
     instance = @
     @fingerprintHash = null
     @fingerprint = null
-    debouncedGenerateParser = _.debounce @generateParser.bind(@)
+    @debouncedGenerateParser = _.debounce @generateParser.bind(@)
     , 3000, {trailing: true, leading: false}
     Events.once 'startupComplete', =>
       @ready = true
-      @generateParser()
+      @debouncedGenerateParser()
 
     Events.on 'generateParserFailed', _.bind @regress,@
-    Events.on 'commandEditsPerformed', debouncedGenerateParser
-    Events.on 'customGrammarUpdated', debouncedGenerateParser
+    Events.on 'commandEditsPerformed', @debouncedGenerateParser
+    Events.on 'customGrammarUpdated', @debouncedGenerateParser
 
   generateParser: ->
     return unless @ready
@@ -42,10 +41,13 @@ class ParserController
     "Regressing to old parser because: #{reason}"
     @setParser oldParser, false
 
-  setParser: (parserAsAString, parserChanged = true) ->
-    indirect = eval # need to use vm instead
+  setParser: (parser, parserChanged = true) ->
     try
-      @parser = indirect parserAsAString
+      if _.isString parser
+        indirect = eval # need to use vm instead
+        @parser = indirect parser
+      else
+        @parser = parser
       notify 'generateParserSuccess', {parserChanged},
       (if parserChanged then 'Parser updated' else 'Parser acquired')
     catch e
@@ -125,7 +127,8 @@ class ParserController
       res.on 'end', =>
         data = data.replace(/[ ]+/g, " ")
         try
-          newParser = eval data
+          indirect = eval # need to use vm instead
+          newParser = indirect data
         catch e
           message = 'Grammar server returned malformed parser'
           error 'generateParserFailed', data?.substring(0, 300), message

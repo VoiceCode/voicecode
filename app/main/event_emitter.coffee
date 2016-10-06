@@ -221,9 +221,9 @@ class EventEmitter extends require('events').EventEmitter
       unless type in ['event', 'mutate', 'debug']
         @logger
           type: type
-          # event: args[2] || "#{event} is missing a human readable message"
-          event: event
-          args: (utilities.inspect args[1..]
+          event: args[2] || _.startCase event
+          # event: event
+          args: (utilities.inspect args[1...2]
           , {depth: 5, color: false}).replace /\\n/gm, "\n"
 
     unless type in ['mutate', 'debug', 'stdout', 'stderr']

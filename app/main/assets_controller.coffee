@@ -100,9 +100,10 @@ class AssetsController
           delete require.cache[fullPath]
         require fullPath
       catch err
-        emit 'assetEvaluationError', {err, fullPath}, "#{fullPath}:\n#{err}"
+        emit 'assetEvaluationError', {event, type, err, fullPath, fileName}
         error "#{type}AssetEvaluationError",
-        {error: err.stack, fullPath}, "#{fullPath}:\n#{err}"
+        {error: err.stack, fullPath}
+        , "#{fullPath.replace(@assetsPath, '')}:\n#{err}"
       emit 'assetEvaluated', {event, type, fullPath, fileName}
       emit "#{type}AssetEvaluated", {event, type, fullPath, fileName},
       "Asset type '#{type}' #{event} & evaluated:\n#{fullPath}"

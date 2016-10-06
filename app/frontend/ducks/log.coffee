@@ -29,14 +29,19 @@ logEntryRecord = immutable.Record
   event: null
   args: null
 
+doNotification = (entry) ->
+  return unless entry.type is 'notify'
+  new Notification entry.event
+  
 exports.reducers =
   logs: (logs = immutable.List([]), {type, payload}) =>
     switch type
       when @CREATE_LOG_ENTRY
+        doNotification payload
         logEntry = new logEntryRecord payload
         logs = logs.insert 0, logEntry
-        if logs.size is 50 and not developmentMode
-          return logs.setSize 50
+        if logs.size is 30 and not developmentMode
+          return logs.setSize 30
         logs
       when @CLEAR_LOG
         immutable.List []
