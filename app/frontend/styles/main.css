@@ -116,3 +116,8 @@ body {
 .command:last-child {
     margin-bottom: 0;
 }
+
+.command .spoken {
+    /*font-size: 17px;*/
+    text-transform: uppercase;
+}

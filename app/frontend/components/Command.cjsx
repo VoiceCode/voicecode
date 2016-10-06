@@ -55,8 +55,7 @@ class Command extends React.Component
                   # </div>
                   rule
                 else
-                  <div className=''>
-                    <i className='small grey unmute icon'></i>
+                  <div className='spoken'>
                     { spoken }
                   </div>
 
