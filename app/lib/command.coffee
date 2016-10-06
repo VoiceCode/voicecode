@@ -47,11 +47,12 @@ class Command
     if _.isEmpty sorted
       warning null, null, "#{@id} has no implementations"
 
+    result = null
     _.each sorted, ({action: e, info}) =>
       options = _.extend {}, info, {input, context}
       if Scope.active(options) and _.isFunction(e)
         emit 'implementationWillExecute', {@id, e, info}
-        e.call(Actions, input, context)
+        result = e.call(Actions, input, context)
         # stop execution, only one (the most 'specific') action should execute
         return false
       return true
@@ -66,6 +67,7 @@ class Command
         true
 
     Actions.executionStack.shift()
+    return result
 
   # here we are sorting the implementations by specificity -
   # this implementation is crude
