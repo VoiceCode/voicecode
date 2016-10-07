@@ -4,7 +4,7 @@ Function::property = (prop, desc) ->
 
 process.env.NODE_ENV = 'production' # needed for react
 
-global.developmentMode = process.argv[2]  == 'develop'
+global.developmentMode = process.argv[3]  == 'develop'
 
 if developmentMode
   process.env.NODE_ENV = 'development'
@@ -29,11 +29,10 @@ replify {name: "voicecode_#{suffix}"}, repl
 global.bundleId = 'io.voicecode.app'
 if developmentMode
   global.bundleId = 'com.github.electron'
-global.app = require 'app'
+global.app = require('electron').app
 global.appVersion = app.getVersion()
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
-global.Reflect = require 'harmony-reflect'
 settings =
   userAssetsPath: '~/voicecode'
   license: ''

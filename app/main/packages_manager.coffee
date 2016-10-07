@@ -37,7 +37,7 @@ class PackagesManager
         return callback? err
       npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
       npmSettings = [
-        'npm_config_target=0.37.8'
+        'npm_config_target=1.4.3'
         'npm_config_arch=x64'
         'npm_config_disturl=https://atom.io/download/atom-shell'
         'npm_config_runtime=electron'

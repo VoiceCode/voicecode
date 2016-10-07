@@ -3,7 +3,6 @@ Events.on 'chainShouldExecute', (phrase) ->
     SlaveController.process phrase
   else
     Fiber(->
-      HAS_FIBER = true
       new Chain(phrase).execute()
     ).run()
 
@@ -13,8 +12,6 @@ Events.on 'commandsShouldExecute', (chain) ->
     # FIXME
   else
     Fiber(->
-      HAS_FIBER = true
-      console.log 'commandsShouldExecute', chain
       new Chain().execute(chain, false, true)
     ).run()
 

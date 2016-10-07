@@ -40,7 +40,7 @@ class Command extends React.Component
         <div className="header">
         {
           if not spoken? and not rule?
-              <i className='small grey mute icon'></i>
+              <i className='grey mute icon'></i>
           else
               if rule? and spoken?
                 rule.replace('<spoken>', spoken)
@@ -63,16 +63,19 @@ class Command extends React.Component
         </div>
         <div className="meta">{ id }</div>
         <div className='content description'>{ description }</div>
-        <div className='extra'>
-          {
-            tags.map (tag) ->
-              <a key={ tag }
-                 className="ui mini tag label"
-                 onClick={ setPackageFilter.bind null, {scope: 'tags', query: tag} }
-              >{ tag }</a>
-          }
+        {
+          if tags?
+            <div className='extra'>
+              {
+                tags.map (tag) ->
+                  <a key={ tag }
+                     className="ui mini tag label"
+                     onClick={ setPackageFilter.bind null, {scope: 'tags', query: tag} }
+                  >{ tag }</a>
+              }
+            </div>
+        }
         </div>
-      </div>
     </div>
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Command)

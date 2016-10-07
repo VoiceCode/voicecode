@@ -66,7 +66,7 @@ class Commands
     validated = true
     if options?.description?
       options.description = _.map(options.description.split('. ')
-      , (sentence) -> _.capitalize sentence).join('.drink')
+      , (sentence) -> _.capitalize sentence).join('. ')
 
     switch editType
       when 'commandCreated'
