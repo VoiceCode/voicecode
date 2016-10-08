@@ -201,14 +201,16 @@ unless developmentMode
   _platform = if platform is 'darwin' then 'osx' else 'win'
   autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{appVersion}"
   autoUpdater.on 'error', (err) -> error 'autoUpdateError', err
+  , "Updater error: #{err.message}"
   autoUpdater.on 'update-not-available'
   , -> log 'updateNotAvailable', null
     , "You are running the latest release: #{version}"
   autoUpdater.on 'update-available'
-  , -> log 'updateAvailable', null, "Update available"
+  , -> log 'updateAvailable', null, "Update available, downloading..."
   autoUpdater.on 'update-downloaded'
   , ->
-    log 'updateDownloaded', null, "Update downloaded"
-    autoUpdater.quitAndInstall()
+    Events.on 'installUpdate', ->
+      autoUpdater.quitAndInstall()
+    notify 'updateDownloaded', true, "Update downloaded, ready to update."
 
   autoUpdater.checkForUpdates()

@@ -96,6 +96,10 @@ body {
     box-shadow: 0 0 20px
 }
 
+.footer {
+    box-shadow: 0 0 20px !important
+}
+
 .package .attached.segment {
     border-top: none !important
 }
@@ -120,4 +124,21 @@ body {
 .command .spoken {
     /*font-size: 17px;*/
     text-transform: uppercase;
+}
+
+
+/* prevent the rubber band scroll */
+
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
+    padding: 0;
+    overflow: auto;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
 }

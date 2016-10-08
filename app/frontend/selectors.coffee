@@ -126,6 +126,8 @@ showingEventsSelector = (state, props) ->
   state.get('logEvents')
 radioSilenceSelector = (state, props) ->
   state.get('radioSilence')
+updateAvailableSelector = (state, props) ->
+  state.get('updateAvailable')
 
 _.assign exports, {
   apisForPackage
@@ -136,6 +138,7 @@ _.assign exports, {
   showingEventsSelector
   packageFilterSelector
   commandFilterSelector
+  updateAvailableSelector
   filteredPackagesSelector
   commandsForPackageSelector
   implementationsForCommand
