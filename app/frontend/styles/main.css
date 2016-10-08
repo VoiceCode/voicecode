@@ -81,11 +81,11 @@ body {
     outline: 0 !important
 }
 
-.packageFilter .ui.dropdown.label .dropdown.icon {
+.commandFilter .ui.dropdown.label .dropdown.icon {
     margin-left: 6px !important;
 }
 
-.packageFilter .ui.dropdown.label .icon {
+.commandFilter .ui.dropdown.label .icon {
     margin-right: 0px !important;
 }
 

@@ -1,21 +1,28 @@
 React = require 'react'
 {connect} = require 'react-redux'
 classNames = require 'classnames'
-{setPackageFilter} = require('../ducks/package_filter').actionCreators
-{packageFilterSelector} = require '../selectors'
+{setCommandFilter} = require('../ducks/command_filter').actionCreators
+{commandFilterSelector} = require '../selectors'
 require('semantic-ui-css/components/transition.js')
 require('semantic-ui-css/components/dropdown.js')
-mapDispatchToProps = {setPackageFilter}
+mapDispatchToProps = {setCommandFilter}
 mapStateToProps = (state, props) ->
-  filter: packageFilterSelector state
+  filter: commandFilterSelector state
 
-class PackageFilter extends React.Component
+class CommandFilter extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
     @props.filter isnt nextProps.filter
 
   componentDidMount: ->
     if @props.filter.get('query') isnt ''
       @refs.queryInput.focus()
+
+    $('.dropdown').dropdown({
+      transition: 'fade up'
+      onChange: (value, text, $selectedItem) =>
+        @props.setCommandFilter scope: value
+    })
+
 
   componentWillReceiveProps: (nextProps)->
     next = nextProps.filter.get('query')
@@ -26,11 +33,24 @@ class PackageFilter extends React.Component
 
 
   onChange: _.debounce(((event) ->
-    @props.setPackageFilter query: event.target.value
+    @props.setCommandFilter query: event.target.value
     ), 500)
 
+  iconsFor: (scope, icon = true) ->
+    current = @props.filter.get 'scope'
+    scope ?= current
+    if not icon
+      return "item" + (if scope is current then ' selected active' else '')
+
+    classNames
+      'icon': true
+      'tag': scope is 'tags'
+      'cube': scope is 'packages'
+      'announcement': scope is 'commands'
+      'file text outline': scope is 'descriptions'
+
   render: ->
-    {setPackageFilter, filter} = @props
+    {setCommandFilter, filter} = @props
     <div className="ui fixed secondary pointing page menu">
       {
         ['all', 'enabled', 'disabled'].map (state) =>
@@ -38,7 +58,7 @@ class PackageFilter extends React.Component
             className={ classNames(
               'item': true,
               'active': filter.get('state') is state) }
-            onClick={ setPackageFilter.bind @, {state} }
+            onClick={ setCommandFilter.bind @, {state} }
           >
           <i className={ classNames(
             'icon': true,
@@ -53,18 +73,27 @@ class PackageFilter extends React.Component
 
       <div className="right menu">
         <div className="item">
-          <div className='ui left labeled small input packageFilter'>
-            <div className='ui label'>
+          <div className='ui left labeled small input commandFilter'>
+            <div className='ui dropdown label'>
               <div className='text'>
-                <i className='cube icon'></i>
+                <i className={ @iconsFor() }></i>
+              </div>
+              <i className='dropdown icon'></i>
+              <div className='menu'>
+                {
+                  ['tags', 'packages', 'commands', 'descriptions'].map (scope) =>
+                    <div key={ scope } className={ @iconsFor scope, false } data-value={ scope }>
+                      <i className={ @iconsFor scope }></i>
+                    </div>
+                }
               </div>
             </div>
             <input
               type="text"
               ref="queryInput"
               placeholder="Search #{filter.get('scope')}"
-              onBlur={ (event) => setPackageFilter {focused: false} }
-              onFocus={ (event) => setPackageFilter {focused: true} }
+              onBlur={ (event) => setCommandFilter {focused: false} }
+              onFocus={ (event) => setCommandFilter {focused: true} }
               onChange={
                 (event) =>
                   event.persist()
@@ -76,4 +105,4 @@ class PackageFilter extends React.Component
       </div>
     </div>
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(PackageFilter)
+module.exports = connect(mapStateToProps, mapDispatchToProps)(CommandFilter)
