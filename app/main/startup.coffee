@@ -6,6 +6,10 @@ process.env.NODE_ENV = 'production' # needed for react
 
 global.developmentMode = process.argv[3]  == 'develop'
 
+powerSaveBlocker = require('electron').powerSaveBlocker
+powerSaveBlocker.start('prevent-app-suspension')
+
+
 if developmentMode
   process.env.NODE_ENV = 'development'
   electronConnect = require('electron-connect').client
