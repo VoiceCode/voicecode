@@ -126,6 +126,11 @@ body {
     text-transform: uppercase;
 }
 
+.logEntry .console {
+    font-family: monospace !important;
+    font-size: 12px !important
+}
+
 
 /* prevent the rubber band scroll */
 

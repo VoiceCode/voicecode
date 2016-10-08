@@ -16,7 +16,7 @@ class Footer extends React.Component
           {
             if updateAvailable
               <div className='item'>
-                <div className='ui yellow button'
+                <div className='ui inverted yellow button'
                      onClick={ installUpdate }
                 >UPDATE</div>
               </div>
