@@ -66,5 +66,6 @@ class Packages
 
   remove: (name) ->
     # TODO: fix
+    delete @packages[name]
 
 module.exports = new Packages

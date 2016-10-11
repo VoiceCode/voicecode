@@ -35,7 +35,7 @@ class PackagesManager
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
-      return callback? null, true
+      return callback null, true
     emit 'installingPackageFolder', name, destination
     Packages.remove name
     callback = _.wrap callback, (callback, err) ->
