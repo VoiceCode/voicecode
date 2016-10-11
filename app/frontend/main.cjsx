@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-window.Remote = require 'remote'
+window.Remote = require('electron').remote
 _events = Remote.getGlobal 'Events'
 window.emit = _events._emit
 window.Events = {on: _events.frontendOn}
@@ -37,7 +37,7 @@ subscribeToRemoteEvents = ->
     'toggleStickyWindow': 'setStickyWindow'
     'logEvents': 'setLogEvents'
     'radioSilence': 'setRadioSilence'
-    
+    'commandSpokenChanged': 'changeSpoken'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

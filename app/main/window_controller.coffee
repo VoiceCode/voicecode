@@ -1,4 +1,4 @@
-BrowserWindow = require 'browser-window'
+{BrowserWindow} = require 'electron'
 module.exports = new class WindowController
   constructor: ->
     @windows = {}

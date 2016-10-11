@@ -104,6 +104,12 @@ class EventEmitter extends require('events').EventEmitter
     # this is needed because only enumerable properties are accessible
     # via remote module i.e must strip all functions
     switch event
+      # when 'commandCreated'
+      #   if arguments[0].rule?
+      #     _callback = ->
+      #       command = arguments[0]
+      #       command.lists = arguments[0].grammar.lists
+      #       callback.call null, command
       when 'implementationCreated'
         _callback = ->
           implementations = _.keys arguments[0].implementations
@@ -215,9 +221,9 @@ class EventEmitter extends require('events').EventEmitter
       unless type in ['event', 'mutate', 'debug']
         @logger
           type: type
-          # event: args[2] || "#{event} is missing a human readable message"
-          event: event
-          args: (utilities.inspect args[1..]
+          event: args[2] || _.startCase event
+          # event: event
+          args: (utilities.inspect args[1...2]
           , {depth: 5, color: false}).replace /\\n/gm, "\n"
 
     unless type in ['mutate', 'debug', 'stdout', 'stderr']

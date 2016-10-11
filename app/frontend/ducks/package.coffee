@@ -18,12 +18,26 @@ exports.actionCreators =
   removePackage: (name) ->
     (dispatch, getState) ->
       emit 'removePackage', name
+  revealPackageSource: (name) ->
+    (dispatch, getState) ->
+      emit 'commandsShouldExecute', [{
+        command: 'os:revealDirectory',
+        'arguments': "~/voicecode/packages/#{name}"
+        }]
+  revealPackageOrigin: (name) ->
+    (dispatch, getState) ->
+      repo = getState().get('packages').get(name).get('repo')
+      emit 'commandsShouldExecute', [{
+        command: 'os:openURL',
+        'arguments': repo
+        }]
 
 packageRecord = immutable.Record
   name: 'unknown'
-  description: 'no description'
+  description: 'No description'
   installed: false
   repo: ''
+
 apiRecord = immutable.Record
   name: null
   description: null

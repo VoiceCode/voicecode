@@ -2,12 +2,13 @@ fs = require 'fs'
 path = require 'path'
 
 module.exports = class SettingsManager
-  debouncedSave = null
   constructor: (@name) ->
     @file = path.resolve(AssetsController.assetsPath, "#{@name}.json")
     if @needsCreating()
       @create()
     @loadSettings()
+    @debouncedSave = _.debounce _.bind(@_save, @)
+    , 3000, {trailing: true, leading: false}
   needsCreating: ->
     not @fileExists()
   create: ->
@@ -33,6 +34,4 @@ module.exports = class SettingsManager
     fs.writeFile @file, JSON.stringify(@settings, null, 4), 'utf8'
     emit "#{@constructor.name}SettingsSaved", {@file}
   save: ->
-    unless debouncedSave?
-      debouncedSave = _.debounce _.bind(@_save, @), 1000
-    debouncedSave()
+    @debouncedSave()

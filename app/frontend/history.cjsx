@@ -1,7 +1,7 @@
 _ = require 'lodash'
 React = require 'react'
 ReactDOM = require 'react-dom'
-window.Remote = require 'remote'
+window.Remote = require('electron').remote
 _events = Remote.getGlobal 'Events'
 window.emit = _events.emit
 window.Events = {on: _events.frontendOn}

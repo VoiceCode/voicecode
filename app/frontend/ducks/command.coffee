@@ -6,7 +6,7 @@ constants =
   ENABLE_COMMAND: 'ENABLE_COMMAND'
   DISABLE_COMMAND: 'DISABLE_COMMAND'
   CREATE_COMMAND: 'CREATE_COMMAND'
-
+  CHANGE_SPOKEN: 'CHANGE_SPOKEN'
 _.extend @, constants
 _.extend exports, constants
 
@@ -14,7 +14,7 @@ actionCreators =
   createCommand: createAction(@CREATE_COMMAND)
   enableCommand: createAction(@ENABLE_COMMAND)
   disableCommand: createAction(@DISABLE_COMMAND)
-
+  changeSpoken: createAction(@CHANGE_SPOKEN)
 # thunk
 actionCreators.toggleCommand = (id, enabled) ->
   (dispatch, getState) ->
@@ -32,17 +32,19 @@ commandRecord = immutable.Record
   locked: false
   enabled: false
   packageId: 'unpackaged'
-  description: 'no description'
+  description: 'No description'
   internal: false
   tags: []
+  variables: []
 
 exports.reducers =
   commands: (commands = immutable.Map({}), {type, payload}) =>
     switch (type)
+      when @CHANGE_SPOKEN
+        commands.setIn [payload.id, 'spoken'], payload.spoken
       when @CREATE_COMMAND
         command = new commandRecord payload
         commands.set payload.id, command
-
       when @ENABLE_COMMAND
         commands.setIn [payload.id, 'enabled'], true
       when @DISABLE_COMMAND

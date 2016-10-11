@@ -12,7 +12,8 @@ class DragonVocabularyController extends VocabularyController
     @createVocabularyTrainingFile()
 
   createVocabularyTrainingFile: ->
-    file = path.resolve(AssetsController.assetsPath, "generated/vocabulary_training.txt")
+    file = path.resolve(AssetsController.assetsPath
+    , "generated/vocabulary_training.txt")
     fs.writeFileSync file, @generateVocabularyTraining(), 'utf8'
 
   createVocabFile: (filename, phrases) ->
@@ -38,7 +39,8 @@ class DragonVocabularyController extends VocabularyController
     </plist>
     """
 
-    file = path.resolve(AssetsController.assetsPath, "generated/#{filename}.xml")
+    file = path.resolve(AssetsController.assetsPath
+    , "generated/#{filename}.xml")
     fs.writeFileSync file, content, 'utf8'
 
   buildWord: (item, spoken) ->

@@ -13,7 +13,7 @@ class Main extends React.Component
     <div>
       <div className="ui top fixed inverted menu" style={WebkitAppRegion: "drag"}>
           <div className="header item" style={WebkitAppRegion: "drag"}>
-          VoiceCode
+          VoiceCode <sup className="appVersion" >{ Remote.getGlobal('appVersion') }</sup>
           </div>
           <div className="right menu">
             <IndexLink to="/" className="item" activeClassName="active">Log</IndexLink>

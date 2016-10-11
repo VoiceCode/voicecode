@@ -3,7 +3,6 @@ Events.on 'chainShouldExecute', (phrase) ->
     SlaveController.process phrase
   else
     Fiber(->
-      HAS_FIBER = true
       new Chain(phrase).execute()
     ).run()
 
@@ -13,8 +12,6 @@ Events.on 'commandsShouldExecute', (chain) ->
     # FIXME
   else
     Fiber(->
-      HAS_FIBER = true
-      console.log 'commandsShouldExecute', chain
       new Chain().execute(chain, false, true)
     ).run()
 
@@ -37,7 +34,7 @@ class Chain
         delete parsedCommand.a
         parsedCommand
       @applyMouseLatency parsed
-      log 'chainParsed', parsed, JSON.stringify parsed
+      log 'chainParsed', parsed
       parsed
     else
       error 'chainMissingParser', null, "The parser is not initialized -
@@ -51,7 +48,7 @@ class Chain
           chain = callback chain
         chain
       , chain
-      log 'chainPreprocessed', chain, JSON.stringify chain
+      log 'chainPreprocessed', chain
     chainBroken = false
     comboBreaker = (reason) ->
       chainBroken = {reason}
@@ -84,7 +81,7 @@ class Chain
       finally
         if _.isObject chainBroken
           unless chainBroken.error?
-            log 'chainBroken', {link, chain},
+            notify 'chainBroken', {link, chain},
             "#{link.command} broke the chain:\n
             #{chainBroken.reason}"
           else

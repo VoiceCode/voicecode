@@ -14,16 +14,23 @@ class PackageFilter extends React.Component
     @props.filter isnt nextProps.filter
 
   componentDidMount: ->
+    if @props.filter.get('query') isnt ''
+      @refs.queryInput.focus()
+
     $('.dropdown').dropdown({
       transition: 'fade up'
       onChange: (value, text, $selectedItem) =>
         @props.setPackageFilter scope: value
     })
 
+
   componentWillReceiveProps: (nextProps)->
+    next = nextProps.filter.get('query')
+    current = @refs.queryInput.value
+    @refs.queryInput.value = next unless current is next
     if nextProps.filter.get('focused')
       @refs.queryInput.focus()
-    @refs.queryInput.value = nextProps.filter.get('query')
+
 
   onChange: _.debounce(((event) ->
     @props.setPackageFilter query: event.target.value
@@ -84,6 +91,8 @@ class PackageFilter extends React.Component
               type="text"
               ref="queryInput"
               placeholder="Search #{filter.get('scope')}"
+              onBlur={ (event) => setPackageFilter {focused: false} }
+              onFocus={ (event) => setPackageFilter {focused: true} }
               onChange={
                 (event) =>
                   event.persist()

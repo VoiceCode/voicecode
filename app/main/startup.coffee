@@ -4,7 +4,11 @@ Function::property = (prop, desc) ->
 
 process.env.NODE_ENV = 'production' # needed for react
 
-global.developmentMode = process.argv[2]  == 'develop'
+global.developmentMode = process.argv[3]  == 'develop'
+
+powerSaveBlocker = require('electron').powerSaveBlocker
+powerSaveBlocker.start('prevent-app-suspension')
+
 
 if developmentMode
   process.env.NODE_ENV = 'development'
@@ -27,10 +31,12 @@ replify {name: "voicecode_#{suffix}"}, repl
 
 
 global.bundleId = 'io.voicecode.app'
-global.app = require 'app'
+if developmentMode
+  global.bundleId = 'com.github.electron'
+global.app = require('electron').app
+global.appVersion = app.getVersion()
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
-global.Reflect = require 'harmony-reflect'
 settings =
   userAssetsPath: '~/voicecode'
   license: ''
@@ -189,9 +195,8 @@ if developmentMode
 # auto update
 unless developmentMode
   autoUpdater = require 'auto-updater'
-  version = app.getVersion()
   _platform = if platform is 'darwin' then 'osx' else 'win'
-  autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{version}"
+  autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{appVersion}"
   autoUpdater.on 'error', (err) -> error 'autoUpdateError', err
   autoUpdater.on 'update-not-available'
   , -> log 'updateNotAvailable', null

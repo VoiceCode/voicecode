@@ -8,25 +8,21 @@ exec = require 'gulp-exec'
 
 
 gulp.task 'serve', [], ->
-  electron.start ['develop',
+  electron.start ['app/app.js', 'develop',
   '--disable-http-cache',
   '--enable-transparent-visuals']
   gulp.watch 'app/**/*.coffee', ['electron-restart']
-  gulp.watch 'app/frontend/**/*.less', [ 'electron-reload' ]
+  # gulp.watch 'app/frontend/**/*.less', [ 'electron-reload' ]
   # gulp.watch 'src/frontend/**/*.cjsx', [ 'electron-reload' ]
   gulp.watch 'app/frontend/**/*.html', [ 'electron-restart' ]
 
-
-gulp.task 'electron-rebuild', ->
-  exec './node_modules/.bin/electron-rebuild -v 0.34.2 -n 48'
-  return
 
 gulp.task 'electron-reload', ->
   electron.reload()
   return
 
 gulp.task 'electron-restart', ->
-  electron.restart ['develop',
+  electron.restart ['app/app.js','develop',
   '--disable-http-cache',
   '--enable-transparent-visuals']
 

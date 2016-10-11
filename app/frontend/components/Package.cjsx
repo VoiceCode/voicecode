@@ -1,12 +1,18 @@
 React = require 'react'
 {connect} = require 'react-redux'
-{makeFilteredCommandsForPackage,
-packageFilterSelector,
-packageSelector,
-commandSelector
+{
+  makeFilteredCommandsForPackage,
+  packageFilterSelector,
+  packageSelector,
+  commandSelector
 } = require '../selectors'
 CommandList = require './CommandList.cjsx'
-{installPackage, removePackage} = require('../ducks/package').actionCreators
+{
+  installPackage,
+  removePackage,
+  revealPackageOrigin,
+  revealPackageSource
+} = require('../ducks/package').actionCreators
 ApiList = require './ApiList.cjsx'
 {connect} = require 'react-redux'
 {getPackage} = require '../selectors'
@@ -18,7 +24,12 @@ makeMapStateToProps = (state, props)->
     commands: filteredCommandsForPackage state, props
     packageFilter: packageFilterSelector state, props
     pack: packageSelector state, props
-mapDispatchToProps = {installPackage, removePackage}
+mapDispatchToProps = {
+  installPackage,
+  removePackage,
+  revealPackageOrigin,
+  revealPackageSource
+}
 
 Package = class Package extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
@@ -28,8 +39,15 @@ Package = class Package extends React.Component
     pack or commands or scope
   render: ->
     {name, description, installed} = @props.pack
-    {packageFilter, commands, viewMode, installPackage, removePackage} = @props
-    <div className=''>
+    {packageFilter,
+    commands,
+    viewMode,
+    installPackage,
+    removePackage,
+    revealPackageOrigin
+    revealPackageSource,
+    } = @props
+    <div className='package'>
     {
       if packageFilter.get('scope') is 'packages' or viewMode isnt 'commands'
         <div className="ui top attached huge block header">
@@ -59,12 +77,26 @@ Package = class Package extends React.Component
         <div className="ui attached segment">
         {
           if installed
-            <button className="ui black tiny icon button" onClick={ removePackage.bind null, name }>
+            <button className="ui black tiny icon button"
+                    onClick={ removePackage.bind null, name }>
               <i className="trash icon"></i>
             </button>
           else
-            <button className="ui green tiny icon button" onClick={ installPackage.bind null, name }>
+            <button className="ui green tiny icon button"
+                    onClick={ installPackage.bind null, name }>
               <i className="download icon"></i>
+            </button>
+        }
+        {
+          if installed
+            <button className="ui black tiny icon button"
+                    onClick={ revealPackageSource.bind null, name }>
+              <i className="code icon"></i>
+            </button>
+          else
+            <button className="ui black tiny icon button"
+                    onClick={ revealPackageOrigin.bind null, name }>
+              <i className="gitlab icon"></i>
             </button>
         }
         </div>

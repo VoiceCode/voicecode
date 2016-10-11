@@ -69,28 +69,6 @@ class DarwinActions extends Actions
           transformed = SelectionTransformer[transform](contents)
           @string transformed
 
-  revealFinderDirectory: (directory) ->
-    emit 'notUndoable'
-    w = $.NSWorkspace('sharedWorkspace')
-    d = $.NSString('stringWithUTF8String', directory)
-    # finder = $.NSString('stringWithUTF8String', "Finder")
-    w('openFile', d('stringByStandardizingPath'))
-    # w('openFile', d, 'withApplication', finder)
-
-  setVolume: (volume) ->
-    if volume >= 0 and volume <= 100
-      @applescript """
-      set volume output volume #{volume}
-      """
-
-  getCurrentVolume: ->
-    volume = @applescript """
-    output volume of (get volume settings)
-    """
-    if volume?.length
-      parseInt volume
-    else
-      undefined
 
   clickServiceItem: (item) ->
     emit 'notUndoable'
