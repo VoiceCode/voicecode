@@ -46,6 +46,9 @@ module.exports = new class MainController
   keyUpHandler: (event) ->
     emit 'keyboard.keyUp', event
 
+  darwinEventHandler: (event) ->
+    emit event.event, event
+
   listenOnSocket: (socketPath, callback) ->
     fs.stat socketPath, (error) =>
       unless error
@@ -63,6 +66,8 @@ module.exports = new class MainController
         @mouseLeftClickHandler event
       when 'keyUp'
         @keyUpHandler event
+      else
+        @darwinEventHandler event
 
   deviceHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
