@@ -31,7 +31,11 @@ logEntryRecord = immutable.Record
 
 doNotification = (entry) ->
   return unless entry.type is 'notify'
-  new Notification entry.event
+  if _.isPlainObject entry.event
+    {title, options} = entry.event
+    new Notification title, options
+  else
+    new Notification entry.event
   
 exports.reducers =
   logs: (logs = immutable.List([]), {type, payload}) =>

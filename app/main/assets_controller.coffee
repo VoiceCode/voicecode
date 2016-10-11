@@ -17,11 +17,9 @@ class AssetsController
     @createSettingsFile()
     @createDirectory @assetsPath + '/packages', (err, created) =>
       return if err
-      if created
-        PackagesManager.downloadBasePackages @assetsPath + '/packages/'
-        , ->
-          emit 'assetsControllerReady'
-      else
+      # always make sure base packages get loaded, in case there was a previous failure
+      PackagesManager.downloadBasePackages @assetsPath + '/packages/'
+      , ->
         emit 'assetsControllerReady'
 
   createDirectory: (path, callback) ->

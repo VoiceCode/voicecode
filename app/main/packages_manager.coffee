@@ -7,12 +7,7 @@ npm = require 'npm'
 class PackagesManager
   constructor: ->
     Events.on 'installPackage', @installPackage.bind(@)
-
-    Events.on 'removePackage', (name) ->
-      fs.remove AssetsController.assetsPath + "/packages/#{name}/"
-      , (err) ->
-        if err then return error 'removePackageFailed', err, err.message
-        else log 'packageRemoved', name, "Package removed: #{name}"
+    Events.on 'removePackage', @removePackage.bind(@) 
     Events.once 'packageAssetsLoaded', =>
      # register all non-installed packages
       @getPackageRegistry (err, registry) ->
@@ -31,6 +26,9 @@ class PackagesManager
     repo = @registry.all[name].repo
     destination = AssetsController.assetsPath + "/packages/#{name}"
     temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
+    # skip it if it exists
+    try if fs.lstatSync(destination).isDirectory()
+        return callback? null, true
     git.clone temporary, repo, (err) ->
       if err
         error 'installPackageFailed', err, err.message
@@ -108,48 +106,18 @@ class PackagesManager
         adder(true)
       true
     flow.wait()
-# class PackageSettingsManager extends require('./settings_manager')
-#   # singleton
-#   instance = null
-#   constructor: ->
-#     if instance
-#       return instance
-#     else
-#       instance = super("generated/packages")
-#       @processSettings()
-#       @subscribeToEvents()
-#
-#   # happens once on startup
-#   processSettings: ->
-#     for packageId, packageInfo of @settings
-#       if packageInfo.enabled
-#         @installPackage packageInfo
-#         @enablePackage packageInfo
-#       else
-#         @disablePackage packageInfo
-#
-#     emit 'packages:loaded'
-#
-#   subscribeToEvents: ->
-#     Events.on 'packageEnabled', (packageId) =>
-#       @enable [packageId]
-#
-#     Events.on 'packageDisabled', (packageId) =>
-#       @disable [packageId]
-#
-#     Events.on 'packageNotFound', (packageId) =>
-#       delete @settings[packageId]
-#       @save()
-#
-#   enable: (names) ->
-#     for name in names
-#       @settings[name] = true
-#     @save()
-#
-#   disable: (names) ->
-#     for name in names
-#       delete @settings[name]
-#     @save()
+  removePackage: (name) ->
+    if name in @registry.base
+      return notify
+        title: "#{name} is a base package"
+        options:
+          body: "It should not be removed" 
+    fs.remove AssetsController.assetsPath + "/packages/#{name}/"
+    , (err) ->
+      if err
+        return error 'removePackageFailed', err, err.message
+      else
+        log 'packageRemoved', name, "Package removed: #{name}"
+
 
 module.exports = new PackagesManager
-  # PackageSettingsManager: new PackageSettingsManager()
