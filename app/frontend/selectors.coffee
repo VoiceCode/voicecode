@@ -101,7 +101,7 @@ scopeMap = {
 }
 _makeFilteredCommandsForPackage = ->
   createSelector [
-    packageFilterQuerySelector,
+    commandFilterQuerySelector,
     commandFilterScopeSelector
     makeCommandsForPackageSelector(),
   ], (query, scope, commands) ->
@@ -109,6 +109,7 @@ _makeFilteredCommandsForPackage = ->
       query = new RegExp query, 'gi'
       scope = scopeMap[scope]
       commands = commands.filter (command) ->
+        console.log scope, query
         if command[scope]?
           subject = command[scope]
           unless _.isString subject

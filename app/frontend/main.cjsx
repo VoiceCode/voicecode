@@ -26,6 +26,8 @@ subscribeToRemoteEvents = ->
   events =
     'apiCreated': 'createApi'
     'packageCreated': 'createPackage'
+    'packageUpdated': 'updatePackage'
+    'packageRemoved': 'removePackage'
     'commandCreated': 'createCommand'
     'commandEnabled': 'enableCommand'
     'commandDisabled': 'disableCommand'

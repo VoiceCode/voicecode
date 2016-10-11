@@ -12,15 +12,14 @@ class Footer extends React.Component
     {updateAvailable, installUpdate} = @props
     <div className='footer ui bottom fixed mini inverted menu'>
       <div className='right menu'>
+        {
+          if updateAvailable
+              <a className='item inverted yellow'
+                   onClick={ installUpdate } >
+                   <i className="yellow arrow circle up icon"></i>
+              UPDATE </a>
+        }
         <div className='item'>
-          {
-            if updateAvailable
-              <div className='item'>
-                <div className='ui inverted yellow button'
-                     onClick={ installUpdate }
-                >UPDATE</div>
-              </div>
-          }
           <div className="appVersion" >v { Remote.getGlobal('appVersion') }</div>
         </div>
       </div>

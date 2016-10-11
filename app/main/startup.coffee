@@ -62,7 +62,6 @@ require('../lib/utility/deepExtend')
 global.path = require 'path'
 global.$ = require 'nodobjc'
 global.Events = require './event_emitter'
-global.PackagesManager = require './packages_manager'
 global.requireDirectory = require 'require-directory'
 global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
@@ -85,9 +84,8 @@ menubarOptions =
 
 global.menubar = require('menubar') menubarOptions
 
-unless developmentMode
-  _.each process.mainModule.paths, (path) ->
-    require('module').globalPaths.push path
+_.each process.mainModule.paths, (path) ->
+  require('module').globalPaths.push path
 
 menubar.on 'ready', ->
   menubar.showWindow()
@@ -139,8 +137,9 @@ Events.once 'applicationShouldStart', ->
     global.Actions = require "#{platformLib}/actions"
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
     global.AssetsController = require './assets_controller'
+    global.PackagesManager = require './packages_manager'
     startupFlow.wait 'assetsControllerReady'
-    PackagesManager.updateAll startupFlow
+    # PackagesManager.updateAll startupFlow
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'

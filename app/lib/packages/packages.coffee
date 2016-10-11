@@ -22,12 +22,12 @@ class Packages
     # only flies while we develop...
     # otherwise need 2 cleanup and re-instantiate
     if @packages[options.name]?
-      emit 'packageCreated', @packages[options.name]
+      emit 'packageCreated', {pack: @packages[options.name]}
       return @packages[options.name]
 
     instantiated = new Package options
     @packages[options.name] = instantiated
-    emit 'packageCreated', instantiated
+    emit 'packageCreated', {pack: instantiated}
     Events.once "assetEvaluated", ->
       unless instantiated.hasDeferred
         emit "#{instantiated.name}PackageReady", {pack: instantiated}

@@ -5,6 +5,7 @@ immutable = require 'immutable'
 constants =
   CREATE_PACKAGE: 'CREATE_PACKAGE'
   UPDATE_PACKAGE: 'UPDATE_PACKAGE'
+  REMOVE_PACKAGE: 'REMOVE_PACKAGE'
 
 _.extend @, constants
 _.extend exports, constants
@@ -12,12 +13,17 @@ _.extend exports, constants
 exports.actionCreators =
   createPackage: createAction @CREATE_PACKAGE
   updatePackage: createAction @UPDATE_PACKAGE
-  installPackage: (name) ->
+  removePackage: createAction @REMOVE_PACKAGE
+  shouldInstallPackage: (name, event) ->
+    # event.target.classList.add 'disabled'
     (dispatch, getState) ->
       emit 'installPackage', name
-  removePackage: (name) ->
+  shouldRemovePackage: (name) ->
     (dispatch, getState) ->
       emit 'removePackage', name
+  shouldUpdatePackage: (name) ->
+    (dispatch, getState) ->
+      emit 'updatePackage', name
   revealPackageSource: (name) ->
     (dispatch, getState) ->
       emit 'commandsShouldExecute', [{
@@ -37,6 +43,7 @@ packageRecord = immutable.Record
   description: 'No description'
   installed: false
   repo: ''
+  repoStatus: {behind: false, diverged: false}
 
 apiRecord = immutable.Record
   name: null
@@ -47,16 +54,20 @@ apiRecord = immutable.Record
 exports.reducers =
   packages: (packages = immutable.Map({}), {type, payload}) =>
     switch type
-      when @CREATE_PACKAGE
+      when @CREATE_PACKAGE or @UPDATE_PACKAGE
+        payload = payload.pack
+        payload = payload.options
         pack = new packageRecord payload
         packages.set payload.name, pack
-      when @UPDATE_PACKAGE
-        packages.mergeDeepIn [payload.name], payload
+      when @REMOVE_PACKAGE
+        packages.updateIn [payload]
+        , (pack) -> pack.set 'installed', false
       else
         packages
   package_commands: (package_commands = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
+        payload = payload.pack
         package_commands.set payload.name, immutable.List []
       when CREATE_COMMAND
         {id, spoken, packageId, enabled} = payload
@@ -67,6 +78,7 @@ exports.reducers =
   package_apis: (package_apis = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
+        payload = payload.pack
         package_apis.set payload.name, immutable.List []
       when CREATE_API
         package_apis.updateIn [payload.packageId],

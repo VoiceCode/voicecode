@@ -6,21 +6,24 @@ npm = require 'npm'
 
 class PackagesManager
   constructor: ->
+    @packagePath = AssetsController.assetsPath + "/packages/"
+    @getPackageRegistry()
     Events.on 'installPackage', @installPackage.bind(@)
-    Events.on 'removePackage', @removePackage.bind(@) 
+    Events.on 'removePackage', @removePackage.bind(@)
     Events.once 'packageAssetsLoaded', =>
-     # register all non-installed packages
-      @getPackageRegistry (err, registry) ->
-        unless err
-          _.each registry.all, ({repo, description}, name) ->
-            pack = Packages.get name
-            pack ?= Packages.register {
-              name,
-              description,
-              installed: false,
-              repo
-            }
-            true
+      # register all non-installed packages
+      _.each @registry.all, ({repo, description}, name) ->
+        pack = Packages.get name
+        pack ?= Packages.register {
+          name,
+          description,
+          installed: false,
+          repo
+        }
+        pack.options.repo = repo
+        true
+        @fetchAll()
+
   installPackage: (name, callback) ->
     Packages.remove name
     repo = @registry.all[name].repo
@@ -49,8 +52,12 @@ class PackagesManager
           error 'installPackageFailed', err, err.message
           return callback? err
         callback? null, true
+
   getPackageRegistry: (callback) ->
-    callback ?= ->
+    callback ?= (err) ->
+      if err
+        return error 'packagesManagerRegistryError'
+        , err, "Failed retrieving package registry: #{err.message}"
     http.get(
       host: 'updates.voicecode.io'
       path: '/packages/registry/raw/master/packages.json'
@@ -72,6 +79,7 @@ class PackagesManager
     ).on('error', (e) ->
       callback e
     )
+
   downloadBasePackages: (path, callback) ->
     @getPackageRegistry (err, registry) =>
       if err?
@@ -87,31 +95,39 @@ class PackagesManager
           true
         cloneFlow.wait()
         callback null, true
+
   installAllPackages: ->
     _.every @registry.all, (info, name) ->
       emit 'installPackage', name
       true
-  updateAll: (flow) ->
-    packagePath = AssetsController.assetsPath + "/packages/"
-    installed = fs.readdirSync packagePath
-    _.each installed, (repo) ->
-      return true if repo[0] is '.' # TODO any other weird files to ignore?
+
+  getInstalled: (noCache = false) ->
+    return @installed if @installed and not noCache
+    @installed = fs.readdirSync @packagePath
+    @installed = _.reject @installed, (repo) -> repo.match /\..*/
+
+  updateAllSync: (flow) ->
+    installed = @getInstalled()
+    _.each installed, (repo) =>
       adder = flow.add()
-      git("#{packagePath}#{repo}").pull 'origin', 'master', (err) ->
+      git("#{@packagePath}#{repo}").pull 'origin', 'master', (err) ->
         if err
-          error 'packagesManagerUpdateError', {repo, err}
+          error 'packagesManagerUpdateError'
+          , {repo: "#{@packagePath}#{repo}", err}
           , "Failed to update package: #{repo}"
         else
-          emit 'packageUpdated', repo
+          emit 'packageRepoUpdated'
+          , {repo: "#{@packagePath}#{repo}"}
         adder(true)
       true
     flow.wait()
+
   removePackage: (name) ->
     if name in @registry.base
       return notify
         title: "#{name} is a base package"
         options:
-          body: "It should not be removed" 
+          body: "It should not be removed"
     fs.remove AssetsController.assetsPath + "/packages/#{name}/"
     , (err) ->
       if err
@@ -119,5 +135,17 @@ class PackagesManager
       else
         log 'packageRemoved', name, "Package removed: #{name}"
 
+  fetchAll: ->
+    installed = @getInstalled()
+    _.each installed, (repoName) =>
+      repo = git("#{@packagePath}#{repoName}")
+      repo.fetch 'origin'
+      , (err, result) ->
+        if err
+          return error 'packagesManagerFetchError'
+          , repo, "Failed to fetch #{repoName} repository8"
+        repo.status (err, status) ->
+          emit 'packageRepoStatusUpdate'
+          , {repoName, status}
 
 module.exports = new PackagesManager

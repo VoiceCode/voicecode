@@ -8,8 +8,9 @@ React = require 'react'
 } = require '../selectors'
 CommandList = require './CommandList.cjsx'
 {
-  installPackage,
-  removePackage,
+  shouldInstallPackage,
+  shouldRemovePackage,
+  shouldUpdatePackage,
   revealPackageOrigin,
   revealPackageSource
 } = require('../ducks/package').actionCreators
@@ -25,8 +26,9 @@ makeMapStateToProps = (state, props)->
     packageFilter: packageFilterSelector state, props
     pack: packageSelector state, props
 mapDispatchToProps = {
-  installPackage,
-  removePackage,
+  shouldInstallPackage,
+  shouldRemovePackage,
+  shouldUpdatePackage,
   revealPackageOrigin,
   revealPackageSource
 }
@@ -38,12 +40,13 @@ Package = class Package extends React.Component
     scope = @props.packageFilter.get('scope') isnt nextProps.packageFilter.get('scope')
     pack or commands or scope
   render: ->
-    {name, description, installed} = @props.pack
+    {name, description, installed, repoStatus} = @props.pack
     {packageFilter,
     commands,
     viewMode,
-    installPackage,
-    removePackage,
+    shouldInstallPackage,
+    shouldRemovePackage,
+    shouldUpdatePackage,
     revealPackageOrigin
     revealPackageSource,
     } = @props
@@ -74,31 +77,41 @@ Package = class Package extends React.Component
           }
         </div>
       else
-        <div className="ui attached segment">
+        <div className="ui attached icon menu">
         {
           if installed
-            <button className="ui black tiny icon button"
-                    onClick={ removePackage.bind null, name }>
+            <a className="item"
+                    onClick={ shouldRemovePackage.bind null, name }>
               <i className="trash icon"></i>
-            </button>
-          else
-            <button className="ui green tiny icon button"
-                    onClick={ installPackage.bind null, name }>
+            </a>
+        }{
+          if not installed
+            <a className="item"
+                    onClick={ shouldInstallPackage.bind null, name }>
               <i className="download icon"></i>
-            </button>
+            </a>
         }
-        {
-          if installed
-            <button className="ui black tiny icon button"
-                    onClick={ revealPackageSource.bind null, name }>
-              <i className="code icon"></i>
-            </button>
-          else
-            <button className="ui black tiny icon button"
-                    onClick={ revealPackageOrigin.bind null, name }>
+
+        <div className='right icon menu'>
+          {
+            if installed and true #repoStatus.behind
+              <a className="item"
+                      onClick={ shouldUpdatePackage.bind null, name }>
+                <i className="yellow arrow circle up icon"></i>
+              </a>
+          }
+          {
+            if installed
+              <a className="item"
+                      onClick={ revealPackageSource.bind null, name }>
+                <i className="code icon"></i>
+              </a>
+          }
+          <a className='item inverted'
+                onClick={ revealPackageOrigin.bind null, name }>
               <i className="gitlab icon"></i>
-            </button>
-        }
+          </a>
+        </div>
         </div>
     }
     </div>

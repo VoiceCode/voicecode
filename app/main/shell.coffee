@@ -12,7 +12,7 @@ Execute = (script, options = {}, callback = null) ->
     result = cp[method](script, options, callback).toString('utf8')
     result
   catch err
-    unless options.silent
+    unless options.silent # TODO: rewrite, this does not silence stdout/stderr
       error null, null, err
       error null, null, script
 
