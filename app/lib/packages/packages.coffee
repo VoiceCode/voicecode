@@ -9,7 +9,6 @@ class Packages
     Events.on 'commandCreated', (command, name) =>
       @get(command.packageId)._commands[name] = command
     # Events.on 'packageRemoved', (name) =>
-    #   _.each @get(name)
     #   @remove name
   register: (options) ->
     options.installed ?= true
@@ -66,7 +65,6 @@ class Packages
       true
 
   remove: (name) ->
-    delete @packages[name]
-
+    # TODO: fix
 
 module.exports = new Packages

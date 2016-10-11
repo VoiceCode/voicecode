@@ -9,6 +9,7 @@ class PackagesManager
     @packagePath = AssetsController.assetsPath + "/packages/"
     @getPackageRegistry()
     Events.on 'installPackage', @installPackage.bind(@)
+    Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
@@ -22,23 +23,30 @@ class PackagesManager
         }
         pack.options.repo = repo
         true
-        @fetchAll()
+      @fetchAll()
+      @getRecentCommits()
 
   installPackage: (name, callback) ->
-    Packages.remove name
+    callback ?= ->
     repo = @registry.all[name].repo
     destination = AssetsController.assetsPath + "/packages/#{name}"
     temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
     # skip it if it exists
     try if fs.lstatSync(destination).isDirectory()
-        return callback? null, true
+      return callback? null, true
+    Packages.remove name
+    callback = _.wrap callback, (callback, err) ->
+      callback.apply @, _.toArray(arguments)[1..]
+      if err
+        return error 'packageRepoInstallError', err, err.message
+      emit 'packageRepoInstalled', {repo: destination, pack: name}
+
     git.clone temporary, repo, (err) ->
       if err
-        error 'installPackageFailed', err, err.message
-        return callback? err
+        return callback err
       npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
       npmSettings = [
-        'npm_config_target=1.4.3'
+        "npm_config_target=#{process.versions.electron}"
         'npm_config_arch=x64'
         'npm_config_disturl=https://atom.io/download/atom-shell'
         'npm_config_runtime=electron'
@@ -49,9 +57,8 @@ class PackagesManager
       temporary + " && mv #{temporary} #{destination}"
       , (err) ->
         if err
-          error 'installPackageFailed', err, err.message
-          return callback? err
-        callback? null, true
+          return callback err
+        callback null, true
 
   getPackageRegistry: (callback) ->
     callback ?= (err) ->
@@ -106,21 +113,30 @@ class PackagesManager
     @installed = fs.readdirSync @packagePath
     @installed = _.reject @installed, (repo) -> repo.match /\..*/
 
-  updateAllSync: (flow) ->
-    installed = @getInstalled()
-    _.each installed, (repo) =>
-      adder = flow.add()
-      git("#{@packagePath}#{repo}").pull 'origin', 'master', (err) ->
-        if err
-          error 'packagesManagerUpdateError'
-          , {repo: "#{@packagePath}#{repo}", err}
-          , "Failed to update package: #{repo}"
-        else
-          emit 'packageRepoUpdated'
-          , {repo: "#{@packagePath}#{repo}"}
-        adder(true)
-      true
-    flow.wait()
+  # updateAllSync: (flow) ->
+  #   installed = @getInstalled()
+  #   _.each installed, (repo) =>
+  #     adder = flow.add()
+  #     git("#{@packagePath}#{repo}").pull 'origin', 'master', (err) ->
+  #       if err
+  #         error 'packagesManagerUpdateError'
+  #         , {repo: "#{@packagePath}#{repo}", err}
+  #         , "Failed to update package: #{repo}"
+  #       else
+  #         emit 'packageRepoUpdated'
+  #         , {repo: "#{@packagePath}#{repo}"}
+  #       adder(true)
+  #     true
+  #   flow.wait()
+  updatePackage: (name) ->
+    git("#{@packagePath}#{name}").pull 'origin', 'master', (err) ->
+      if err
+        error 'packageRepoUpdateError'
+        , {repo: "#{@packagePath}#{name}", pack: name, err}
+        , "Failed to update package: #{name}"
+      else
+        emit 'packageRepoUpdated'
+        , {repo: "#{@packagePath}#{name}", pack: name}
 
   removePackage: (name) ->
     if name in @registry.base
@@ -145,7 +161,9 @@ class PackagesManager
           return error 'packagesManagerFetchError'
           , repo, "Failed to fetch #{repoName} repository8"
         repo.status (err, status) ->
-          emit 'packageRepoStatusUpdate'
+          emit 'packageRepoStatusUpdated'
           , {repoName, status}
+
+  getRecentCommits: ->
 
 module.exports = new PackagesManager

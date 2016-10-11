@@ -139,7 +139,6 @@ Events.once 'applicationShouldStart', ->
     global.AssetsController = require './assets_controller'
     global.PackagesManager = require './packages_manager'
     startupFlow.wait 'assetsControllerReady'
-    # PackagesManager.updateAll startupFlow
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -208,8 +207,16 @@ unless developmentMode
   , -> log 'updateAvailable', null, "Update available, downloading..."
   autoUpdater.on 'update-downloaded'
   , ->
-    Events.on 'installUpdate', ->
+    Events.on 'applicationShouldUpdate', ->
       autoUpdater.quitAndInstall()
     notify 'updateDownloaded', true, "Update downloaded, ready to update."
 
   autoUpdater.checkForUpdates()
+
+
+Events.on 'applicationShouldQuit', ->
+  process.nextTick ->
+    process.exit()
+Events.on 'applicationShouldRestart', ->
+  app.relaunch()
+  emit('applicationShouldQuit')

@@ -14,7 +14,7 @@ class Package
       @registerScope()
       @setDefaultCommandOptions()
       @setDefaultEditOptions()
-      Events.on 'packageRepoStatusUpdate'
+      Events.on 'packageRepoStatusUpdated'
       , ({repoName, status}) =>
         if repoName is @name
           @options.repoStatus = status

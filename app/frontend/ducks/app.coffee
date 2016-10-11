@@ -8,6 +8,7 @@ actionCreators = _.reduce {
   SET_LOG_EVENTS: 'SET_LOG_EVENTS'
   SET_RADIO_SILENCE: 'SET_RADIO_SILENCE'
   SET_UPDATE_AVAILABLE: 'SET_UPDATE_AVAILABLE'
+  SET_RESTART_NEEDED: 'SET_RESTART_NEEDED'
 }
 , (ac, c) =>
   ac[_.camelCase(c)] = createAction c
@@ -17,9 +18,9 @@ actionCreators = _.reduce {
 , {}
 
 # thunk
-actionCreators.installUpdate = ->
+actionCreators.updateApplication = ->
   (dispatch, getState) ->
-    emit 'installUpdate', true
+    emit 'applicationShouldUpdate', true
 
 actionCreators.appStart = ->
   (dispatch, getState) ->
@@ -27,20 +28,28 @@ actionCreators.appStart = ->
 
 actionCreators.toggleStickyWindow = ->
   (dispatch, getState) ->
-    shouldStick = not getState().get 'stickyWindow'
+    shouldStick = not getState().get 'sticky_window'
     emit 'toggleStickyWindow',
       id: 'main',
       shouldStick: shouldStick
 
 actionCreators.toggleLogEvents = ->
   (dispatch, getState) ->
-    logEvents = not getState().get 'logEvents'
+    logEvents = not getState().get 'log_events'
     emit 'logEvents', logEvents
 
 actionCreators.toggleRadioSilence = ->
   (dispatch, getState) ->
-    radioSilence = not getState().get 'radioSilence'
+    radioSilence = not getState().get 'radio_silence'
     emit 'radioSilence', radioSilence
+
+actionCreators.restartApplication = ->
+  (dispatch, getState) ->
+    emit 'applicationShouldRestart'
+
+actionCreators.quitApplication = ->
+  (dispatch, getState) ->
+    emit 'applicationShouldQuit'
 
 _.extend actionCreators, changePage: (page = '/') ->
   (dispatch, getState) ->
@@ -50,16 +59,18 @@ _.extend actionCreators, changePage: (page = '/') ->
 module.exports.actionCreators = actionCreators
 
 exports.reducers =
-  isImmutable: (state = true) -> state # not a 🐛
-  logEvents: (state = developmentMode, {type, payload}) =>
+  is_immutable: (state = true) -> state # not a 🐛
+  restart_needed: (state = false, {type, payload}) =>
+    if type is @SET_RESTART_NEEDED then payload else state
+  log_events: (state = developmentMode, {type, payload}) =>
     if type is @SET_LOG_EVENTS then payload else state
-  radioSilence: (state = false, {type, payload}) =>
+  radio_silence: (state = false, {type, payload}) =>
     if type is @SET_RADIO_SILENCE then payload else state
-  stickyWindow: (state = false, {type, payload}) =>
+  sticky_window: (state = false, {type, payload}) =>
     if type is @SET_STICKY_WINDOW then payload.shouldStick else state
-  updateAvailable: (state = false, {type, payload}) =>
+  update_available: (state = false, {type, payload}) =>
     if type is @SET_UPDATE_AVAILABLE then payload else state
-  currentApplication: (state = '', {type, payload}) =>
+  current_application: (state = '', {type, payload}) =>
     switch type
       when @SET_CURRENT_APPLICATION
         state = payload.name

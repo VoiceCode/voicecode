@@ -13,7 +13,7 @@ class PackageList extends React.Component
     {packages, viewMode} = @props
     <div className="">
     {
-      packages.map (pack) ->
+      packages.valueSeq().map (pack) ->
         <Package key={ pack.get('name') } packageId={ pack.get('name')} viewMode={ viewMode }/>
     }
     </div>

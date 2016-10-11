@@ -5,6 +5,7 @@ classNames = require 'classnames'
 {commandFilterSelector} = require '../selectors'
 require('semantic-ui-css/components/transition.js')
 require('semantic-ui-css/components/dropdown.js')
+
 mapDispatchToProps = {setCommandFilter}
 mapStateToProps = (state, props) ->
   filter: commandFilterSelector state
@@ -46,7 +47,7 @@ class CommandFilter extends React.Component
       'icon': true
       'tag': scope is 'tags'
       'cube': scope is 'packages'
-      'announcement': scope is 'commands'
+      'unmute': scope is 'commands'
       'file text outline': scope is 'descriptions'
 
   render: ->
@@ -59,6 +60,7 @@ class CommandFilter extends React.Component
               'item': true,
               'active': filter.get('state') is state) }
             onClick={ setCommandFilter.bind @, {state} }
+            title={ "show #{state}" }
           >
           <i className={ classNames(
             'icon': true,
@@ -82,7 +84,7 @@ class CommandFilter extends React.Component
               <div className='menu'>
                 {
                   ['tags', 'packages', 'commands', 'descriptions'].map (scope) =>
-                    <div key={ scope } className={ @iconsFor scope, false } data-value={ scope }>
+                    <div key={ scope } className={ @iconsFor scope, false } data-value={ scope } title={ "search #{scope}" }>
                       <i className={ @iconsFor scope }></i>
                     </div>
                 }

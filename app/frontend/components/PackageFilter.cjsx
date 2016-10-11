@@ -33,22 +33,27 @@ class PackageFilter extends React.Component
     {setPackageFilter, filter} = @props
     <div className="ui fixed secondary pointing page menu">
       {
-        ['all', 'enabled', 'disabled'].map (state) =>
-          <a key={ state }
-            className={ classNames(
-              'item': true,
-              'active': filter.get('state') is state) }
-            onClick={ setPackageFilter.bind @, {state} }
-          >
-          <i className={ classNames(
-            'icon': true,
-            'grey': filter.get('state') isnt state
-            'black': filter.get('state') is state
-            'circle': state is 'all'
-            'plus circle': state is 'enabled'
-            'minus circle': state is 'disabled'
-          ) }></i>
-          </a>
+        _.map {
+          all: 'all',
+          installed: 'enabled',
+          'not installed': 'disabled'
+          }, (state, key) =>
+            <a key={ state }
+              className={ classNames(
+                'item': true,
+                'active': filter.get('state') is state) }
+              onClick={ setPackageFilter.bind @, {state} }
+              title={ "show #{key}" }
+            >
+            <i className={ classNames(
+              'icon': true,
+              'grey': filter.get('state') isnt state
+              'black': filter.get('state') is state
+              'circle': state is 'all'
+              'plus circle': state is 'enabled'
+              'minus circle': state is 'disabled'
+            ) }></i>
+            </a>
       }
 
       <div className="right menu">

@@ -5,69 +5,68 @@ immutable = require 'immutable'
 packageSelector = (state, props) ->
   state.getIn ['packages', props.packageId]
 
-packagesSelector = (state, {viewMode}) ->
-  packages = state.get 'packages'
-  packages = packages.sort (a, b) ->
-    a.get('name').localeCompare(b.get('name'))
-  if viewMode is 'commands'
-    packages = packages.filter (pack) ->
-      pack.get 'installed'
-  packages
+packagesSelector = (state, props) ->
+  state.get 'packages'
+
 packageFilterSelector = (state, props) ->
   state.get 'package_filter'
 
 packageFilterQuerySelector = (state, props) ->
   packageFilterSelector(state).get 'query'
+
 packageFilterStateSelector = (state) ->
   packageFilterSelector(state).get 'state'
 
-currentQuerySelector = (state, props) ->
+currentFilterQuerySelector = (state, props) ->
   if props.viewMode is 'commands'
     commandFilterQuerySelector(state, props)
   else
     packageFilterQuerySelector(state, props)
 
-filteredPackagesSelector = createSelector [
-  currentQuerySelector,
-  packageFilterStateSelector,
-  packagesSelector,
-  ], (query, state, packages) ->
-    unless state is 'all'
-      packages = packages.filter (pack) ->
-        pack.get('installed') is (state is 'enabled')
-    if query isnt ''
-      query = new RegExp query, 'gi'
-      packages = packages.filter (pack) ->
-        query.test pack.get('name')
-    packages
-
+currentFilterStateSelector = (state, props) ->
+  if props.viewMode is 'commands'
+    'enabled' # HACK: on commands page - drop filtering
+  else
+    packageFilterStateSelector(state, props)
 
 commandFilterSelector = (state, props) ->
   state.get 'command_filter'
 
 commandFilterQuerySelector = (state, props) ->
   commandFilterSelector(state).get 'query'
+
 commandFilterStateSelector = (state) ->
   commandFilterSelector(state).get 'state'
+
 commandFilterScopeSelector = (state) ->
   commandFilterSelector(state).get 'scope'
-
-filteredCommandsSelector = createSelector [
-  packagesSelector,
-  commandFilterQuerySelector,
-  commandFilterScopeSelector
-  ], (packages, query, scope) ->
-    if query isnt '' and scope is 'packages'
-      query = new RegExp query, 'gi'
-      packages = packages.filter (pack) ->
-        query.test pack.get('name')
-    packages
 
 commandsSelector = (state) ->
   state.get 'commands'
 
 commandSelector = (state, props) ->
   commandsSelector(state).get props.commandId
+
+viewModeSelector = (state, {viewMode}) -> viewMode
+
+filteredPackagesSelector =
+  createSelector [
+    viewModeSelector,
+    currentFilterQuerySelector,
+    currentFilterStateSelector,
+    commandFilterScopeSelector,
+    packagesSelector
+    ], (viewMode, query, state, scope, packages) ->
+      unless state is 'all'
+        packages = packages.filter (pack) ->
+          pack.get('installed') is (state is 'enabled')
+
+      scope = 'packages' unless viewMode is 'commands'
+      if query isnt '' and scope is 'packages'
+        query = new RegExp query, 'i'
+        packages = packages.filter (pack) ->
+          query.test pack.get('name')
+      packages
 
 makeCommandsForPackageSelector = ->
   createSelector [
@@ -84,7 +83,6 @@ makeCommandsForPackageSelector = ->
 commandsForPackageSelector = (state, props) ->
   state.get('package_commands').get props.packageId
 
-
 makeFilteredCommandsForPackage = ->
   createSelector [
     commandFilterStateSelector,
@@ -94,11 +92,13 @@ makeFilteredCommandsForPackage = ->
       return commands.filter (command) ->
         command.enabled is (state is 'enabled')
     commands
+
 scopeMap = {
   tags: 'tags'
   commands: 'spoken'
   descriptions: 'description'
 }
+
 _makeFilteredCommandsForPackage = ->
   createSelector [
     commandFilterQuerySelector,
@@ -106,10 +106,9 @@ _makeFilteredCommandsForPackage = ->
     makeCommandsForPackageSelector(),
   ], (query, scope, commands) ->
     if query isnt '' and scope isnt 'packages'
-      query = new RegExp query, 'gi'
+      query = new RegExp query, 'i'
       scope = scopeMap[scope]
-      commands = commands.filter (command) ->
-        console.log scope, query
+      return commands.filter (command) ->
         if command[scope]?
           subject = command[scope]
           unless _.isString subject
@@ -124,11 +123,16 @@ implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
 
 showingEventsSelector = (state, props) ->
-  state.get('logEvents')
+  state.get('log_events')
+
 radioSilenceSelector = (state, props) ->
-  state.get('radioSilence')
+  state.get('radio_silence')
+
 updateAvailableSelector = (state, props) ->
-  state.get('updateAvailable')
+  state.get('update_available')
+
+restartNeededSelector = (state) ->
+  state.get 'restart_needed'
 
 _.assign exports, {
   apisForPackage
@@ -138,6 +142,7 @@ _.assign exports, {
   radioSilenceSelector
   showingEventsSelector
   packageFilterSelector
+  restartNeededSelector
   commandFilterSelector
   updateAvailableSelector
   filteredPackagesSelector
@@ -148,7 +153,7 @@ _.assign exports, {
 
 # history window selectors
 currentApplicationSelector = (state) ->
-  state.get('currentApplication')
+  state.get('current_application')
 
 chainsSelector = (state) ->
   state.get('chains')
@@ -156,7 +161,6 @@ chainsSelector = (state) ->
 activeChainSelector = createSelector currentApplicationSelector, chainsSelector
 , (currentApplication, chains) ->
   chains.get currentApplication
-
 
 _.assign exports, {
   activeChainSelector

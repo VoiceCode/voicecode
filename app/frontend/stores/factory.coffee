@@ -24,7 +24,7 @@ _createStore = (ducks) ->
     if type is '__MUTABLE'
       return inputState.asMutable()
     if type is '__IMMUTABLE'
-      return inputState.asImmutable().set 'isImmutable', true
+      return inputState.asImmutable().set 'is_immutable', true
     rootReducer.apply @, arguments
 
   router = routerMiddleware(hashHistory)

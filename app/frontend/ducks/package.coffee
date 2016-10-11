@@ -58,7 +58,9 @@ exports.reducers =
         payload = payload.pack
         payload = payload.options
         pack = new packageRecord payload
-        packages.set payload.name, pack
+        packages = packages.set payload.name, pack
+        packages.sort (a, b) ->
+          a.get('name').localeCompare(b.get('name'))
       when @REMOVE_PACKAGE
         packages.updateIn [payload]
         , (pack) -> pack.set 'installed', false
