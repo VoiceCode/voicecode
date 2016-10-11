@@ -68,9 +68,12 @@ global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 global.windowController = require './window_controller'
+icon = "#{projectRoot}/assets/vc_tray.png"
+if developmentMode
+  icon = "#{projectRoot}/assets/vc_tray_develop.png"
 menubarOptions =
   index: "file://#{projectRoot}/frontend/main.html"
-  icon: "#{projectRoot}/assets/vc_tray.png"
+  icon: icon
   width: 800
   height: 1020
   # x: 0
