@@ -9,7 +9,6 @@ class Packages
     Events.on 'commandCreated', (command, name) =>
       @get(command.packageId)._commands[name] = command
     # Events.on 'packageRemoved', (name) =>
-    #   _.each @get(name)
     #   @remove name
   register: (options) ->
     options.installed ?= true
@@ -22,12 +21,12 @@ class Packages
     # only flies while we develop...
     # otherwise need 2 cleanup and re-instantiate
     if @packages[options.name]?
-      emit 'packageCreated', @packages[options.name]
+      emit 'packageCreated', {pack: @packages[options.name]}
       return @packages[options.name]
 
     instantiated = new Package options
     @packages[options.name] = instantiated
-    emit 'packageCreated', instantiated
+    emit 'packageCreated', {pack: instantiated}
     Events.once "assetEvaluated", ->
       unless instantiated.hasDeferred
         emit "#{instantiated.name}PackageReady", {pack: instantiated}
@@ -66,7 +65,6 @@ class Packages
       true
 
   remove: (name) ->
-    delete @packages[name]
-
+    # TODO: fix
 
 module.exports = new Packages

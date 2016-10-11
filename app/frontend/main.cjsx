@@ -26,6 +26,8 @@ subscribeToRemoteEvents = ->
   events =
     'apiCreated': 'createApi'
     'packageCreated': 'createPackage'
+    'packageUpdated': 'updatePackage'
+    'packageRemoved': 'removePackage'
     'commandCreated': 'createCommand'
     'commandEnabled': 'enableCommand'
     'commandDisabled': 'disableCommand'
@@ -38,6 +40,8 @@ subscribeToRemoteEvents = ->
     'logEvents': 'setLogEvents'
     'radioSilence': 'setRadioSilence'
     'commandSpokenChanged': 'changeSpoken'
+    'updateDownloaded': 'setUpdateAvailable'
+    'restartNeeded': 'setRestartNeeded'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

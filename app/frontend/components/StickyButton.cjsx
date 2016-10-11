@@ -4,7 +4,7 @@ classNames = require 'classnames'
 {toggleStickyWindow} = require('../ducks/app').actionCreators
 
 stateProps = (state) ->
-  isSticky: state.get 'stickyWindow'
+  isSticky: state.get 'sticky_window'
 dispatchProps = {toggleStickyWindow}
 
 class StickyButton extends React.Component
@@ -17,8 +17,10 @@ class StickyButton extends React.Component
       'inverted icon zeroMargin': true
       'lock': isSticky
       'unlock': !isSticky
-    <div className='item' onClick={ toggleStickyWindow }>
+    <a className='item'
+       onClick={ toggleStickyWindow }
+       title='toggle window hover'>
       <i className={ stickyWindowIconClasses }></i>
-    </div>
+    </a>
 
 module.exports = connect(stateProps, dispatchProps) StickyButton

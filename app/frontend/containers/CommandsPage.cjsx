@@ -1,13 +1,13 @@
 React = require 'react'
 PackageList = require '../components/PackageList'
-PackageFilter = require '../components/PackageFilter'
+CommandFilter = require '../components/CommandFilter'
 classNames = require 'classnames'
 
 class PackagesPage extends React.Component
   shouldComponentUpdate: -> false
   render: ->
     <div className='packagesPage'>
-      <PackageFilter/>
+      <CommandFilter/>
       <PackageList viewMode='commands' />
     </div>
 

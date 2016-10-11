@@ -62,7 +62,6 @@ require('../lib/utility/deepExtend')
 global.path = require 'path'
 global.$ = require 'nodobjc'
 global.Events = require './event_emitter'
-global.PackagesManager = require './packages_manager'
 global.requireDirectory = require 'require-directory'
 global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
@@ -85,7 +84,6 @@ menubarOptions =
 
 global.menubar = require('menubar') menubarOptions
 
-# unless developmentMode
 _.each process.mainModule.paths, (path) ->
   require('module').globalPaths.push path
 
@@ -139,8 +137,8 @@ Events.once 'applicationShouldStart', ->
     global.Actions = require "#{platformLib}/actions"
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
     global.AssetsController = require './assets_controller'
+    global.PackagesManager = require './packages_manager'
     startupFlow.wait 'assetsControllerReady'
-    PackagesManager.updateAll startupFlow
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -201,14 +199,24 @@ unless developmentMode
   _platform = if platform is 'darwin' then 'osx' else 'win'
   autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{appVersion}"
   autoUpdater.on 'error', (err) -> error 'autoUpdateError', err
+  , "Updater error: #{err.message}"
   autoUpdater.on 'update-not-available'
   , -> log 'updateNotAvailable', null
     , "You are running the latest release: #{version}"
   autoUpdater.on 'update-available'
-  , -> log 'updateAvailable', null, "Update available"
+  , -> log 'updateAvailable', null, "Update available, downloading..."
   autoUpdater.on 'update-downloaded'
   , ->
-    log 'updateDownloaded', null, "Update downloaded"
-    autoUpdater.quitAndInstall()
+    Events.on 'applicationShouldUpdate', ->
+      autoUpdater.quitAndInstall()
+    notify 'updateDownloaded', true, "Update downloaded, ready to update."
 
   autoUpdater.checkForUpdates()
+
+
+Events.on 'applicationShouldQuit', ->
+  process.nextTick ->
+    process.exit()
+Events.on 'applicationShouldRestart', ->
+  app.relaunch()
+  emit('applicationShouldQuit')

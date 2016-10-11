@@ -81,11 +81,11 @@ body {
     outline: 0 !important
 }
 
-.packageFilter .ui.dropdown.label .dropdown.icon {
+.commandFilter .ui.dropdown.label .dropdown.icon {
     margin-left: 6px !important;
 }
 
-.packageFilter .ui.dropdown.label .icon {
+.commandFilter .ui.dropdown.label .icon {
     margin-right: 0px !important;
 }
 
@@ -94,6 +94,14 @@ body {
     top: 40px;
     height: 46px;
     box-shadow: 0 0 20px
+}
+
+.footer {
+    box-shadow: 0 0 20px !important
+}
+
+.packagesPage .package {
+    margin-bottom: 15px
 }
 
 .package .attached.segment {
@@ -120,4 +128,26 @@ body {
 .command .spoken {
     /*font-size: 17px;*/
     text-transform: uppercase;
+}
+
+.logEntry .console {
+    font-family: monospace !important;
+    font-size: 12px !important
+}
+
+
+/* prevent the rubber band scroll */
+
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
+    padding: 0;
+    overflow: auto;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
 }

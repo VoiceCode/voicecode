@@ -2,7 +2,7 @@ React = require 'react'
 {connect} = require 'react-redux'
 classNames = require 'classnames'
 {toggleCommand} = require('../ducks/command').actionCreators
-{setPackageFilter} = require('../ducks/package_filter').actionCreators
+{setCommandFilter} = require('../ducks/command_filter').actionCreators
 {commandSelector, implementationsForCommand} = require '../selectors'
 
 mapStateToProps = (state, props) ->
@@ -10,7 +10,7 @@ mapStateToProps = (state, props) ->
   implementations: implementationsForCommand state, props
 mapDispatchToProps = {
   toggleCommand,
-  setPackageFilter
+  setCommandFilter
 }
 class Command extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
@@ -21,7 +21,7 @@ class Command extends React.Component
   #     on: 'hover'
   #   })
   render: ->
-    {toggleCommand, implementations, setPackageFilter} = @props
+    {toggleCommand, implementations, setCommandFilter} = @props
     {id, spoken, enabled, packageId,
     description, locked, rule, tags} = @props.command.toJS()
     iconClasses = classNames
@@ -68,9 +68,9 @@ class Command extends React.Component
             <div className='extra'>
               {
                 tags.map (tag) ->
-                  <a key={ tag }
+                  <a key={ "#{id}-#{tag}" }
                      className="ui mini tag label"
-                     onClick={ setPackageFilter.bind null, {scope: 'tags', query: tag} }
+                     onClick={ setCommandFilter.bind null, {scope: 'tags', query: tag} }
                   >{ tag }</a>
               }
             </div>

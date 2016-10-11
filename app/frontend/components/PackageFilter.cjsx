@@ -17,13 +17,6 @@ class PackageFilter extends React.Component
     if @props.filter.get('query') isnt ''
       @refs.queryInput.focus()
 
-    $('.dropdown').dropdown({
-      transition: 'fade up'
-      onChange: (value, text, $selectedItem) =>
-        @props.setPackageFilter scope: value
-    })
-
-
   componentWillReceiveProps: (nextProps)->
     next = nextProps.filter.get('query')
     current = @refs.queryInput.value
@@ -35,56 +28,40 @@ class PackageFilter extends React.Component
   onChange: _.debounce(((event) ->
     @props.setPackageFilter query: event.target.value
     ), 500)
-  iconsFor: (scope, icon = true) ->
-    current = @props.filter.get 'scope'
-    scope ?= current
-    if not icon
-      return "item" + (if scope is current then ' selected active' else '')
-
-    classNames
-      'icon': true
-      'tag': scope is 'tags'
-      'cube': scope is 'packages'
-      'announcement': scope is 'commands'
-      'file text outline': scope is 'descriptions'
 
   render: ->
     {setPackageFilter, filter} = @props
     <div className="ui fixed secondary pointing page menu">
       {
-        ['all', 'enabled', 'disabled'].map (state) =>
-          <a key={ state }
-            className={ classNames(
-              'item': true,
-              'active': filter.get('state') is state) }
-            onClick={ setPackageFilter.bind @, {state} }
-          >
-          <i className={ classNames(
-            'icon': true,
-            'grey': filter.get('state') isnt state
-            'black': filter.get('state') is state
-            'circle': state is 'all'
-            'plus circle': state is 'enabled'
-            'minus circle': state is 'disabled'
-          ) }></i>
-          </a>
+        _.map {
+          all: 'all',
+          installed: 'enabled',
+          'not installed': 'disabled'
+          }, (state, key) =>
+            <a key={ state }
+              className={ classNames(
+                'item': true,
+                'active': filter.get('state') is state) }
+              onClick={ setPackageFilter.bind @, {state} }
+              title={ "show #{key}" }
+            >
+            <i className={ classNames(
+              'icon': true,
+              'grey': filter.get('state') isnt state
+              'black': filter.get('state') is state
+              'circle': state is 'all'
+              'plus circle': state is 'enabled'
+              'minus circle': state is 'disabled'
+            ) }></i>
+            </a>
       }
 
       <div className="right menu">
         <div className="item">
           <div className='ui left labeled small input packageFilter'>
-            <div className='ui dropdown label'>
+            <div className='ui label'>
               <div className='text'>
-                <i className={ @iconsFor() }></i>
-              </div>
-              <i className='dropdown icon'></i>
-              <div className='menu'>
-                {
-                  ['tags', 'packages', 'commands', 'descriptions'].map (scope) =>
-                    <div key={ scope } className={ @iconsFor scope, false } data-value={ scope }>
-                      <i className={ @iconsFor scope }></i>
-                    </div>
-                }
+                <i className='cube icon'></i>
               </div>
             </div>
             <input

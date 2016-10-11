@@ -6,23 +6,29 @@ npm = require 'npm'
 
 class PackagesManager
   constructor: ->
+    @packagePath = AssetsController.assetsPath + "/packages/"
+    @getPackageRegistry()
     Events.on 'installPackage', @installPackage.bind(@)
-    Events.on 'removePackage', @removePackage.bind(@) 
+    Events.on 'updatePackage', @updatePackage.bind(@)
+    Events.on 'removePackage', @removePackage.bind(@)
+    Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
+    Events.once 'packageAssetsLoaded', @fetchAll.bind(@)
+    Events.once 'packageAssetsLoaded', @getRecentCommits.bind(@)
     Events.once 'packageAssetsLoaded', =>
-     # register all non-installed packages
-      @getPackageRegistry (err, registry) ->
-        unless err
-          _.each registry.all, ({repo, description}, name) ->
-            pack = Packages.get name
-            pack ?= Packages.register {
-              name,
-              description,
-              installed: false,
-              repo
-            }
-            true
+      # register all non-installed packages
+      _.each @registry.all, ({repo, description}, name) ->
+        pack = Packages.get name
+        pack ?= Packages.register {
+          name,
+          description,
+          installed: false,
+          repo
+        }
+        pack.options.repo = repo
+        true
+
   installPackage: (name, callback) ->
-    Packages.remove name
+    callback ?= ->
     repo = @registry.all[name].repo
     destination = AssetsController.assetsPath + "/packages/#{name}"
     temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
@@ -31,13 +37,18 @@ class PackagesManager
       emit 'packageDestinationFolderExists', destination
       return callback? null, true
     emit 'installingPackageFolder', name, destination
+    Packages.remove name
+    callback = _.wrap callback, (callback, err) ->
+      callback.apply @, _.toArray(arguments)[1..]
+      if err
+        return error 'packageRepoInstallError', err, err.message
+      emit 'packageRepoInstalled', {repo: destination, pack: name}
     git.clone temporary, repo, (err) ->
       if err
-        error 'installPackageFailed', err, err.message
-        return callback? err
+        return callback err
       npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
       npmSettings = [
-        'npm_config_target=1.4.3'
+        "npm_config_target=#{process.versions.electron}"
         'npm_config_arch=x64'
         'npm_config_disturl=https://atom.io/download/atom-shell'
         'npm_config_runtime=electron'
@@ -48,11 +59,14 @@ class PackagesManager
       temporary + " && mv #{temporary} #{destination}"
       , (err) ->
         if err
-          error 'installPackageFailed', err, err.message
-          return callback? err
-        callback? null, true
+          return callback err
+        callback null, true
+
   getPackageRegistry: (callback) ->
-    callback ?= ->
+    callback ?= (err) ->
+      if err
+        return error 'packagesManagerRegistryError'
+        , err, "Failed retrieving package registry: #{err.message}"
     http.get(
       host: 'updates.voicecode.io'
       path: '/packages/registry/raw/master/packages.json'
@@ -74,6 +88,7 @@ class PackagesManager
     ).on('error', (e) ->
       callback e
     )
+
   downloadBasePackages: (path, callback) ->
     @getPackageRegistry (err, registry) =>
       if err?
@@ -89,25 +104,42 @@ class PackagesManager
           true
         cloneFlow.wait()
         callback null, true
+
   installAllPackages: ->
     _.every @registry.all, (info, name) ->
       emit 'installPackage', name
       true
-  updateAll: (flow) ->
-    packagePath = AssetsController.assetsPath + "/packages/"
-    installed = fs.readdirSync packagePath
-    _.each installed, (repo) ->
-      return true if repo[0] is '.' # TODO any other weird files to ignore?
-      adder = flow.add()
-      git("#{packagePath}#{repo}").pull 'origin', 'master', (err) ->
-        if err
-          error 'packagesManagerUpdateError', {repo, err}
-          , "Failed to update package: #{repo}"
-        else
-          emit 'packageUpdated', repo
-        adder(true)
-      true
-    flow.wait()
+
+  getInstalled: (noCache = false) ->
+    return @installed if @installed and not noCache
+    @installed = fs.readdirSync @packagePath
+    @installed = _.reject @installed, (repo) -> repo.match /\..*/
+
+  # updateAllSync: (flow) ->
+  #   installed = @getInstalled()
+  #   _.each installed, (repo) =>
+  #     adder = flow.add()
+  #     git("#{@packagePath}#{repo}").pull 'origin', 'master', (err) ->
+  #       if err
+  #         error 'packagesManagerUpdateError'
+  #         , {repo: "#{@packagePath}#{repo}", err}
+  #         , "Failed to update package: #{repo}"
+  #       else
+  #         emit 'packageRepoUpdated'
+  #         , {repo: "#{@packagePath}#{repo}"}
+  #       adder(true)
+  #     true
+  #   flow.wait()
+  updatePackage: (name) ->
+    git("#{@packagePath}#{name}").pull 'origin', 'master', (err) =>
+      if err
+        error 'packageRepoUpdateError'
+        , {repo: "#{@packagePath}#{name}", pack: name, err}
+        , "Failed to update package: #{name}"
+      else
+        emit 'packageRepoUpdated'
+        , {repo: "#{@packagePath}#{name}", pack: name}
+
   removePackage: (name) ->
     if name in @registry.base
       return notify
@@ -121,5 +153,22 @@ class PackagesManager
       else
         log 'packageRemoved', name, "Package removed: #{name}"
 
+  fetch: (repoName) ->
+    repo = git("#{@packagePath}#{repoName}")
+    repo.fetch 'origin'
+    , (err, result) ->
+      if err
+        return error 'packagesManagerFetchError'
+        , repo, "Failed to fetch #{repoName} repository8"
+      repo.status (err, status) ->
+        emit 'packageRepoStatusUpdated'
+        , {repoName, status}
+
+  fetchAll: ->
+    installed = @getInstalled()
+    _.each installed, (repoName) =>
+      @fetch repoName
+
+  getRecentCommits: ->
 
 module.exports = new PackagesManager

@@ -34,15 +34,15 @@ class LogPage extends React.Component
 
     <div className="logPage">
       <div className='ui fixed secondary pointing page menu'>
-        <a className={ logEventsClasses } onClick={ toggleLogEvents }>
+        <a className={ logEventsClasses } onClick={ toggleLogEvents } title="toggle debug mode">
           <i className='bug icon'></i>
         </a>
-        <a className={ radioSilenceClasses } onClick={ toggleRadioSilence }>
+        <a className={ radioSilenceClasses } onClick={ toggleRadioSilence } title="toggle logging">
           <i className='pause circle icon'></i>
         </a>
 
         <div className="right menu">
-          <a className={ 'item' } onClick={ clearLog }>
+          <a className={ 'item' } onClick={ clearLog } title="clear log">
             <i className='trash outline icon'></i>
           </a>
         </div>

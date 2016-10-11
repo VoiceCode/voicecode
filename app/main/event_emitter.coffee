@@ -264,7 +264,7 @@ global.mutationNotifier = (target, event, args, deep = false) ->
       if value isnt target[property]
         payload = _.assign {}, args, {
           property,
-          oldValue: target[property],
+          oldValue: _.cloneDeep target[property],
           value: value
         }
         process.nextTick ->

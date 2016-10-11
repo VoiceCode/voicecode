@@ -22,7 +22,7 @@ class LogEntry extends React.Component
     contentClasses = classNames
       'content': true
       'active': true
-    <div className="">
+    <div className="logEntry">
       <div className={ titleClasses }>
         <i className={ iconClasses }></i>
         { event }
@@ -30,7 +30,7 @@ class LogEntry extends React.Component
       {
         if args?
           <div className={ contentClasses }>
-            <pre className="ui inverted message">
+            <pre className="ui inverted console message">
             { args }
             </pre>
           </div>

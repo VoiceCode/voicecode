@@ -1,5 +1,6 @@
 class Package
-  constructor: (@options) -> #TODO: RE- FACTOR
+  constructor: (@options) ->
+    @name = @options.name
     # these are key for keeping track of this package's changes
     @_commands = {}
     @_actions = {}
@@ -9,11 +10,15 @@ class Package
     @_implementations = {}
     @_settings = mutationNotifier (@options.settings or {})
     , 'packageSettingsChanged', {pack: @}, true
-    {@name, @description, @scope, @installed, @repo} = @options #TODO: RE- FACTOR
-    if @installed
+    if @options.installed
       @registerScope()
       @setDefaultCommandOptions()
       @setDefaultEditOptions()
+      Events.on 'packageRepoStatusUpdated'
+      , ({repoName, status}) =>
+        if repoName is @name
+          @options.repoStatus = status
+          emit 'packageUpdated', {pack: @}
 
 
   api: (actions) ->
@@ -135,15 +140,15 @@ class Package
 
   setDefaultEditOptions: ->
     @defaultEditOptions =
-      scope: @scope
+      scope: @options.scope
       packageId: @name
 
   registerScope: ->
     if @shouldCreateScope()
       Scope.register @options
-      @scope = @name
+      @options.scope = @name
     else
-      @scope = @options.scope or 'global'
+      @options.scope ?= 'global'
 
   shouldCreateScope: ->
     # if it uses a scope already declared return false
@@ -155,10 +160,10 @@ class Package
     @options.condition
 
   active: ->
-    Scope.active @scope
+    Scope.active @options.scope
 
   applications: ->
-    Scope.get(@scope).applications()
+    Scope.get(@options.scope).applications()
 
   remove: ->
     # TODO track commands that were added, and before/after-

@@ -1,55 +1,78 @@
 React = require 'react'
+
 {connect} = require 'react-redux'
 {
   makeFilteredCommandsForPackage,
   packageFilterSelector,
+  commandFilterSelector,
   packageSelector,
   commandSelector
 } = require '../selectors'
 CommandList = require './CommandList.cjsx'
 {
-  installPackage,
-  removePackage,
+  shouldInstallPackage,
+  shouldRemovePackage,
+  shouldUpdatePackage,
   revealPackageOrigin,
   revealPackageSource
 } = require('../ducks/package').actionCreators
 ApiList = require './ApiList.cjsx'
 {connect} = require 'react-redux'
 {getPackage} = require '../selectors'
+currentFilterSelector = (state, {viewMode}) ->
+  if viewMode is 'commands'
+    commandFilterSelector.apply null, arguments
+  else
+    packageFilterSelector.apply null, arguments
 
 # https://github.com/reactjs/reselect#sharing-selectors-with-props-across-multiple-components
 makeMapStateToProps = (state, props)->
   filteredCommandsForPackage = makeFilteredCommandsForPackage()
   (state, props) ->
     commands: filteredCommandsForPackage state, props
-    packageFilter: packageFilterSelector state, props
+    currentFilter: currentFilterSelector state, props
     pack: packageSelector state, props
 mapDispatchToProps = {
-  installPackage,
-  removePackage,
+  shouldInstallPackage,
+  shouldRemovePackage,
+  shouldUpdatePackage,
   revealPackageOrigin,
   revealPackageSource
 }
 
 Package = class Package extends React.Component
+  # componentDidMount: ->
+  #   $('.withRightTooltip').popup
+  #     on: 'hover'
+  #     position: 'bottom right'
+  #     delay:
+  #       show: 500
+  #       hide: 0
+  #   $('.withLeftTooltip').popup
+  #     on: 'hover'
+  #     position: 'top right'
+  #     delay:
+  #       show: 500
+  #       hide: 0
   shouldComponentUpdate: (nextProps, nextState) ->
     pack = @props.pack isnt nextProps.pack
     commands = @props.commands isnt nextProps.commands
-    scope = @props.packageFilter.get('scope') isnt nextProps.packageFilter.get('scope')
+    scope = @props.currentFilter.get('scope') isnt nextProps.currentFilter.get('scope')
     pack or commands or scope
   render: ->
-    {name, description, installed} = @props.pack
-    {packageFilter,
+    {name, description, installed, repoStatus} = @props.pack
+    {currentFilter,
     commands,
     viewMode,
-    installPackage,
-    removePackage,
+    shouldInstallPackage,
+    shouldRemovePackage,
+    shouldUpdatePackage,
     revealPackageOrigin
     revealPackageSource,
     } = @props
     <div className='package'>
     {
-      if packageFilter.get('scope') is 'packages' or viewMode isnt 'commands'
+      if currentFilter.get('scope') is 'packages' or viewMode isnt 'commands'
         <div className="ui top attached huge block header">
           <i className="cube icon"></i>
           <div className='content'>
@@ -67,38 +90,48 @@ Package = class Package extends React.Component
             <CommandList packageId={ name } commands={ commands }/>
           </div>
           {
-            if packageFilter.get('scope') is 'packages'
+            if currentFilter.get('scope') is 'packages'
               <div className="ui attached segment">
                 <ApiList packageId={ name } />
               </div>
           }
         </div>
       else
-        <div className="ui attached segment">
+        <div className="ui attached icon menu">
         {
           if installed
-            <button className="ui black tiny icon button"
-                    onClick={ removePackage.bind null, name }>
-              <i className="trash icon"></i>
-            </button>
-          else
-            <button className="ui green tiny icon button"
-                    onClick={ installPackage.bind null, name }>
+            <a className="item " title="remove package"
+                    onClick={ shouldRemovePackage.bind null, name }>
+              <i className="trash outline icon"></i>
+            </a>
+        }{
+          if not installed
+            <a className="item" title="install package"
+                    onClick={ shouldInstallPackage.bind null, name }>
               <i className="download icon"></i>
-            </button>
+            </a>
         }
-        {
-          if installed
-            <button className="ui black tiny icon button"
-                    onClick={ revealPackageSource.bind null, name }>
-              <i className="code icon"></i>
-            </button>
-          else
-            <button className="ui black tiny icon button"
-                    onClick={ revealPackageOrigin.bind null, name }>
+
+        <div className='right icon menu'>
+          {
+            if installed and repoStatus.behind
+              <a className="item" title="update package"
+                      onClick={ shouldUpdatePackage.bind null, name }>
+                <i className="yellow arrow circle up icon"></i>
+              </a>
+          }
+          {
+            if installed
+              <a className="item" title="reveal package"
+                      onClick={ revealPackageSource.bind null, name }>
+                <i className="code icon"></i>
+              </a>
+          }
+          <a className='item inverted' title="go to repository"
+                onClick={ revealPackageOrigin.bind null, name }>
               <i className="gitlab icon"></i>
-            </button>
-        }
+          </a>
+        </div>
         </div>
     }
     </div>
