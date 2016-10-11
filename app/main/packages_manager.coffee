@@ -27,8 +27,10 @@ class PackagesManager
     destination = AssetsController.assetsPath + "/packages/#{name}"
     temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
     # skip it if it exists
-    try if fs.lstatSync(destination).isDirectory()
-        return callback? null, true
+    if fs.existsSync(destination)
+      emit 'packageDestinationFolderExists', destination
+      return callback? null, true
+    emit 'installingPackageFolder', name, destination
     git.clone temporary, repo, (err) ->
       if err
         error 'installPackageFailed', err, err.message
@@ -111,7 +113,7 @@ class PackagesManager
       return notify
         title: "#{name} is a base package"
         options:
-          body: "It should not be removed" 
+          body: "It should not be removed"
     fs.remove AssetsController.assetsPath + "/packages/#{name}/"
     , (err) ->
       if err

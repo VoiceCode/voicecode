@@ -17,9 +17,6 @@ class Actions
   undoByDeleting: ->
     # TODO: implement
 
-
-
-
   enableDwellClicking: ->
     @_dwellClickingEnabled = true
 
@@ -33,9 +30,6 @@ class Actions
     if @_dwellClickingEnabled or @_dwellClickOnce
       @click()
       @_dwellClickOnce = false
-
-
-  
 
   fuzzyMatch: (list, term) ->
     # array
@@ -73,17 +67,5 @@ class Actions
       best = _.min _.keys(results), (k) ->
         results[k]
       best
-
-
-
-  # for specific applications/contexts
-  sublime: ->
-    new Contexts.Sublime()
-
-
-
-
-
-
 
 module.exports = Actions

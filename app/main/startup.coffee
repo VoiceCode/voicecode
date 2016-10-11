@@ -85,9 +85,9 @@ menubarOptions =
 
 global.menubar = require('menubar') menubarOptions
 
-unless developmentMode
-  _.each process.mainModule.paths, (path) ->
-    require('module').globalPaths.push path
+# unless developmentMode
+_.each process.mainModule.paths, (path) ->
+  require('module').globalPaths.push path
 
 menubar.on 'ready', ->
   menubar.showWindow()

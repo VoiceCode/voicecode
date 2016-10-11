@@ -19,7 +19,7 @@ module.exports = class SettingsManager
         # this is good
       else
         error 'assetDirectoryError', @file,
-         "Could not create user assets directory: #{@file}"
+         "Could not create user asset file: #{@file}"
         @state = "error"
     fs.writeFileSync @file, '{}', 'utf8'
   fileExists: ->

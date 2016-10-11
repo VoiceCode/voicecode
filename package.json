@@ -4,8 +4,8 @@
   "scripts": {
     "fixfibers": "./fixfibers.sh",
     "develop": "gulp",
-    "run": "./node_modules/electron-prebuilt/dist/Electron.app/Contents/MacOS/Electron app/app.js production",
-    "slave": "./node_modules/electron-prebuilt/dist/Electron.app/Contents/MacOS/Electron app/app.js develop",
+    "run": "./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron app/app.js production",
+    "slave": "./node_modules/electron/dist/Electron.app/Contents/MacOS/Electron app/app.js develop develop",
     "dist": "build"
   },
   "build": {
@@ -19,7 +19,7 @@
     "electron-builder": "^7.11.4",
     "electron-connect": "^0.6.0",
     "electron-packager": "^8.1.0",
-    "electron-prebuilt": "^1.4.3",
+    "electron": "^1.4.3",
     "electron-rebuild": "^1.2.1",
     "electron-hot-loader": "git+https://github.com/dimatter/electron-hot-loader.git",
     "gulp": "^3.9.1",
