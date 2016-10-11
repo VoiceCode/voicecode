@@ -114,7 +114,7 @@ Package = class Package extends React.Component
 
         <div className='right icon menu'>
           {
-            if installed and true #repoStatus.behind
+            if installed and repoStatus.behind
               <a className="item" title="update package"
                       onClick={ shouldUpdatePackage.bind null, name }>
                 <i className="yellow arrow circle up icon"></i>

@@ -1,4 +1,5 @@
 React = require 'react'
+classNames = require 'classnames'
 {connect} = require 'react-redux'
 {
   updateAvailableSelector,
@@ -24,33 +25,41 @@ class Footer extends React.Component
     {
       restartNeeded,
       updateAvailable,
-      quitApplication
+      quitApplication,
       updateApplication,
       restartApplication,
     } = @props
-    <div className='footer ui bottom fixed mini inverted menu'>
-      <a className='item inverted' title="click to quit VoiceCode.app"
-           onClick={ quitApplication } >
+    restartIconClasses = classNames
+      "icon": true
+      "refresh": true
+      "inverted": true
+    restartItemClasses = classNames
+      "item": true
+    <div className='footer ui bottom fixed mini inverted icon menu'>
+      <a className={ restartItemClasses }
+         title="quit VoiceCode.app"
+         onClick={ quitApplication } >
            <i className="power icon"></i>
       </a>
-      <a className='item inverted' title="click to restart VoiceCode.app"
-           onClick={ restartApplication } >
-           <i className="refresh up icon"></i>
+      <a className='item '
+         title="restart VoiceCode.app"
+         onClick={ restartApplication } >
+           <i className={ restartIconClasses }></i>
+           {
+             if restartNeeded
+              "RESTART NEEDED"
+           }
       </a>
 
       <div className='right menu'>
         {
           if updateAvailable
-              <a className='item inverted yellow' title="click to update VoiceCode.app"
-                   onClick={ updateApplication } >
+              <a className='item '
+                 title="update VoiceCode.app"
+                 onClick={ updateApplication } >
                    <i className="yellow arrow circle up icon"></i>
-              UPDATE </a>
-        } {
-          if restartNeeded
-              <a className='item inverted red' title="click to restart VoiceCode.app"
-                   onClick={ restartApplication } >
-                   <i className="yellow arrow circle up icon"></i>
-              UPDATE </a>
+                   UPDATE
+              </a>
         }
         <div className='item'>
           <div className="appVersion" >v { Remote.getGlobal('appVersion') }</div>

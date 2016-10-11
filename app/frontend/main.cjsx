@@ -41,6 +41,7 @@ subscribeToRemoteEvents = ->
     'radioSilence': 'setRadioSilence'
     'commandSpokenChanged': 'changeSpoken'
     'updateDownloaded': 'setUpdateAvailable'
+    'restartNeeded': 'setRestartNeeded'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

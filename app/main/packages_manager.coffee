@@ -11,6 +11,9 @@ class PackagesManager
     Events.on 'installPackage', @installPackage.bind(@)
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
+    Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
+    Events.once 'packageAssetsLoaded', @fetchAll.bind(@)
+    Events.once 'packageAssetsLoaded', @getRecentCommits.bind(@)
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
       _.each @registry.all, ({repo, description}, name) ->
@@ -23,8 +26,6 @@ class PackagesManager
         }
         pack.options.repo = repo
         true
-      @fetchAll()
-      @getRecentCommits()
 
   installPackage: (name, callback) ->
     callback ?= ->
@@ -129,7 +130,7 @@ class PackagesManager
   #     true
   #   flow.wait()
   updatePackage: (name) ->
-    git("#{@packagePath}#{name}").pull 'origin', 'master', (err) ->
+    git("#{@packagePath}#{name}").pull 'origin', 'master', (err) =>
       if err
         error 'packageRepoUpdateError'
         , {repo: "#{@packagePath}#{name}", pack: name, err}
@@ -151,18 +152,21 @@ class PackagesManager
       else
         log 'packageRemoved', name, "Package removed: #{name}"
 
+  fetch: (repoName) ->
+    repo = git("#{@packagePath}#{repoName}")
+    repo.fetch 'origin'
+    , (err, result) ->
+      if err
+        return error 'packagesManagerFetchError'
+        , repo, "Failed to fetch #{repoName} repository8"
+      repo.status (err, status) ->
+        emit 'packageRepoStatusUpdated'
+        , {repoName, status}
+
   fetchAll: ->
     installed = @getInstalled()
     _.each installed, (repoName) =>
-      repo = git("#{@packagePath}#{repoName}")
-      repo.fetch 'origin'
-      , (err, result) ->
-        if err
-          return error 'packagesManagerFetchError'
-          , repo, "Failed to fetch #{repoName} repository8"
-        repo.status (err, status) ->
-          emit 'packageRepoStatusUpdated'
-          , {repoName, status}
+      @fetch repoName
 
   getRecentCommits: ->
 
