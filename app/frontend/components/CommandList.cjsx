@@ -20,7 +20,8 @@ CommandList = class CommandList extends React.Component
     if (enabledCount or disabledCount) is commands.length
       direction = !direction
     _.each commands, (command) ->
-      toggleCommand command.id, direction
+      unless command.locked
+        toggleCommand command.id, direction
 
   render: ->
     {commands} = @props
