@@ -1,5 +1,8 @@
 {createAction} = require 'redux-actions'
 {push} = require('react-router-redux')
+{currentPageSelector} = require '../selectors'
+{setCommandFilter} = require('./command_filter').actionCreators
+{setPackageFilter} = require('./package_filter').actionCreators
 
 # 😂
 actionCreators = _.reduce {
@@ -18,6 +21,10 @@ actionCreators = _.reduce {
 , {}
 
 # thunk
+actionCreators.changePage = (page = '/') ->
+    (dispatch, getState) ->
+      dispatch push "/#{page}".replace '//', '/'
+
 actionCreators.updateApplication = ->
   (dispatch, getState) ->
     emit 'applicationShouldUpdate', true
@@ -38,6 +45,18 @@ actionCreators.toggleLogEvents = ->
     logEvents = not getState().get 'log_events'
     emit 'logEvents', logEvents
 
+actionCreators.setCurrentFilter = ->
+  args = arguments
+  (dispatch, getState) ->
+    currentPage = currentPageSelector getState()
+    unless currentPage in ['commands', 'packages']
+      dispatch actionCreators.changePage '/commands'
+
+    if currentPage is 'packages'
+      dispatch setPackageFilter.apply null, args
+    else
+      dispatch setCommandFilter.apply null, args
+
 actionCreators.toggleRadioSilence = ->
   (dispatch, getState) ->
     radioSilence = not getState().get 'radio_silence'
@@ -50,10 +69,6 @@ actionCreators.restartApplication = ->
 actionCreators.quitApplication = ->
   (dispatch, getState) ->
     emit 'applicationShouldQuit'
-
-_.extend actionCreators, changePage: (page = '/') ->
-  (dispatch, getState) ->
-    dispatch push "/#{page}".replace '//', '/'
 
 
 module.exports.actionCreators = actionCreators

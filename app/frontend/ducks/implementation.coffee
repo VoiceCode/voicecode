@@ -12,7 +12,7 @@ actionCreators =
   createImplementation: createAction(@CREATE_IMPLEMENTATION)
 
 # thunk
-actionCreators.implementationCreated = ({commandId, implementations}) ->
+actionCreators.createImplementation = ({commandId, implementations}) ->
   (dispatch, getState) ->
     state = getState()
     current = state.get('command_implementations').get(commandId).toJS()

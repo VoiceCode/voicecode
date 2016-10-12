@@ -134,11 +134,17 @@ updateAvailableSelector = (state, props) ->
 restartNeededSelector = (state) ->
   state.get 'restart_needed'
 
+currentPageSelector = (state) ->
+  router = state.get 'router'
+  path = router.get('locationBeforeTransitions').get 'pathname'
+  path.replace '/', ''
+
 _.assign exports, {
   apisForPackage
   commandSelector
   packageSelector
   packagesSelector
+  currentPageSelector
   radioSilenceSelector
   showingEventsSelector
   packageFilterSelector
