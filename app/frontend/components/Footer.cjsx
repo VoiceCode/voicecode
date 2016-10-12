@@ -37,12 +37,12 @@ class Footer extends React.Component
       "item": true
     <div className='footer ui bottom fixed mini inverted icon menu'>
       <a className={ restartItemClasses }
-         title="quit VoiceCode.app"
+         title="quit VoiceCode"
          onClick={ quitApplication } >
            <i className="power icon"></i>
       </a>
       <a className='item '
-         title="restart VoiceCode.app"
+         title="restart VoiceCode"
          onClick={ restartApplication } >
            <i className={ restartIconClasses }></i>
            {
@@ -55,7 +55,7 @@ class Footer extends React.Component
         {
           if updateAvailable
               <a className='item '
-                 title="update VoiceCode.app"
+                 title="update VoiceCode"
                  onClick={ updateApplication } >
                    <i className="yellow arrow circle up icon"></i>
                    UPDATE
