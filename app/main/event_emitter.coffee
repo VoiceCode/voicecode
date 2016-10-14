@@ -106,7 +106,10 @@ class EventEmitter extends require('events').EventEmitter
     switch event
       when 'packageUpdated'
         _callback = ->
-          args = _.cloneDeep arguments[0]
+          args = {pack: {
+            options: _.cloneDeep arguments[0].pack.options,
+            name: arguments[0].pack.name}
+          }
           callback.call null, args
       when 'implementationCreated'
         _callback = ->
