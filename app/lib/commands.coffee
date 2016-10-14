@@ -201,7 +201,7 @@ class Commands
           # let us try again in the next performCommandEdits()
           @edit name, editType, edition, callback
         else
-          warning 'commandNotFound', name, editType
+          emit 'commandNotFound', {name, editType}
       return true
     emit "#{invokedBy}CommandEditsPerformed"
     emit 'commandEditsPerformed', invokedBy
