@@ -127,11 +127,6 @@ Events.once 'applicationShouldStart', ->
     if developmentMode
       Settings.userAssetsPath = '~/voicecode_development'
     global.Packages = require '../lib/packages/packages'
-    # A package for platform specific global commands
-    Packages.register
-      name: global.platform
-      description: "#{_.startCase global.platform}"
-
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"

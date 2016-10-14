@@ -42,7 +42,7 @@ packageRecord = immutable.Record
   name: 'unknown'
   description: 'No description'
   installed: false
-  repo: ''
+  repo: null
   repoStatus: {behind: false, diverged: false}
   repoLog: []
 apiRecord = immutable.Record

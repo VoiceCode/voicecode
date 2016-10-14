@@ -12,7 +12,6 @@ class PackagesManager
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
     Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
-    Events.once 'packageAssetsLoaded', @fetchAll.bind(@)
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
       _.each @registry.all, ({repo, description}, name) ->
@@ -25,7 +24,7 @@ class PackagesManager
         }
         pack.options.repo = repo
         true
-
+    Events.once 'userAssetsLoaded', @fetchAll.bind(@)
   installPackage: (name, callback) ->
     callback ?= ->
     repo = @registry.all[name].repo
