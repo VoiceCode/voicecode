@@ -1,7 +1,6 @@
 http = require 'http'
 git = require 'gitty'
 fs = require 'fs-extra'
-
 npm = require 'npm'
 
 class PackagesManager
@@ -23,6 +22,7 @@ class PackagesManager
           repo
         }
         pack.options.repo = repo
+        emit 'packageUpdated', {pack}
         true
     Events.once 'userAssetsLoaded', @fetchAll.bind(@)
   installPackage: (name, callback) ->
