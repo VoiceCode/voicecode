@@ -127,6 +127,11 @@ Events.once 'applicationShouldStart', ->
     if developmentMode
       Settings.userAssetsPath = '~/voicecode_development'
     global.Packages = require '../lib/packages/packages'
+    # A package for platform specific global commands
+    Packages.register
+      name: global.platform
+      description: "#{_.startCase global.platform}"
+
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"
@@ -180,6 +185,16 @@ Events.once 'applicationShouldStart', ->
 
     emit "startupComplete"
 
+
+
+Events.on 'applicationShouldQuit', ->
+  process.nextTick ->
+    process.exit()
+Events.on 'applicationShouldRestart', ->
+  app.relaunch()
+  emit('applicationShouldQuit')
+
+
 # benchmarking
 if developmentMode
   Events.on 'chainDidExecute', ->
@@ -207,11 +222,3 @@ unless developmentMode
     notify 'updateDownloaded', true, "Update downloaded, ready to update."
 
   autoUpdater.checkForUpdates()
-
-
-Events.on 'applicationShouldQuit', ->
-  process.nextTick ->
-    process.exit()
-Events.on 'applicationShouldRestart', ->
-  app.relaunch()
-  emit('applicationShouldQuit')
