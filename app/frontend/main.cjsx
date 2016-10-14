@@ -31,7 +31,7 @@ subscribeToRemoteEvents = ->
     'commandCreated': 'createCommand'
     'commandEnabled': 'enableCommand'
     'commandDisabled': 'disableCommand'
-    'implementationCreated': 'createImplementation'
+    'implementationCreated': 'implementationCreated'
     'startupComplete': 'appStart'
     'setPackageFilter': 'setPackageFilter'
     'setCommandFilter': 'setCommandFilter'
