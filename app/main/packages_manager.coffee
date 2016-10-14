@@ -25,6 +25,7 @@ class PackagesManager
         emit 'packageUpdated', {pack}
         true
     Events.once 'userAssetsLoaded', @fetchAll.bind(@)
+
   installPackage: (name, callback) ->
     callback ?= ->
     repo = @registry.all[name].repo
@@ -65,6 +66,7 @@ class PackagesManager
       if err
         return error 'packagesManagerRegistryError'
         , err, "Failed retrieving package registry: #{err.message}"
+    return callback(null, @registry) if @registry?
     http.get(
       host: 'updates.voicecode.io'
       path: '/packages/registry/raw/master/packages.json'
@@ -89,10 +91,7 @@ class PackagesManager
 
   downloadBasePackages: (path, callback) ->
     @getPackageRegistry (err, registry) =>
-      if err?
-        error 'getPackageRegistry', e
-        , 'Failed getting list of packages: ' + e.message
-        return
+      return callback(err) if err?
       funk = asyncblock.nostack
       if developmentMode
         funk = asyncblock
@@ -108,26 +107,11 @@ class PackagesManager
       emit 'installPackage', name
       true
 
-  getInstalled: (noCache = false) ->
-    return @installed if @installed and not noCache
+  getInstalled: ->
+    return @installed if @installed?
     @installed = fs.readdirSync @packagePath
     @installed = _.reject @installed, (repo) -> repo.match /\..*/
 
-  # updateAllSync: (flow) ->
-  #   installed = @getInstalled()
-  #   _.each installed, (repo) =>
-  #     adder = flow.add()
-  #     git("#{@packagePath}#{repo}").pull 'origin', 'master', (err) ->
-  #       if err
-  #         error 'packagesManagerUpdateError'
-  #         , {repo: "#{@packagePath}#{repo}", err}
-  #         , "Failed to update package: #{repo}"
-  #       else
-  #         emit 'packageRepoUpdated'
-  #         , {repo: "#{@packagePath}#{repo}"}
-  #       adder(true)
-  #     true
-  #   flow.wait()
   updatePackage: (name) ->
     git("#{@packagePath}#{name}").pull 'origin', 'master', (err) =>
       if err
