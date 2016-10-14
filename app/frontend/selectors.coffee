@@ -57,15 +57,19 @@ filteredPackagesSelector =
     commandFilterScopeSelector,
     packagesSelector
     ], (viewMode, query, state, scope, packages) ->
-      unless state is 'all'
+      if state in ['enabled', 'disabled']
         packages = packages.filter (pack) ->
           pack.get('installed') is (state is 'enabled')
+      if state is 'updatable'
+        packages = packages.filter (pack) ->
+          pack.get('repoStatus')?.behind
 
       scope = 'packages' unless viewMode is 'commands'
       if query isnt '' and scope is 'packages'
         query = new RegExp query, 'i'
         packages = packages.filter (pack) ->
-          query.test pack.get('name')
+          (query.test pack.get('name')) or
+          (query.test pack.get('description'))
       packages
 
 makeCommandsForPackageSelector = ->

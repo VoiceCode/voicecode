@@ -10,6 +10,17 @@ class Packages
       @get(command.packageId)._commands[name] = command
     # Events.on 'packageRemoved', (name) =>
     #   @remove name
+    Events.on 'packageRepoStatusUpdated'
+    , ({repoName, status}) =>
+      if pack = @get(repoName)
+        pack.options.repoStatus = status
+        emit 'packageUpdated', {pack}
+    Events.on 'packageRepoLogUpdated'
+    , ({repoName, log}) =>
+      if pack = @get(repoName)
+        pack.options.repoLog = log
+        emit 'packageUpdated', {pack}
+
   register: (options) ->
     options.installed ?= true
 

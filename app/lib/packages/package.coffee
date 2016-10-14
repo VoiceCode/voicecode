@@ -14,12 +14,6 @@ class Package
       @registerScope()
       @setDefaultCommandOptions()
       @setDefaultEditOptions()
-      Events.on 'packageRepoStatusUpdated'
-      , ({repoName, status}) =>
-        if repoName is @name
-          @options.repoStatus = status
-          emit 'packageUpdated', {pack: @}
-
 
   api: (actions) ->
     @actions actions, 'api'
