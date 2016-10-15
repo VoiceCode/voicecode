@@ -1,7 +1,6 @@
 http = require 'http'
 git = require 'gitty'
 fs = require 'fs-extra'
-
 npm = require 'npm'
 
 class PackagesManager
@@ -12,8 +11,6 @@ class PackagesManager
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
     Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
-    Events.once 'packageAssetsLoaded', @fetchAll.bind(@)
-    Events.once 'packageAssetsLoaded', @getRecentCommits.bind(@)
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
       _.each @registry.all, ({repo, description}, name) ->
@@ -25,8 +22,9 @@ class PackagesManager
           repo
         }
         pack.options.repo = repo
+        emit 'packageUpdated', {pack}
         true
-
+    Events.once 'userAssetsLoaded', @fetchAll.bind(@)
   installPackage: (name, callback) ->
     callback ?= ->
     repo = @registry.all[name].repo
@@ -89,7 +87,12 @@ class PackagesManager
       callback e
     )
 
-  downloadBasePackages: (path, callback) ->
+  downloadBasePackages: (callback) ->
+    @downloadPackageGroup 'base', callback
+  downloadRecommendedPackages: (callback) ->
+    @downloadPackageGroup 'recommended', callback
+
+  downloadPackageGroup: (group, callback) ->
     @getPackageRegistry (err, registry) =>
       if err?
         error 'getPackageRegistry', e
@@ -99,7 +102,7 @@ class PackagesManager
       if developmentMode
         funk = asyncblock
       funk (cloneFlow) =>
-        _.every registry.base, (name) =>
+        _.every registry[group], (name) =>
           @installPackage name, cloneFlow.add()
           true
         cloneFlow.wait()
@@ -156,19 +159,30 @@ class PackagesManager
   fetch: (repoName) ->
     repo = git("#{@packagePath}#{repoName}")
     repo.fetch 'origin'
-    , (err, result) ->
+    , (err, result) =>
       if err
         return error 'packagesManagerFetchError'
         , repo, "Failed to fetch #{repoName} repository8"
-      repo.status (err, status) ->
+      repo.status (err, status) =>
         emit 'packageRepoStatusUpdated'
         , {repoName, status}
+        if status.behind
+          @log repoName
+
+  log: (repoName) ->
+    repo = git("#{@packagePath}#{repoName}")
+    repo.log 'origin/master...'
+    , (err, log) ->
+      if err
+        return error 'packagesManagerLogError'
+        , repo, "Failed to Log #{repoName} repository8"
+      emit 'packageRepoLogUpdated'
+      , {repoName, log}
 
   fetchAll: ->
     installed = @getInstalled()
     _.each installed, (repoName) =>
       @fetch repoName
 
-  getRecentCommits: ->
 
 module.exports = new PackagesManager

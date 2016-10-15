@@ -185,6 +185,16 @@ Events.once 'applicationShouldStart', ->
 
     emit "startupComplete"
 
+
+
+Events.on 'applicationShouldQuit', ->
+  process.nextTick ->
+    process.exit()
+Events.on 'applicationShouldRestart', ->
+  app.relaunch()
+  emit('applicationShouldQuit')
+
+
 # benchmarking
 if developmentMode
   Events.on 'chainDidExecute', ->
@@ -212,11 +222,3 @@ unless developmentMode
     notify 'updateDownloaded', true, "Update downloaded, ready to update."
 
   autoUpdater.checkForUpdates()
-
-
-Events.on 'applicationShouldQuit', ->
-  process.nextTick ->
-    process.exit()
-Events.on 'applicationShouldRestart', ->
-  app.relaunch()
-  emit('applicationShouldQuit')

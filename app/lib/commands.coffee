@@ -167,7 +167,15 @@ class Commands
   enableAll: ->
     _.each @mapping, (command, name) =>
       @enable name
-    @performCommandEdits('slaveModeEnableAllCommands')
+    @performCommandEdits('slaveModeEnableAllCommands') # TODO change name of this
+
+  enableAllByTag: (tag) ->
+    _.each @mapping, (command, name) =>
+      if tag in (command.tags or [])
+        @enable name
+    @performCommandEdits('slaveModeEnableAllCommands') # TODO change name of this
+
+
 
   shouldEmitValidationFailed: (editType, command) ->
     return true
@@ -201,7 +209,7 @@ class Commands
           # let us try again in the next performCommandEdits()
           @edit name, editType, edition, callback
         else
-          warning 'commandNotFound', name, editType
+          emit 'commandNotFound', {name, editType}
       return true
     emit "#{invokedBy}CommandEditsPerformed"
     emit 'commandEditsPerformed', invokedBy

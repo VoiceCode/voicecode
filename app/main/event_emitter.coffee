@@ -104,12 +104,13 @@ class EventEmitter extends require('events').EventEmitter
     # this is needed because only enumerable properties are accessible
     # via remote module i.e must strip all functions
     switch event
-      # when 'commandCreated'
-      #   if arguments[0].rule?
-      #     _callback = ->
-      #       command = arguments[0]
-      #       command.lists = arguments[0].grammar.lists
-      #       callback.call null, command
+      when 'packageUpdated'
+        _callback = ->
+          args = {pack: {
+            options: _.cloneDeep arguments[0].pack.options,
+            name: arguments[0].pack.name}
+          }
+          callback.call null, args
       when 'implementationCreated'
         _callback = ->
           implementations = _.keys arguments[0].implementations

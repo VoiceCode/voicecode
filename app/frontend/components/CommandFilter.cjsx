@@ -54,7 +54,7 @@ class CommandFilter extends React.Component
     {setCommandFilter, filter} = @props
     <div className="ui fixed secondary pointing page menu">
       {
-        ['all', 'enabled', 'disabled'].map (state) =>
+        ['all', 'enabled', 'disabled', 'user'].map (state) =>
           <a key={ state }
             className={ classNames(
               'item': true,
@@ -69,6 +69,7 @@ class CommandFilter extends React.Component
             'circle': state is 'all'
             'plus circle': state is 'enabled'
             'minus circle': state is 'disabled'
+            'user': state is 'user'
           ) }></i>
           </a>
       }

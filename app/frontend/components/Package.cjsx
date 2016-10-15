@@ -60,16 +60,24 @@ Package = class Package extends React.Component
     scope = @props.currentFilter.get('scope') isnt nextProps.currentFilter.get('scope')
     pack or commands or scope
   render: ->
-    {name, description, installed, repoStatus} = @props.pack
-    {currentFilter,
-    commands,
-    viewMode,
-    shouldInstallPackage,
-    shouldRemovePackage,
-    shouldUpdatePackage,
-    revealPackageOrigin
-    revealPackageSource,
+    {
+      name,
+      description,
+      installed,
+      repoStatus,
+      repoLog
+    } = @props.pack
+    {
+      currentFilter,
+      commands,
+      viewMode,
+      shouldInstallPackage,
+      shouldRemovePackage,
+      shouldUpdatePackage,
+      revealPackageOrigin
+      revealPackageSource,
     } = @props
+
     <div className='package'>
     {
       if currentFilter.get('scope') is 'packages' or viewMode isnt 'commands'
@@ -97,41 +105,62 @@ Package = class Package extends React.Component
           }
         </div>
       else
-        <div className="ui attached icon menu">
-        {
-          if installed
-            <a className="item " title="remove package"
-                    onClick={ shouldRemovePackage.bind null, name }>
-              <i className="trash outline icon"></i>
-            </a>
-        }{
-          if not installed
-            <a className="item" title="install package"
-                    onClick={ shouldInstallPackage.bind null, name }>
-              <i className="download icon"></i>
-            </a>
-        }
-
-        <div className='right icon menu'>
-          {
-            if installed and repoStatus.behind
-              <a className="item" title="update package"
-                      onClick={ shouldUpdatePackage.bind null, name }>
-                <i className="yellow arrow circle up icon"></i>
-              </a>
-          }
+        <div className=''>
+          <div className="ui attached icon menu">
           {
             if installed
-              <a className="item" title="reveal package"
-                      onClick={ revealPackageSource.bind null, name }>
-                <i className="code icon"></i>
+              <a className="item " title="remove package"
+                      onClick={ shouldRemovePackage.bind null, name }>
+                <i className="trash outline icon"></i>
+              </a>
+          }{
+            if not installed
+              <a className="item" title="install package"
+                      onClick={ shouldInstallPackage.bind null, name }>
+                <i className="download icon"></i>
               </a>
           }
-          <a className='item inverted' title="go to repository"
-                onClick={ revealPackageOrigin.bind null, name }>
-              <i className="gitlab icon"></i>
-          </a>
-        </div>
+
+            <div className='right icon menu'>
+              {
+                if installed and repoStatus.behind
+                  <a className="item" title="update package"
+                          onClick={ shouldUpdatePackage.bind null, name }>
+                    <i className="yellow arrow circle up icon"></i>
+                  </a>
+              }
+              {
+                if installed
+                  <a className="item" title="reveal package"
+                          onClick={ revealPackageSource.bind null, name }>
+                    <i className="code icon"></i>
+                  </a>
+              }
+              <a className='item inverted' title="go to repository"
+                    onClick={ revealPackageOrigin.bind null, name }>
+                  <i className="gitlab icon"></i>
+              </a>
+            </div>
+          </div>
+        {
+          <div className="ui attached segment">
+            {
+              unless _.isEmpty repoLog
+                <div className='ui divided list'>
+                  {
+                    _.map repoLog, (commit) ->
+                        <div className='item' key={ commit.commit }>
+                          <i className='file code outline middle aligned icon'></i>
+                          <div className='content'>
+                            <div className='header'>{ _.startCase commit.message }</div>
+                            <div className='description'>{ commit.date }</div>
+                          </div>
+                        </div>
+                  }
+                </div>
+            }
+          </div>
+        }
         </div>
     }
     </div>
