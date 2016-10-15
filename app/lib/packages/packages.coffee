@@ -10,6 +10,17 @@ class Packages
       @get(command.packageId)._commands[name] = command
     # Events.on 'packageRemoved', (name) =>
     #   @remove name
+    Events.on 'packageRepoStatusUpdated'
+    , ({repoName, status}) =>
+      if pack = @get(repoName)
+        pack.options.repoStatus = status
+        emit 'packageUpdated', {pack}
+    Events.on 'packageRepoLogUpdated'
+    , ({repoName, log}) =>
+      if pack = @get(repoName)
+        pack.options.repoLog = log
+        emit 'packageUpdated', {pack}
+
   register: (options) ->
     options.installed ?= true
 
@@ -27,13 +38,19 @@ class Packages
     instantiated = new Package options
     @packages[options.name] = instantiated
     emit 'packageCreated', {pack: instantiated}
-    Events.once "assetEvaluated", ->
-      unless instantiated.hasDeferred
-        emit "#{instantiated.name}PackageReady", {pack: instantiated}
-        emit 'packageReady', {pack: instantiated}
-        , "Package ready: #{instantiated.name}"
+    unless options.name is global.platform
+      Events.once "assetEvaluated", =>
+        unless instantiated.hasDeferred
+          @emitReady instantiated
+    else
+      @emitReady instantiated
     instantiated
 
+  emitReady: (instantiated) ->
+    emit "#{instantiated.name}PackageReady"
+    , {pack: instantiated}
+    emit 'packageReady', {pack: instantiated}
+    , "Package ready: #{instantiated.name}"
   get: (name) ->
     @packages[name]
 

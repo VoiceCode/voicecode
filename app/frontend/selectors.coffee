@@ -25,7 +25,8 @@ currentFilterQuerySelector = (state, props) ->
 
 currentFilterStateSelector = (state, props) ->
   if props.viewMode is 'commands'
-    'enabled' # HACK: on commands page - drop filtering
+    state = commandFilterStateSelector(state, props)
+    return if state is 'user' then 'user' else 'enabled'
   else
     packageFilterStateSelector(state, props)
 
@@ -57,15 +58,26 @@ filteredPackagesSelector =
     commandFilterScopeSelector,
     packagesSelector
     ], (viewMode, query, state, scope, packages) ->
-      unless state is 'all'
+      if viewMode is 'packages'
+        packages = packages.filter (pack) ->
+          pack.get('repo')?
+
+      if state in ['enabled', 'disabled']
         packages = packages.filter (pack) ->
           pack.get('installed') is (state is 'enabled')
+      if state is 'updatable'
+        packages = packages.filter (pack) ->
+          pack.get('repoStatus')?.behind
+      if state is 'user'
+        packages = packages.filter (pack) ->
+          pack.get('repo') is null
 
       scope = 'packages' unless viewMode is 'commands'
       if query isnt '' and scope is 'packages'
         query = new RegExp query, 'i'
         packages = packages.filter (pack) ->
-          query.test pack.get('name')
+          (query.test pack.get('name')) or
+          (query.test pack.get('description'))
       packages
 
 makeCommandsForPackageSelector = ->
@@ -88,7 +100,7 @@ makeFilteredCommandsForPackage = ->
     commandFilterStateSelector,
     _makeFilteredCommandsForPackage()
   ], (state, commands) ->
-    unless state is 'all'
+    unless state in ['all', 'user']
       return commands.filter (command) ->
         command.enabled is (state is 'enabled')
     commands

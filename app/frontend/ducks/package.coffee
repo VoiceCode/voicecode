@@ -42,9 +42,9 @@ packageRecord = immutable.Record
   name: 'unknown'
   description: 'No description'
   installed: false
-  repo: ''
+  repo: null
   repoStatus: {behind: false, diverged: false}
-
+  repoLog: []
 apiRecord = immutable.Record
   name: null
   description: null
@@ -54,7 +54,7 @@ apiRecord = immutable.Record
 exports.reducers =
   packages: (packages = immutable.Map({}), {type, payload}) =>
     switch type
-      when @CREATE_PACKAGE or @UPDATE_PACKAGE
+      when @CREATE_PACKAGE, @UPDATE_PACKAGE
         payload = payload.pack
         payload = payload.options
         pack = new packageRecord payload

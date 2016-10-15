@@ -37,6 +37,7 @@ class PackageFilter extends React.Component
           all: 'all',
           installed: 'enabled',
           'not installed': 'disabled'
+          'updatable': 'updatable'
           }, (state, key) =>
             <a key={ state }
               className={ classNames(
@@ -52,6 +53,7 @@ class PackageFilter extends React.Component
               'circle': state is 'all'
               'plus circle': state is 'enabled'
               'minus circle': state is 'disabled'
+              'arrow circle up': state is 'updatable'
             ) }></i>
             </a>
       }
