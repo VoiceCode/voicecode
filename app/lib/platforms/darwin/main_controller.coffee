@@ -58,16 +58,19 @@ module.exports = new class MainController
       unixServer.listen socketPath
 
   systemEventHandler: (buffer) ->
-    event = JSON.parse buffer.toString('utf8')
-    switch event.event
-      when 'applicationChanged'
-        @applicationChanged event
-      when 'leftClick'
-        @mouseLeftClickHandler event
-      when 'keyUp'
-        @keyUpHandler event
-      else
-        @darwinEventHandler event
+    try
+      event = JSON.parse buffer.toString('utf8')
+      switch event.event
+        when 'applicationChanged'
+          @applicationChanged event
+        when 'leftClick'
+          @mouseLeftClickHandler event
+        when 'keyUp'
+          @keyUpHandler event
+        else
+          @darwinEventHandler event
+    catch
+      error 'systemEventHandler', 'unable to parse json', buffer.toString('utf8')
 
   deviceHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")

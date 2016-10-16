@@ -89,14 +89,19 @@ class PackagesManager
       callback e
     )
 
-  downloadBasePackages: (path, callback) ->
+  downloadBasePackages: (callback) ->
+    @downloadPackageGroup 'base', callback
+  downloadRecommendedPackages: (callback) ->
+    @downloadPackageGroup 'recommended', callback
+
+  downloadPackageGroup: (group, callback) ->
     @getPackageRegistry (err, registry) =>
       return callback(err) if err?
       funk = asyncblock.nostack
       if developmentMode
         funk = asyncblock
       funk (cloneFlow) =>
-        _.every registry.base, (name) =>
+        _.every registry[group], (name) =>
           @installPackage name, cloneFlow.add()
           true
         cloneFlow.wait()

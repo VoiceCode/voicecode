@@ -1,6 +1,6 @@
 {
   "name": "VoiceCode",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
   "website": "http://voicecode.io",
   "main": "app.js",
