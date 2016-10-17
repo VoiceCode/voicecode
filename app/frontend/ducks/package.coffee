@@ -70,7 +70,7 @@ exports.reducers =
   package_commands: (package_commands = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
-        payload = payload.pack = 
+        payload = payload.pack
         package_commands.set payload.name, immutable.List []
       when CREATE_COMMAND
         {id, spoken, packageId, enabled} = payload

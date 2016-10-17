@@ -113,10 +113,10 @@ class EventEmitter extends require('events').EventEmitter
           callback.call null, args
       when 'implementationCreated'
         _callback = ->
-          implementations = arguments[0].implementations
-          commandId = arguments[0].id
-          originalPackageId = arguments[0].packageId
-          callback.call null, {implementations, commandId, originalPackageId}
+          callback.call null,
+            implementations: _.mapValues arguments[0].implementations, 'info'
+            commandId: arguments[0].id
+            originalPackageId: arguments[0].packageId
     # @frontendSubscriptions[event] ?= []
     # @frontendSubscriptions[event].push _callback or callback
     @on event, (_callback or callback)

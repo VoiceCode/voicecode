@@ -218,7 +218,7 @@ class Commands
     @edit commandName, 'implementationCreated', {info, action},
     (command) ->
       command.implementations ?= {}
-      id = "#{info.packageId}@#{info.scope}"
+      id = "#{command.id}@#{info.packageId}:#{info.scope}"
       command.implementations[id] = {info, action}
       command
 

@@ -4,7 +4,7 @@ Api = require '../components/Api.cjsx'
 {connect} = require 'react-redux'
 {apisForPackage} = require '../selectors'
 makeMapStateToProps = (state, props) ->
-    apis: apisForPackage state, props
+  apis: apisForPackage state, props
 
 class ApiList extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->

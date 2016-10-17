@@ -19,7 +19,7 @@ CommandList = require './CommandList.cjsx'
 ApiList = require './ApiList.cjsx'
 PackageImplementationList = require './PackageImplementationList.cjsx'
 {connect} = require 'react-redux'
-{getPackage} = require '../selectors'
+# {getPackage} = require '../selectors'
 currentFilterSelector = (state, {viewMode}) ->
   if viewMode is 'commands'
     commandFilterSelector.apply null, arguments
@@ -100,11 +100,13 @@ Package = class Package extends React.Component
           </div>
           {
             if currentFilter.get('scope') is 'packages'
-              <div className="ui attached segment">
-                <PackageImplementationList packageId={ name } />
-              </div>
-              <div className="ui attached segment">
-                <ApiList packageId={ name } />
+              <div className=''>
+                <div className="ui attached segment">
+                  <PackageImplementationList packageId={ name } />
+                </div>
+                <div className="ui attached segment">
+                  <ApiList packageId={ name } />
+                </div>
               </div>
           }
         </div>

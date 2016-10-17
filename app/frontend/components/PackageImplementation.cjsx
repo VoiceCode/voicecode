@@ -17,8 +17,10 @@ class PackageImplementation extends React.Component
     <div className="item">
       <div className="content">
         <div className="header">
-          <i className='small grey plus-network icon'></i>
-          <div className="meta">{ id }</div>
+          <i className='small grey cubes icon'></i>
+          { commandId }
+          {' '}
+          <div className="ui teal horizontal label small">{ '@' + scope }</div>
         </div>
       </div>
     </div>

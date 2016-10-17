@@ -3,11 +3,11 @@ React = require 'react'
 classNames = require 'classnames'
 {toggleCommand} = require('../ducks/command').actionCreators
 {setCommandFilter} = require('../ducks/command_filter').actionCreators
-{commandSelector, implementationsForCommand} = require '../selectors'
+{commandSelector, implementationRecordsForCommand} = require '../selectors'
 
 mapStateToProps = (state, props) ->
   command: commandSelector state, props
-  implementations: implementationsForCommand state, props
+  implementations: implementationRecordsForCommand state, props
 mapDispatchToProps = {
   toggleCommand,
   setCommandFilter
@@ -21,7 +21,7 @@ class Command extends React.Component
   #     on: 'hover'
   #   })
   render: ->
-    {toggleCommand, implementations, setCommandFilter} = @props
+    {toggleCommand, setCommandFilter} = @props
     {id, spoken, enabled, packageId,
     description, locked, rule, tags} = @props.command.toJS()
     iconClasses = classNames
@@ -61,7 +61,11 @@ class Command extends React.Component
 
         }
         </div>
-        <div className="meta">{ id }</div>
+        <div className="meta">
+          { id }
+          {' '}
+          { @implementations() }
+        </div>
         <div className='content description'>{ description }</div>
         {
           if tags?
@@ -77,5 +81,16 @@ class Command extends React.Component
         }
         </div>
     </div>
+  implementations: ->
+    {implementations} = @props
+    packageId = @props.command.get 'packageId'
+    implementations.filter((i) -> i.packageId isnt packageId)
+      .map (i) ->
+        <div className="ui teal horizontal label small">
+          { "#{i.packageId}@#{i.scope}" }
+        </div>
+
+
+
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Command)

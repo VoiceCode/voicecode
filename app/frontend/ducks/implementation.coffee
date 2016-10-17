@@ -1,5 +1,6 @@
 { createAction } = require 'redux-actions'
-# immutable = require 'immutable'
+immutable = require 'immutable'
+
 constants =
   CREATE_IMPLEMENTATION: 'CREATE_IMPLEMENTATION'
   REMOVE_IMPLEMENTATION: 'REMOVE_IMPLEMENTATION'
@@ -49,7 +50,7 @@ exports.reducers =
       when @CREATE_IMPLEMENTATION
         record = new implementationRecord payload
         implementations.set payload.id, record
-      # when @REMOVE_IMPLEMENTATION
-      #   todo
+        # when @REMOVE_IMPLEMENTATION
+        #   todo
       else
         implementations

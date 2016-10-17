@@ -55,6 +55,16 @@ implementationSelector = (state, props) ->
   implementationsSelector(state).get props.id
 implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
+
+implementationRecordsForCommand =
+  createSelector [
+    implementationsSelector,
+    implementationsForCommand
+    ], (implementations, commandImplementations) ->
+      commandImplementations.map (id) ->
+        implementations.get id
+
+
 implementationsForPackage = (state, props) ->
   state.get('package_implementations').get props.packageId
 
@@ -160,9 +170,11 @@ currentPageSelector = (state) ->
 
 _.assign exports, {
   apisForPackage
+  implementationsSelector
   implementationSelector
   implementationsForPackage
   implementationsForCommand
+  implementationRecordsForCommand
   commandSelector
   packageSelector
   packagesSelector
@@ -175,7 +187,6 @@ _.assign exports, {
   updateAvailableSelector
   filteredPackagesSelector
   commandsForPackageSelector
-  implementationsForCommand
   makeFilteredCommandsForPackage
 }
 
