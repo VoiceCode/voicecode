@@ -48,6 +48,16 @@ commandsSelector = (state) ->
 commandSelector = (state, props) ->
   commandsSelector(state).get props.commandId
 
+# implementations
+implementationsSelector = (state) ->
+  state.get 'implementations'
+implementationSelector = (state, props) ->
+  implementationsSelector(state).get props.id
+implementationsForCommand = (state, props) ->
+  state.get('command_implementations').get props.commandId
+implementationsForPackage = (state, props) ->
+  state.get('package_implementations').get props.packageId
+
 viewModeSelector = (state, {viewMode}) -> viewMode
 
 filteredPackagesSelector =
@@ -131,9 +141,6 @@ _makeFilteredCommandsForPackage = ->
 apisForPackage = (state, props) ->
   state.get('package_apis').get props.packageId
 
-implementationsForCommand = (state, props) ->
-  state.get('command_implementations').get props.commandId
-
 showingEventsSelector = (state, props) ->
   state.get('log_events')
 
@@ -153,6 +160,9 @@ currentPageSelector = (state) ->
 
 _.assign exports, {
   apisForPackage
+  implementationSelector
+  implementationsForPackage
+  implementationsForCommand
   commandSelector
   packageSelector
   packagesSelector

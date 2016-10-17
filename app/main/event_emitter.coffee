@@ -32,7 +32,7 @@ class EventEmitter extends require('events').EventEmitter
         'commandCreated'
         'commandEnabled'
         'windowCreated'
-        'implementationCreated'
+        # 'implementationCreated'
         # 'commandOverwritten'
         'commandAfterAdded'
         'commandBeforeAdded'
@@ -113,9 +113,10 @@ class EventEmitter extends require('events').EventEmitter
           callback.call null, args
       when 'implementationCreated'
         _callback = ->
-          implementations = _.keys arguments[0].implementations
+          implementations = arguments[0].implementations
           commandId = arguments[0].id
-          callback.call null, {implementations, commandId}
+          originalPackageId = arguments[0].packageId
+          callback.call null, {implementations, commandId, originalPackageId}
     # @frontendSubscriptions[event] ?= []
     # @frontendSubscriptions[event].push _callback or callback
     @on event, (_callback or callback)

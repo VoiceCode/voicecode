@@ -51,12 +51,12 @@ exports.reducers =
         commands.setIn [payload.id, 'enabled'], false
       else
         commands
-  command_implementations: (ci = immutable.Map({}), {type, payload}) =>
+  command_implementations: (implementations = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_COMMAND
-        ci.set payload.id, immutable.List []
+        implementations.set payload.id, immutable.List []
       when CREATE_IMPLEMENTATION
-        ci.updateIn [payload.commandId]
-        , (list) -> list.push payload.packageId
+        implementations.updateIn [payload.commandId]
+        , (list) -> list.push payload.id
       else
-        ci
+        implementations
