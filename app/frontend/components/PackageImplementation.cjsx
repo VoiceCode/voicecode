@@ -20,7 +20,7 @@ class PackageImplementation extends React.Component
           <i className='small grey cubes icon'></i>
           { commandId }
           {' '}
-          <div className="ui teal horizontal label small">{ '@' + scope }</div>
+          <div className="ui blue horizontal label small">{ '@' + scope }</div>
         </div>
       </div>
     </div>
