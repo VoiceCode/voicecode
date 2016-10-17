@@ -3,11 +3,13 @@ React = require 'react'
 classNames = require 'classnames'
 {toggleCommand} = require('../ducks/command').actionCreators
 {setCommandFilter} = require('../ducks/command_filter').actionCreators
-{commandSelector, implementationRecordsForCommand} = require '../selectors'
+{commandSelector, makeImplementationsForCommand} = require '../selectors'
 
 mapStateToProps = (state, props) ->
+  implementationsForCommand = makeImplementationsForCommand()
+
   command: commandSelector state, props
-  implementations: implementationRecordsForCommand state, props
+  implementations: implementationsForCommand state, props
 mapDispatchToProps = {
   toggleCommand,
   setCommandFilter

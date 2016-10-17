@@ -56,7 +56,7 @@ implementationSelector = (state, props) ->
 implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
 
-implementationRecordsForCommand =
+makeImplementationsForCommand = ->
   createSelector [
     implementationsSelector,
     implementationsForCommand
@@ -174,7 +174,7 @@ _.assign exports, {
   implementationSelector
   implementationsForPackage
   implementationsForCommand
-  implementationRecordsForCommand
+  makeImplementationsForCommand
   commandSelector
   packageSelector
   packagesSelector
