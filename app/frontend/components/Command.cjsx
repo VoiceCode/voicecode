@@ -31,6 +31,11 @@ class Command extends React.Component
       'toggle on': enabled
       'toggle off': !enabled
       'grey': locked
+    description = description.split('␣').map (item, index) ->
+      if index > 0
+        [<span className='space'>␣</span>, item]
+      else
+        item
     <div className="item command">
       <i className={iconClasses}
          onClick={
