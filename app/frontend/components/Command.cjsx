@@ -82,11 +82,19 @@ class Command extends React.Component
         </div>
     </div>
   implementations: ->
-    {implementations} = @props
-    packageId = @props.command.get 'packageId'
-    implementations.filter((i) -> i.packageId isnt packageId)
-      .map (i) ->
-        <div className="ui teal horizontal label small">
+    {implementations, command} = @props
+    packageId = command.get 'packageId'
+    commandId = command.get 'id'
+    # implementations.filter((i) -> i.packageId isnt packageId)
+    implementations.map (i) ->
+        implementationClasses = classNames
+          ui: true
+          horizontal: true
+          label: true
+          small: true
+          blue: i.packageId isnt packageId
+          gray: i.packageId is packageId
+        <div key={ "#{i.packageId}-#{commandId}-#{i.scope}" } className={ implementationClasses }>
           { "#{i.packageId}@#{i.scope}" }
         </div>
 
