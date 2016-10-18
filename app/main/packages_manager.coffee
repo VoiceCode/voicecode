@@ -129,10 +129,7 @@ class PackagesManager
 
   removePackage: (name) ->
     if name in @registry.base
-      return notify
-        title: "#{name} is a base package"
-        options:
-          body: "It should not be removed"
+      return emit 'packageRequired', {name}
     fs.remove AssetsController.assetsPath + "/packages/#{name}/"
     , (err) ->
       if err
