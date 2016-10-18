@@ -214,7 +214,7 @@ unless developmentMode
       autoUpdater.on 'error', (err) -> 
         error 'autoUpdateError', err, "Updater error: #{err.message}"
       autoUpdater.on 'update-not-available', ->
-        log 'updateNotAvailable', null, "You are running the latest release: #{version}"
+        log 'updateNotAvailable', null, "You are running the latest release: #{appVersion}"
       autoUpdater.on 'update-available', ->
         log 'updateAvailable', null, "Update available, downloading..."
       autoUpdater.on 'update-downloaded', (event, notes, version) ->
@@ -223,6 +223,6 @@ unless developmentMode
         emit 'updateDownloaded', {notes, version}
         clearInterval updateInterval
       autoUpdater.checkForUpdates()
-      updateInterval = setInterval autoUpdater.checkForUpdates, 1000 * 20
+      updateInterval = setInterval autoUpdater.checkForUpdates, 1000 * 60 * 30
     catch err
       error 'autoUpdateError', err, err.message
