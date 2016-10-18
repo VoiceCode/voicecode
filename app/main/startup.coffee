@@ -92,6 +92,9 @@ menubar.on 'ready', ->
     menubar.hideWindow()
   app.on 'activate', ->
     menubar.showWindow()
+  Events.on 'currentApplicationChanged', (to) ->
+    if to.bundleId is global.bundleId
+      menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   window = menubar.window
