@@ -58,7 +58,7 @@ class Footer extends React.Component
                  title="update VoiceCode"
                  onClick={ updateApplication } >
                    <i className="yellow arrow circle up icon"></i>
-                   UPDATE
+                   {"UPDATE to #{updateAvailable.version}"}
               </a>
         }
         <div className='item'>
