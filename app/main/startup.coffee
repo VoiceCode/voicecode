@@ -101,7 +101,7 @@ menubar.on 'after-create-window', ->
   windowController.set 'main', window
   window.on 'blur', ->
     unless developmentMode or window.isSticky
-      window.hide()
+      menubar.hideWindow()
   Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
     if id is 'main'
       window.isSticky = shouldStick
