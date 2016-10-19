@@ -60,14 +60,10 @@ class Commands
           if command.grammar?
             {spoken, rule, variables} = command
             command.grammar = new CustomGrammar spoken, rule, variables
-            emit 'customGrammarUpdated', command
+            emit 'customGrammarUpdated', {command}
 
   validate: (command, options, editType) ->
     validated = true
-    if options?.description?
-      options.description = _.map(options.description.split('. ')
-      , (sentence) -> _.capitalize sentence).join('. ')
-
     switch editType
       when 'commandCreated'
         validated = @validate command, options, 'commandSpokenChanged'

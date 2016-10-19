@@ -44,6 +44,8 @@ subscribeToRemoteEvents = ->
     'commandSpokenChanged': 'changeSpoken'
     'updateDownloaded': 'setUpdateAvailable'
     'restartNeeded': 'setRestartNeeded'
+    'customGrammarCreated': 'createGrammar'
+    'customGrammarUpdated': 'updateGrammar'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 

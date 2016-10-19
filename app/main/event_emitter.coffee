@@ -32,7 +32,7 @@ class EventEmitter extends require('events').EventEmitter
         'commandCreated'
         'commandEnabled'
         'windowCreated'
-        # 'implementationCreated'
+        'implementationCreated'
         # 'commandOverwritten'
         'commandAfterAdded'
         'commandBeforeAdded'
@@ -79,6 +79,10 @@ class EventEmitter extends require('events').EventEmitter
         /.*PackageCreated$/
         /.*PackageReady$/
         /.*SettingsChanged$/
+        'customGrammarCreated'
+        'customGrammarUpdated'
+        'packageRepoStatusUpdated'
+        'packageRepoLogUpdated'
       ]
     @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
       if _.isString entry
@@ -117,6 +121,11 @@ class EventEmitter extends require('events').EventEmitter
             implementations: _.mapValues arguments[0].implementations, 'info'
             commandId: arguments[0].id
             originalPackageId: arguments[0].packageId
+      when 'customGrammarCreated', 'customGrammarUpdated'
+        _callback = ->
+          callback.call null,
+            id: arguments[0].command.id
+            lists: arguments[0].command.grammar.lists
     # @frontendSubscriptions[event] ?= []
     # @frontendSubscriptions[event].push _callback or callback
     @on event, (_callback or callback)
