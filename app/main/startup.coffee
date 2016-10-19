@@ -213,7 +213,7 @@ unless developmentMode
     try
       autoUpdater = electron.autoUpdater
       _platform = if platform is 'darwin' then 'osx' else 'win'
-      autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{appVersion}"
+      autoUpdater.setFeedURL "http://downloads.voicecode.io:31337/update/#{_platform}/#{appVersion}"
       autoUpdater.on 'error', (err) -> 
         error 'autoUpdateError', err, "Updater error: #{err.message}"
       autoUpdater.on 'update-not-available', ->
