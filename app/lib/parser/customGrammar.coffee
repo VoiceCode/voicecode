@@ -34,11 +34,12 @@ class CustomGrammar
         # when 'special'
         # when 'text'
         when 'list'
-          @listNames.push token.uniqueName
-          @lists[token.name] ?= new SpeakableList(@optionsForList(token))
-        when 'inlineList'
-          @listNames.push token.uniqueName
-          @lists[token.name] ?= new SpeakableList(token.options)
+          if not token.inline
+            @listNames.push token.uniqueName
+            @lists[token.name] ?= new SpeakableList(@optionsForList(token))
+          else
+            @listNames.push token.uniqueName
+            @lists[token.name] ?= new SpeakableList(token.options)
 
   optionsForList: (token) ->
     definition = @variables[token.name]
