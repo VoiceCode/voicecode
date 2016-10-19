@@ -31,7 +31,7 @@ logEntryRecord = immutable.Record
 
 doNotification = (entry) ->
   return unless entry.type is 'notify'
-  if _.isPlainObject entry.event
+  if _.isObject entry.event
     {title, options} = entry.event
     new Notification title, options
   else

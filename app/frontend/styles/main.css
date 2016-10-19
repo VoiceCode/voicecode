@@ -135,6 +135,12 @@ body {
     font-size: 12px !important
 }
 
+span.space {
+    background: #f8f8f8;
+    color: #e0e0e0;
+    padding: 0 2px;
+}
+
 
 /* prevent the rubber band scroll */
 

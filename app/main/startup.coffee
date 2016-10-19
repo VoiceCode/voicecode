@@ -5,9 +5,8 @@ Function::property = (prop, desc) ->
 process.env.NODE_ENV = 'production' # needed for react
 
 global.developmentMode = process.argv[3]  == 'develop'
-
-powerSaveBlocker = require('electron').powerSaveBlocker
-powerSaveBlocker.start('prevent-app-suspension')
+global.electron = require('electron')
+electron.powerSaveBlocker.start('prevent-app-suspension')
 
 
 if developmentMode
@@ -33,7 +32,7 @@ replify {name: "voicecode_#{suffix}"}, repl
 global.bundleId = 'io.voicecode.app'
 if developmentMode
   global.bundleId = 'com.github.electron'
-global.app = require('electron').app
+global.app = electron.app
 global.appVersion = app.getVersion()
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
@@ -91,13 +90,18 @@ menubar.on 'ready', ->
   menubar.showWindow()
   unless developmentMode
     menubar.hideWindow()
+  app.on 'activate', ->
+    menubar.showWindow()
+  Events.on 'currentApplicationChanged', (to) ->
+    if to.bundleId is global.bundleId
+      menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   window = menubar.window
   windowController.set 'main', window
   window.on 'blur', ->
     unless developmentMode or window.isSticky
-      window.hide()
+      menubar.hideWindow()
   Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
     if id is 'main'
       window.isSticky = shouldStick
@@ -205,20 +209,23 @@ if developmentMode
 
 # auto update
 unless developmentMode
-  autoUpdater = require 'auto-updater'
-  _platform = if platform is 'darwin' then 'osx' else 'win'
-  autoUpdater.setFeedURL "http://updates.voicecode.io:31337/update/#{_platform}/#{appVersion}"
-  autoUpdater.on 'error', (err) -> error 'autoUpdateError', err
-  , "Updater error: #{err.message}"
-  autoUpdater.on 'update-not-available'
-  , -> log 'updateNotAvailable', null
-    , "You are running the latest release: #{version}"
-  autoUpdater.on 'update-available'
-  , -> log 'updateAvailable', null, "Update available, downloading..."
-  autoUpdater.on 'update-downloaded'
-  , ->
-    Events.on 'applicationShouldUpdate', ->
-      autoUpdater.quitAndInstall()
-    notify 'updateDownloaded', true, "Update downloaded, ready to update."
-
-  autoUpdater.checkForUpdates()
+  Events.once 'startupComplete', ->
+    try
+      autoUpdater = electron.autoUpdater
+      _platform = if platform is 'darwin' then 'osx' else 'win'
+      autoUpdater.setFeedURL "http://downloads.voicecode.io:31337/update/#{_platform}/#{appVersion}"
+      autoUpdater.on 'error', (err) -> 
+        error 'autoUpdateError', err, "Updater error: #{err.message}"
+      autoUpdater.on 'update-not-available', ->
+        log 'updateNotAvailable', null, "You are running the latest release: #{appVersion}"
+      autoUpdater.on 'update-available', ->
+        log 'updateAvailable', null, "Update available, downloading..."
+      autoUpdater.on 'update-downloaded', (event, notes, version) ->
+        Events.on 'applicationShouldUpdate', ->
+          autoUpdater.quitAndInstall()
+        emit 'updateDownloaded', {notes, version}
+        clearInterval updateInterval
+      autoUpdater.checkForUpdates()
+      updateInterval = setInterval autoUpdater.checkForUpdates, 1000 * 60 * 30
+    catch err
+      error 'autoUpdateError', err, err.message

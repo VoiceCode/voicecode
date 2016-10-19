@@ -49,6 +49,13 @@ subscribeToRemoteEvents = ->
 
 subscribeToRemoteEvents()
 
+Events.on 'packageRequired', ({name}) ->
+  new Notification "#{name} is a required package",
+    body: "It should not be removed"
+
+Events.on 'updateDownloaded', ({notes, version}) ->
+  new Notification "Update is ready to install",
+    body: notes
 
 ReactDOM.render(
   <Provider store={store}>
