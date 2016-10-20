@@ -269,12 +269,19 @@ global.subscribe = _.bind Events.on, Events
 global.once = _.bind Events.once, Events
 module.exports = Events
 
-global.mutationNotifier = (target, event, args, deep = false) ->
+global.mutationNotifier = (
+  target,
+  event,
+  args = {},
+  deep = false,
+  path = null
+) ->
   new Proxy target,
     set: (target, property, value, receiver) ->
       if value isnt target[property]
         payload = _.assign {}, args, {
           property,
+          path,
           value: value,
           oldValue: _.cloneDeep(target[property])
         }
@@ -284,7 +291,7 @@ global.mutationNotifier = (target, event, args, deep = false) ->
         # emit "#{event}#{target}", payload
         # emit "#{event}#{target}Set", payload
         if deep and _.isObjectLike value
-          value = mutationNotifier value, event, args, true
+          value = mutationNotifier value, event, args, true, "#{path}.#{property}"
       Reflect.set target, property, value, receiver
     deleteProperty: (target, property) ->
       payload = _.assign {}, args, {
