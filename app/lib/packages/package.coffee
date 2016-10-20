@@ -9,7 +9,7 @@ class Package
     @_after = {}
     @_implementations = {}
     @_settings = mutationNotifier (@options.settings or {})
-    , 'packageSettingsChanged', {pack: @}, true
+    , 'packageSettingsChanged', {pack: @}, true, "Settings.#{@name}"
     if @options.installed
       @registerScope()
       @setDefaultCommandOptions()

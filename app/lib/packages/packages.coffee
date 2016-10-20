@@ -6,6 +6,8 @@ class Packages
     return instance if instance?
     instance = @
     @packages = {}
+    Events.on 'assetEvent', ({event, fullPath, type}) =>
+      @currentEventType = type
     Events.on 'commandCreated', (command, name) =>
       @get(command.packageId)._commands[name] = command
     # Events.on 'packageRemoved', (name) =>
@@ -23,7 +25,7 @@ class Packages
 
   register: (options) ->
     options.installed ?= true
-
+    options.loadOrigin = @currentEventType
     # validate the options
     # instantiate the package, add it to our internal list of packages
     # I'm sure we will think of more things to be done here

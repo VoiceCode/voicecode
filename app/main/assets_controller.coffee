@@ -15,9 +15,10 @@ class AssetsController
   init: ->
     @createDirectory @assetsPath
     @createSettingsFile()
-    @createDirectory @assetsPath + '/packages', (err, created) =>
+    @createDirectory @assetsPath + '/packages', (err, created) ->
       return if err
-      # always make sure base packages get loaded, in case there was a previous failure
+      # always make sure base packages get loaded,
+      # in case there was a previous failure
       PackagesManager.downloadBasePackages ->
         # only the first time, install all the recommended packages
         if created
@@ -91,8 +92,8 @@ class AssetsController
     if coffee = fullPath.match(/.coffee$/) or js = fullPath.match(/.js$/)
       extension = if coffee then '.coffee' else '.js'
       fileName = path.basename fullPath, extension
-      emit 'assetEvent', {event, fullPath}
-      emit "#{type}AssetEvent", {event, fullPath}
+      emit 'assetEvent', {event, fullPath, type}
+      emit "#{type}AssetEvent", {event, fullPath, type}
       try
         unless type is 'package'
           global.Package = Packages.get("user:#{fileName}") or

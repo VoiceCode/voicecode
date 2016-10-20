@@ -1,6 +1,10 @@
 React = require 'react'
-
 {connect} = require 'react-redux'
+CommandList = require './CommandList.cjsx'
+ApiList = require './ApiList.cjsx'
+PackageSettings = require './PackageSettings.cjsx'
+PackageImplementationList = require './PackageImplementationList.cjsx'
+
 {
   makeFilteredCommandsForPackage,
   packageFilterSelector,
@@ -8,7 +12,7 @@ React = require 'react'
   packageSelector,
   commandSelector
 } = require '../selectors'
-CommandList = require './CommandList.cjsx'
+
 {
   shouldInstallPackage,
   shouldRemovePackage,
@@ -16,9 +20,6 @@ CommandList = require './CommandList.cjsx'
   revealPackageOrigin,
   revealPackageSource
 } = require('../ducks/package').actionCreators
-ApiList = require './ApiList.cjsx'
-PackageImplementationList = require './PackageImplementationList.cjsx'
-{connect} = require 'react-redux'
 # {getPackage} = require '../selectors'
 currentFilterSelector = (state, {viewMode}) ->
   if viewMode is 'commands'
@@ -110,7 +111,7 @@ Package = class Package extends React.Component
               </div>
           }
         </div>
-      else
+      else if viewMode is 'packages'
         <div className=''>
           <div className="ui attached icon menu">
           {
@@ -168,6 +169,8 @@ Package = class Package extends React.Component
           </div>
         }
         </div>
+      else if viewMode is 'settings'
+        <PackageSettings packageId={ name }/>
     }
     </div>
 
