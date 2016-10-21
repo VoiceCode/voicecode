@@ -250,12 +250,13 @@ class EventEmitter extends require('events').EventEmitter
     container.continue = true
     if _.isFunction events
       events = [events]
-    _.reduce events, (container={}, event) ->
+    mutated = _.reduce events, (container={}, event) ->
       return container unless container.continue
       container = event container
       container
     , container
-
+    delete mutated.continue
+    mutated
 Events = new EventEmitter
 global.debug = _.bind Events.debug, Events
 global.emit = _.bind Events._emit, Events
@@ -274,7 +275,7 @@ global.mutationNotifier = (
   event,
   args = {},
   deep = false,
-  path = null
+  path = ''
 ) ->
   new Proxy target,
     set: (target, property, value, receiver) ->
@@ -291,7 +292,8 @@ global.mutationNotifier = (
         # emit "#{event}#{target}", payload
         # emit "#{event}#{target}Set", payload
         if deep and _.isObjectLike value
-          value = mutationNotifier value, event, args, true, "#{path}.#{property}"
+          value = mutationNotifier value, event, args
+          , true, "#{path}.#{property}".replace /^\./, ''
       Reflect.set target, property, value, receiver
     deleteProperty: (target, property) ->
       payload = _.assign {}, args, {

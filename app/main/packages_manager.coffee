@@ -11,6 +11,10 @@ class PackagesManager
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
     Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
+    Events.on 'willCreatePackage', (options) =>
+      # attaching repository to soon-to-register-itself package
+      options.repo = @registry?.all[options.name]
+      options
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
       _.each @registry.all, ({repo, description}, name) ->
@@ -19,18 +23,16 @@ class PackagesManager
           name,
           description,
           installed: false,
-          repo
         }
-        pack.options.repo = repo
-        emit 'packageUpdated', {pack}
         true
     Events.once 'userAssetsLoaded', @fetchAll.bind(@)
 
   installPackage: (name, callback) ->
     callback ?= ->
     repo = @registry.all[name].repo
-    destination = AssetsController.assetsPath + "/packages/#{name}"
-    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
+    safeName = _.snakeCase name
+    destination = AssetsController.assetsPath + "/packages/#{safeName}"
+    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -45,7 +47,8 @@ class PackagesManager
     git.clone temporary, repo, (err) ->
       if err
         return callback err
-      npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
+      npmCommand = '/usr/local/bin/node ' +
+       projectRoot + '/node_modules/npm/bin/npm-cli.js'
       npmSettings = [
         "npm_config_target=#{process.versions.electron}"
         'npm_config_arch=x64'
@@ -54,7 +57,8 @@ class PackagesManager
         'npm_config_build_from_source=true'
         'HOME=~/.electron-gyp'
       ].join ' '
-      Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmCommand} install --silent --prefix " +
+      Execute "#{npmSettings} mkdir -p #{temporary}/node_modules " +
+       "&& #{npmCommand} install --silent --prefix " +
       temporary + " && mv #{temporary} #{destination}"
       , (err) ->
         if err

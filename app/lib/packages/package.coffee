@@ -1,5 +1,7 @@
 class Package
-  constructor: (@options) ->
+  constructor: (options) ->
+    @options = mutationNotifier options
+    , 'packageUpdated', {pack: @}, true
     @name = @options.name
     # these are key for keeping track of this package's changes
     @_commands = {}
@@ -9,7 +11,7 @@ class Package
     @_after = {}
     @_implementations = {}
     @_settings = mutationNotifier (@options.settings or {})
-    , 'packageSettingsChanged', {pack: @}, true, "Settings.#{@name}"
+    , 'packageSettingsChanged', {pack: @}, true
     if @options.installed
       @registerScope()
       @setDefaultCommandOptions()
