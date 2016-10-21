@@ -128,22 +128,17 @@ class Command extends React.Component
     implementations.map (i) ->
       siblings = i.packageId is packageId
       implementationClasses = classNames
-        ui: true
+        implementation: true
         horizontal: true
-        label: true
-        small: true
         blue: not siblings
         gray: siblings
-      <div key={ i.id } className={ implementationClasses }>
-        {
-          if siblings
-            "@#{i.scope}"
-          else
-            "#{i.packageId}@#{i.scope}"
-        }
+        label: true
+        small: true
+        ui: true
+      <div key={ "#{i.id}#{i.packageId}#{i.scope}" } className={ implementationClasses }
+           title={ "#{i.packageId} package, #{i.scope} scope" } >
+      { if siblings then "#{i.packageId }@#{ i.scope }" else "@#{ i.scope }" }
       </div>
-
-
 
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Command)
