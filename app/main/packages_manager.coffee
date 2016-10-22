@@ -2,6 +2,7 @@ http = require 'http'
 git = require 'gitty'
 fs = require 'fs-extra'
 npm = require 'npm'
+semver = require 'semver'
 
 class PackagesManager
   constructor: ->
@@ -11,10 +12,6 @@ class PackagesManager
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
     Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
-    Events.on 'willCreatePackage', (options) =>
-      # attaching repository to soon-to-register-itself package
-      options.repo = @registry?.all[options.name]
-      options
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
       _.each @registry.all, ({repo, description}, name) ->
@@ -23,21 +20,29 @@ class PackagesManager
           name,
           description,
           installed: false,
+          repo
         }
+        pack.options.repo = repo
+        emit 'packageUpdated', {pack}
         true
     Events.once 'userAssetsLoaded', @fetchAll.bind(@)
 
   installPackage: (name, callback) ->
     callback ?= ->
     repo = @registry.all[name].repo
-    safeName = _.snakeCase name
-    destination = AssetsController.assetsPath + "/packages/#{safeName}"
-    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{safeName}"
+    version = @determineVersion name
+    if version is false
+      notify "incompatible package: #{name}"
+      return callback 'incompatiblePackage', name
+      , "Package: #{name} - no compatible version available"
+    version ?= 'master'
+    destination = AssetsController.assetsPath + "/packages/#{name}"
+    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
       return callback null, true
-    emit 'installingPackageFolder', name, destination
+    emit 'installingPackageFolder', name, destination, version
     Packages.remove name
     callback = _.wrap callback, (callback, err) ->
       callback.apply @, _.toArray(arguments)[1..]
@@ -47,23 +52,25 @@ class PackagesManager
     git.clone temporary, repo, (err) ->
       if err
         return callback err
-      npmCommand = '/usr/local/bin/node ' +
-       projectRoot + '/node_modules/npm/bin/npm-cli.js'
-      npmSettings = [
-        "npm_config_target=#{process.versions.electron}"
-        'npm_config_arch=x64'
-        'npm_config_disturl=https://atom.io/download/atom-shell'
-        'npm_config_runtime=electron'
-        'npm_config_build_from_source=true'
-        'HOME=~/.electron-gyp'
-      ].join ' '
-      Execute "#{npmSettings} mkdir -p #{temporary}/node_modules " +
-       "&& #{npmCommand} install --silent --prefix " +
-      temporary + " && mv #{temporary} #{destination}"
-      , (err) ->
+      repository = git(temporary)
+      repository.checkout version, (err) ->
         if err
           return callback err
-        callback null, true
+        npmCommand = 'node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
+        npmSettings = [
+          "npm_config_target=#{process.versions.electron}"
+          'npm_config_arch=x64'
+          'npm_config_disturl=https://atom.io/download/atom-shell'
+          'npm_config_runtime=electron'
+          'npm_config_build_from_source=true'
+          'HOME=~/.electron-gyp'
+        ].join ' '
+        Execute "#{npmSettings} mkdir -p '#{temporary}/node_modules' && #{npmCommand} install --silent --prefix " +
+        temporary + " && mv '#{temporary}' '#{destination}'"
+        , (err) ->
+          if err
+            return callback err
+          callback null, true
 
   getPackageRegistry: (callback) ->
     callback ?= (err) ->
@@ -93,6 +100,16 @@ class PackagesManager
       callback e
     )
 
+  determineVersion: (name) ->
+    versions = @registry?.all?[name]?.versions
+    if versions
+      for version, index in versions
+        if semver.satisfies global.appVersion, version[0]
+          return version[1]
+      return false
+    else
+      null
+
   downloadBasePackages: (callback) ->
     @downloadPackageGroup 'base', callback
   downloadRecommendedPackages: (callback) ->
@@ -105,11 +122,14 @@ class PackagesManager
       if developmentMode
         funk = asyncblock
       funk (cloneFlow) =>
-        _.every registry[group], (name) =>
-          @installPackage name, cloneFlow.add()
-          true
-        cloneFlow.wait()
-        callback null, true
+        try
+          _.every registry[group], (name) =>
+            @installPackage name, cloneFlow.add()
+            true
+          cloneFlow.wait()
+          callback null, true
+        catch err
+          callback err
 
   installAllPackages: ->
     _.every @registry.all, (info, name) ->
@@ -147,12 +167,18 @@ class PackagesManager
     , (err, result) =>
       if err
         return error 'packagesManagerFetchError'
-        , repo, "Failed to fetch #{repoName} repository8"
+        , repo, "Failed to fetch #{repoName} repository"
       repo.status (err, status) =>
         emit 'packageRepoStatusUpdated'
         , {repoName, status}
         if status.behind
           @log repoName
+    if version = @determineVersion repoName
+      # only if it is not master
+      if version
+        repo.checkout version, (err) ->
+          if err
+            error 'packagesManagerCheckoutError', repo, "Failed to check out #{repoName}/#{version}"
 
   log: (repoName) ->
     repo = git("#{@packagePath}#{repoName}")
@@ -160,7 +186,7 @@ class PackagesManager
     , (err, log) ->
       if err
         return error 'packagesManagerLogError'
-        , repo, "Failed to Log #{repoName} repository8"
+        , repo, "Failed to Log #{repoName} repository"
       emit 'packageRepoLogUpdated'
       , {repoName, log}
 

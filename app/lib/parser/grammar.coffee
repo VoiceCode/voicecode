@@ -159,9 +159,12 @@ class Grammar
     "_#{name}=value:(#{itemString}) {return value;}"
 
   singleLetterSuffix: ->
-    Packages.get('alphabet').settings().singleLetterSuffix
+    Settings.alphabet.singleLetterSuffix
   uppercaseLetterPrefix: ->
-    Packages.get('alphabet').settings().uppercaseLetterPrefix
+    Settings.alphabet.uppercaseLetterPrefix
+
+  numberRangeSeparator: ->
+    Settings.core.numberRangeSeparator or "dot"
 
   build: -> """
     {
@@ -294,7 +297,7 @@ class Grammar
       symbol:([$-/] / [:-?] / [{-~] / '!' / '"' / '^' / '_' / '`' / '[' / ']' / '#' / '@' / '\\\\' / '`' / '&') s
       {return symbol}
 
-    numberRange = first:(fuzzyInteger) "." ss last:(fuzzyInteger)? {return {first: parseInt(first), last: parseInt(last)};}
+    numberRange = first:(fuzzyInteger) "#{@numberRangeSeparator()}" ss last:(fuzzyInteger)? {return {first: parseInt(first), last: parseInt(last)};}
 
     numerals = d:[0-9]+ s {return d.join('');}
 

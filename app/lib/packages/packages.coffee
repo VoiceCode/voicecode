@@ -1,4 +1,5 @@
 Package = require './package'
+semver = require 'semver'
 
 class Packages
   instance = null
@@ -50,6 +51,13 @@ class Packages
     , {pack: instantiated}
     emit 'packageReady', {pack: instantiated}
     , "Package ready: #{instantiated.name}"
+
+  await: (packageName, callback) ->
+    if pack = @get packageName
+      callback {pack}
+    else
+      Events.once "#{packageName}PackageReady", callback
+
   get: (name) ->
     @packages[name]
 
@@ -59,8 +67,9 @@ class Packages
     @packages = {}
 
   validatePackage: (options) ->
-    invalid = unless options.name?.length
-      "Package [name] is required"
+    invalid = []
+    unless options.name?.length
+      invalid.push "Package [name] is required"
 
     warning = []
     if @packages[options.name]?
@@ -74,8 +83,8 @@ class Packages
       Events.warning 'packageValidationWarning', options, w
       true
 
-    if invalid?
-      error 'packageValidationError', options, invalid
+    if invalid.length
+      error 'packageValidationError', options, invalid.join('\n')
       false
     else
       true

@@ -5,16 +5,16 @@ Execute = (script, options = {}, callback = null) ->
   if _.isFunction options
     callback = options
     options = {}
-  method = 'execSync'
+  method = 'execFileSync'
   if callback?
-    method = 'exec'
+    method = 'execFile'
   try
-    result = cp[method](script, options, callback).toString('utf8')
+    result = cp[method](process.env.SHELL, ['-c', script], options, callback)
+      .toString('utf8').trim()
     result
   catch err
     unless options.silent # TODO: rewrite, this does not silence stdout/stderr
-      error null, null, err
-      error null, null, script
+      error null, script, err
 
 Applescript = (content, shouldReturn = true) ->
   script = $.NSAppleScript('alloc')('initWithSource', $(content))
@@ -26,8 +26,6 @@ Applescript = (content, shouldReturn = true) ->
     null
   script('dealloc')
   returnValue
-
-
 
 exports.Execute = Execute
 exports.Applescript = Applescript
