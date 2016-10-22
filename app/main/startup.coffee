@@ -168,6 +168,7 @@ Events.once 'applicationShouldStart', ->
       return true if /generated/.test path
       return true if /node_modules/.test path
       return true if /package_settings/.test path
+      return true if /misc\//.test path
       return false
     startupFlow.wait 'userAssetsLoaded'
 
