@@ -57,8 +57,8 @@ class Chain
     Events.once 'chainDidExecute', ->
       Events.unsubscribe 'breakChain', comboBreaker
 
-    passableChain = _.cloneDeep chain
     emit 'chainWillExecute', chain
+    passableChain = HistoryController.getChain().concat chain
     _.each chain, (link, index) ->
       chainLinkIndex = HistoryController.getChainLength()
       link.context ?= {}
