@@ -8,7 +8,6 @@ global.developmentMode = process.argv[3]  == 'develop'
 global.electron = require('electron')
 electron.powerSaveBlocker.start('prevent-app-suspension')
 
-
 if developmentMode
   process.env.NODE_ENV = 'development'
   electronConnect = require('electron-connect').client
@@ -55,7 +54,6 @@ global.Settings = Object.create new Proxy settings,
       Events.once "#{property}PackageReady", ({pack})->
         pack.settings value
 
-global._s = require 'underscore.string' # ?
 global._ = require 'lodash'
 require('../lib/utility/deepExtend')
 global.path = require 'path'
