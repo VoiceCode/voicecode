@@ -1,6 +1,7 @@
 { createAction } = require 'redux-actions'
 immutable = require 'immutable'
 {CREATE_COMMAND} = require('./command')
+{CREATE_IMPLEMENTATION} = require './implementation'
 {CREATE_API} = require './api'
 constants =
   CREATE_PACKAGE: 'CREATE_PACKAGE'
@@ -78,6 +79,24 @@ exports.reducers =
           if list.includes id then list else list.push id
       else
         package_commands
+  package_implementations: (package_implementations = immutable.Map({})
+  , {type, payload}) =>
+    switch type
+      when @CREATE_PACKAGE
+        payload = payload.pack
+        package_implementations.set payload.name, immutable.List []
+      when CREATE_IMPLEMENTATION
+        {originalPackageId, packageId, id} = payload
+        # only keep track of packages that
+        # implement commands from another package
+        if originalPackageId isnt packageId
+          package_implementations.updateIn [packageId]
+          , (list) ->
+            if list.includes id then list else list.push id
+        else
+          package_implementations
+      else
+        package_implementations
   package_apis: (package_apis = immutable.Map({}), {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
