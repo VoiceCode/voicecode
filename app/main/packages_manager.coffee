@@ -36,8 +36,9 @@ class PackagesManager
       return callback 'incompatiblePackage', name
       , "Package: #{name} - no compatible version available"
     version ?= 'master'
-    destination = AssetsController.assetsPath + "/packages/#{name}"
-    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
+    safeName = _.snakeCase name
+    destination = AssetsController.assetsPath + "/packages/#{safeName}"
+    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -65,8 +66,8 @@ class PackagesManager
           'npm_config_build_from_source=true'
           'HOME=~/.electron-gyp'
         ].join ' '
-        Execute "#{npmSettings} mkdir -p '#{temporary}/node_modules' && #{npmCommand} install --silent --prefix " +
-        temporary + " && mv '#{temporary}' '#{destination}'"
+        Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmCommand} install --silent --prefix " +
+        temporary + " && mv #{temporary} #{destination}"
         , (err) ->
           if err
             return callback err
