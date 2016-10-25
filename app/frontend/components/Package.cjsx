@@ -159,7 +159,7 @@ Package = class Package extends React.Component
                         <div className='item' key={ commit.commit }>
                           <i className='file code outline middle aligned icon'></i>
                           <div className='content'>
-                            <div className='header'>{ _.startCase commit.message }</div>
+                            <div className='header'>{ commit.message }</div>
                             <div className='description'>{ commit.date }</div>
                           </div>
                         </div>
