@@ -204,26 +204,3 @@ if developmentMode
   Events.on 'chainWillExecute', ->
     console.time 'CHAIN'
 
-
-# auto update
-unless developmentMode
-  Events.once 'startupComplete', ->
-    try
-      autoUpdater = electron.autoUpdater
-      _platform = if platform is 'darwin' then 'osx' else 'win'
-      autoUpdater.setFeedURL "http://downloads.voicecode.io:31337/update/#{_platform}/#{appVersion}"
-      autoUpdater.on 'error', (err) -> 
-        error 'autoUpdateError', err, "Updater error: #{err.message}"
-      autoUpdater.on 'update-not-available', ->
-        log 'updateNotAvailable', null, "You are running the latest release: #{appVersion}"
-      autoUpdater.on 'update-available', ->
-        log 'updateAvailable', null, "Update available, downloading..."
-      autoUpdater.on 'update-downloaded', (event, notes, version) ->
-        Events.on 'applicationShouldUpdate', ->
-          autoUpdater.quitAndInstall()
-        emit 'updateDownloaded', {notes, version}
-        clearInterval updateInterval
-      autoUpdater.checkForUpdates()
-      updateInterval = setInterval autoUpdater.checkForUpdates, 1000 * 60 * 30
-    catch err
-      error 'autoUpdateError', err, err.message
