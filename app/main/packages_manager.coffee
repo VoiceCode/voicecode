@@ -55,7 +55,7 @@ class PackagesManager
       repository.checkout version, (err) ->
         if err
           return callback err
-        npmCommand = 'node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
+        npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
         npmSettings = [
           "npm_config_target=#{process.versions.electron}"
           'npm_config_arch=x64'
@@ -105,9 +105,7 @@ class PackagesManager
       for version, index in versions
         if semver.satisfies global.appVersion, version[0]
           return version[1]
-      return false
-    else
-      null
+    return null
 
   downloadBasePackages: (callback) ->
     @downloadPackageGroup 'base', callback
