@@ -1,18 +1,11 @@
-class EnabledCommandsManager extends require('./settings_manager')
-  # singleton
-  instance = null
+class EnabledCommandsManager extends FileManager
   constructor: ->
-    if instance
-      return instance
-    else
-      instance = super("generated/enabled_commands")
-      Events.on 'commandNotFound', (commandName) =>
-        delete @settings[commandName]
-        @save()
-
-      @processSettings()
-      @subscribeToEvents()
-
+    super("generated/enabled_commands")
+    Events.on 'commandNotFound', (commandName) =>
+      delete @settings[commandName]
+      @save()
+    @processSettings()
+    @subscribeToEvents()
   processSettings: ->
     _.each @settings, (isEnabled, commandName) ->
       if isEnabled

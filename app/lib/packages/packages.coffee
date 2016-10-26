@@ -15,16 +15,15 @@ class Packages
     , ({repoName, status}) =>
       if pack = @get(repoName)
         pack.options.repoStatus = status
-        emit 'packageUpdated', {pack}
+        # emit 'packageUpdated', {pack}
     Events.on 'packageRepoLogUpdated'
     , ({repoName, log}) =>
       if pack = @get(repoName)
         pack.options.repoLog = log
-        emit 'packageUpdated', {pack}
+        # emit 'packageUpdated', {pack}
 
   register: (options) ->
     options.installed ?= true
-
     # validate the options
     # instantiate the package, add it to our internal list of packages
     # I'm sure we will think of more things to be done here
@@ -35,7 +34,7 @@ class Packages
     if @packages[options.name]?
       emit 'packageCreated', {pack: @packages[options.name]}
       return @packages[options.name]
-
+    options = mutate 'willCreatePackage', options
     instantiated = new Package options
     @packages[options.name] = instantiated
     emit 'packageCreated', {pack: instantiated}

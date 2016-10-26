@@ -33,10 +33,12 @@ class PackagesManager
     version = @determineVersion name
     if version is false
       notify "incompatible package: #{name}"
-      return callback 'incompatiblePackage', name, "Package: #{name} - no compatible version available"
+      return callback 'incompatiblePackage', name
+      , "Package: #{name} - no compatible version available"
     version ?= 'master'
-    destination = AssetsController.assetsPath + "/packages/#{name}"
-    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{name}"
+    safeName = _.snakeCase name
+    destination = AssetsController.assetsPath + "/packages/#{safeName}"
+    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination

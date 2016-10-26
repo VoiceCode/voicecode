@@ -20,7 +20,10 @@ class Command
   # https://gist.github.com/dimatter/0206268704609de07119
   @property 'grammar',
     get: ->
-      Commands.mapping[@id].grammar = new CustomGrammar(@spoken, @rule, @variables)
+      grammar = Commands.mapping[@id].grammar =
+      new CustomGrammar(@spoken, @rule, @variables)
+      emit 'customGrammarCreated', {command: Commands.mapping[@id]}
+      grammar
 
   package: ->
     if @packageId?

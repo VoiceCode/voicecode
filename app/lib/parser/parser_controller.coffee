@@ -1,7 +1,6 @@
 fs = require 'fs'
 path = require 'path'
 cryptojs = require 'crypto-js'
-SettingsManager = require('../../main/settings_manager')
 
 class ParserController
   instance = null
@@ -83,16 +82,16 @@ class ParserController
       result
 
   writeToDisk: (data) ->
-    @settingsManager ?= new SettingsManager("generated/parser")
-    @settingsManager.update data
+    @file ?= new FileManager("generated/parser")
+    @file.update data
 
   writeGrammar: ->
     file = path.resolve(AssetsController.assetsPath, "generated/grammar.js")
     fs.writeFile file, @fingerprint.grammar, 'utf8'
 
   loadFromDisk: ->
-    @settingsManager ?= new SettingsManager("generated/parser")
-    @settingsManager.settings
+    @file ?= new FileManager("generated/parser")
+    @file.settings
 
   generateFingerprint: ->
     @fingerprint =

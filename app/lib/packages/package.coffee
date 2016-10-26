@@ -1,5 +1,7 @@
 class Package
-  constructor: (@options) ->
+  constructor: (options) ->
+    @options = mutationNotifier options
+    , 'packageUpdated', {pack: @}, true
     @name = @options.name
     # these are key for keeping track of this package's changes
     @_commands = {}

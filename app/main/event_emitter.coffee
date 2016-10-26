@@ -32,7 +32,7 @@ class EventEmitter extends require('events').EventEmitter
         'commandCreated'
         'commandEnabled'
         'windowCreated'
-        # 'implementationCreated'
+        'implementationCreated'
         # 'commandOverwritten'
         'commandAfterAdded'
         'commandBeforeAdded'
@@ -79,6 +79,10 @@ class EventEmitter extends require('events').EventEmitter
         /.*PackageCreated$/
         /.*PackageReady$/
         /.*SettingsChanged$/
+        'customGrammarCreated'
+        'customGrammarUpdated'
+        'packageRepoStatusUpdated'
+        'packageRepoLogUpdated'
       ]
     @suppressedLogEntries = _.map @suppressedLogEntries, (entry) ->
       if _.isString entry
@@ -117,6 +121,11 @@ class EventEmitter extends require('events').EventEmitter
             implementations: _.mapValues arguments[0].implementations, 'info'
             commandId: arguments[0].id
             originalPackageId: arguments[0].packageId
+      when 'customGrammarCreated', 'customGrammarUpdated'
+        _callback = ->
+          callback.call null,
+            id: arguments[0].command.id
+            lists: arguments[0].command.grammar.lists
     # @frontendSubscriptions[event] ?= []
     # @frontendSubscriptions[event].push _callback or callback
     @on event, (_callback or callback)
@@ -241,12 +250,13 @@ class EventEmitter extends require('events').EventEmitter
     container.continue = true
     if _.isFunction events
       events = [events]
-    _.reduce events, (container={}, event) ->
+    mutated = _.reduce events, (container={}, event) ->
       return container unless container.continue
       container = event container
       container
     , container
-
+    delete mutated.continue
+    mutated
 Events = new EventEmitter
 global.debug = _.bind Events.debug, Events
 global.emit = _.bind Events._emit, Events
@@ -260,14 +270,21 @@ global.subscribe = _.bind Events.on, Events
 global.once = _.bind Events.once, Events
 module.exports = Events
 
-global.mutationNotifier = (target, event, args, deep = false) ->
+global.mutationNotifier = (
+  target,
+  event,
+  args = {},
+  deep = false,
+  path = ''
+) ->
   new Proxy target,
     set: (target, property, value, receiver) ->
       if value isnt target[property]
         payload = _.assign {}, args, {
           property,
-          oldValue: _.cloneDeep target[property],
-          value: value
+          path,
+          value: value,
+          oldValue: _.cloneDeep(target[property])
         }
         process.nextTick ->
           emit event, payload
@@ -275,13 +292,14 @@ global.mutationNotifier = (target, event, args, deep = false) ->
         # emit "#{event}#{target}", payload
         # emit "#{event}#{target}Set", payload
         if deep and _.isObjectLike value
-          value = mutationNotifier value, event, args, true
+          value = mutationNotifier value, event, args
+          , true, "#{path}.#{property}".replace /^\./, ''
       Reflect.set target, property, value, receiver
     deleteProperty: (target, property) ->
       payload = _.assign {}, args, {
         property,
-        oldValue: target[property],
-        value: undefined
+        value: undefined,
+        oldValue: _.cloneDeep(target[property])
       }
       process.nextTick ->
         emit event, payload

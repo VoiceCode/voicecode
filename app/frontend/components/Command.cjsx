@@ -3,11 +3,16 @@ React = require 'react'
 classNames = require 'classnames'
 {toggleCommand} = require('../ducks/command').actionCreators
 {setCommandFilter} = require('../ducks/command_filter').actionCreators
-{commandSelector, makeImplementationsForCommand} = require '../selectors'
+{
+  commandSelector,
+  makeImplementationsForCommand,
+  grammarForCommandSelector
+} = require '../selectors'
 
 mapStateToProps = (state, props) ->
   implementationsForCommand = makeImplementationsForCommand()
 
+  grammarForCommand: grammarForCommandSelector state, props
   command: commandSelector state, props
   implementations: implementationsForCommand state, props
 mapDispatchToProps = {
@@ -18,12 +23,12 @@ class Command extends React.Component
   shouldComponentUpdate: (nextProps, nextState) ->
     @props.command isnt nextProps.command
   # componentDidMount: ->
-  #   $('.rule.dropdown').dropdown({
+  #   $('.rule').dropdown({
   #     transition: 'fade up',
   #     on: 'hover'
   #   })
   render: ->
-    {toggleCommand, setCommandFilter} = @props
+    {toggleCommand, setCommandFilter, grammarForCommand} = @props
     {id, spoken, enabled, packageId,
     description, locked, rule, tags} = @props.command.toJS()
     iconClasses = classNames
@@ -49,22 +54,12 @@ class Command extends React.Component
           if not spoken? and not rule?
               <i className='grey mute icon'></i>
           else
-              if rule? and spoken?
-                rule.replace('<spoken>', spoken)
-              else
-                if rule?
-                  # <div className='rule ui inline pointing dropdown'>
-                  #   { rule } <i className='dropdown icon'></i>
-                  #   <div className='menu'>
-                  #     <div className='item'>test</div>
-                  #     <div className='item'>test 2</div>
-                  #   </div>
-                  # </div>
-                  rule
-                else
-                  <div className='spoken'>
-                    { spoken }
-                  </div>
+            if rule?
+              @renderRule rule, spoken
+            else
+              <div className='spoken'>
+                { spoken }
+              </div>
 
         }
         </div>
@@ -88,6 +83,43 @@ class Command extends React.Component
         }
         </div>
     </div>
+  renderRule: ->
+    {grammarForCommand} = @props
+    rule = @props.command.get 'rule'
+    spoken = @props.command.get 'spoken'
+    count = 0
+    items = {}
+    rule = rule.replace /\((.*?)\)\?*/g, (part, name) ->
+      optional = part.indexOf(')?') isnt -1
+      if part.indexOf('/') isnt -1
+        name = _.camelCase name.replace('/', ' ')
+      items[++count] = {name, optional}
+      "_#{count}"
+    if spoken?
+      rule = rule.replace '<spoken>', _.toUpper spoken
+    inner = _.map rule.split(' '), (part) ->
+      if part[0] is '_'
+        index = part.replace '_', ''
+        grammarListClasses = classNames
+          horizontal: true
+          "ui small label simple dropdown": true
+          blue: !items[index].optional
+          gray: items[index].optional
+        <div className={ grammarListClasses }>
+          { items[index].name }
+          <i className='dropdown icon'></i>
+          <div className='menu'>
+          {
+            _.map grammarForCommand.get(items[index].name), (i) ->
+              <div className='item'>{ i }</div>
+          }
+          </div>
+        </div>
+      else
+        _.toUpper part + " "
+    <div className='rule ui '>
+      { inner }
+    </div>
   implementations: ->
     {implementations, command} = @props
     packageId = command.get 'packageId'
@@ -96,22 +128,17 @@ class Command extends React.Component
     implementations.map (i) ->
       siblings = i.packageId is packageId
       implementationClasses = classNames
-        ui: true
+        implementation: true
         horizontal: true
-        label: true
-        small: true
         blue: not siblings
         gray: siblings
-      <div key={ i.id } className={ implementationClasses }>
-        {
-          if siblings
-            "@#{i.scope}"
-          else
-            "#{i.packageId}@#{i.scope}"
-        }
+        label: true
+        small: true
+        ui: true
+      <div key={ "#{i.id}#{i.packageId}#{i.scope}" } className={ implementationClasses }
+           title={ "#{i.packageId} package, #{i.scope} scope" } >
+      { if siblings then "#{i.packageId }@#{ i.scope }" else "@#{ i.scope }" }
       </div>
-
-
 
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Command)

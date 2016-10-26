@@ -75,20 +75,24 @@ exports.reducers =
       when CREATE_COMMAND
         {id, spoken, packageId, enabled} = payload
         package_commands.updateIn [packageId]
-        , (list) -> list.push id
+        , (list) ->
+          if list.includes id then list else list.push id
       else
         package_commands
-  package_implementations: (package_implementations = immutable.Map({}), {type, payload}) =>
+  package_implementations: (package_implementations = immutable.Map({})
+  , {type, payload}) =>
     switch type
       when @CREATE_PACKAGE
         payload = payload.pack
         package_implementations.set payload.name, immutable.List []
       when CREATE_IMPLEMENTATION
         {originalPackageId, packageId, id} = payload
-        # only keep track of packages that implement commands from another package
+        # only keep track of packages that
+        # implement commands from another package
         if originalPackageId isnt packageId
           package_implementations.updateIn [packageId]
-          , (list) -> list.push id
+          , (list) ->
+            if list.includes id then list else list.push id
         else
           package_implementations
       else

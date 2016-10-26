@@ -64,21 +64,20 @@ global.numberToWords = require '../lib/utility/numberToWords'
 global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 global.windowController = require './window_controller'
-icon = "#{projectRoot}/assets/vc_tray.png"
-if developmentMode
-  icon = "#{projectRoot}/assets/vc_tray_develop.png"
+
 menubarOptions =
   index: "file://#{projectRoot}/frontend/main.html"
-  icon: icon
+  icon: "#{projectRoot}/assets/vc_tray.png"
   width: 800
   height: 1020
-  # x: 0
-  # y: 0
   windowPosition: 'trayRight'
   alwaysOnTop: true
   'always-on-top': true
   showDockIcon: true
-
+if developmentMode
+  menubarOptions.icon = "#{projectRoot}/assets/vc_tray_develop.png"
+  menubarOptions.x = 0
+  menubarOptions.y = 0
 global.menubar = require('menubar') menubarOptions
 
 _.each process.mainModule.paths, (path) ->
@@ -128,12 +127,12 @@ Events.once 'applicationShouldStart', ->
     _.extend global, require './shell' # Execute, Applescript
     if developmentMode
       Settings.userAssetsPath = '~/voicecode_development'
+    global.FileManager = require('./file_manager')
     global.Packages = require '../lib/packages/packages'
     # A package for platform specific global commands
     Packages.register
       name: global.platform
       description: "#{_.startCase global.platform}"
-
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"
@@ -166,6 +165,8 @@ Events.once 'applicationShouldStart', ->
       return true if /settings\.coffee/.test path
       return true if /generated/.test path
       return true if /node_modules/.test path
+      return true if /package_settings/.test path
+      return true if /misc\//.test path
       return false
     startupFlow.wait 'userAssetsLoaded'
 
@@ -203,4 +204,3 @@ if developmentMode
     console.timeEnd 'CHAIN'
   Events.on 'chainWillExecute', ->
     console.time 'CHAIN'
-

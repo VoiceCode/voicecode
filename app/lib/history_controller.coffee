@@ -54,9 +54,9 @@ class HistoryController
 
   getChain: (offset = 0, context = null) ->
     context ?= @getCurrentContext()
-    chain = @history[context][offset]
-    chain = _.cloneDeep @history[context][offset]
-    chain.reverse() # TODO: do this in between chains for performance?
+    chain = @history[context]?[offset]
+    chain = _.cloneDeep chain
+    chain.reverse()
 
   hasAmnesia: (yesNo) ->
     yesNo ?= @amnesia

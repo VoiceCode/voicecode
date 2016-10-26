@@ -2,6 +2,9 @@
 immutable = require 'immutable'
 
 # main window selectors
+settingsForPackageSelector = (state, props) ->
+  state.getIn ['settings', props.packageId]
+
 packageSelector = (state, props) ->
   state.getIn ['packages', props.packageId]
 
@@ -55,6 +58,8 @@ implementationSelector = (state, props) ->
   implementationsSelector(state).get props.id
 implementationsForCommand = (state, props) ->
   state.get('command_implementations').get props.commandId
+grammarForCommandSelector = (state, props) ->
+  state.get('grammars').get props.commandId
 
 makeImplementationsForCommand = ->
   createSelector [
@@ -174,7 +179,6 @@ _.assign exports, {
   implementationSelector
   implementationsForPackage
   implementationsForCommand
-  makeImplementationsForCommand
   commandSelector
   packageSelector
   packagesSelector
@@ -186,7 +190,10 @@ _.assign exports, {
   commandFilterSelector
   updateAvailableSelector
   filteredPackagesSelector
+  grammarForCommandSelector
+  settingsForPackageSelector
   commandsForPackageSelector
+  makeImplementationsForCommand
   makeFilteredCommandsForPackage
 }
 
