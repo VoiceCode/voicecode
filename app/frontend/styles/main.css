@@ -161,3 +161,8 @@ body {
 .allCommandToggle {
     cursor: pointer
 }
+
+/* !important is ugly but couldn't seem to override default style with more specific selectors */
+.ui.rule .ui.dropdown .menu > .item {
+    padding: 4px 14px !important; 
+}
