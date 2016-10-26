@@ -83,6 +83,9 @@ global.menubar = require('menubar') menubarOptions
 _.each process.mainModule.paths, (path) ->
   require('module').globalPaths.push path
 
+# perhaps we need a redux store on the node side for state like this
+global.Network = require '../lib/utility/network'
+
 menubar.on 'ready', ->
   menubar.showWindow()
   unless developmentMode
