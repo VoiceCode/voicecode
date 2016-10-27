@@ -12,6 +12,7 @@ actionCreators = _.reduce {
   SET_RADIO_SILENCE: 'SET_RADIO_SILENCE'
   SET_UPDATE_AVAILABLE: 'SET_UPDATE_AVAILABLE'
   SET_RESTART_NEEDED: 'SET_RESTART_NEEDED'
+  SET_NETWORK_STATUS: 'SET_NETWORK_STATUS'
 }
 , (ac, c) =>
   ac[_.camelCase(c)] = createAction c
@@ -91,3 +92,5 @@ exports.reducers =
         state = payload.name
       else
         state
+  network_status: (state = true, {type, payload}) =>
+    if type is @SET_NETWORK_STATUS then payload else state

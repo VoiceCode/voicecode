@@ -47,10 +47,18 @@ subscribeToRemoteEvents = ->
     'customGrammarCreated': 'createGrammar'
     'customGrammarUpdated': 'updateGrammar'
     'packageSettingsChanged': 'updateSettings'
+    'networkStatus': 'setNetworkStatus'
   _.each events, (handler, event) ->
     Events.on event, _.partial _.invoke, store, "actions.#{handler}"
 
 subscribeToRemoteEvents()
+
+emitNetworkStatus = ->
+  emit 'networkStatus', navigator.onLine
+
+window.addEventListener 'online',  emitNetworkStatus
+window.addEventListener 'offline', emitNetworkStatus
+emitNetworkStatus()
 
 Events.on 'packageRequired', ({name}) ->
   new Notification "#{name} is a required package",
