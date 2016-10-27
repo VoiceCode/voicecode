@@ -180,7 +180,7 @@ Events.once 'applicationShouldStart', ->
       Commands.enableAll()
 
 
-    if developmentMode
+    if developmentMode or platform is 'windows'
       Settings.core.slaveMode = true
     global.MainController = require "#{platformLib}/main_controller"
 
