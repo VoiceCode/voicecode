@@ -85,6 +85,7 @@ _.each process.mainModule.paths, (path) ->
 
 # perhaps we need a redux store on the node side for state like this
 global.Network = require '../lib/utility/network'
+global.BadgeCounter = require '../lib/utility/badge_counter'
 
 menubar.on 'ready', ->
   menubar.showWindow()

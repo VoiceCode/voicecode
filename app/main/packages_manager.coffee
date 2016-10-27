@@ -195,4 +195,10 @@ class PackagesManager
       @fetch repoName
 
 
+Events.on 'packageRepoStatusUpdated', ({repoName, status}) ->
+  if status.behind
+    BadgeCounter.add repoName
+  else
+    BadgeCounter.remove repoName
+
 module.exports = new PackagesManager
