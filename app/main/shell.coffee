@@ -5,7 +5,7 @@ Execute = (script, options = {}, callback = null) ->
   switch platform
     when 'windows'
       cmd = process.env.ComSpec
-      params = ['\\c', script]
+      params = ['/c', script]
     else
       cmd = crosses.env.SHELL
       params = ['-c', script]
@@ -16,11 +16,9 @@ Execute = (script, options = {}, callback = null) ->
   if callback?
     method = 'execFile'
   try
-    console.log cp, method, cmd, params, options, (callback?)
     result = cp[method](cmd, params, options, callback)
     result.toString('utf8').trim() unless callback?
   catch err
-    console.error err
     unless options.silent # TODO: rewrite, this does not silence stdout/stderr
       error null, script, err
 

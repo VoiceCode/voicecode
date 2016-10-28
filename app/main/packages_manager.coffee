@@ -84,16 +84,16 @@ class PackagesManager
           makeDirCmd = 'mkdir'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
           nodePath = '"' + nodePath + '"'
-          optional = ' > nul 2> nul'
+          # optional = ' > nul 2> nul'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
+        # all of this will most likely fail when user has a space in his name
         commandString = "#{makeDirCmd} " +
         path.join(temporary, 'node_modules') +
         " && #{nodePath} #{npmCommand} install --silent --prefix " +
-        temporary + optional + " && #{moveDirCmd} #{temporary} #{destination}"
-        console.log commandString
+        temporary + ' ' + temporary ' ' +
+        optional + " && #{moveDirCmd} #{temporary} #{destination}"
         Execute commandString, {env}, (err) ->
-          console.log arguments
           if err
             return callback err
           callback null, true
@@ -142,12 +142,12 @@ class PackagesManager
     funk = asyncblock.nostack
     if developmentMode
       funk = asyncblock
-    # funk (cloneFlow) =>
+    funk (cloneFlow) =>
       try
         _.every @registry[group], (name) =>
-          @installPackage name#, cloneFlow.add()
+          @installPackage name, cloneFlow.add()
           true
-        # cloneFlow.wait()
+        cloneFlow.wait()
         callback null, true
       catch err
         callback err
