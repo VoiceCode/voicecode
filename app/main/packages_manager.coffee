@@ -70,7 +70,7 @@ class PackagesManager
         optional = ''
         moveDirCmd = 'mv'
         makeDirCmd = 'mkdir -p'
-        nodePath = '/usr/local/bin/node '
+        nodePath = '/usr/local/bin/node'
         npmSettings = {
           npm_config_target: "#{process.versions.electron}"
           npm_config_arch: 'x64'
@@ -82,7 +82,7 @@ class PackagesManager
         if platform is 'windows'
           moveDirCmd = 'move'
           makeDirCmd = 'mkdir'
-          nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
+          nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node.exe'
           nodePath = '"' + nodePath + '"'
           # optional = ' > nul 2> nul'
         env = _.assign process.env, npmSettings
