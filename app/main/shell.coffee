@@ -2,6 +2,13 @@
 cp = require('child_process')
 
 Execute = (script, options = {}, callback = null) ->
+  switch platform
+    when 'windows'
+      cmd = process.env.ComSpec
+      params = ['\c', script]
+    else
+      cmd = crosses.env.SHELL
+      params = ['-c', script]
   if _.isFunction options
     callback = options
     options = {}
@@ -9,7 +16,7 @@ Execute = (script, options = {}, callback = null) ->
   if callback?
     method = 'execFile'
   try
-    result = cp[method](process.env.SHELL, ['-c', script], options, callback)
+    result = cp[method](cmd, params, options, callback)
       .toString('utf8').trim()
     result
   catch err

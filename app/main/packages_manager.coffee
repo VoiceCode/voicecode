@@ -79,11 +79,11 @@ class PackagesManager
           willDirectory = 'move'
           nodePath = '/c/Program Files/nodejs/node '
         # hack, spawn passes processes.env along
-        process.env = _.assign process.env, npmSettings
+        env = _.assign process.env, npmSettings
         npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
         Execute "mkdir -p #{temporary}/node_modules " +
         "&& #{npmCommand} install --silent --prefix " +
-        temporary + " && #{moveDirectory} #{temporary} #{destination}"
+        temporary + " && #{moveDirectory} #{temporary} #{destination}", {env}
         , (err) ->
           if err
             return callback err
