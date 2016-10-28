@@ -77,7 +77,7 @@ class PackagesManager
         }
         if platform is 'windows'
           willDirectory = 'move'
-          nodePath = '/c/Program Files/nodejs/node'
+          nodePath = '/c/Program Files/nodejs/node '
         # hack, spawn passes processes.env along
         process.env = _.assign process.env, npmSettings
         npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
