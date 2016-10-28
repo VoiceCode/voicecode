@@ -67,23 +67,21 @@ class PackagesManager
           return callback err
         moveDirectory = 'mv'
         nodePath = '/usr/local/bin/node '
-        npmSettings = [
-          "npm_config_target=#{process.versions.electron}"
-          'npm_config_arch=x64'
-          'npm_config_disturl=https://atom.io/download/atom-shell'
-          'npm_config_runtime=electron'
-          'npm_config_build_from_source=true'
-          'HOME=~/.electron-gyp'
+        npmSettings = {
+          npm_config_target: "#{process.versions.electron}"
+          npm_config_arch: 'x64'
+          npm_config_disturl: 'https://atom.io/download/atom-shell'
+          npm_config_runtime: 'electron'
+          npm_config_build_from_source: true
+          HOME: "#{os.homedir()}/.electron-gyp"
         ]
         if platform is 'windows'
           willDirectory = 'move'
           nodePath = '/c/Program Files/nodejs/node'
-          npmSettings = _.map npmSettings, (envVariable) ->
-            "set #{envVariable.replace('=', ' ')} &&"
-
+        process.env = _.assign process.env, npmSettings # hack, spawn passes processes.env along
         npmSettings = npmSettings.join ' '
         npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
-        Execute "#{npmSettings} mkdir -p #{temporary}/node_modules " +
+        Execute "mkdir -p #{temporary}/node_modules " +
         "&& #{npmCommand} install --silent --prefix " +
         temporary + " && #{moveDirectory} #{temporary} #{destination}"
         , (err) ->
