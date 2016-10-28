@@ -67,7 +67,9 @@ class PackagesManager
         console.log 'git checkout'
         if err
           return callback err
+        optional = ''
         moveDirCmd = 'mv'
+        makeDirCmd = 'mkdir -p'
         nodePath = '/usr/local/bin/node '
         npmSettings = {
           npm_config_target: "#{process.versions.electron}"
@@ -79,12 +81,14 @@ class PackagesManager
         }
         if platform is 'windows'
           moveDirCmd = 'move'
+          makeDirCmd = 'mkdir'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
           nodePath = '"' + nodePath + '"'
+          optional = '> nul 2> nul'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
-        commandString = "mkdir -p " + path.join(temporary, 'node_modules') +
-        " && #{nodePath} #{npmCommand} install --silent --prefix " +
+        commandString = "#{makeDirCmd} " + path.join(temporary, 'node_modules') +
+        " && #{nodePath} #{npmCommand} install --silent --prefix " + optional +
         temporary + " && #{moveDirCmd} #{temporary} #{destination}"
         console.log commandString
         Execute commandString, {env}, (err) ->
