@@ -46,7 +46,7 @@ class PackagesManager
     version ?= 'master'
     safeName = _.snakeCase name
     destination = path.join AssetsController.assetsPath, 'packages', safeName
-    temporary = path.join os.tmpdir(), '/voicecode/packages/', Date.now(), safeName
+    temporary = path.join os.tmpdir(), '/voicecode/packages/', String(Date.now()), safeName
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
