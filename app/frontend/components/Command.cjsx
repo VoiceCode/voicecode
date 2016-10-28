@@ -87,6 +87,7 @@ class Command extends React.Component
     {grammarForCommand} = @props
     rule = @props.command.get 'rule'
     spoken = @props.command.get 'spoken'
+    enabled = @props.command.get 'enabled'
     count = 0
     items = {}
     rule = rule.replace /\((.*?)\)\?*/g, (part, name) ->
@@ -100,20 +101,27 @@ class Command extends React.Component
     inner = _.map rule.split(' '), (part) ->
       if part[0] is '_'
         index = part.replace '_', ''
+        dropDownClasses = classNames
+          dropdown: enabled
+          icon: enabled
         grammarListClasses = classNames
           horizontal: true
-          "ui small label simple dropdown": true
+          "ui small label simple": true
+          dropdown: enabled
           blue: !items[index].optional
           gray: items[index].optional
         <div className={ grammarListClasses }>
           { items[index].name }
-          <i className='dropdown icon'></i>
-          <div className='menu'>
-          {
-            _.map grammarForCommand.get(items[index].name), (i) ->
-              <div className='item'>{ i }</div>
-          }
-          </div>
+          <i className={ dropDownClasses }> </i>
+            <div className='menu'>
+            {
+              if enabled
+                _.map grammarForCommand.get(items[index].name), (i) ->
+                  <div className='item'>{ i }</div>
+              else
+                null
+            }
+            </div>
         </div>
       else
         _.toUpper part + " "
