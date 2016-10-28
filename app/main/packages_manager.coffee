@@ -84,12 +84,13 @@ class PackagesManager
           makeDirCmd = 'mkdir'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
           nodePath = '"' + nodePath + '"'
-          optional = '> nul 2> nul'
+          optional = ' > nul 2> nul'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
-        commandString = "#{makeDirCmd} " + path.join(temporary, 'node_modules') +
-        " && #{nodePath} #{npmCommand} install --silent --prefix " + optional +
-        temporary + " && #{moveDirCmd} #{temporary} #{destination}"
+        commandString = "#{makeDirCmd} " +
+        path.join(temporary, 'node_modules') +
+        " && #{nodePath} #{npmCommand} install --silent --prefix " +
+        temporary + optional + " && #{moveDirCmd} #{temporary} #{destination}"
         console.log commandString
         Execute commandString, {env}, (err) ->
           console.log arguments
