@@ -6,6 +6,7 @@ semver = require 'semver'
 
 class PackagesManager
   constructor: ->
+    @registry = {all: {}}
     @packagePath = AssetsController.assetsPath + "/packages/"
     @getPackageRegistry()
     Events.on 'installPackage', @installPackage.bind(@)
@@ -115,6 +116,9 @@ class PackagesManager
     @downloadPackageGroup 'recommended', callback
 
   downloadPackageGroup: (group, callback) ->
+    if platform is 'windows'
+        return callback null, true
+
     @getPackageRegistry (err, registry) =>
       return callback(err) if err?
       funk = asyncblock.nostack

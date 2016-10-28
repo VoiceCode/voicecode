@@ -4,11 +4,9 @@ forever = require 'forever'
 
 module.exports = new class MainController
   constructor: ->
-    @loadFrameworks()
-
     Events.once 'startupComplete', =>
       if developmentMode
-        null
+        @monitorEvents()
         # @listenOnSocket "/tmp/voicecode_events_dev.sock", @systemEventHandler
       else
         @startEventMonitor()
@@ -19,6 +17,7 @@ module.exports = new class MainController
         null
 
   startEventMonitor: ->
+    @monitorEvents()
     @eventMonitor = forever.start '',
       command: "#{projectRoot}\\bin\\WEM.exe"
       silent: true
@@ -40,7 +39,7 @@ module.exports = new class MainController
       @systemEventHandler message
     server.on 'listening', ->
       console.log "Listening for system events"
-    server.bind 31337, '127.255.255.255'
+    server.bind 31337, '127.0.0.255'
 
   systemEventHandler: (message) ->
     try
