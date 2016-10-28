@@ -35,18 +35,18 @@ module.exports = new class MainController
     server.on 'error', (err) ->
       error 'eventMonitoringError', err, err.message
     server.on 'message', (message) =>
-      console.log message
+      #console.log message
       @systemEventHandler message
     server.on 'listening', ->
-      console.log "Listening for system events"
+      #console.log "Listening for system events"
     server.bind 31337, '127.0.0.255'
 
   systemEventHandler: (message) ->
     try
       {title, path} = JSON.parse message
-      path = path.split '\\'
-      name = _.last path
-      Actions.setCurrentApplication {name, path, title}
+      _path = path.split '\\'
+      bundleId = _.last _path
+      Actions.setCurrentApplication {bundleId, path, title}
     catch
       error 'systemEventHandler', message, "Unable to parse system event"
 
@@ -56,6 +56,8 @@ module.exports = new class MainController
   listenAsSlave: ->
     socketServer = net.createServer (socket) =>
       notify 'masterConnected', null, "Master connected!"
+      socket.on 'error', (er) ->
+        error 'slaveSocketError', err
       socket.on 'data', @slaveDataHandler.bind(@)
       socket.on 'end', (socket) ->
         notify 'masterDisconnected', null, "Master disconnected..."

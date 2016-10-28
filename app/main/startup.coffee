@@ -30,7 +30,11 @@ replify {name: "voicecode_#{suffix}"}, repl
 
 global.bundleId = 'io.voicecode.app'
 if developmentMode
-  global.bundleId = 'com.github.electron'
+  switch platform
+    when 'darwin'
+      global.bundleId = 'com.github.electron'
+    when 'windows'
+      global.bundleId = 'electron.exe'
 global.app = electron.app
 global.appVersion = app.getVersion()
 global.Fiber = require 'fibers'
