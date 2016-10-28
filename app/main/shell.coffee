@@ -17,8 +17,7 @@ Execute = (script, options = {}, callback = null) ->
     method = 'execFile'
   try
     result = cp[method](cmd, params, options, callback)
-      .toString('utf8').trim()
-    result
+    result.toString('utf8').trim() unless callback
   catch err
     unless options.silent # TODO: rewrite, this does not silence stdout/stderr
       error null, script, err

@@ -87,8 +87,7 @@ class PackagesManager
         " && #{nodePath} #{npmCommand} install --silent --prefix " +
         temporary + " && #{moveDirCmd} #{temporary} #{destination}"
         console.log commandString
-        Execute commandString, {env}
-        , (err) ->
+        Execute commandString, {env}, (err) ->
           console.log arguments
           if err
             return callback err
