@@ -133,12 +133,12 @@ class PackagesManager
     funk = asyncblock.nostack
     if developmentMode
       funk = asyncblock
-    funk (cloneFlow) =>
+    # funk (cloneFlow) =>
       try
         _.every @registry[group], (name) =>
-          @installPackage name, cloneFlow.add()
+          @installPackage name#, cloneFlow.add()
           true
-        cloneFlow.wait()
+        # cloneFlow.wait()
         callback null, true
       catch err
         callback err
