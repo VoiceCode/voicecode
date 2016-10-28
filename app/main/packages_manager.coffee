@@ -80,6 +80,7 @@ class PackagesManager
         if platform is 'windows'
           willDirectory = 'move'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
+          nodePath = '"' + nodePath + '"'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
         commandString = "mkdir -p " + path.join(temporary, 'node_modules') +
