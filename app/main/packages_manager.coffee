@@ -4,7 +4,7 @@ git = require 'gitty'
 fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
-
+path = require 'path'
 class PackagesManager
   constructor: ->
     @packagePath = AssetsController.assetsPath + "/packages/"
@@ -45,8 +45,8 @@ class PackagesManager
       , "Package: #{name} - no compatible version available"
     version ?= 'master'
     safeName = _.snakeCase name
-    destination = AssetsController.assetsPath + "/packages/#{safeName}"
-    temporary = "#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
+    destination = path.normalize AssetsController.assetsPath + "/packages/#{safeName}"
+    temporary = path.normalize "#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -73,16 +73,16 @@ class PackagesManager
           npm_config_disturl: 'https://atom.io/download/atom-shell'
           npm_config_runtime: 'electron'
           npm_config_build_from_source: true
-          HOME: "#{os.homedir()}/.electron-gyp"
+          HOME: path.join os.homedir(), '.electron-gyp'
         }
         if platform is 'windows'
           willDirectory = 'move'
-          nodePath = '"C:\\Program Files\\nodejs\\node" '
-        # hack, spawn passes processes.env along
+          nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
         env = _.assign process.env, npmSettings
-        npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
-        Execute "mkdir -p #{temporary}/node_modules " +
-        "&& #{npmCommand} install --silent --prefix " +
+        npmCommand = path.join nodePath, projectRoot
+        , path.normalize '/node_modules/npm/bin/npm-cli.js'
+        Execute "mkdir -p " + path.normalize("#{temporary}/node_modules") +
+        " && #{npmCommand} install --silent --prefix " +
         temporary + " && #{moveDirectory} #{temporary} #{destination}", {env}
         , (err) ->
           if err
