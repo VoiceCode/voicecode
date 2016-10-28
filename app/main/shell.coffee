@@ -16,9 +16,11 @@ Execute = (script, options = {}, callback = null) ->
   if callback?
     method = 'execFile'
   try
+    console.log cp, method, cmd, params, options, (callback?)
     result = cp[method](cmd, params, options, callback)
-    result.toString('utf8').trim() unless callback
+    result.toString('utf8').trim() unless callback?
   catch err
+    console.error err
     unless options.silent # TODO: rewrite, this does not silence stdout/stderr
       error null, script, err
 
