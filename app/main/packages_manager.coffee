@@ -81,9 +81,9 @@ class PackagesManager
           willDirectory = 'move'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
         env = _.assign process.env, npmSettings
-        npmCommand = path.join nodePath, projectRoot, '/node_modules/npm/bin/npm-cli.js'
+        npmCommand = projectRoot, '/node_modules/npm/bin/npm-cli.js'
         commandString = "mkdir -p " + path.join(temporary, 'node_modules') +
-        " && #{npmCommand} install --silent --prefix " +
+        " && #{path.join nodePath} #{npmCommand} install --silent --prefix " +
         temporary + " && #{moveDirCmd} #{temporary} #{destination}"
         console.log commandString
         Execute commandString, {env}
