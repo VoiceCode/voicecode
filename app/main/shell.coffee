@@ -5,7 +5,7 @@ Execute = (script, options = {}, callback = null) ->
   switch platform
     when 'windows'
       cmd = process.env.ComSpec
-      params = ['\c', script]
+      params = ['\\c', script]
     else
       cmd = crosses.env.SHELL
       params = ['-c', script]
