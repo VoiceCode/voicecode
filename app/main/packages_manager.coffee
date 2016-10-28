@@ -90,8 +90,7 @@ class PackagesManager
         # all of this will most likely fail when user has a space in his name
         commandString = "#{makeDirCmd} " +
         path.join(temporary, 'node_modules') +
-        " && #{nodePath} #{npmCommand} install --silent --prefix " +
-        temporary + ' ' + temporary ' ' +
+        " && #{nodePath} #{npmCommand} install --silent --prefix " + temporary + ' ' + temporary ' ' +
         optional + " && #{moveDirCmd} #{temporary} #{destination}"
         Execute commandString, {env}, (err) ->
           if err
