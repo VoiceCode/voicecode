@@ -46,7 +46,7 @@ class PackagesManager
     version ?= 'master'
     safeName = _.snakeCase name
     destination = AssetsController.assetsPath + "/packages/#{safeName}"
-    temporary = "/#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
+    temporary = "#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
