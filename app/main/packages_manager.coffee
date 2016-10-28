@@ -59,10 +59,12 @@ class PackagesManager
         return error 'packageRepoInstallError', err, err.message
       emit 'packageRepoInstalled', {repo: destination, pack: name}
     git.clone temporary, repo, (err) ->
+      console.log  'git clone'
       if err
         return callback err
       repository = git(temporary)
       repository.checkout version, (err) ->
+        console.log 'git checkout'
         if err
           return callback err
         moveDirCmd = 'mv'
@@ -83,6 +85,7 @@ class PackagesManager
         commandString = "mkdir -p " + path.join(temporary, 'node_modules') +
         " && #{npmCommand} install --silent --prefix " +
         temporary + " && #{moveDirCmd} #{temporary} #{destination}"
+        console.log commandString
         Execute commandString, {env}
         , (err) ->
           if err
