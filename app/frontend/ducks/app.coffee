@@ -92,5 +92,5 @@ exports.reducers =
         state = payload.name
       else
         state
-  network_status: (state = true, {type, payload}) =>
+  network_status: (state = false, {type, payload}) =>
     if type is @SET_NETWORK_STATUS then payload else state

@@ -1,4 +1,3 @@
-os = require 'os'
 http = require 'http'
 git = require 'gitty'
 fs = require 'fs-extra'
@@ -7,9 +6,17 @@ semver = require 'semver'
 
 class PackagesManager
   constructor: ->
-    @registry = {all: {}}
     @packagePath = AssetsController.assetsPath + "/packages/"
-    @getPackageRegistry()
+    @getPackageRegistry (err, registry) =>
+      console.log arguments
+      if err
+        error 'packagesManagerRegistryError'
+        , err, "Failed retrieving package registry: #{err.message}"
+        @registry = {all: {}}
+      else
+        @registry = registry
+      emit 'packagesManagerReady'
+
     Events.on 'installPackage', @installPackage.bind(@)
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
@@ -40,7 +47,7 @@ class PackagesManager
     version ?= 'master'
     safeName = _.snakeCase name
     destination = AssetsController.assetsPath + "/packages/#{safeName}"
-    temporary = "/#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
+    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -59,8 +66,7 @@ class PackagesManager
       repository.checkout version, (err) ->
         if err
           return callback err
-        moveDirectory = 'mv'
-        nodePath = '/usr/local/bin/node '
+        npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
         npmSettings = [
           "npm_config_target=#{process.versions.electron}"
           'npm_config_arch=x64'
@@ -68,46 +74,32 @@ class PackagesManager
           'npm_config_runtime=electron'
           'npm_config_build_from_source=true'
           'HOME=~/.electron-gyp'
-        ]
-        if platform is 'windows'
-          willDirectory = 'move'
-          nodePath = '/c/Program Files/nodejs/node'
-          npmSettings = _.map npmSettings, (envVariable) ->
-            "set #{envVariable.replace('=', ' ')} && "
-
-        npmSettings.join ' '
-        npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
-        Execute "#{npmSettings} mkdir -p #{temporary}/node_modules " +
-        "&& #{npmCommand} install --silent --prefix " +
-        temporary + " && #{moveDirectory} #{temporary} #{destination}"
+        ].join ' '
+        Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmCommand} install --silent --prefix " +
+        temporary + " && mv #{temporary} #{destination}"
         , (err) ->
           if err
             return callback err
           callback null, true
 
   getPackageRegistry: (callback) ->
-    callback ?= (err) ->
-      if err
-        return error 'packagesManagerRegistryError'
-        , err, "Failed retrieving package registry: #{err.message}"
-    return callback(null, @registry) if @registry?
+    if not Network.online
+      return callback new Error 'Not online'
     http.get(
       host: 'updates.voicecode.io'
       path: '/packages/registry/raw/master/packages.json'
-    , (response) =>
+      timeout: 3000
+    , (response) ->
       data = ''
       response.setEncoding 'utf8'
       response.on 'data', (chunk) ->
         data += chunk
-      response.on 'end', =>
+      response.on 'end', ->
         registry = JSON.parse data
         if _.isObject registry
-          @registry = registry
-          callback null, @registry
+          callback null, registry
         else
-          callback
-            message: 'malformed response'
-            data: data
+          callback new TypeError 'Malformed registry response', data
       response.resume()
     ).on('error', (e) ->
       callback e
@@ -122,28 +114,27 @@ class PackagesManager
     return null
 
   downloadBasePackages: (callback) ->
+    if not Network.online
+      return callback new Error 'Cant download base packages'
     @downloadPackageGroup 'base', callback
+
   downloadRecommendedPackages: (callback) ->
+    return callback new Error 'Cant download recommended packages'
     @downloadPackageGroup 'recommended', callback
 
   downloadPackageGroup: (group, callback) ->
-    if platform is 'windows'
-        return callback null, true
-
-    @getPackageRegistry (err, registry) =>
-      return callback(err) if err?
-      funk = asyncblock.nostack
-      if developmentMode
-        funk = asyncblock
-      funk (cloneFlow) =>
-        try
-          _.every registry[group], (name) =>
-            @installPackage name, cloneFlow.add()
-            true
-          cloneFlow.wait()
-          callback null, true
-        catch err
-          callback err
+    funk = asyncblock.nostack
+    if developmentMode
+      funk = asyncblock
+    funk (cloneFlow) =>
+      try
+        _.every @registry[group], (name) =>
+          @installPackage name, cloneFlow.add()
+          true
+        cloneFlow.wait()
+        callback null, true
+      catch err
+        callback err
 
   installAllPackages: ->
     _.every @registry.all, (info, name) ->

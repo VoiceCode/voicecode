@@ -24,6 +24,7 @@
     "fs-extra": "^0.30.0",
     "gitty": "^3.5.0",
     "immutable": "^3.8.1",
+    "is-online": "^5.1.2",
     "jquery": "^3.1.1",
     "lodash": "^4.16.4",
     "menubar": "^5.1.0",

@@ -1,10 +1,23 @@
+isOnline = require 'is-online'
+
 class Network
-	instance = null
-	constructor: ->
-		return instance if instance?
-		@online = true
-		Events.on 'networkStatus', @updateStatus.bind(@)
-	updateStatus: (status) ->
-		@online = status
+  instance = null
+  constructor: ->
+    return instance if instance?
+    @online = false
+    Events.once 'startupComplete', =>
+      @interval = setInterval @check.bind(@), 300000 # 5 minutes
+
+  check: ->
+    isOnline @updateStatus.bind @
+  updateStatus: (err, status = false) ->
+    if err
+      error 'networkStatusError', err
+    @online = status
+    emit 'networkStatus', @online
+  checkSync: (callback) ->
+    isOnline (err, status) ->
+      @updateStatus err, status
+      callback err, status
 
 module.exports = new Network

@@ -10,7 +10,7 @@ class AssetsController
     @assetsPath = Settings.userAssetsPath.replace /^~/, os.homedir()
     emit 'assetPath', @assetsPath, "Assets path: #{@assetsPath}"
     @watchers = {}
-    process.nextTick @init.bind @
+    Events.once 'packagesManagerReady', @init.bind @
 
   init: ->
     @createDirectory @assetsPath

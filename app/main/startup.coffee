@@ -87,7 +87,6 @@ global.menubar = require('menubar') menubarOptions
 _.each process.mainModule.paths, (path) ->
   require('module').globalPaths.push path
 
-# perhaps we need a redux store on the node side for state like this
 global.Network = require '../lib/utility/network'
 global.BadgeCounter = require '../lib/utility/badge_counter'
 
@@ -132,6 +131,9 @@ Events.once 'applicationShouldStart', ->
     funk = asyncblock
   funk (startupFlow) ->
     startupFlow.firstArgIsError = false
+    Events.once 'networkStatus', startupFlow.add 'networkStatus'
+    Network.check()
+    startupFlow.wait 'networkStatus'
     _.extend global, require './shell' # Execute, Applescript
     if developmentMode
       Settings.userAssetsPath = '~/voicecode_development'
@@ -145,9 +147,12 @@ Events.once 'applicationShouldStart', ->
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
+    Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.AssetsController = require './assets_controller'
     global.PackagesManager = require './packages_manager'
+    startupFlow.wait 'packagesManagerReady'
     startupFlow.wait 'assetsControllerReady'
+
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'

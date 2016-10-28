@@ -4,6 +4,7 @@ classNames = require 'classnames'
 {
   updateAvailableSelector,
   restartNeededSelector,
+  networkStatusSelector
 } = require '../selectors'
 {
   updateApplication,
@@ -19,16 +20,24 @@ mapDispatchToProps = {
 mapStateToProps = (state, props) ->
   restartNeeded: restartNeededSelector state
   updateAvailable: updateAvailableSelector state
+  online: networkStatusSelector state
 
 class Footer extends React.Component
   render: ->
     {
+      online,
       restartNeeded,
       updateAvailable,
       quitApplication,
       updateApplication,
       restartApplication,
     } = @props
+    networkStatusClasses = classNames
+      icon: true
+      green: online
+      red: !online
+      circle: true
+      tiny: true
     restartIconClasses = classNames
       "icon": true
       "refresh": true
@@ -62,6 +71,7 @@ class Footer extends React.Component
               </a>
         }
         <div className='item'>
+          <i className={ networkStatusClasses }></i>
           <div className="appVersion" >v { Remote.getGlobal('appVersion') }</div>
         </div>
       </div>
