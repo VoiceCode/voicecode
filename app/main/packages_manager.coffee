@@ -79,9 +79,9 @@ class PackagesManager
           willDirectory = 'move'
           nodePath = '/c/Program Files/nodejs/node'
           npmSettings = _.map npmSettings, (envVariable) ->
-            "set #{envVariable.replace('=', ' ')} && "
+            "set #{envVariable.replace('=', ' ')} &&"
 
-        npmSettings.join ' '
+        npmSettings = npmSettings.join ' '
         npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
         Execute "#{npmSettings} mkdir -p #{temporary}/node_modules " +
         "&& #{npmCommand} install --silent --prefix " +
