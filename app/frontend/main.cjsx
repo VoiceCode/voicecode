@@ -53,13 +53,6 @@ subscribeToRemoteEvents = ->
 
 subscribeToRemoteEvents()
 
-emitNetworkStatus = ->
-  emit 'networkStatus', navigator.onLine
-
-window.addEventListener 'online',  emitNetworkStatus
-window.addEventListener 'offline', emitNetworkStatus
-emitNetworkStatus()
-
 Events.on 'packageRequired', ({name}) ->
   new Notification "#{name} is a required package",
     body: "It should not be removed"

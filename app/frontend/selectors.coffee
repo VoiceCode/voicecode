@@ -173,6 +173,9 @@ currentPageSelector = (state) ->
   path = router.get('locationBeforeTransitions').get 'pathname'
   path.replace '/', ''
 
+networkStatusSelector = (state) ->
+  state.get 'network_status'
+
 _.assign exports, {
   apisForPackage
   implementationsSelector
@@ -187,6 +190,7 @@ _.assign exports, {
   showingEventsSelector
   packageFilterSelector
   restartNeededSelector
+  networkStatusSelector
   commandFilterSelector
   updateAvailableSelector
   filteredPackagesSelector

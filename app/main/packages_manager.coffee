@@ -7,7 +7,16 @@ semver = require 'semver'
 class PackagesManager
   constructor: ->
     @packagePath = AssetsController.assetsPath + "/packages/"
-    @getPackageRegistry()
+    @getPackageRegistry (err, registry) =>
+      console.log arguments
+      if err
+        error 'packagesManagerRegistryError'
+        , err, "Failed retrieving package registry: #{err.message}"
+        @registry = {all: {}}
+      else
+        @registry = registry
+      emit 'packagesManagerReady'
+
     Events.on 'installPackage', @installPackage.bind(@)
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
@@ -74,28 +83,23 @@ class PackagesManager
           callback null, true
 
   getPackageRegistry: (callback) ->
-    callback ?= (err) ->
-      if err
-        return error 'packagesManagerRegistryError'
-        , err, "Failed retrieving package registry: #{err.message}"
-    return callback(null, @registry) if @registry?
+    if not Network.online
+      return callback new Error 'Not online'
     http.get(
       host: 'updates.voicecode.io'
       path: '/packages/registry/raw/master/packages.json'
-    , (response) =>
+      timeout: 3000
+    , (response) ->
       data = ''
       response.setEncoding 'utf8'
       response.on 'data', (chunk) ->
         data += chunk
-      response.on 'end', =>
+      response.on 'end', ->
         registry = JSON.parse data
         if _.isObject registry
-          @registry = registry
-          callback null, @registry
+          callback null, registry
         else
-          callback
-            message: 'malformed response'
-            data: data
+          callback new TypeError 'Malformed registry response', data
       response.resume()
     ).on('error', (e) ->
       callback e
@@ -110,25 +114,27 @@ class PackagesManager
     return null
 
   downloadBasePackages: (callback) ->
+    if not Network.online
+      return callback new Error 'Cant download base packages'
     @downloadPackageGroup 'base', callback
+
   downloadRecommendedPackages: (callback) ->
+    return callback new Error 'Cant download recommended packages'
     @downloadPackageGroup 'recommended', callback
 
   downloadPackageGroup: (group, callback) ->
-    @getPackageRegistry (err, registry) =>
-      return callback(err) if err?
-      funk = asyncblock.nostack
-      if developmentMode
-        funk = asyncblock
-      funk (cloneFlow) =>
-        try
-          _.every registry[group], (name) =>
-            @installPackage name, cloneFlow.add()
-            true
-          cloneFlow.wait()
-          callback null, true
-        catch err
-          callback err
+    funk = asyncblock.nostack
+    if developmentMode
+      funk = asyncblock
+    funk (cloneFlow) =>
+      try
+        _.every @registry[group], (name) =>
+          @installPackage name, cloneFlow.add()
+          true
+        cloneFlow.wait()
+        callback null, true
+      catch err
+        callback err
 
   installAllPackages: ->
     _.every @registry.all, (info, name) ->
