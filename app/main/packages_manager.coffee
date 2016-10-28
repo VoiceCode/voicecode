@@ -78,7 +78,7 @@ class PackagesManager
           HOME: path.join os.homedir(), '.electron-gyp'
         }
         if platform is 'windows'
-          willDirectory = 'move'
+          moveDirCmd = 'move'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
           nodePath = '"' + nodePath + '"'
         env = _.assign process.env, npmSettings
