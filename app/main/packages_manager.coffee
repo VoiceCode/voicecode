@@ -74,7 +74,7 @@ class PackagesManager
           npm_config_runtime: 'electron'
           npm_config_build_from_source: true
           HOME: "#{os.homedir()}/.electron-gyp"
-        ]
+        }
         if platform is 'windows'
           willDirectory = 'move'
           nodePath = '/c/Program Files/nodejs/node'
