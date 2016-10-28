@@ -89,6 +89,7 @@ class PackagesManager
         console.log commandString
         Execute commandString, {env}
         , (err) ->
+          console.log arguments
           if err
             return callback err
           callback null, true
