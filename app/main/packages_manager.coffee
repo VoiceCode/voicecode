@@ -1,3 +1,4 @@
+os = require 'os'
 http = require 'http'
 git = require 'gitty'
 fs = require 'fs-extra'
@@ -47,7 +48,7 @@ class PackagesManager
     version ?= 'master'
     safeName = _.snakeCase name
     destination = AssetsController.assetsPath + "/packages/#{safeName}"
-    temporary = "/tmp/voicecode/packages/#{Date.now()}/#{safeName}"
+    temporary = "/#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -66,7 +67,8 @@ class PackagesManager
       repository.checkout version, (err) ->
         if err
           return callback err
-        npmCommand = '/usr/local/bin/node ' + projectRoot + '/node_modules/npm/bin/npm-cli.js'
+        moveDirectory = 'mv'
+        nodePath = '/usr/local/bin/node '
         npmSettings = [
           "npm_config_target=#{process.versions.electron}"
           'npm_config_arch=x64'
@@ -74,9 +76,18 @@ class PackagesManager
           'npm_config_runtime=electron'
           'npm_config_build_from_source=true'
           'HOME=~/.electron-gyp'
-        ].join ' '
-        Execute "#{npmSettings} mkdir -p #{temporary}/node_modules && #{npmCommand} install --silent --prefix " +
-        temporary + " && mv #{temporary} #{destination}"
+        ]
+        if platform is 'windows'
+          willDirectory = 'move'
+          nodePath = '/c/Program Files/nodejs/node'
+          npmSettings = _.map npmSettings, (envVariable) ->
+            "set #{envVariable.replace('=', ' ')} && "
+
+        npmSettings.join ' '
+        npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
+        Execute "#{npmSettings} mkdir -p #{temporary}/node_modules " +
+        "&& #{npmCommand} install --silent --prefix " +
+        temporary + " && #{moveDirectory} #{temporary} #{destination}"
         , (err) ->
           if err
             return callback err
