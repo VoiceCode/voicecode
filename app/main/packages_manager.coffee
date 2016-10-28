@@ -45,8 +45,8 @@ class PackagesManager
       , "Package: #{name} - no compatible version available"
     version ?= 'master'
     safeName = _.snakeCase name
-    destination = path.normalize AssetsController.assetsPath + "/packages/#{safeName}"
-    temporary = path.normalize "#{os.tmpdir()}/voicecode/packages/#{Date.now()}/#{safeName}"
+    destination = path.join AssetsController.assetsPath, 'packages', safeName
+    temporary = path.join os.tmpdir(), '/voicecode/packages/', Date.now(), safeName
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -65,7 +65,7 @@ class PackagesManager
       repository.checkout version, (err) ->
         if err
           return callback err
-        moveDirectory = 'mv'
+        moveDirCmd = 'mv'
         nodePath = '/usr/local/bin/node '
         npmSettings = {
           npm_config_target: "#{process.versions.electron}"
@@ -79,11 +79,11 @@ class PackagesManager
           willDirectory = 'move'
           nodePath = path.join 'C:', 'Program Files', 'nodejs', 'node'
         env = _.assign process.env, npmSettings
-        npmCommand = path.join nodePath, projectRoot
-        , path.normalize '/node_modules/npm/bin/npm-cli.js'
-        Execute "mkdir -p " + path.normalize("#{temporary}/node_modules") +
+        npmCommand = path.join nodePath, projectRoot, '/node_modules/npm/bin/npm-cli.js'
+        commandString = "mkdir -p " + path.join(temporary, 'node_modules') +
         " && #{npmCommand} install --silent --prefix " +
-        temporary + " && #{moveDirectory} #{temporary} #{destination}", {env}
+        temporary + " && #{moveDirCmd} #{temporary} #{destination}"
+        Execute commandString, {env}
         , (err) ->
           if err
             return callback err
