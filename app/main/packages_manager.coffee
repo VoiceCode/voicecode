@@ -78,8 +78,8 @@ class PackagesManager
         if platform is 'windows'
           willDirectory = 'move'
           nodePath = '/c/Program Files/nodejs/node'
-        process.env = _.assign process.env, npmSettings # hack, spawn passes processes.env along
-        npmSettings = npmSettings.join ' '
+        # hack, spawn passes processes.env along
+        process.env = _.assign process.env, npmSettings
         npmCommand = nodePath + projectRoot + '/node_modules/npm/bin/npm-cli.js'
         Execute "mkdir -p #{temporary}/node_modules " +
         "&& #{npmCommand} install --silent --prefix " +
