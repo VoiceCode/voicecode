@@ -53,14 +53,14 @@ class SlaveController
 
   onError: (slaveSocket, _error) ->
     delete @connectedSlaves[slaveSocket.name]
-    @clearTarget()
+    @clearTarget slaveSocket.name
     unless _error.code is 'ECONNREFUSED'
       error 'slaveError', {slave: slaveSocket.name, error: _error},
       "#{slaveSocket.name} socket: #{_error.code}"
 
   onClose: (slaveSocket) ->
     delete @connectedSlaves[slaveSocket.name]
-    @clearTarget()
+    @clearTarget slaveSocket.name
     [host, port] = Settings.core.slaves[slaveSocket.name]
     setTimeout =>
       @createSocket slaveSocket.name, host, port
@@ -80,7 +80,8 @@ class SlaveController
     else
       notify 'slaveModeToggleFailed', target, "Slave mode failed: #{target}"
 
-  clearTarget: ->
+  clearTarget: (target) ->
+    return if target? and @target isnt target
     @target = null
 
 module.exports = new SlaveController
