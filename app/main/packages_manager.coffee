@@ -59,18 +59,15 @@ class PackagesManager
         return error 'packageRepoInstallError', err, err.message
       emit 'packageRepoInstalled', {repo: destination, pack: name}
     git.clone temporary, repo, (err) ->
-      console.log  'git clone'
       if err
         return callback err
       repository = git(temporary)
       repository.checkout version, (err) ->
-        console.log 'git checkout'
         if err
           return callback err
-        optional = ''
         moveDirCmd = 'mv'
         makeDirCmd = 'mkdir -p'
-        nodePath = '/usr/local/bin/node'
+        nodePath = '/usr/local/bin/node' #why hardcode?
         npmSettings = {
           npm_config_target: "#{process.versions.electron}"
           npm_config_arch: 'x64'
@@ -83,7 +80,6 @@ class PackagesManager
           moveDirCmd = 'move'
           makeDirCmd = 'mkdir'
           nodePath = 'node'
-          # optional = ' > nul 2> nul'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
         # all of this will most likely fail when user has a space in his name
@@ -91,7 +87,7 @@ class PackagesManager
         path.join(temporary, 'node_modules') +
         " && #{nodePath} #{npmCommand} install --silent --prefix " +
         temporary + ' ' + temporary + ' ' +
-        optional + " && #{moveDirCmd} #{temporary} #{destination}"
+        " && #{moveDirCmd} #{temporary} #{destination}"
         Execute commandString, {env}, (err) ->
           if err
             return callback err

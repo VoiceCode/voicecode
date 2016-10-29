@@ -1,7 +1,6 @@
-# Shell = require('shelljs')
 cp = require('child_process')
 
-Execute = (script, options = {}, callback = null) ->
+exports.Execute = (script, options = {}, callback = null) ->
   switch platform
     when 'windows'
       cmd = process.env.ComSpec
@@ -22,16 +21,14 @@ Execute = (script, options = {}, callback = null) ->
     unless options.silent # TODO: rewrite, this does not silence stdout/stderr
       error null, script, err
 
-Applescript = (content, shouldReturn = true) ->
-  script = $.NSAppleScript('alloc')('initWithSource', $(content))
-  results = script('executeAndReturnError', null)
-  returnValue = if shouldReturn and _.isFunction(results)
-    debug results
-    results('stringValue')?.toString()
-  else
-    null
-  script('dealloc')
-  returnValue
-
-exports.Execute = Execute
-exports.Applescript = Applescript
+if platform is 'darwin'
+  exports.Applescript = (content, shouldReturn = true) ->
+    script = $.NSAppleScript('alloc')('initWithSource', $(content))
+    results = script('executeAndReturnError', null)
+    returnValue = if shouldReturn and _.isFunction(results)
+      debug results
+      results('stringValue')?.toString()
+    else
+      null
+    script('dealloc')
+    returnValue
