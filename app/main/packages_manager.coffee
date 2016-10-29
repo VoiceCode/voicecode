@@ -89,12 +89,12 @@ class PackagesManager
           nodePath = 'node'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
-        commandString = "#{makeDirCmd} \"" +
+        commandString = "#{makeDirCmd} " +
                         path.join(temporary, 'node_modules') +
-                        "\" && #{nodePath} #{npmCommand} install --silent --prefix " +
+                        " && #{nodePath} #{npmCommand} install --silent --prefix " +
                         temporary + ' ' + temporary + ' ' +
-                        "\"#{temporary}\" \"#{temporary}\" " +
-                        " && #{moveDirCmd} \"#{temporary}\" \"#{destination}\""
+                        "#{temporary} #{temporary} " +
+                        " && #{moveDirCmd} #{temporary} #{destination}"
         Execute commandString, {env}, (err) ->
           return callback err if err?
           callback null, true
