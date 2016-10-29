@@ -22,7 +22,7 @@ class PackagesManager
     Events.on 'packageRepoUpdated', ({pack}) => @fetch pack
     Events.once 'packageAssetsLoaded', =>
       # register all non-installed packages
-      _.each @registry.all, ({repo, description}, name) ->
+      _.each @registry?.all, ({repo, description}, name) ->
         pack = Packages.get name
         pack ?= Packages.register {
           name,
@@ -37,16 +37,23 @@ class PackagesManager
 
   installPackage: (name, callback) ->
     callback ?= ->
-    repo = @registry.all[name].repo
+    if not Network.online
+      error 'installPackageError', null
+      , 'Can\'t install packages while offline.'
+      return callback new Error 'Can\'t install packages while offline.'
+
+    repo = @registry?.all[name].repo
     version = @determineVersion name
     if version is false
-      notify "incompatible package: #{name}"
-      return callback 'incompatiblePackage', name
-      , "Package: #{name} - no compatible version available"
+      notify 'incompatiblePackageVersion'
+      , name, "No compatible version available for package #{name}"
+      return callback new Error "No compatible
+       version available for package #{name}"
     version ?= 'master'
     safeName = _.snakeCase name
     destination = path.join AssetsController.assetsPath, 'packages', safeName
-    temporary = path.join os.tmpdir(), '/voicecode/packages/', String(Date.now()), safeName
+    temporary = path.join os.tmpdir()
+    , '/voicecode/packages/', String(Date.now()), safeName
     # skip it if it exists
     if fs.existsSync(destination)
       emit 'packageDestinationFolderExists', destination
@@ -63,8 +70,7 @@ class PackagesManager
         return callback err
       repository = git(temporary)
       repository.checkout version, (err) ->
-        if err
-          return callback err
+        return callback err if err?
         moveDirCmd = 'mv'
         makeDirCmd = 'mkdir -p'
         nodePath = '/usr/local/bin/node' #why hardcode?
@@ -82,15 +88,14 @@ class PackagesManager
           nodePath = 'node'
         env = _.assign process.env, npmSettings
         npmCommand = path.join projectRoot, '/node_modules/npm/bin/npm-cli.js'
-        # all of this will most likely fail when user has a space in his name
-        commandString = "#{makeDirCmd} " +
-        path.join(temporary, 'node_modules') +
-        " && #{nodePath} #{npmCommand} install --silent --prefix " +
-        temporary + ' ' + temporary + ' ' +
-        " && #{moveDirCmd} #{temporary} #{destination}"
+        commandString = "#{makeDirCmd} \"" +
+                        path.join(temporary, 'node_modules') +
+                        "\" && #{nodePath} #{npmCommand} install --silent --prefix " +
+                        temporary + ' ' + temporary + ' ' +
+                        "\"#{temporary}\" \"#{temporary}\" " +
+                        " && #{moveDirCmd} \"#{temporary}\" \"#{destination}\""
         Execute commandString, {env}, (err) ->
-          if err
-            return callback err
+          return callback err if err?
           callback null, true
 
   getPackageRegistry: (callback) ->
@@ -139,7 +144,7 @@ class PackagesManager
       funk = asyncblock
     funk (cloneFlow) =>
       try
-        _.every @registry[group], (name) =>
+        _.every @registry?[group], (name) =>
           @installPackage name, cloneFlow.add()
           true
         cloneFlow.wait()
@@ -148,7 +153,7 @@ class PackagesManager
         callback err
 
   installAllPackages: ->
-    _.every @registry.all, (info, name) ->
+    _.every @registry?.all, (info, name) ->
       emit 'installPackage', name
       true
 
@@ -168,7 +173,7 @@ class PackagesManager
         , {repo: "#{@packagePath}#{name}", pack: name}
 
   removePackage: (name) ->
-    if name in @registry.base
+    if name in @registry?.base
       return emit 'packageRequired', {name}
     fs.remove AssetsController.assetsPath + "/packages/#{name}/"
     , (err) ->
