@@ -14,7 +14,8 @@ class PackagesManager
         , err, "Failed retrieving package registry: #{err.message}"
       else
         @registry = registry
-      emit 'packagesManagerReady'
+      process.nextTick ->
+        emit 'packagesManagerReady'
 
     Events.on 'installPackage', @installPackage.bind(@)
     Events.on 'updatePackage', @updatePackage.bind(@)
