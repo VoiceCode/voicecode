@@ -8,7 +8,6 @@ class PackagesManager
   constructor: ->
     @packagePath = AssetsController.assetsPath + "/packages/"
     @getPackageRegistry (err, registry) =>
-      console.log arguments
       if err
         error 'packagesManagerRegistryError'
         , err, "Failed retrieving package registry: #{err.message}"
