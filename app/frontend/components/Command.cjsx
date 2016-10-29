@@ -116,7 +116,7 @@ class Command extends React.Component
             <div className='menu'>
             {
               if enabled
-                _.map grammarForCommand.get(items[index].name), (i) ->
+                _.map grammarForCommand?.get(items[index].name), (i) ->
                   <div className='item'>{ i }</div>
               else
                 null
