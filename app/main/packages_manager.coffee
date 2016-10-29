@@ -133,10 +133,11 @@ class PackagesManager
   downloadBasePackages: (callback) ->
     if not Network.online
       return callback new Error 'Cant download base packages'
-    @downloadPackageGroup 'base', callback
+    @downloadPackageGroup "base_#{platform}", callback
 
   downloadRecommendedPackages: (callback) ->
     return callback new Error 'Cant download recommended packages'
+    return callback null, true if platform is 'windows'
     @downloadPackageGroup 'recommended', callback
 
   downloadPackageGroup: (group, callback) ->
