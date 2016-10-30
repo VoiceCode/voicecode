@@ -53,6 +53,9 @@ subscribeToRemoteEvents = ->
 
 subscribeToRemoteEvents()
 
+window.addEventListener 'online', -> emit 'shouldCheckNetworkStatus'
+window.addEventListener 'offline', -> emit 'shouldCheckNetworkStatus'
+
 Events.on 'packageRequired', ({name}) ->
   new Notification "#{name} is a required package",
     body: "It should not be removed"

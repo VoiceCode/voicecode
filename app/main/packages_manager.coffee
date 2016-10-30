@@ -7,15 +7,35 @@ semver = require 'semver'
 class PackagesManager
   constructor: ->
     @packagePath = AssetsController.assetsPath + "/packages/"
+    @subscribe()
+    unless Network.online
+      @registry = {all: {}}
+      if AssetsController.firstRun
+        notify 'Offline mode, no packages installed'
+      else
+        notify 'Offline mode'
+      emit 'packagesManagerReady'
     @getPackageRegistry (err, registry) =>
       if err
         error 'packagesManagerRegistryError'
         , err, "Failed retrieving package registry: #{err.message}"
         @registry = {all: {}}
+        emit 'packagesManagerReady'
       else
         @registry = registry
-      emit 'packagesManagerReady'
+        # always make sure base packages get loaded,
+        # in case there was a previous failure
+        @downloadBasePackages =>
+          # only the first time, install all the recommended packages
+          if AssetsController.firstRun
+            Events.once 'EnabledCommandsManagerSettingsProcessed', ->
+              Commands.enableAllByTag 'recommended'
+            @downloadRecommendedPackages ->
+              emit 'packagesManagerReady'
+          else
+            emit 'packagesManagerReady'
 
+  subscribe: ->
     Events.on 'installPackage', @installPackage.bind(@)
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
@@ -33,7 +53,9 @@ class PackagesManager
         pack.options.repo = repo
         emit 'packageUpdated', {pack}
         true
-    Events.once 'userAssetsLoaded', @fetchAll.bind(@)
+    Events.once 'userAssetsLoaded', =>
+      if Network.online
+        @fetchAll.bind(@)
 
   installPackage: (name, callback) ->
     callback ?= ->
@@ -82,7 +104,7 @@ class PackagesManager
           callback null, true
 
   getPackageRegistry: (callback) ->
-    if not Network.online
+    unless Network.online
       return callback new Error 'Not online'
     http.get(
       host: 'updates.voicecode.io'

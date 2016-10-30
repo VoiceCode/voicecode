@@ -142,12 +142,14 @@ Events.once 'applicationShouldStart', ->
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"
+
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
-    Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.AssetsController = require './assets_controller'
+    startupFlow.wait 'assetsControllerReady'
+    
+    Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.PackagesManager = require './packages_manager'
     startupFlow.wait 'packagesManagerReady'
-    startupFlow.wait 'assetsControllerReady'
 
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
