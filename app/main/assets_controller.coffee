@@ -15,7 +15,7 @@ class AssetsController
   init: ->
     @createDirectory @assetsPath
     @createSettingsFile()
-    @createDirectory @assetsPath + '/packages', (err, created) ->
+    @createDirectory @assetsPath + '/packages', (err, created) =>
       # return if err
       if created
         @firstRun = true

@@ -145,12 +145,13 @@ class PackagesManager
     return null
 
   downloadBasePackages: (callback) ->
-    if not Network.online
-      return callback new Error 'Cant download base packages'
+    unless Network.online
+      return callback new Error 'Offline: Cant download base packages'
     @downloadPackageGroup 'base', callback
 
   downloadRecommendedPackages: (callback) ->
-    return callback new Error 'Cant download recommended packages'
+    unless Network.online
+      return callback new Error 'Offline: Cant download recommended packages'
     @downloadPackageGroup 'recommended', callback
 
   downloadPackageGroup: (group, callback) ->
