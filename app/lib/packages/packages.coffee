@@ -54,9 +54,10 @@ class Packages
 
   await: (packageName, callback) ->
     if pack = @get packageName
-      callback {pack}
+      callback pack
     else
-      Events.once "#{packageName}PackageReady", callback
+      Events.once "#{packageName}PackageReady", ({pack}) ->
+        callback pack
 
   get: (name) ->
     @packages[name]
