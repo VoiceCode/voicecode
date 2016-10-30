@@ -32,7 +32,7 @@ global.bundleId = 'io.voicecode.app'
 if developmentMode
   global.bundleId = 'com.github.electron'
 global.app = electron.app
-global.appVersion = app.getVersion()
+global.appVersion = require('../package.json').version
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
 settings =
