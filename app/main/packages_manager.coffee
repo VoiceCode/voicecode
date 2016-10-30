@@ -8,32 +8,27 @@ class PackagesManager
   constructor: ->
     @packagePath = AssetsController.assetsPath + "/packages/"
     @subscribe()
-    unless Network.online
-      @registry = {all: {}}
+    if Network.online
+      @getPackageRegistry (err, registry) =>
+        if err
+          error 'packagesManagerRegistryError'
+          , err, "Failed retrieving package registry: #{err.message}"
+          @prepareOffline()
+          emit 'packagesManagerReady'
+        else
+          @registry = registry
+          @populateInitialPackages ->
+            emit 'packagesManagerReady'
+    else
+      @prepareOffline()
       if AssetsController.firstRun
         notify 'Offline mode, no packages installed'
+        # TODO wait for online status and
+        # retry populate packages
       else
         notify 'Offline mode'
       emit 'packagesManagerReady'
-    @getPackageRegistry (err, registry) =>
-      if err
-        error 'packagesManagerRegistryError'
-        , err, "Failed retrieving package registry: #{err.message}"
-        @registry = {all: {}}
-        emit 'packagesManagerReady'
-      else
-        @registry = registry
-        # always make sure base packages get loaded,
-        # in case there was a previous failure
-        @downloadBasePackages =>
-          # only the first time, install all the recommended packages
-          if AssetsController.firstRun
-            Events.once 'EnabledCommandsManagerSettingsProcessed', ->
-              Commands.enableAllByTag 'recommended'
-            @downloadRecommendedPackages ->
-              emit 'packagesManagerReady'
-          else
-            emit 'packagesManagerReady'
+    
 
   subscribe: ->
     Events.on 'installPackage', @installPackage.bind(@)
@@ -56,6 +51,21 @@ class PackagesManager
     Events.once 'userAssetsLoaded', =>
       if Network.online
         @fetchAll.bind(@)
+
+  prepareOffline: ->
+    @registry = {all: {}}
+
+  populateInitialPackages: (callback) ->
+    # always make sure base packages get loaded,
+    # in case there was a previous failure
+    @downloadBasePackages =>
+      # only the first time, install all the recommended packages
+      if AssetsController.firstRun
+        Events.once 'EnabledCommandsManagerSettingsProcessed', ->
+          Commands.enableAllByTag 'recommended'
+        @downloadRecommendedPackages callback
+      else
+        callback()
 
   installPackage: (name, callback) ->
     callback ?= ->
