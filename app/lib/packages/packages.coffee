@@ -31,9 +31,9 @@ class Packages
 
     # only flies while we develop...
     # otherwise need 2 cleanup and re-instantiate
-    if @packages[options.name]?
-      emit 'packageCreated', {pack: @packages[options.name]}
-      return @packages[options.name]
+    # if @packages[options.name]?
+    #   emit 'packageCreated', {pack: @packages[options.name]}
+    #   return @packages[options.name]
     options = mutate 'willCreatePackage', options
     instantiated = new Package options
     @packages[options.name] = instantiated
@@ -92,6 +92,6 @@ class Packages
 
   remove: (name) ->
     # TODO: fix
-    delete @packages[name]
+    # delete @packages[name]
 
 module.exports = new Packages
