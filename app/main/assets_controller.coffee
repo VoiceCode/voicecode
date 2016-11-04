@@ -1,4 +1,5 @@
 fs = require 'fs'
+_path = require 'path'
 os = require 'os'
 chokidar = require 'chokidar'
 
@@ -83,7 +84,7 @@ class AssetsController
   handleFile: (type, event, fullPath) ->
     if coffee = fullPath.match(/.coffee$/) or js = fullPath.match(/.js$/)
       extension = if coffee then '.coffee' else '.js'
-      fileName = path.basename fullPath, extension
+      fileName = _path.basename fullPath, extension
       emit 'assetEvent', {event, fullPath, type}
       emit "#{type}AssetEvent", {event, fullPath, type}
       try
@@ -94,7 +95,12 @@ class AssetsController
             description: "User code in #{fileName}#{extension}"
             tags: ['user', "#{fileName}#{extension}"]
         if event is 'changed'
-          delete require.cache[fullPath]
+          directory = _path.dirname fullPath
+          directoryExpression = new RegExp "^#{directory}"
+          _.each require.cache, (__, path) ->
+            if path.match directoryExpression
+              delete require.cache[path]
+            true
         require fullPath
       catch err
         emit 'assetEvaluationError', {event, type, err, fullPath, fileName}
