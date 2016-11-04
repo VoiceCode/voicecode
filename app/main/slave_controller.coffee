@@ -54,7 +54,7 @@ class SlaveController
   onError: (slaveSocket, _error) ->
     delete @connectedSlaves[slaveSocket.name]
     @clearTarget slaveSocket.name
-    unless _error.code is 'ECONNREFUSED'
+    unless _error.code in ['ECONNREFUSED', 'ETIMEDOUT']
       error 'slaveError', {slave: slaveSocket.name, error: _error},
       "#{slaveSocket.name} socket: #{_error.code}"
 
