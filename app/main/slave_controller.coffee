@@ -41,7 +41,6 @@ class SlaveController
   process: (commandPhrase) ->
     commandPhrase = commandPhrase.toLowerCase()
     if commandPhrase.replace(/\s+/g, '') is Commands.mapping['core:slave-control'].spoken
-      notify 'slaveModeToggle', null, 'Slave mode off'
       @clearTarget()
     else
       @sendToSlave commandPhrase
@@ -54,9 +53,9 @@ class SlaveController
   onError: (slaveSocket, _error) ->
     delete @connectedSlaves[slaveSocket.name]
     @clearTarget slaveSocket.name
-    unless _error.code in ['ECONNREFUSED', 'ETIMEDOUT']
-      error 'slaveError', {slave: slaveSocket.name, error: _error},
-      "#{slaveSocket.name} socket: #{_error.code}"
+    # unless _error.code in ['ECONNREFUSED', 'ETIMEDOUT']
+    #   error 'slaveError', {slave: slaveSocket.name, error: _error},
+    #   "#{slaveSocket.name} socket: #{_error.code}"
 
   onClose: (slaveSocket) ->
     delete @connectedSlaves[slaveSocket.name]
@@ -82,6 +81,7 @@ class SlaveController
 
   clearTarget: (target) ->
     return if target? and @target isnt target
+    notify 'slaveModeToggle', null, 'Slave mode: off'
     @target = null
 
 module.exports = new SlaveController
