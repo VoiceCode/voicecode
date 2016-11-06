@@ -32,8 +32,8 @@ _createStore = (ducks) ->
     thunkMiddleware,
     router
   ]
-  if developmentMode and platform isnt 'windows'
-    middleware.push loggerMiddleware
+  # if developmentMode and platform isnt 'windows'
+  #   middleware.push loggerMiddleware
   enhancer = applyMiddleware.apply null, middleware
 
   initialState = immutable.Map({})
