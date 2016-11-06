@@ -5,13 +5,13 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    unless developmentMode
-      process.stdout.write = (chunk, encoding, next = null) =>
-        @stdout _.truncate(chunk, {length: 50}), chunk
-        next?()
-      process.stderr.write = (chunk, encoding, next = null) =>
-        @stderr _.truncate(chunk, {length: 50}), chunk
-        next?()
+    # unless developmentMode
+    #   process.stdout.write = (chunk, encoding, next = null) =>
+    #     @stdout _.truncate(chunk, {length: 50}), chunk
+    #     next?()
+    #   process.stderr.write = (chunk, encoding, next = null) =>
+    #     @stderr _.truncate(chunk, {length: 50}), chunk
+    #     next?()
 
     @setMaxListeners 300
     instance = @
@@ -173,7 +173,8 @@ class EventEmitter extends require('events').EventEmitter
     unless @radioSilence()
       process.nextTick =>
         entry.timestamp = process.hrtime()
-        @emit 'logger', entry
+        console.log entry
+        # @emit 'logger', entry
 
   debug: (event) ->
     args = _.toArray arguments
