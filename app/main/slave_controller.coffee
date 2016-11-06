@@ -38,14 +38,17 @@ class SlaveController
       @onConnect(slaveSocket)
     slaveSocket.connect port, host
 
-  process: (commandPhrase) ->
-    commandPhrase = commandPhrase.toLowerCase()
-    if commandPhrase.replace(/\s+/g, '') is Commands.mapping['core:slave-control'].spoken
-      @clearTarget()
+  process: (phrase, chain = null) ->
+    if not phrase? and chain?
+      phrase = JSON.stringify chain
     else
-      @sendToSlave commandPhrase
-      log 'slaveModeExecutedRemote', commandPhrase,
-      "Executing '#{commandPhrase}' on #{@target}"
+      phrase = phrase.toLowerCase()
+      if phrase.replace(/\s+/g, '') is
+      Commands.mapping['core:slave-control'].spoken
+        return @clearTarget()
+    @sendToSlave phrase
+    log 'slaveModeExecutedRemote', phrase,
+    "Executing '#{phrase}' on #{@target}"
 
   sendToSlave: (commandPhrase, target = @target) ->
     @connectedSlaves[target].write commandPhrase
