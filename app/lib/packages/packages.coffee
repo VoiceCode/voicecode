@@ -31,9 +31,9 @@ class Packages
 
     # only flies while we develop...
     # otherwise need 2 cleanup and re-instantiate
-    if @packages[options.name]?
-      emit 'packageCreated', {pack: @packages[options.name]}
-      return @packages[options.name]
+    # if @packages[options.name]?
+    #   emit 'packageCreated', {pack: @packages[options.name]}
+    #   return @packages[options.name]
     options = mutate 'willCreatePackage', options
     instantiated = new Package options
     @packages[options.name] = instantiated
@@ -54,9 +54,10 @@ class Packages
 
   await: (packageName, callback) ->
     if pack = @get packageName
-      callback {pack}
+      callback pack
     else
-      Events.once "#{packageName}PackageReady", callback
+      Events.once "#{packageName}PackageReady", ({pack}) ->
+        callback pack
 
   get: (name) ->
     @packages[name]
@@ -91,6 +92,6 @@ class Packages
 
   remove: (name) ->
     # TODO: fix
-    delete @packages[name]
+    # delete @packages[name]
 
 module.exports = new Packages

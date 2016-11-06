@@ -36,7 +36,7 @@ if developmentMode
     when 'windows'
       global.bundleId = 'electron.exe'
 global.app = electron.app
-global.appVersion = app.getVersion()
+global.appVersion = require('../package.json').version
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
 settings =
@@ -95,10 +95,12 @@ menubar.on 'ready', ->
   unless developmentMode
     menubar.hideWindow()
   app.on 'activate', ->
-    menubar.showWindow()
+    unless windowController.get('main').isVisible()
+      menubar.showWindow()
   Events.on 'currentApplicationChanged', (to) ->
     if to.bundleId is global.bundleId
-      menubar.showWindow()
+      unless windowController.get('main').isVisible()
+        menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   window = menubar.window
@@ -146,12 +148,14 @@ Events.once 'applicationShouldStart', ->
     global.Commands = require '../lib/commands'
     global.Scope = require '../lib/scope'
     global.Actions = require "#{platformLib}/actions"
+
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
-    Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.AssetsController = require './assets_controller'
+    startupFlow.wait 'assetsControllerReady'
+
+    Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.PackagesManager = require './packages_manager'
     startupFlow.wait 'packagesManagerReady'
-    startupFlow.wait 'assetsControllerReady'
 
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'

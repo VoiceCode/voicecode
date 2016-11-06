@@ -7,6 +7,7 @@ class Network
     @online = false
     Events.once 'startupComplete', =>
       @interval = setInterval @check.bind(@), 300000 # 5 minutes
+      Events.on 'shouldCheckNetworkStatus', @check.bind(@)
 
   check: ->
     isOnline @updateStatus.bind @

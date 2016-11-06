@@ -8,15 +8,30 @@ path = require 'path'
 class PackagesManager
   constructor: ->
     @packagePath = AssetsController.assetsPath + "/packages/"
-    @getPackageRegistry (err, registry) =>
-      if err
-        error 'packagesManagerRegistryError'
-        , err, "Failed retrieving package registry: #{err.message}"
-      else
-        @registry = registry
-      process.nextTick ->
-        emit 'packagesManagerReady'
 
+    @subscribe()
+    if Network.online
+      @getPackageRegistry (err, registry) =>
+        if err
+          error 'packagesManagerRegistryError'
+          , err, "Failed retrieving package registry: #{err.message}"
+          @prepareOffline()
+          emit 'packagesManagerReady'
+        else
+          @registry = registry
+          @populateInitialPackages ->
+            emit 'packagesManagerReady'
+    else
+      @prepareOffline()
+      if AssetsController.firstRun
+        notify 'Offline mode, no packages installed'
+        # TODO wait for online status and
+        # retry populate packages
+      else
+        notify 'Offline mode'
+      emit 'packagesManagerReady'
+
+  subscribe: ->
     Events.on 'installPackage', @installPackage.bind(@)
     Events.on 'updatePackage', @updatePackage.bind(@)
     Events.on 'removePackage', @removePackage.bind(@)
@@ -34,7 +49,24 @@ class PackagesManager
         pack.options.repo = repo
         emit 'packageUpdated', {pack}
         true
-    Events.once 'userAssetsLoaded', @fetchAll.bind(@)
+    Events.once 'userAssetsLoaded', =>
+      if Network.online
+        @fetchAll.bind(@)
+
+  prepareOffline: ->
+    @registry = {all: {}}
+
+  populateInitialPackages: (callback) ->
+    # always make sure base packages get loaded,
+    # in case there was a previous failure
+    @downloadBasePackages =>
+      # only the first time, install all the recommended packages
+      if AssetsController.firstRun
+        Events.once 'EnabledCommandsManagerSettingsProcessed', ->
+          Commands.enableAllByTag 'recommended'
+        @downloadRecommendedPackages callback
+      else
+        callback()
 
   installPackage: (name, callback) ->
     callback ?= ->
@@ -100,7 +132,7 @@ class PackagesManager
           callback null, true
 
   getPackageRegistry: (callback) ->
-    if not Network.online
+    unless Network.online
       return callback new Error 'Not online'
     http.get(
       host: 'updates.voicecode.io'
@@ -131,14 +163,14 @@ class PackagesManager
     return null
 
   downloadBasePackages: (callback) ->
-    if not Network.online
-      return callback new Error 'Cant download base packages'
+    unless Network.online
+      return callback new Error 'Offline: Cant download base packages'
     @downloadPackageGroup "base_#{platform}", callback
 
   downloadRecommendedPackages: (callback) ->
-    return callback new Error 'Cant download recommended packages'
-    return callback null, true if platform is 'windows'
-    @downloadPackageGroup 'recommended', callback
+    unless Network.online or platform is 'windows'#TODO: WINDOWS
+      return callback new Error 'Offline: Cant download recommended packages'
+    @downloadPackageGroup "recommended_#{platform}", callback
 
   downloadPackageGroup: (group, callback) ->
     funk = asyncblock.nostack
@@ -201,7 +233,8 @@ class PackagesManager
       if version
         repo.checkout version, (err) ->
           if err
-            error 'packagesManagerCheckoutError', repo, "Failed to check out #{repoName}/#{version}"
+            error 'packagesManagerCheckoutError'
+            , repo, "Failed to check out #{repoName}/#{version}"
 
   log: (repoName) ->
     repo = git("#{@packagePath}#{repoName}")

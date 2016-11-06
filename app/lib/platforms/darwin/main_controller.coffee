@@ -70,15 +70,18 @@ module.exports = new class MainController
         else
           @darwinEventHandler event
     catch
-      error 'systemEventHandler', 'unable to parse json', buffer.toString('utf8')
+      error 'systemEventHandler', buffer.toString('utf8'), 'Unable to parse JSON'
 
   deviceHandler: (data) ->
     phrase = data.toString('utf8').replace("\n", "")
     debug 'devicePhrase', phrase
     @executeChain(phrase)
 
-  executeChain: (phrase) ->
-    emit 'chainShouldExecute', phrase
+  executeChain: (phrase, chain) ->
+    if chain?
+      emit 'commandsShouldExecute', chain
+    else
+      emit 'chainShouldExecute', phrase
 
   listenAsSlave: ->
     socketServer = net.createServer (socket) =>
@@ -94,4 +97,9 @@ module.exports = new class MainController
   slaveDataHandler: (phrase) ->
     phrase = phrase.toString()
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
-    @executeChain(phrase)
+    if phrase[0] is '{'
+      try
+        chain = JSON.parse phrase
+      catch
+        return error 'slaveCommandError', phrase, 'Unable to parse JSON'
+    @executeChain phrase, chain

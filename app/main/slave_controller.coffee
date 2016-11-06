@@ -38,15 +38,17 @@ class SlaveController
       @onConnect(slaveSocket)
     slaveSocket.connect port, host
 
-  process: (commandPhrase) ->
-    commandPhrase = commandPhrase.toLowerCase()
-    if commandPhrase.replace(/\s+/g, '') is Commands.mapping['core:slave-control'].spoken
-      notify 'slaveModeToggle', null, 'Slave mode off'
-      @clearTarget()
+  process: (phrase, chain = null) ->
+    if not phrase? and chain?
+      phrase = JSON.stringify chain
     else
-      @sendToSlave commandPhrase
-      log 'slaveModeExecutedRemote', commandPhrase,
-      "Executing '#{commandPhrase}' on #{@target}"
+      phrase = phrase.toLowerCase()
+      if phrase.replace(/\s+/g, '') is
+      Commands.mapping['core:slave-control'].spoken
+        return @clearTarget()
+    @sendToSlave phrase
+    log 'slaveModeExecutedRemote', phrase,
+    "Executing '#{phrase}' on #{@target}"
 
   sendToSlave: (commandPhrase, target = @target) ->
     @connectedSlaves[target].write commandPhrase
@@ -54,9 +56,9 @@ class SlaveController
   onError: (slaveSocket, _error) ->
     delete @connectedSlaves[slaveSocket.name]
     @clearTarget slaveSocket.name
-    unless _error.code is 'ECONNREFUSED'
-      error 'slaveError', {slave: slaveSocket.name, error: _error},
-      "#{slaveSocket.name} socket: #{_error.code}"
+    # unless _error.code in ['ECONNREFUSED', 'ETIMEDOUT']
+    #   error 'slaveError', {slave: slaveSocket.name, error: _error},
+    #   "#{slaveSocket.name} socket: #{_error.code}"
 
   onClose: (slaveSocket) ->
     delete @connectedSlaves[slaveSocket.name]
@@ -82,6 +84,7 @@ class SlaveController
 
   clearTarget: (target) ->
     return if target? and @target isnt target
+    notify 'slaveModeToggle', null, 'Slave mode: off'
     @target = null
 
 module.exports = new SlaveController
