@@ -163,11 +163,16 @@ class PackagesManager
     return null
 
   downloadBasePackages: (callback) ->
+    if platform is 'windows'
+      return callback null, true
     unless Network.online
       return callback new Error 'Offline: Cant download base packages'
     @downloadPackageGroup "base_#{platform}", callback
 
   downloadRecommendedPackages: (callback) ->
+    if platform is 'windows'
+      return callback null, true
+
     unless Network.online or platform is 'windows'#TODO: WINDOWS
       return callback new Error 'Offline: Cant download recommended packages'
     @downloadPackageGroup "recommended_#{platform}", callback
@@ -217,6 +222,7 @@ class PackagesManager
         log 'packageRemoved', name, "Package removed: #{name}"
 
   fetch: (repoName) ->
+    if platform is 'windows' then return true
     repo = git("#{@packagePath}#{repoName}")
     repo.fetch 'origin'
     , (err, result) =>
