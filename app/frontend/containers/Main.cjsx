@@ -6,10 +6,7 @@ Footer = require '../components/Footer'
 
 class Main extends React.Component
   componentDidMount: ->
-    window.requestAnimationFrame ->
-      setTimeout ->
-        emit 'applicationShouldStart'
-      , 500
+    emit 'applicationShouldSandtart'
 
   render: ->
     <div>
