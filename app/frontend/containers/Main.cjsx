@@ -6,8 +6,6 @@ Footer = require '../components/Footer'
 
 class Main extends React.Component
   componentDidMount: ->
-    emit 'applicationShouldSandtart'
-
   render: ->
     <div>
       <div className="ui top fixed inverted menu">
