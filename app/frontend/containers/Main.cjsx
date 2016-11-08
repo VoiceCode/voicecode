@@ -10,7 +10,7 @@ class Main extends React.Component
 
   render: ->
     <div>
-      <div className="ui top fixed inverted menu" style={WebkitAppRegion: "drag"}>
+      <div className="ui top fixed inverted menu">
           <div className="header item" style={WebkitAppRegion: "drag"}>
             VoiceCode
           </div>
