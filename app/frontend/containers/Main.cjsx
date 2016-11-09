@@ -6,6 +6,11 @@ Footer = require '../components/Footer'
 
 class Main extends React.Component
   componentDidMount: ->
+    window.requestAnimationFrame ->
+      setTimeout ->
+        emit 'applicationShouldStart'
+      , 500
+
   render: ->
     <div>
       <div className="ui top fixed inverted menu">
