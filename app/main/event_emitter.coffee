@@ -30,6 +30,9 @@ class EventEmitter extends require('events').EventEmitter
         'packageSettingsChanged'
         'enableCommand'
         'commandCreated'
+        'beforeDidExecute'
+        'afterDidExecute'
+        'implementationDidExecute'
         'commandEnabled'
         'windowCreated'
         'implementationCreated'
@@ -173,8 +176,7 @@ class EventEmitter extends require('events').EventEmitter
     unless @radioSilence()
       process.nextTick =>
         entry.timestamp = process.hrtime()
-        # @emit 'logger', entry
-        console.log entry
+        @emit 'logger', entry
 
   debug: (event) ->
     args = _.toArray arguments
