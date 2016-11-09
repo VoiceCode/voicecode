@@ -60,7 +60,7 @@ class AssetsController
     watcherSettings =
       persistent: true
       ignored: ignoreMask
-    if type is 'package' # I don't like this, just testing
+    if false
       _.assign watcherSettings,
         useFsEvents: false
         usePolling: true

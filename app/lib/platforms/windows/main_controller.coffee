@@ -42,16 +42,20 @@ module.exports = new class MainController
     server.bind 31337, '127.0.0.255'
 
   systemEventHandler: (message) ->
+    message = message.toString()
     try
       {title, path} = JSON.parse message
       _path = path.split '\\'
       bundleId = _.last _path
       Actions.setCurrentApplication {bundleId, path, title}
-    catch
-      error 'systemEventHandler', message, "Unable to parse system event"
+    catch err
+      error 'systemEventHandler', {err}, err
 
-  executeChain: (phrase) ->
-    emit 'chainShouldExecute', phrase
+  executeChain: (phrase, chain) ->
+    if chain?
+      emit 'commandsShouldExecute', chain
+    else
+      emit 'chainShouldExecute', phrase
 
   listenAsSlave: ->
     socketServer = net.createServer (socket) =>
@@ -69,4 +73,9 @@ module.exports = new class MainController
   slaveDataHandler: (phrase) ->
     phrase = phrase.toString()
     log 'slaveCommandReceived', phrase, "Master said: #{phrase}"
-    @executeChain(phrase)
+    if phrase[0] is '{'
+      try
+        chain = JSON.parse phrase
+      catch
+        return error 'slaveCommandError', phrase, 'Unable to parse JSON'
+    @executeChain phrase, chain

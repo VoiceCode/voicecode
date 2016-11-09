@@ -173,7 +173,8 @@ class EventEmitter extends require('events').EventEmitter
     unless @radioSilence()
       process.nextTick =>
         entry.timestamp = process.hrtime()
-        @emit 'logger', entry
+        # @emit 'logger', entry
+        console.log entry
 
   debug: (event) ->
     args = _.toArray arguments
