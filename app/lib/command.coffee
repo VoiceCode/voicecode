@@ -39,8 +39,9 @@ class Command
       _.each @befores, ({action: e, info}) =>
         options = _.extend {}, info, {input, context}
         if Scope.active(options) and _.isFunction(e)
-          emit 'beforeWillExecute', {@id, e, info}
-          e.call(Actions, input, context)
+          emit 'beforeWillExecute', {@id, info, action: e, input}
+          result = e.call(Actions, input, context)
+          emit 'beforeDidExecute', {@id, info, action: e, input, result}
         true
 
     # one of the befores called @stop()
@@ -54,8 +55,9 @@ class Command
     _.each sorted, ({action: e, info}) =>
       options = _.extend {}, info, {input, context}
       if Scope.active(options) and _.isFunction(e)
-        emit 'implementationWillExecute', {@id, e, info}
+        emit 'implementationWillExecute', {@id, info, action: e, input}
         result = e.call(Actions, input, context)
+        emit 'implementationDidExecute', {@id, info, action: e, input, result}
         # stop execution, only one (the most 'specific') action should execute
         return false
       return true
@@ -65,8 +67,9 @@ class Command
       _.each @afters, ({action: e, info}) =>
         options = _.extend {}, info, {input, context}
         if Scope.active(options) and _.isFunction(e)
-          emit 'afterWillExecute', {@id, e, info}
-          e.call(Actions, input, context)
+          emit 'afterWillExecute', {@id, info, action: e, input}
+          _result = e.call(Actions, input, context)
+          emit 'afterDidExecute', {@id, info, action: e, input, result: _result}
         true
 
     Actions.executionStack.shift()
