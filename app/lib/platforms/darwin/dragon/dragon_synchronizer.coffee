@@ -267,6 +267,6 @@ class DragonSynchronizer
       db.run "DELETE FROM ZTRIGGER"    
       db.close()
     else
-      error 'clearDragonCommandFile', file, "couldn't find dragon command file: #{file}"
+      warning 'clearDragonCommandFile', file, "couldn't find dragon command file"
 
 module.exports = new DragonSynchronizer
