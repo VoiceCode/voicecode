@@ -28,7 +28,7 @@ class PackagesManager
       else
         notify 'Offline mode'
       emit 'packagesManagerReady'
-    
+
 
   subscribe: ->
     Events.on 'installPackage', @installPackage.bind(@)
@@ -50,7 +50,7 @@ class PackagesManager
         true
     Events.once 'userAssetsLoaded', =>
       if Network.online
-        @fetchAll.bind(@)
+        @fetchAll()
 
   prepareOffline: ->
     @registry = {all: {}}
