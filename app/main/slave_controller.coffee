@@ -40,21 +40,26 @@ class SlaveController
 
   process: (phrase, chain = null) ->
     if not phrase? and chain?
-      phrase = JSON.stringify chain
+      remote = JSON.stringify chain
     else
       sleepSpoken = Commands.mapping['core:slave-control'].spoken
-      phrase = phrase.toLowerCase().replace(/\s+/g, '')
-      if phrase.indexOf(sleepSpoken) isnt -1
-        @clearTarget()
-        process.nextTick ->
-          emit 'chainShouldExecute', _.trim phrase.replace sleepSpoken, ''
-        return
-    @sendToSlave phrase
-    log 'slaveModeExecutedRemote', phrase,
-    "Executing '#{phrase}' on #{@target}"
+      remote = phrase.toLowerCase().replace(/\s{2,}/g, '')
+      if remote.indexOf(sleepSpoken) isnt -1
+        [remote, local] = remote.split sleepSpoken
+        unless _.isEmpty remote
+          Events.once 'slaveModeExecutedRemote', => @clearTarget()
+        else
+          @clearTarget()
+        unless _.isEmpty local
+          process.nextTick =>
+            @clearTarget() if @isActive()
+            emit 'chainShouldExecute', _.trim local
+    @sendToSlave remote unless _.isEmpty remote
 
   sendToSlave: (commandPhrase, target = @target) ->
     @connectedSlaves[target].write commandPhrase
+    log 'slaveModeExecutedRemote', commandPhrase,
+      "Executing '#{commandPhrase}' on #{@target}"
 
   onError: (slaveSocket, _error) ->
     delete @connectedSlaves[slaveSocket.name]
