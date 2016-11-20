@@ -8,8 +8,7 @@ Events.on 'chainShouldExecute', (phrase) ->
 
 Events.on 'commandsShouldExecute', (chain) ->
   if SlaveController.isActive()
-    # SlaveController.process phrase
-    # FIXME
+    SlaveController.process null, chain
   else
     Fiber(->
       new Chain().execute(chain, false, true)

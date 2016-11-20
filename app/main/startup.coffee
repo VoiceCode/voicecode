@@ -91,10 +91,12 @@ menubar.on 'ready', ->
   unless developmentMode
     menubar.hideWindow()
   app.on 'activate', ->
-    menubar.showWindow()
+    unless windowController.get('main').isVisible()
+      menubar.showWindow()
   Events.on 'currentApplicationChanged', (to) ->
     if to.bundleId is global.bundleId
-      menubar.showWindow()
+      unless windowController.get('main').isVisible()
+        menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   window = menubar.window
@@ -146,7 +148,7 @@ Events.once 'applicationShouldStart', ->
     Events.once 'assetsControllerReady', startupFlow.add 'assetsControllerReady'
     global.AssetsController = require './assets_controller'
     startupFlow.wait 'assetsControllerReady'
-    
+
     Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.PackagesManager = require './packages_manager'
     startupFlow.wait 'packagesManagerReady'
