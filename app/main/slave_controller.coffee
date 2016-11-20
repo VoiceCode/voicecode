@@ -42,10 +42,13 @@ class SlaveController
     if not phrase? and chain?
       phrase = JSON.stringify chain
     else
-      phrase = phrase.toLowerCase()
-      if phrase.replace(/\s+/g, '') is
-      Commands.mapping['core:slave-control'].spoken
-        return @clearTarget()
+      sleepSpoken = Commands.mapping['core:slave-control'].spoken
+      phrase = phrase.toLowerCase().replace(/\s+/g, '')
+      if phrase.indexOf(sleepSpoken) isnt -1
+        @clearTarget()
+        process.nextTick ->
+          emit 'chainShouldExecute', _.trim phrase.replace sleepSpoken, ''
+        return
     @sendToSlave phrase
     log 'slaveModeExecutedRemote', phrase,
     "Executing '#{phrase}' on #{@target}"

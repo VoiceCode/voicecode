@@ -1,6 +1,6 @@
 {
   "name": "VoiceCode",
-  "version": "2.1.5",
+  "version": "2.1.7",
   "description": "Pushing the boundaries of human-computer-interaction via Advanced Voice Control + Automation",
   "website": "http://voicecode.io",
   "main": "app.js",
@@ -12,6 +12,7 @@
     "asyncblock": "git+https://github.com/dimatter/asyncblock.git",
     "chokidar": "^1.6.0",
     "classnames": "^2.2.5",
+    "clj-fuzzy": "^0.3.3",
     "coffee-react": "^5.0.1",
     "coffee-react-transform": "^5.0.0",
     "coffee-script": "^1.11.1",

@@ -51,7 +51,7 @@ class PackagesManager
         true
     Events.once 'userAssetsLoaded', =>
       if Network.online
-        @fetchAll.bind(@)
+        @fetchAll()
 
   prepareOffline: ->
     @registry = {all: {}}
@@ -234,13 +234,11 @@ class PackagesManager
         , {repoName, status}
         if status.behind
           @log repoName
-    if version = @determineVersion repoName
-      # only if it is not master
-      if version
-        repo.checkout version, (err) ->
-          if err
-            error 'packagesManagerCheckoutError'
-            , repo, "Failed to check out #{repoName}/#{version}"
+    version = @determineVersion(repoName) or 'master'
+    repo.checkout version, (err) ->
+      if err
+        error 'packagesManagerCheckoutError'
+        , repo, "Failed to check out #{repoName}/#{version}"
 
   log: (repoName) ->
     repo = git("#{@packagePath}#{repoName}")

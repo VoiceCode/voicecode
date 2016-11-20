@@ -1,6 +1,7 @@
 fs = require 'fs'
 sqlite3 = require("sqlite3").verbose()
 sync = require('synchronize')
+os = require 'os'
 
 class DragonSynchronizer
   constructor: ->
@@ -133,7 +134,6 @@ class DragonSynchronizer
       @database.run "COMMIT TRANSACTION;"
 
   databaseFile: (extension) ->
-    os = require 'os'
     home = os.homedir()
     file = [home, "Library/Application\ Support/Dragon/Commands/#{@getUsername()}.#{extension}"].join("/")
     if developmentMode
@@ -159,8 +159,11 @@ class DragonSynchronizer
       @deleteAllDynamic()
       @synchronizeStatic()
       @synchronizeDynamic()
+      unless Settings.dragon_darwin.keepDefaultDragonCommands
+        @removeDefaultDragonCommands()
     unless @error
       emit 'dragonSynchronizingEnded'
+    @database?.close()
 
   createList: (name, items, bundleId = '#') ->
     if @error
@@ -238,5 +241,32 @@ class DragonSynchronizer
           unless uniqueName in @insertedLists
             @createList listName, speakableList.speakableValues(), bundleId
             @insertedLists.push uniqueName
+
+  removeDefaultDragonCommands: ->
+    files = [
+      'Global-eng'
+      'GlobalSearch-eng'
+      'GlobalSocial-eng'
+      'iCal-eng'
+      'iChat-eng'
+      'Mail-eng'
+      'Safari-eng'
+      'TextEdit-eng'
+      'Word-eng'
+      'Finder-eng'
+    ]
+    _.each files, @clearDragonCommandFile.bind(@)
+  clearDragonCommandFile: (name) ->
+    home = os.homedir()
+    file = [home, "Library/Application\ Support/Dragon/Commands/#{name}.ddictatecommands"].join("/")
+    if fs.existsSync(file)
+      db = new sqlite3.Database file, sqlite3.OPEN_READWRITE
+      sync db, 'run'      
+      db.run "DELETE FROM ZACTION"
+      db.run "DELETE FROM ZCOMMAND"
+      db.run "DELETE FROM ZTRIGGER"    
+      db.close()
+    else
+      warning 'clearDragonCommandFile', file, "couldn't find dragon command file"
 
 module.exports = new DragonSynchronizer

@@ -1,6 +1,9 @@
 # base actions shared by each platform
 # Actions is the context that every command is called with
 # - so anything that should be available on 'this' within a command should be defined in the actions class
+# _s = require 'underscore.string'
+
+fuzzy = require('clj-fuzzy')
 
 class Actions
   constructor: () ->
@@ -33,14 +36,25 @@ class Actions
 
   fuzzyMatch: (list, term) ->
     # array
-    if Object::toString.call(list) is '[object Array]'
+    if _.isArray list
       if _.includes list, term
         term
       else
         results = {}
         for item in list
-          results[item] = _s.levenshtein(item, term)
-        best = _.min _.keys(results), (k) ->
+          levenshtein = fuzzy.metrics.levenshtein item, term
+          # mra = 6 - (fuzzy.metrics.mra_comparison(item, term)?.similarity or 0)
+          # caverphoneDistance = fuzzy.metrics.levenshtein(
+          #   fuzzy.phonetics.caverphone(item),
+          #   fuzzy.phonetics.caverphone(term)
+          # )
+          # soundex = fuzzy.metrics.levenshtein(
+          #   fuzzy.phonetics.soundex(item),
+          #   fuzzy.phonetics.soundex(term)
+          # )
+          # results[item] = mra + caverphoneDistance + soundex
+          results[item] = levenshtein
+        best = _.minBy _.keys(results), (k) ->
           results[k]
         best
     # object
@@ -49,11 +63,33 @@ class Actions
         list[term]
       else
         results = {}
-        _.each list, (item, key) ->
-          totalDistance = _s.levenshtein(key, term)
-          results[key] = totalDistance
-        best = _.min _.keys(results), (k) ->
+        analysis = {}
+        _.each list, (value, item) ->
+          # mra = 6 - (fuzzy.metrics.mra_comparison(item, term)?.similarity or 0)
+          # caverphoneDistance = fuzzy.metrics.levenshtein(
+          #   fuzzy.phonetics.caverphone(item),
+          #   fuzzy.phonetics.caverphone(term)
+          # )
+          # soundex = fuzzy.metrics.levenshtein(
+          #   fuzzy.phonetics.soundex(item),
+          #   fuzzy.phonetics.soundex(term)
+          # )
+          # results[item] = mra + caverphoneDistance + soundex
+          levenshtein = fuzzy.metrics.levenshtein item, term
+          results[item] = levenshtein
+          analysis[item] =
+            levenshtein: levenshtein
+            # mra: mra
+            # caverphone: caverphoneDistance
+            # soundex: soundex
+            # total: results[item]
+          true
+        best = _.minBy _.keys(results), (k) ->
           results[k]
+        analysis =
+          original: term
+          results: analysis
+        warning 'fuzzy', analysis
         list[best]
 
   fuzzyMatchKey: (list, term) ->

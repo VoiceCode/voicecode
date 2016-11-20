@@ -59,17 +59,6 @@ class DarwinActions extends Actions
       end try
       """
 
-  transformSelectedText: (transform) ->
-    switch @currentApplication().name
-      when "Atom"
-        @runAtomCommand "transformSelectedText", transform, true
-      else
-        if @isTextSelected()
-          contents = @getSelectedText()
-          transformed = SelectionTransformer[transform](contents)
-          @string transformed
-
-
   clickServiceItem: (item) ->
     emit 'notUndoable'
     @applescript """
@@ -78,29 +67,6 @@ class DarwinActions extends Actions
     end tell
     delay 1
     """
-
-  isTextSelected: ->
-    result = @applescript """
-    tell application "System Events" to tell (process 1 where frontmost is true)
-      set selectionExists to (enabled of first menu item of (menu 1 of menu bar item 4 of menu bar 1) ¬
-          where (value of attribute "AXMenuItemCmdChar" is "C") ¬
-          and (value of attribute "AXMenuItemCmdModifiers" is 0))
-    end tell
-    return selectionExists
-    """
-    (result is "true")
-
-  getSelectedText: ->
-    old = @getClipboard()
-    @copy()
-    @waitForClipboard()
-    result = @getClipboard()
-    @setClipboard(old)
-    result
-
-
-  canDetermineSelections: ->
-    not _.includes(Settings.os.applicationsThatCanNotHandleBlankSelections, @currentApplication().name)
 
   verticalSelectionExpansion: (number) ->
     emit 'notUndoable'

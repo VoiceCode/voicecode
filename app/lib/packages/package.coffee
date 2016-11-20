@@ -57,7 +57,7 @@ class Package
     id = @normalizeId(id)
     commandOptions = _.defaultsDeep options, @defaultCommandOptions
     packageOptions = _.defaultsDeep options, @defaultEditOptions
-    Commands.createDisabled id, commandOptions
+    Commands.create id, commandOptions
     if funk?
       @implement packageOptions, {"#{id}": funk}
 

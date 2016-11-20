@@ -115,26 +115,6 @@ class Commands
     if (alreadyEnabled or options.enabled) is true
       @enable name
 
-  createWithDefaults: (defaults, options) ->
-    _.each options, (value, key) =>
-      command = _.extend {}, defaults, value
-      command.enabled ?= true
-      @create key, command
-
-  createDisabled: (name, options) ->
-    if typeof name is "object"
-      _.each name, (value, key) =>
-        @createDisabled key, value
-      return
-    options.enabled ?= false
-    @create name, options
-
-  createDisabledWithDefaults: (defaults, options) ->
-    for key, value of options
-      command = _.extend {}, defaults, value
-      command.enabled ?= false
-      @create key, command
-
   edit: (name, editType, edition, callback) ->
     @delayedEditFunctions.push {name, editType, edition, callback}
     if @immediateEdits
@@ -170,8 +150,6 @@ class Commands
       if tag in (command.tags or [])
         @enable name
     @performCommandEdits('slaveModeEnableAllCommands') # TODO change name of this
-
-
 
   shouldEmitValidationFailed: (editType, command) ->
     return true
