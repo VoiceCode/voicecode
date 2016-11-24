@@ -16,11 +16,10 @@ class AssetsController
   init: ->
     @createDirectory @assetsPath
     @createSettingsFile()
-    @createDirectory @assetsPath + '/packages', (err, created) =>
-      # return if err
+    @createDirectory _path.join(@assetsPath, 'packages'), (err, created) =>
       if created
         @firstRun = true
-    emit 'assetsControllerReady'
+      emit 'assetsControllerReady'
 
   createDirectory: (path, callback) ->
     callback ?= ->
@@ -37,7 +36,7 @@ class AssetsController
         , "Could not create user assets directory: #{err.message}"
         callback err
   createSettingsFile: ->
-    path =  "#{@assetsPath}/settings.coffee"
+    path =  _path.join @assetsPath, 'settings.coffee'
     data = """
     _.merge Settings,
       license: ''

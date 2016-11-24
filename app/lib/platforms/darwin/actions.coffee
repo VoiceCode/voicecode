@@ -1,4 +1,5 @@
 Actions = require '../base/actions'
+$ = require 'nodobjc'
 
 class DarwinActions extends Actions
   constructor: ->

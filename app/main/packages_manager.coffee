@@ -5,9 +5,10 @@ fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'
 path = require 'path'
+
 class PackagesManager
   constructor: ->
-    @packagePath = AssetsController.assetsPath + "/packages/"
+    @packagePath = path.join AssetsController.assetsPath, 'packages'
 
     @subscribe()
     if Network.online

@@ -5,15 +5,16 @@ class NatLinkSynchronizer
 
 class Synchronizer
   constructor: ->
-    if platform is "darwin"
-      _path = '../lib/platforms/darwin/dragon'
-      @synchronizer = require "#{_path}/dragon_synchronizer"
-    else if platform is "windows"
-      @synchronizer = new NatLinkSynchronizer
+    @synchronizer = switch platform
+      when 'darwin'
+        require "../lib/platforms/darwin/dragon/dragon_synchronizer"
+      when 'windows'
+        new NatLinkSynchronizer
 
     Events.on 'generateParserSuccess', ({parserChanged}) =>
       if parserChanged
-        @synchronize
+        @synchronize()
+
   synchronize: ->
     @synchronizer.synchronize()
 

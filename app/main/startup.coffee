@@ -61,7 +61,6 @@ global.Settings = Object.create new Proxy settings,
 global._ = require 'lodash'
 require('../lib/utility/deepExtend')
 global.path = require 'path'
-#global.$ = require 'nodobjc'
 global.Events = require './event_emitter'
 global.requireDirectory = require 'require-directory'
 global.numberToWords = require '../lib/utility/numberToWords'
@@ -166,8 +165,7 @@ Events.once 'applicationShouldStart', ->
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.ParserController = require '../lib/parser/parser_controller'
-    
-    global.VocabularyController = require "#{platformLib}/dragon/dragon_vocabulary_controller" unless developmentMode
+    global.VocabularyController = require "#{platformLib}/dragon/dragon_vocabulary_controller"
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
     AssetsController.getAssets 'package', 'packages/**/package.coffee'
@@ -194,8 +192,12 @@ Events.once 'applicationShouldStart', ->
       Commands.enableAll()
 
 
-    if developmentMode or platform is 'windows'
+    if developmentMode
       Settings.core.slaveMode = true
+
+    # if platform is 'windows'
+    #   Settings.core.slaveMode = true
+
     global.MainController = require "#{platformLib}/main_controller"
 
     unless Settings.core.slaveMode
