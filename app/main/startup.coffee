@@ -65,6 +65,7 @@ global.SelectionTransformer = require '../lib/utility/selectionTransformer'
 global.Transforms = require '../lib/utility/transforms'
 global.windowController = require './window_controller'
 
+
 menubarOptions =
   index: "file://#{projectRoot}/frontend/main.html"
   icon: "#{projectRoot}/assets/vc_tray.png"
@@ -88,6 +89,7 @@ global.BadgeCounter = require '../lib/utility/badge_counter'
 
 menubar.on 'ready', ->
   menubar.showWindow()
+  require('./menu.coffee')
   unless developmentMode
     menubar.hideWindow()
   app.on 'activate', ->

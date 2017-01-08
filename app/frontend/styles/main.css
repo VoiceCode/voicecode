@@ -8,10 +8,10 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     vertical-align: baseline;
 }
 
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
     display: none;
 }
-
+*/
 
 /* HTML5 display-role reset for older browsers */
 
@@ -164,5 +164,5 @@ body {
 
 /* !important is ugly but couldn't seem to override default style with more specific selectors */
 .ui.rule .ui.dropdown .menu > .item {
-    padding: 4px 14px !important; 
+    padding: 4px 14px !important;
 }
