@@ -114,11 +114,14 @@ class Package
   # (so a user can change package settings that
   # this package's commands depend on)
   defer: (callback) ->
-    @hasDeferred = true
-    Events.once 'userAssetsLoaded', =>
-      do callback.bind @
-      emit "#{@name}PackageReady", {pack: @}
-      emit 'packageReady', {pack: @}, "Package ready: #{@name}"
+    if global.startupComplete
+      callback.call @
+    else
+      @hasDeferred = true
+      Events.once 'userAssetsLoaded', =>
+        do callback.bind @
+        emit "#{@name}PackageReady", {pack: @}
+        emit 'packageReady', {pack: @}, "Package ready: #{@name}"
 
   # the instance should automatically add its
   # package name at the beginning of all commands it creates
