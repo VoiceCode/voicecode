@@ -120,6 +120,10 @@ class Commands
     if @immediateEdits
       @performCommandEdits 'immediate'
 
+  update: (name, changes) ->
+    @edit name, 'update', 'update', (command) ->
+      _.deepExtend command, changes
+
   remove: (name) ->
     # TODO what else needs to be done to clean up?
     @edit name, 'commandDisabled', null, (command) =>
