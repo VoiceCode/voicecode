@@ -92,13 +92,13 @@ menubar.on 'ready', ->
   require('./menu.coffee')
   unless developmentMode
     menubar.hideWindow()
-  app.on 'activate', ->
-    unless windowController.get('main').isVisible()
-      menubar.showWindow()
-  Events.on 'currentApplicationChanged', (to) ->
-    if to.bundleId is global.bundleId
-      unless windowController.get('main').isVisible()
-        menubar.showWindow()
+  # app.on 'activate', ->
+  #   unless windowController.get('main').isVisible()
+  #     menubar.showWindow()
+  # Events.on 'currentApplicationChanged', (to) ->
+  #   if to.bundleId is global.bundleId
+  #     unless windowController.get('main').isVisible()
+  #       menubar.showWindow()
 
 menubar.on 'after-create-window', ->
   window = menubar.window
@@ -201,8 +201,8 @@ Events.once 'applicationShouldStart', ->
       global.Synchronizer = require './synchronize'
       Synchronizer.synchronize()
 
+    global.startupComplete = true
     emit "startupComplete"
-
 
 
 Events.on 'applicationShouldQuit', ->
