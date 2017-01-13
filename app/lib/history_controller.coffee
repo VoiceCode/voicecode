@@ -97,20 +97,21 @@ class HistoryController
       y: 0
       width: 350
       height: 600
-      # width: 900
-      # height: 1200
       hasShadow: false
-      # type: "desktop"
       alwaysOnTop: true
       transparent: true
+      resizable: false
+      focusable: false
       frame: false
       toolbar: false
-      resizable: false
-      show: true
+      # show: false
+      autoHideMenuBar: true
+      # vibrancy: 'dark'
     historyWindow.once 'show', ->
       historyWindow.hide()
       # historyWindow.openDevTools()
     historyWindow.loadURL("file://#{projectRoot}/frontend/history.html")
+    historyWindow.setIgnoreMouseEvents true
 
   createMicrophoneStateWindow: ->
     screen = require 'screen'
