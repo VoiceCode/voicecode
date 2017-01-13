@@ -88,11 +88,14 @@ _.each process.mainModule.paths, (path) ->
 
 global.Network = require '../lib/utility/network'
 global.BadgeCounter = require '../lib/utility/badge_counter'
+Config = require('electron-config')
+config = new Config()
 
 app.once 'ready', ->
 
   # TODO persist this to restore preferred window position
-  mainWindowState =
+  mainWindowState = config.get 'mainWindowState'
+  mainWindowState ?=
     width: 1200
     height: 800
 
@@ -106,6 +109,9 @@ app.once 'ready', ->
     titleBarStyle: 'hidden-inset'
     show: false
     center: true
+
+  main.on 'close', ->
+    config.set 'mainWindowState', main.getBounds()
 
   main.once 'show', ->
     require('./menu.coffee')
