@@ -17,6 +17,7 @@
     "coffee-react-transform": "^5.0.0",
     "coffee-script": "^1.11.1",
     "crypto-js": "^3.1.7",
+    "electron-config": "^0.2.1",
     "electron-settings": "^2.2.1",
     "events": "^1.1.1",
     "fibers": "^1.0.15",
