@@ -75,11 +75,13 @@ menubarOptions =
   alwaysOnTop: true
   'always-on-top': true
   showDockIcon: true
-if developmentMode
-  menubarOptions.icon = "#{projectRoot}/assets/vc_tray_develop.png"
-  menubarOptions.x = 0
-  menubarOptions.y = 0
-global.menubar = require('menubar') menubarOptions
+
+# if developmentMode
+#   menubarOptions.icon = "#{projectRoot}/assets/vc_tray_develop.png"
+#   menubarOptions.x = 0
+#   menubarOptions.y = 0
+
+# global.menubar = require('menubar') menubarOptions
 
 _.each process.mainModule.paths, (path) ->
   require('module').globalPaths.push path
@@ -87,37 +89,78 @@ _.each process.mainModule.paths, (path) ->
 global.Network = require '../lib/utility/network'
 global.BadgeCounter = require '../lib/utility/badge_counter'
 
-menubar.on 'ready', ->
-  menubar.showWindow()
-  require('./menu.coffee')
-  unless developmentMode
-    menubar.hideWindow()
-  # app.on 'activate', ->
-  #   unless windowController.get('main').isVisible()
-  #     menubar.showWindow()
-  # Events.on 'currentApplicationChanged', (to) ->
-  #   if to.bundleId is global.bundleId
-  #     unless windowController.get('main').isVisible()
-  #       menubar.showWindow()
+app.once 'ready', ->
 
-menubar.on 'after-create-window', ->
-  window = menubar.window
-  windowController.set 'main', window
-  window.on 'blur', ->
-    unless developmentMode or window.isSticky
-      menubar.hideWindow()
-  Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
-    if id is 'main'
-      window.isSticky = shouldStick
-  # window.webContents.executeJavaScript 'require("coffee-script/register")'
-  # window.webContents.executeJavaScript 'require("node-cjsx").transform()'
-  if developmentMode
-    window.on 'reload', ->
-      Events.frontendClearSubscriptions()
-    electronConnect = electronConnect.create window
-    window.openDevTools()
+  # TODO persist this to restore preferred window position
+  mainWindowState =
+    width: 1200
+    height: 800
 
-app.on 'ready', ->
+  main = windowController.new 'main',
+    width: mainWindowState.width
+    height: mainWindowState.height
+    x: mainWindowState.x
+    y: mainWindowState.y
+    # closable: false
+    acceptFirstMouse: true
+    titleBarStyle: 'hidden-inset'
+    show: false
+    center: true
+
+  main.once 'show', ->
+    require('./menu.coffee')
+
+  main.once 'ready-to-show', ->
+    setTimeout ->
+      main.show()
+      app.on 'activate', ->
+        main.show()
+    , 400
+    # menubar.showWindow()
+    # unless developmentMode
+    #   menubar.hideWindow()
+
+    Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
+      if id is 'main'
+        if main.isAlwaysOnTop()
+          main.setAlwaysOnTop false
+        else
+          main.setAlwaysOnTop true, 'floating'
+
+    if developmentMode
+      main.on 'reload', ->
+        Events.frontendClearSubscriptions()
+      electronConnect = electronConnect.create main
+      main.openDevTools()
+
+  main.loadURL("file://#{projectRoot}/frontend/main.html")
+
+    # app.on 'activate', ->
+    #   unless windowController.get('main').isVisible()
+    #     menubar.showWindow()
+    # Events.on 'currentApplicationChanged', (to) ->
+    #   if to.bundleId is global.bundleId
+    #     unless windowController.get('main').isVisible()
+    #       menubar.showWindow()
+
+# menubar.on 'after-create-window', ->
+#   window = menubar.window
+#   windowController.set 'main', window
+#   window.on 'blur', ->
+#     unless developmentMode or window.isSticky
+#       menubar.hideWindow()
+#   Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
+#     if id is 'main'
+#       window.isSticky = shouldStick
+#   # window.webContents.executeJavaScript 'require("coffee-script/register")'
+#   # window.webContents.executeJavaScript 'require("node-cjsx").transform()'
+#   if developmentMode
+#     window.on 'reload', ->
+#       Events.frontendClearSubscriptions()
+#     electronConnect = electronConnect.create window
+#     window.openDevTools()
+
+# app.on 'ready', ->
   # emit 'appReady'#, app
 
 
@@ -205,11 +248,14 @@ Events.once 'applicationShouldStart', ->
     emit "startupComplete"
 
 
+app.on 'window-all-closed', ->
+  app.quit()
+
 Events.on 'applicationShouldQuit', ->
-  process.nextTick ->
-    process.exit()
+  app.quit()
+
 Events.on 'applicationShouldRestart', ->
-  app.relaunch()
+  electron.app.relaunch()
   emit('applicationShouldQuit')
 
 

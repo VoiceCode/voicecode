@@ -62,7 +62,14 @@ body {
 }
 
 .mainBody {
-    margin-top: 88px
+    position: absolute;
+    width: 100%;
+    top: 88px;
+    bottom: 31px;
+    left: 0;
+    right: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .segment:empty {

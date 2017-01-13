@@ -59,7 +59,7 @@ module.exports = new class MainController
 
   systemEventHandler: (buffer) ->
     try
-      event = JSON.parse buffer.toString('utf8')
+      event = JSON.parse buffer.toString('utf8').trim()
       switch event.event
         when 'applicationChanged'
           @applicationChanged event

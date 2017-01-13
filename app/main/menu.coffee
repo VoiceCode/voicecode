@@ -1,3 +1,5 @@
+electron = require 'electron'
+
 template = [
   {
     label: 'Edit',

@@ -16,7 +16,7 @@ class StickyButton extends React.Component
     stickyWindowIconClasses = classNames
       'inverted icon zeroMargin': true
       'lock': isSticky
-      'unlock': !isSticky
+      'pin': !isSticky
     <a className='item'
        onClick={ toggleStickyWindow }
        title='toggle window hover'>
