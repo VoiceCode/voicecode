@@ -45,19 +45,17 @@ class Footer extends React.Component
     restartItemClasses = classNames
       "item": true
     <div className='footer ui bottom fixed mini inverted icon menu'>
-      <a className={ restartItemClasses }
-         title="quit VoiceCode"
-         onClick={ quitApplication } >
-           <i className="power icon"></i>
-      </a>
-      <a className='item '
-         title="restart VoiceCode"
-         onClick={ restartApplication } >
-           <i className={ restartIconClasses }></i>
-           {
-             if restartNeeded
+      <a className='item'
+        title="restart VoiceCode"
+        onClick={ restartApplication } >
+          <i className={ restartIconClasses }></i>
+          {' '}
+          {
+            if restartNeeded
               "RESTART NEEDED"
-           }
+            else
+              "Restart"
+          }
       </a>
 
       <div className='right menu'>

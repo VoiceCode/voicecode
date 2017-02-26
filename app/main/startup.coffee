@@ -141,6 +141,9 @@ app.once 'ready', ->
 
   main.loadURL("file://#{projectRoot}/frontend/main.html")
 
+  Events.on 'printCurrentWindow', ->
+    windowController.getFocused()?.webContents.print()
+
     # app.on 'activate', ->
     #   unless windowController.get('main').isVisible()
     #     menubar.showWindow()

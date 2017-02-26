@@ -14,12 +14,12 @@ class Main extends React.Component
   render: ->
     <div>
       <div className="ui top fixed inverted menu" style={WebkitAppRegion: "drag"}>
-          <div className="right menu">
-            <IndexLink to="/" className="item" activeClassName="active">Log</IndexLink>
-            <Link to="/commands" className="item" activeClassName="active">Commands</Link>
-            <Link to="/packages" className="item" activeClassName="active">Packages</Link>
-            <StickyButton/>
-          </div>
+        <div className="right menu">
+          <IndexLink to="/" className="item" activeClassName="active">Log</IndexLink>
+          <Link to="/commands" className="item" activeClassName="active">Commands</Link>
+          <Link to="/packages" className="item" activeClassName="active">Packages</Link>
+          <StickyButton/>
+        </div>
       </div>
       <div className='mainBody'>
         {@props.children}

@@ -200,20 +200,24 @@ class PackagesManager
 
   fetch: (repoName) ->
     repo = git("#{@packagePath}#{repoName}")
-    repo.fetch 'origin'
-    , (err, result) =>
-      if err
-        return error 'packagesManagerFetchError'
-        , repo, "Failed to fetch #{repoName} repository"
-      repo.status (err, status) =>
-        emit 'packageRepoStatusUpdated'
-        , {repoName, status}
-        if status.behind
-          @log repoName
-    version = @determineVersion(repoName) or 'master'
-    repo.checkout version, (err) ->
-      if err
-        error 'packagesManagerCheckoutError', repo, "Failed to check out #{repoName}/#{version}"
+    try
+      repo.fetch 'origin'
+      , (err, result) =>
+        if err
+          return error 'packagesManagerFetchError'
+          , repo, "Failed to fetch #{repoName} repository"
+        repo.status (err, status) =>
+          emit 'packageRepoStatusUpdated'
+          , {repoName, status}
+          if status.behind
+            @log repoName
+      version = @determineVersion(repoName) or 'master'
+      repo.checkout version, (err) ->
+        if err
+          error 'packagesManagerCheckoutError', repo, "Failed to check out #{repoName}/#{version}"
+    catch
+      return error 'packagesManagerFetchError'
+      , repo, "Failed to fetch #{repoName} repository"
 
   log: (repoName) ->
     repo = git("#{@packagePath}#{repoName}")
