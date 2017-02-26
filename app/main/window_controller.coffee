@@ -21,3 +21,7 @@ module.exports = new class WindowController
     emit 'windowCreated', {id, window}
     window.webContents.executeJavaScript "window.init == null || window.init()"
     window
+
+  getFocused: ->
+    for name, window of @windows
+      return window if window.isFocused()

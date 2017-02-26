@@ -1,0 +1,21 @@
+.mainBody {
+  position: static;
+  display: block;
+}
+.footer {
+	display: none;
+	visibility: hidden;
+}
+.ui.fixed.secondary {
+	display: none;
+	visibility: hidden;
+}
+.ui.top.fixed.inverted.menu {
+	display: none;
+	visibility: hidden;
+}
+.tag {
+	display: none;
+	visibility: hidden;
+}
+

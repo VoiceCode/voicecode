@@ -71,6 +71,7 @@ class CommandFilter extends React.Component
             'minus circle': state is 'disabled'
             'user': state is 'user'
           ) }></i>
+          { _.upperFirst state }
           </a>
       }
 
@@ -87,6 +88,7 @@ class CommandFilter extends React.Component
                   ['tags', 'packages', 'commands', 'descriptions'].map (scope) =>
                     <div key={ scope } className={ @iconsFor scope, false } data-value={ scope } title={ "search #{scope}" }>
                       <i className={ @iconsFor scope }></i>
+                      { ' ' + _.upperFirst(scope) }
                     </div>
                 }
               </div>

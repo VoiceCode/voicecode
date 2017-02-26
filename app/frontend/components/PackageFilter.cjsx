@@ -55,6 +55,7 @@ class PackageFilter extends React.Component
               'minus circle': state is 'disabled'
               'arrow circle up': state is 'updatable'
             ) }></i>
+            { ' ' + _.startCase(key)}
             </a>
       }
 

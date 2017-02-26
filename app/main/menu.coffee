@@ -2,7 +2,17 @@ electron = require 'electron'
 
 template = [
   {
-    label: 'Edit',
+    label: 'File'
+    submenu: [
+      {
+        label: 'Print...'
+        click: -> emit 'printCurrentWindow'
+        accelerator: 'CmdOrCtrl+P'
+      }
+    ]
+  },
+  {
+    label: 'Edit'
     submenu: [
       # { role: 'undo' }
       # { role: 'redo' }
@@ -14,9 +24,10 @@ template = [
     ]
   },
   {
-    label: 'View',
+    label: 'View'
     submenu: [
-      # { type: 'separator' }
+      { type: 'toggledevtools' }
+      { type: 'separator' }
       { role: 'resetzoom' }
       { role: 'zoomin' }
       { role: 'zoomout' }
@@ -25,14 +36,14 @@ template = [
     ]
   },
   {
-    role: 'window',
+    role: 'window'
     submenu: [
       { role: 'minimize' }
       { role: 'close' }
     ]
   },
   {
-    role: 'help',
+    role: 'help'
     submenu: [
       {
         label: 'Learn More'
@@ -60,24 +71,24 @@ if process.platform is 'darwin'
   # Window menu.
   template[3].submenu = [
     {
-      label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
+      label: 'Close'
+      accelerator: 'CmdOrCtrl+W'
       role: 'close'
     },
     {
-      label: 'Minimize',
-      accelerator: 'CmdOrCtrl+M',
+      label: 'Minimize'
+      accelerator: 'CmdOrCtrl+M'
       role: 'minimize'
     },
     {
-      label: 'Zoom',
+      label: 'Zoom'
       role: 'zoom'
     },
     {
       type: 'separator'
     },
     {
-      label: 'Bring All to Front',
+      label: 'Bring All to Front'
       role: 'front'
     }
   ]

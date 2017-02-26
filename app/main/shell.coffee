@@ -20,7 +20,6 @@ Applescript = (content, shouldReturn = true) ->
   script = $.NSAppleScript('alloc')('initWithSource', $(content))
   results = script('executeAndReturnError', null)
   returnValue = if shouldReturn and _.isFunction(results)
-    debug results
     results('stringValue')?.toString()
   else
     null
