@@ -12,7 +12,7 @@ class Scope
 
   # application: shorthand for applications: ['single']
   # condition: shorthand for conditions: [->]
-  constructor: ({@name, applications, condition, application, conditions}) ->
+  constructor: ({@name, applications, condition, application, conditions, @parents, parent}) ->
     @_applications = if applications
       if _.isFunction applications
         [applications]
@@ -25,6 +25,10 @@ class Scope
       conditions
     else if condition
       [condition]
+
+    @parents ?= []
+    if parent
+      @parents.push parent
 
   @register: (options) ->
     if @instances[options.name]?
@@ -53,7 +57,7 @@ class Scope
   active: (options={}) ->
     return true if @name is 'global'
     {input, context} = options
-    @checkApplications() and @checkConditions({input, context})
+    @checkParent(options) and @checkApplications() and @checkConditions({input, context})
 
   # allow lazy resolving of an application list
   applications: ->
@@ -77,6 +81,36 @@ class Scope
   checkConditions: ({input, context}) ->
     _.every @conditions(), (condition) ->
       condition.call(Actions, input, context)
+
+  checkParent: (options) ->
+    if @parents.length
+      _.some @parents, (p) ->
+        Scope.get(p)?.active(options)
+    else
+      true
+
+  @sortBySpecificity: (scopes) ->
+    _.reverse _.sortBy scopes, (scope) =>
+      @specificity scope
+
+  ancestors: ->
+    if @parents.length
+      _.map @parents, (parent) ->
+        [parent].concat(Scope.get(parent)?.ancestors() or [])
+    else
+      []
+
+  @specificity: (scope) ->
+    return 0 if scope is 'global' or scope is 'abstract'
+    scope = Scope.get scope
+    return 1 unless scope?
+    maxDepth = (arr) ->
+      _.max _.map arr, (i) ->
+        if _.isArray(i) and i.length > 0
+          1 + maxDepth(i)
+        else
+          1
+    maxDepth [scope.ancestors()]
 
 # this is just for easy access to a global version
 Scope.global = Scope.register

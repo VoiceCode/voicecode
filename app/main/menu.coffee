@@ -26,7 +26,7 @@ template = [
   {
     label: 'View'
     submenu: [
-      { type: 'toggledevtools' }
+      { role: 'toggledevtools' }
       { type: 'separator' }
       { role: 'resetzoom' }
       { role: 'zoomin' }
@@ -69,7 +69,7 @@ if process.platform is 'darwin'
     ]
   })
   # Window menu.
-  template[3].submenu = [
+  template[4].submenu = [
     {
       label: 'Close'
       accelerator: 'CmdOrCtrl+W'

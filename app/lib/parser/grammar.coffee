@@ -277,7 +277,7 @@ class Grammar
 
     nestedTextId = "shrink" / "treemail" / "trusername" / "trassword"
 
-    translation = id:translationId {return Settings.vocabulary.translations[id.trim()];}
+    translation = id:translationId {return Commands.getTranslation(id.trim());}
 
     translationId = id:(#{@translationIds()}) {return id;}
 
@@ -289,7 +289,7 @@ class Grammar
       !sentinel !customCommand text:(characters) {return text}
 
     characters =
-      chars:([a-z]i / '.' / "'" / '-' / '&' / '`' / '/' / ':' / [0-9])+ ss
+      chars:([a-z]i / '.' / "'" / '-' / '+' / '&' / '`' / '/' / ':' / [0-9])+ ss
       {return chars.join('')}
 
     symbol =

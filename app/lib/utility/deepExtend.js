@@ -14,7 +14,8 @@ function deepExtend(obj) {
       }
       else if (_.isArray(obj[prop]) || _.isArray(source[prop])){
         if (!_.isArray(obj[prop]) || !_.isArray(source[prop])){
-          throw new Error('Trying to combine an array with a non-array (' + prop + ')');
+          warn('Trying to combine an array with a non-array (' + prop + ')');
+          obj[prop] = source[prop];
         } else {
           // obj[prop] = _.reject(_.deepExtend(_.clone(obj[prop]), source[prop]), function (item) { return _.isNull(item);});
           obj[prop] = obj[prop].concat(source[prop]);
@@ -22,7 +23,8 @@ function deepExtend(obj) {
       }
       else if (_.isObject(obj[prop]) || _.isObject(source[prop])){
         if (!_.isObject(obj[prop]) || !_.isObject(source[prop])){
-          throw new Error('Trying to combine an object with a non-object (' + prop + ')');
+          warn('Trying to combine an object with a non-object (' + prop + ')');
+          obj[prop] = source[prop];
         } else {
           obj[prop] = _.deepExtend(_.clone(obj[prop]), source[prop]);
         }

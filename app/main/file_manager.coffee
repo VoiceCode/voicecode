@@ -64,7 +64,7 @@ FileManager.types null,
       data = if _.isEmpty data then '{}' else data
       JSON.parse data, 'utf8'
     saver: (data) ->
-      data = if _.isEmpty data then '{}' else data
+      data = if _.isEmpty data then {} else data
       JSON.stringify(data, null, 4)
   coffeescript:
     extension: '.coffee'

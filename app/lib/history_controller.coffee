@@ -9,6 +9,7 @@ class HistoryController
     Events.on 'historyControllerAmnesia', (yesNo) =>
       @hasAmnesia yesNo
     Events.on 'chainWillExecute', =>
+      @amnesia = false # sometimes amnesia gets stuck enabled, not sure why
       @activeChains++
       previous = @history[@context]
       # console.log 'previous exists: ' + previous?

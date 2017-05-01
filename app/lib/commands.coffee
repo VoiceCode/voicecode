@@ -122,7 +122,7 @@ class Commands
 
   update: (name, changes) ->
     @edit name, 'update', 'update', (command) ->
-      _.deepExtend command, changes
+      _.extend command, changes
 
   remove: (name) ->
     # TODO what else needs to be done to clean up?
@@ -228,6 +228,29 @@ class Commands
 
   getRepeater: (spoken) ->
     @repeaterLookup[spoken]
+
+  getTranslation: (term) ->
+    translation = Settings.vocabulary.translations[term]
+    if _.isString translation
+      return translation
+    if _.isFunction translation
+      return translation.call Actions
+    if _.isObject translation
+      consideredScopes = {}
+      for scopes, nested of translation
+        for scope in scopes.split(',')
+          consideredScopes[scope.trim()] = nested
+      sorted = Scope.sortBySpecificity(_.keys(consideredScopes))
+      log 'assorted scope', sorted
+      for scope in sorted
+        if Scope.active(scope)
+          resolved = consideredScopes[scope]
+          if _.isString resolved
+            return resolved
+          else if _.isFunction resolved
+            return resolved.call Actions
+    return term
+
 
   normalizeOptions: (name, options) ->
     options.id = name
