@@ -43,7 +43,7 @@ class SlaveController
       phrase = JSON.stringify chain
     else
       sleepSpoken = Commands.mapping['core:slave-control'].spoken
-      phrase = phrase.toLowerCase().replace(/\s+/g, '')
+      phrase = phrase.toLowerCase().replace(/\s+/g, ' ')
       if phrase.indexOf(sleepSpoken) isnt -1
         @clearTarget()
         process.nextTick ->
