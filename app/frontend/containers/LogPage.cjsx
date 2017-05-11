@@ -14,10 +14,8 @@ mapStateToProps = (state) ->
 mapDispatchToProps = {toggleLogEvents, clearLog, toggleRadioSilence}
 
 class LogPage extends React.Component
-  # componentDidMount: ->
-    # unless developmentMode
-      # $('.ui.accordion').accordion
-      #   on: 'click'
+  shouldComponentUpdate: ->
+    Remote.getGlobal('windowController').get('main').isVisible()
   render: ->
     {showingEvents
     , toggleLogEvents
