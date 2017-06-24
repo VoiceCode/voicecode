@@ -60,13 +60,17 @@ class Scope
     @checkParent(options) and @checkApplications() and @checkConditions({input, context})
 
   # allow lazy resolving of an application list
-  applications: ->
+  myApplications: ->
     return [] unless @_applications
     _.compact _.uniq _.flattenDeep _.map @_applications, (a) ->
       if _.isFunction a
         a.call(Actions)
       else
         a
+
+  applications: ->
+    _.compact _.uniq _.flattenDeep @myApplications().concat _.map @ancestors(), (ancestor) ->
+      Scope.get(ancestor)?.myApplications()
 
   conditions: ->
     @_conditions or []
@@ -107,9 +111,9 @@ class Scope
     maxDepth = (arr) ->
       _.max _.map arr, (i) ->
         if _.isArray(i) and i.length > 0
-          1 + maxDepth(i)
+          10 + maxDepth(i)
         else
-          1
+          10
     maxDepth [scope.ancestors()]
 
 # this is just for easy access to a global version

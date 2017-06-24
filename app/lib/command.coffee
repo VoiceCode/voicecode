@@ -75,28 +75,14 @@ class Command
     Actions.executionStack.shift()
     return result
 
-  # here we are sorting the implementations by specificity -
-  # this implementation is crude
-  # but it should work for now
+  # here we are sorting the implementations by specificity
   # also, caching?
   sortedImplementations: ->
-    _.sortBy @implementations, ({info}) ->
-      result = 0
-      weight = info.weight or 0
-      if info.scope?
-        unless info.scope is 'global' or info.scope is 'abstract'
-          scope = Scope.get info.scope
-
-          if scope.applications().length
-            result += 1
-          if scope.conditions().length
-            result += 1
-            # tiebreaker if multiple conditions
-            result += (scope.conditions().length - 1) / 10
-          if scope.platform?
-            result += 0.5
-
-      (result - weight) * -1
+    _.reverse _.sortBy @implementations, ({info}) ->
+      specificity = Scope.specificity(info.scope) or 0
+      if info.weight
+        specificity += info.weight
+      specificity
 
   active: ->
     _.some @implementations, ({info}) ->

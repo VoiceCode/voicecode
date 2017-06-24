@@ -219,7 +219,7 @@ Events.once 'applicationShouldStart', ->
     global.VocabularyController = require "#{platformLib}/dragon/dragon_vocabulary_controller"
 
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
-    AssetsController.getAssets 'package', 'packages/**/package.coffee'
+    AssetsController.getAssets 'package', ['packages/*/package.coffee', 'packages/*/package.js']
     startupFlow.wait 'packageAssetsLoaded'
 
     Events.once 'settingsAssetsLoaded', startupFlow.add 'settingsAssetsLoaded'
