@@ -5,7 +5,7 @@ class EventEmitter extends require('events').EventEmitter
   instance = null
   constructor: ->
     return instance if instance?
-    unless developmentMode
+    unless (developmentMode or headlessMode)
       process.stdout.write = (chunk, encoding, next = null) =>
         @stdout _.truncate(chunk, {length: 50}), chunk
         next?()
@@ -21,7 +21,7 @@ class EventEmitter extends require('events').EventEmitter
       'willParsePhrase'
     ]
     @subscribeToEvents()
-    if developmentMode
+    if developmentMode ^ headlessMode
       @suppressedLogEntries = [
         'dragonInterfaceData'
         'apiCreated'

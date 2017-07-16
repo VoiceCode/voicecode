@@ -1,6 +1,7 @@
-{BrowserWindow} = require 'electron'
+{BrowserWindow} = require 'electron' unless headlessMode
 module.exports = new class WindowController
   constructor: ->
+    return @ if headlessMode
     @windows = {}
     Events.on 'windowCreated', ({id, window}) ->
       window.webContents.executeJavaScript "window.developmentMode = #{!!developmentMode}"

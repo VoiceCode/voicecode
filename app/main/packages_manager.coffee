@@ -1,5 +1,12 @@
 http = require 'http'
-git = require 'gitty'
+_git = require 'gitty'
+git = ->
+  try
+    git.apply arguments
+  catch err
+    error err
+
+
 fs = require 'fs-extra'
 npm = require 'npm'
 semver = require 'semver'

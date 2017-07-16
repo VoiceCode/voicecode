@@ -10,6 +10,7 @@ class BadgeCounter
 		delete @badges[name]
 		@propagate()
 	propagate: ->
-		electron.app.setBadgeCount _.size(@badges)
+		unless headlessMode
+			electron.app.setBadgeCount _.size(@badges)
 
 module.exports = new BadgeCounter

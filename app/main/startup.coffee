@@ -4,34 +4,41 @@ Function::property = (prop, desc) ->
 
 process.env.NODE_ENV = 'production' # needed for react
 
-global.developmentMode = process.argv[3]  == 'develop'
-global.electron = require('electron')
-electron.powerSaveBlocker.start('prevent-app-suspension')
+global.developmentMode = 'develop' in process.argv
+global.headlessMode = process.argv0  == 'node'
+if headlessMode
+  process.nextTick () ->
+    Events.on 'logger', console.log.bind(console)
+unless headlessMode
+  global.electron = require('electron')
+  global.app  =  electron.app
+  electron.powerSaveBlocker.start('prevent-app-suspension')
+else
+  global.app = {on: ->}
 
 if developmentMode
   process.env.NODE_ENV = 'development'
   electronConnect = require('electron-connect').client
 
 global.projectRoot = require('app-root-path').path
-global.platform =
-  switch process.platform
-    when "darwin"
-      "darwin"
-    when "win32"
-      "windows"
-    when "linux"
-      "linux"
+global.platform = 'linux'
+  # switch process.platform
+  #   when "darwin"
+  #     "darwin"
+  #   when "win32"
+  #     "windows"
+  #   when "linux"
+  #     "linux"
 
 replify = require('replify')
-repl = require('http').createServer()
+# repl = require('http').createServer()
 suffix = process.env.NODE_ENV
-replify {name: "voicecode_#{suffix}"}, repl
+# replify {name: "voicecode_#{suffix}"}, repl
 
 
 global.bundleId = 'io.voicecode.app'
 if developmentMode
   global.bundleId = 'com.github.electron'
-global.app = electron.app
 global.appVersion = require('../package.json').version
 global.Fiber = require 'fibers'
 global.asyncblock = require 'asyncblock'
@@ -88,61 +95,62 @@ _.each process.mainModule.paths, (path) ->
 
 global.Network = require '../lib/utility/network'
 global.BadgeCounter = require '../lib/utility/badge_counter'
-Config = require('electron-config')
-config = new Config()
+unless headlessMode
+  Config = require('electron-config')
+  config = new Config()
 
-app.once 'ready', ->
+  app.once 'ready', ->
 
-  # TODO persist this to restore preferred window position
-  mainWindowState = config.get 'mainWindowState'
-  mainWindowState ?=
-    width: 1200
-    height: 800
+    # TODO persist this to restore preferred window position
+    mainWindowState = config.get 'mainWindowState'
+    mainWindowState ?=
+      width: 1200
+      height: 800
 
-  main = windowController.new 'main',
-    width: mainWindowState.width
-    height: mainWindowState.height
-    x: mainWindowState.x
-    y: mainWindowState.y
-    # closable: false
-    acceptFirstMouse: true
-    titleBarStyle: 'hidden-inset'
-    show: false
-    center: true
+    main = windowController.new 'main',
+      width: mainWindowState.width
+      height: mainWindowState.height
+      x: mainWindowState.x
+      y: mainWindowState.y
+      # closable: false
+      acceptFirstMouse: true
+      titleBarStyle: 'hidden-inset'
+      show: false
+      center: true
 
-  main.on 'close', ->
-    config.set 'mainWindowState', main.getBounds()
+    main.on 'close', ->
+      config.set 'mainWindowState', main.getBounds()
 
-  main.once 'show', ->
-    require('./menu.coffee')
+    main.once 'show', ->
+      require('./menu.coffee')
 
-  main.once 'ready-to-show', ->
-    setTimeout ->
-      main.show()
-      app.on 'activate', ->
+    main.once 'ready-to-show', ->
+      setTimeout ->
         main.show()
-    , 400
-    # menubar.showWindow()
-    # unless developmentMode
-    #   menubar.hideWindow()
+        app.on 'activate', ->
+          main.show()
+      , 400
+      # menubar.showWindow()
+      # unless developmentMode
+      #   menubar.hideWindow()
 
-    Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
-      if id is 'main'
-        if main.isAlwaysOnTop()
-          main.setAlwaysOnTop false
-        else
-          main.setAlwaysOnTop true, 'floating'
+      Events.on 'toggleStickyWindow', ({id, shouldStick}) ->
+        if id is 'main'
+          if main.isAlwaysOnTop()
+            main.setAlwaysOnTop false
+          else
+            main.setAlwaysOnTop true, 'floating'
 
-    if developmentMode
-      main.on 'reload', ->
-        Events.frontendClearSubscriptions()
-      electronConnect = electronConnect.create main
-      main.openDevTools()
+      if developmentMode
+        main.on 'reload', ->
+          Events.frontendClearSubscriptions()
+        electronConnect = electronConnect.create main
+        main.openDevTools()
 
-  main.loadURL("file://#{projectRoot}/frontend/main.html")
+    main.loadURL("file://#{projectRoot}/frontend/main.html")
 
-  Events.on 'printCurrentWindow', ->
-    windowController.getFocused()?.webContents.print()
+    Events.on 'printCurrentWindow', ->
+      windowController.getFocused()?.webContents.print()
 
     # app.on 'activate', ->
     #   unless windowController.get('main').isVisible()
@@ -173,10 +181,11 @@ app.once 'ready', ->
   # emit 'appReady'#, app
 
 
-process.on 'uncaughtException', (err) ->
-  error 'UNCAUGHT EXCEPTION', err.stack, err.message
+# process.on 'uncaughtException', (err) ->
+#   error 'UNCAUGHT EXCEPTION', err.stack, err.message
 
-Events.once 'applicationShouldStart', ->
+
+applicationShouldStart = ->
   platformLib = path.join '../lib', 'platforms', platform
   funk = asyncblock.nostack
   if developmentMode
@@ -206,7 +215,6 @@ Events.once 'applicationShouldStart', ->
     Events.once 'packagesManagerReady', startupFlow.add 'packagesManagerReady'
     global.PackagesManager = require './packages_manager'
     startupFlow.wait 'packagesManagerReady'
-
     global.Command = require '../lib/command'
     global.grammarContext = require '../lib/parser/grammarContext'
     global.GrammarState = require '../lib/parser/grammar_state'
@@ -216,8 +224,8 @@ Events.once 'applicationShouldStart', ->
     Commands.Utility = require '../lib/utility/utility'
     global.SlaveController = require './slave_controller'
     global.ParserController = require '../lib/parser/parser_controller'
-    global.VocabularyController = require "#{platformLib}/dragon/dragon_vocabulary_controller"
-
+    if platform is 'darwin'# yuck
+      global.VocabularyController = require "#{platformLib}/dragon/dragon_vocabulary_controller"
     Events.once 'packageAssetsLoaded', startupFlow.add 'packageAssetsLoaded'
     AssetsController.getAssets 'package', ['packages/*/package.coffee', 'packages/*/package.js']
     startupFlow.wait 'packageAssetsLoaded'
@@ -239,7 +247,7 @@ Events.once 'applicationShouldStart', ->
 
     global.EnabledCommandsManager = require './enabled_commands_manager'
 
-    if Settings.core.slaveMode or developmentMode
+    if Settings.core.slaveMode or developmentMode or platform isnt 'darwin'
       Commands.enableAll()
 
 
@@ -274,3 +282,9 @@ if developmentMode
     console.timeEnd 'CHAIN'
   Events.on 'chainWillExecute', ->
     console.time 'CHAIN'
+
+
+if headlessMode
+  process.nextTick applicationShouldStart
+else
+  Events.once 'applicationShouldStart', applicationShouldStart

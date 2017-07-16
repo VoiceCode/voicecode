@@ -32,7 +32,7 @@ class HistoryController
             context: @context
 
 
-    @createHistoryWindow()
+    @createHistoryWindow() unless headlessMode
     # Events.on ['microphoneSleep', 'microphoneOff'], ->
     #   windowController.get('microphoneState').show()
     # Events.on 'microphoneWakeUp', ->
