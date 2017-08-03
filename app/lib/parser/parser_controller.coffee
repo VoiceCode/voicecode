@@ -21,6 +21,8 @@ class ParserController
 
   generateParser: ->
     return unless @ready
+    if not Network.online
+      return @regress null, 'No internet connection'
     @generateFingerprint()
     @generateFingerprintHash()
     {
