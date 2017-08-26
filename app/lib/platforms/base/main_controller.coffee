@@ -7,9 +7,9 @@ module.exports = class BaseController
     Events.on 'systemEvent:applicationChanged'
     , @applicationChangedHandler.bind @
     Events.on 'systemEvent:leftClick'
-    , @leftClickHandler.bind @
+    , @mouseLeftClickHandler.bind @
     Events.on 'systemEvent:keyUp'
-    , @darwinEventHandler.bind @
+    , @keyUpHandler.bind @
 
   applicationChangedHandler: ({event, bundleId, name}) ->
     Actions.setCurrentApplication {name, bundleId}

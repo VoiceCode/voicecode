@@ -21,14 +21,13 @@ if developmentMode
   electronConnect = require('electron-connect').client
 
 global.projectRoot = require('app-root-path').path
-global.platform = 'linux'
-  # switch process.platform
-  #   when "darwin"
-  #     "darwin"
-  #   when "win32"
-  #     "windows"
-  #   when "linux"
-  #     "linux"
+global.platform = switch process.platform
+  when "darwin"
+    "darwin"
+  when "win32"
+    "windows"
+  when "linux"
+    "linux"
 
 replify = require('replify')
 # repl = require('http').createServer()
@@ -258,8 +257,8 @@ applicationShouldStart = ->
     unless Settings.core.slaveMode
       global.SystemInfo = require "#{platformLib}/system_info"
       VocabularyController.start()
-      global.Synchronizer = require './synchronize'
-      Synchronizer.synchronize()
+      # global.Synchronizer = require './synchronize'
+      # Synchronizer.synchronize()
 
     global.startupComplete = true
     emit "startupComplete"

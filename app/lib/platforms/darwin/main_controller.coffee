@@ -1,6 +1,6 @@
 BaseController = require '../base/main_controller'
 
-module.exports = new class DarwinMainController
+module.exports = new class DarwinMainController extends BaseController
   constructor: ->
     super
     $.framework 'Foundation'# TODO: move?
@@ -13,7 +13,7 @@ module.exports = new class DarwinMainController
         , @systemEventHandler
       else
         runnable = "#{projectRoot}/bin/DarwinEventMonitor.app/Contents/MacOS/DarwinEventMonitor"
-        @startEventMonitor rentable
+        @startEventMonitor runnable
 
       if Settings.core.slaveMode
         @listenAsSlave()
